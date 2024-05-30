@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
-import offerMasterRedcucer  from './Slices/offerMasterSlice';
-import faqMasterReducer from './Slices/faqMasterSlice';
+import  testMasterReducer  from './Slices/testSlice';
 const reducers = combineReducers({
-    offerMasterRedcucer:offerMasterRedcucer,
-    faqMasterReducer:faqMasterReducer
+    testMasterReducer:testMasterReducer
+    
 });
 
 export default reducers;

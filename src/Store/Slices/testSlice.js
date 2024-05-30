@@ -1,38 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const faqMaster = createSlice({
-  name: "faqMaster",
+export const testMaster = createSlice({
+  name: "test",
   initialState: {
     getfaqMaster: {},
   },
   reducers: {
-    onGetFaqMaster: (state) => {
+    onGetTestMaster: (state) => {
       return {
-        getFaqMaster: {},
+        getTestMaster: {},
       };
     },
-    onGetFaqMasterSuccess: (state, { payload }) => {
+    onGetTestMasterSuccess: (state, { payload }) => {
       const { data = {}, message = "", status_code = 200 } = payload;
       return {
         ...state,
-        getFaqMaster: data,
+        getTestMaster: data,
         message,
         status_code,
       };
     },
-    onGetFaqMasterError: (state, { payload }) => {
+    onGetTestMasterError: (state, { payload }) => {
       const { data = {}, message = "", status_code = 400 } = payload;
       return {
         ...state,
-        getFaqMaster: data,
+        getTestMaster: data,
         message,
         status_code,
       };
     },
-    OnGetFaqMasterReset: (state) => {
+    OnGetTestMasterReset: (state) => {
       return {
         ...state,
-        getFaqMaster: {},
+        getTestMaster: {},
         message: "",
         status_code: null,
       };
@@ -41,10 +41,10 @@ export const faqMaster = createSlice({
 });
 
 export const {
-  onGetFaqMaster,
-  onGetFaqMasterSuccess,
-  onGetFaqMasterError,
-  OnGetFaqMasterReset,
-} = faqMaster.actions;
+  onGetTestMaster,
+  onGetTestMasterSuccess,
+  onGetTestMasterError,
+  OnGetTestMasterReset,
+} = testMaster.actions;
 
-export default faqMaster.reducer;
+export default testMaster.reducer;

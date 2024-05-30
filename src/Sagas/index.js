@@ -1,9 +1,8 @@
 import { all } from "redux-saga/effects";
-import offerMasterSaga from "./offerMasterSaga";
-import faqMasterSaga from "./faqMasterSaga";
+
+import testSaga from "./testSaga";
 export default function* rootSaga() {
   yield all([
-      offerMasterSaga(),
-      faqMasterSaga()
-  ]);
+    testSaga()
+    ]);
 }
