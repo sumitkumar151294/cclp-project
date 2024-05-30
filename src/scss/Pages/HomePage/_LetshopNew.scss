@@ -1,0 +1,47 @@
+$color_1: var(--primary-white);
+$color_2: var(--primary-greyish-2);
+
+.new-bg {
+	background: var(--primary-red) !important;
+	padding: 4em;
+}
+.clc {
+	color: $color_1 !important;
+	font-weight: 700;
+}
+.the-para-magic2 {
+	margin-bottom: 5px;
+	font-weight: 400;
+	color: $color_2;
+	font-size: 15px;
+}
+.avail2 {
+	background: var(--primary-black-3);
+	padding: 10px 19px;
+	border-radius: 4px;
+	color: $color_1 !important;
+	background: var(--primary-blue-9);
+}
+.offer-box1 {
+	border: 1px solid var(--primary-white);
+	transform: scale(1.05);
+	box-shadow: 1px 1px 6px 3px var(--rgba-primary-2);
+	border-radius: 20px;
+	background: var(--primary-white);
+	&:hover {
+		border: 1px solid var(--primary-white-6);
+		transform: scale(1.05);
+		box-shadow: 1px 1px 6px 3px var(--rgba-primary-6);
+		border-radius: 5px;
+		border-radius: 20px;
+	}
+}
+.coupendis {
+	position: relative;
+	text-align: center;
+	bottom: 10px;
+}
+.fnt-12px {
+	font-size: 15px;
+	font-weight: 600;
+}

@@ -1,0 +1,91 @@
+@import './Components/Header';
+@import './Components/Footer';
+@import './Components/Button';
+@import './Utility/Common';
+@import './Utility/Rows';
+@import './Utility/Padding';
+@import './Utility/Margin';
+@import './Pages/ProductCart/Letshop';
+@import './Pages/ProductCart/LetshopHandpick';
+@import './Pages/AddToCart/AddCart';
+@import './Pages/OrderConfirm';
+@import './Pages/HomePage/SectionHero';
+@import './Pages/HomePage/LetshopNew';
+@import './Pages/HomePage/GroupGifts';
+@import './Pages/Checkout/Checkout';
+@import './Pages/HomePage/GiftChoice';
+@import './Pages/FaqMaster/FaqMaster';
+
+:root {
+  --primary-light-green: #64ff64;
+  --primary-skin: #EEE;
+  --primary-red: #d61448;
+  --primary-red-2: #ff4d7d;
+  --primary-black: #000;
+  --primary-black-2: #212121;
+  --primary-black-3: #ff000000;
+  --primary-black-4: #4747471a;
+  --primary-black-5: #47474717;
+  --primary-greyish: #333;
+  --primary-greyish-2: #808080;
+  --primary-greyish-3: #767171;
+  --primary-grey: #b5b5b5;
+  --primary-grey-2: #b8b8b8;
+  --primary-grey-3: #bebdbd;
+  --primary-grey-4: #AFAFAF;
+  --primary-grey-5: #afabab;
+  --primary-grey-6: #A4A4A4;
+  --primary-grey-7: #525252;
+  --primary-white: #ffffff;
+  --primary-white-1: #f0f2f5;
+  --primary-white-2: #dbdbdb;
+  --primary-white-3: #ddd;
+  --primary-white-4: #d6d6d6;
+  --primary-white-5: #efefef;
+  --primary-white-6: #ededed;
+  --primary-white-7: #dee2e6;
+  --primary-blue: #2861f7;
+  --primary-blue-1: #0073fd;
+  --primary-blue-2: #3b71fe;
+  --primary-blue-3: #0a58ca;
+  --primary-blue-4: #00417a;
+  --primary-blue-5: #0e4d8d;
+  --primary-blue-6: #1947e1;
+  --primary-blue-7: #4a73ff;
+  --primary-blue-8: #5177f8;
+  --primary-blue-9: #0072fd;
+  --primary-blue-10: aliceblue;
+  --primary-blue-11: #3c92fd;
+  --primary-yellow: #fdb917;
+  --primary-yellow-2: #d9cf6e;
+  --rgba-primary-1: rgb(0 0 0 / 5%);
+  --rgba-primary-2: rgb(226 226 226 / 27%);
+  --rgba-primary-3: rgba(0, 0, 0, .1);
+  --rgba-primary-4: rgba(0, 0, 0, .08);
+  --rgba-primary-5: rgba(65, 132, 234, 0.75);
+  --rgba-primary-6: rgb(0 0 0 / 27%);
+  --rgba-primary-7: rgb(0 0 0 / 0%);
+  --rgba-primary-8: rgba(0, 0, 0, .2);
+  --rgba-primary-9: rgba(0, 0, 0, .14);
+  --rgba-primary-10: rgba(0, 0, 0, .12);
+  --title: #000;
+
+  /* width */
+  --vh100: 100vh;
+  --w100: 100%;
+  --h100: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif !important;
+  background: var(--primary-white-6) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}

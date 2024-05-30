@@ -1,0 +1,62 @@
+$color_1: var(--primary-red);
+$color_2: var(--primary-white);
+$font-family_1: 'Inter', sans-serif;
+
+body {
+	font-family: $font-family_1 !important;
+	background: var(--primary-white-5) !important;
+	font-size: 12px !important;
+	font-weight: 400 !important;
+	line-height: 1.5 !important;
+}
+.section-hero {
+	background-size: cover;
+	padding: 14px;
+	background: var(--primary-white);
+}
+.hero-img-box {
+	grid-column: 2/3;
+	grid-row: 1 / 3;
+}
+.maxx {
+	max-height: 420px !important;
+}
+.heading-primary {
+	font-size: 48px;
+	color: $color_1;
+	font-weight: 700;
+	letter-spacing: -0.5px;
+	line-height: 1.4em;
+	margin-bottom: 10px;
+}
+br {
+	display: block;
+	margin: 5px 0;
+}
+.hero-description {
+	color: $color_1;
+	font-size: 24px;
+	line-height: 1.5;
+	margin-bottom: 50px;
+}
+.btn-hover.color-9 {
+	background-image: linear-gradient(to right, var(--primary-blue-6), var(--primary-blue-7), var(--primary-blue-8), var(--primary-blue-6));
+	box-shadow: 0 4px 15px 0 var(--rgba-primary-5);
+	padding: 15px 25px;
+}
+.btn-hover {
+	width: 200px;
+	font-size: 16px;
+	font-weight: 600;
+	color: $color_2;
+	cursor: pointer;
+	height: 55px;
+	text-align: center;
+	border: none;
+	background-size: 300% 100%;
+	border-radius: 5px;
+	moz-transition: all .4s ease-in-out;
+	-o-transition: all .4s ease-in-out;
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}

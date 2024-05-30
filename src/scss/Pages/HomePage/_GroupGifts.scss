@@ -1,0 +1,35 @@
+$color_1: var(--primary-red);
+
+.mobile-hide {
+	display: block;
+}
+.esec-mar {
+	margin-top: 50px !important;
+	margin-bottom: 50px !important;
+}
+.jokes {
+	background-image: url(../../../Assets/group-made.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding: 1rem;
+	width: var(--w100);
+	height: 450px;
+}
+.hero-text-box2 {
+	padding: 70px 110px;
+	width: var(--w100) !important;
+}
+.heading-primary23 {
+	font-size: 30px;
+	color: $color_1;
+	font-weight: 700;
+	letter-spacing: -0.5px;
+	line-height: 1.4em;
+	margin-bottom: 25px;
+}
+.hero-description23 {
+	color: $color_1;
+	font-size: 21px;
+	line-height: 1.5;
+	margin-bottom: 50px;
+}

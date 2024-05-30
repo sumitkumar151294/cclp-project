@@ -1,0 +1,16 @@
+.pad {
+	padding: 10px !important;
+}
+.pt-33 {
+	padding-top: 20px;
+}
+.pad3 {
+	padding: 15px !important;
+	border: 2px solid #ededed;
+	border-radius: 15px;
+}
+@media screen and (max-width: 767px) and (min-width: 320px) {
+	.pad {
+		padding: 0px;
+	}
+}
