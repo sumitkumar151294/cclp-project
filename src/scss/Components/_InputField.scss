@@ -1,0 +1,108 @@
+$color_1: var(--primary-grey);
+$color_2: var(--bs-gray);
+$color_3: var(--bs-table-dark-bg-2);
+$background-color_1: var(--primary-white);
+$background-color_2: var(--primary-input-bg);
+$background-color_3: var(--bs-light-bg);
+$background-color_4: transparent;
+$border-color_1: var(--bs-cream);
+$border-color_2: inherit;
+$border-color_3: var(--primary);
+$border-color_4: var(--rgba-primary-2);
+
+.dateInput {
+	border-radius: 1rem !important;
+}
+.rs-input-group:not(.rs-input-group-disabled):hover, .rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus, .rs-input-group:focus-within {
+    border-color: red; 
+}
+.rs-input-group.rs-input-group-inside {
+	width: 100%;
+	background-color: #fff;
+	background-color: var(--rs-input-bg);
+	height: 33px;
+}
+
+.rs-input-group.rs-input-group-inside:focus {
+	border-color: transparent;
+}
+
+.rs-picker-error>.rs-input-group {
+	border-color: transparent !important;
+}
+
+.rs-picker-block {
+	display: block;
+	margin: 0px 5px;
+}
+
+.dateInput {
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	appearance: none;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	background: var(--primary-white);
+	border: 3px solid var(--primary-greyish) !important;
+	color: $color_3;
+
+	&:focus {
+		color: $color_1;
+		background-color: $background-color_1;
+		box-shadow: none;
+		border-color: $border-color_3;
+	}
+
+	&::placeholder {
+		color: $color_2;
+		opacity: 1;
+	}
+}
+
+.form-control {
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	appearance: none;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	background: var(--primary-white);
+	border: 3px solid var(--primary-greyish);
+	padding: 0.3125rem 1.25rem;
+	color: $color_3;
+	border-radius: 1rem;
+
+	&:focus {
+		color: $color_1;
+		background-color: $background-color_1;
+		box-shadow: none;
+		border-color: $border-color_3;
+	}
+
+	&::placeholder {
+		color: $color_2;
+		opacity: 1;
+	}
+}
+
+@media only screen and (max-width: 1400px) {
+	.form-control {
+		//height: 2.5rem;
+		height: 3rem;
+		width: var(--w100);
+	}
+}
+
+@media only screen and (min-width: 1400px) {
+	.form-control {
+		height: 2.5rem;
+		width: var(--w100);
+	}
+}
+
+@media only screen and (min-width: 1400px) {
+	.form-control {
+		//    height: 3rem; 
+		width: var(--w100);
+	}
+}

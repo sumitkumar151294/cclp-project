@@ -1,15 +1,25 @@
-import React from 'react'
-import FooterLogo from '../../Assets/footer-logo.png'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-    return (
-        <>
-            <footer className="footer new-ft">
-                <h2>footer</h2>
-            </footer>
-        </>
-    )
-}
+  return (
+    <div className="footer">
+      <div className="copyright">
+        <p>
+          Copyright © LC Reward Dev &amp; Developed by
+          <Link
+            to="https://www.way2webworld.com/"
+            target="_blank"
+            className="footer-link"
+          >
+            {" "}
+            Way2web World
+          </Link>{" "}
+          {new Date().getFullYear()}
+        </p>
+      </div>
+    </div>
+  );
+};
 
-export default Footer
+export default Footer;

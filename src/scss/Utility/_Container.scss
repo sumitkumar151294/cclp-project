@@ -1,0 +1,75 @@
+$w100: var(--w100);
+$bs-gutter-x: 15px;
+$primary-grey: var(--primary-grey);
+$primary-white-2: var(--primary-white-2);
+$rgba-primary-16: var(--rgba-primary-16);
+$h100: var(--h100);
+
+.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 15px) ;
+  padding-left: var(--bs-gutter-x, 15px) ;
+  margin-right: auto;
+  margin-left: auto;
+
+}
+@media only screen and (min-width: 1400px)  {
+  
+  .mt-client-list{
+    padding-top: 1.3rem !important;
+  }
+}
+
+.content-body .container-fluid{
+  padding-top: 1.3rem;
+  padding-right: 2.5rem;
+  padding-left: 2.5rem;
+
+  @media only screen and (max-width: 75rem) {
+    padding-top: 1.875rem;
+    padding-right: 1.875rem;
+    padding-left: 1.875rem;
+  }
+
+  @media only screen and (max-width: 47.9375rem) {
+    padding-top: 1.25rem;
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  @media only screen and (max-width: 35.9375rem) {
+    padding-top: 0.9375rem;
+    padding-right: 0.9375rem;
+    padding-left: 0.9375rem;
+  }
+  
+  @media only screen and (min-width: 1400px)  {
+    .card-body .container-fluid{
+      padding-top: 1.5rem !important;
+    }
+  }
+}
+body {
+  overflow-x: hidden;
+  height: var( --h100);
+  position: relative;
+  max-width: var( --w100);
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--primary-grey);
+  background-color: var(--primary-white-2);
+  -webkit-text-size-adjust: var(--w100);
+  -webkit-tap-highlight-color: var(--rgba-primary-16);
+
+  @media only screen and (max-width: 991px) {
+      font-size: 0.875rem;
+  }
+}
+@media only screen and (max-width: 100rem) {
+  :root {
+    font-size: 0.875rem;
+  }
+}

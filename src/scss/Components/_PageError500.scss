@@ -1,0 +1,36 @@
+.error-text-500 {
+    line-height: 1;
+    font-size: 9.375rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.server_error {
+    font-size: 2.5rem;
+    margin-bottom: 0.3125rem
+}
+
+.error_description {
+    font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+    .col-md-5 {
+        flex: 0 0 auto;
+        width: 41.6666666667%;
+    }
+}
+
+@media (max-width: 575px) {
+    .error-text-500 {
+        font-size: 5rem;
+    }
+
+    .server_error {
+        font-size: 1.25rem;
+    }
+
+    .error_description {
+        font-size: 0.875rem;
+    }
+}

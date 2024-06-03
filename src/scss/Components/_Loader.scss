@@ -1,0 +1,63 @@
+$background-color_1: var(--primary-white);
+
+@keyframes dot {
+	50% {
+		transform: translateX(96px);
+	}
+}
+@keyframes dots {
+	50% {
+		transform: translateX(-31px);
+	}
+}
+.absoluteLoader {
+	position: absolute !important;
+	border-radius: 0 0px 1.75rem 1.75rem;
+	box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+#preloader {
+	position: fixed;
+	width: var(--w100);
+	height: var(--h100);
+	left: 0;
+	top: 0;
+	background-color: $background-color_1;
+	.gooey {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 142px;
+		height: 40px;
+		margin: -20px 0 0 -71px;
+		background: var(--primary-white);
+		filter: contrast(20);
+		.dot {
+			position: absolute;
+			width: 16px;
+			height: 16px;
+			top: 12px;
+			left: 15px;
+			filter: blur(4px);
+			background: var(--primary-black);
+			border-radius: 50%;
+			transform: translateX(0);
+			animation: dot 2.8s infinite;
+		}
+		.dots {
+			transform: translateX(0);
+			margin-top: 12px;
+			margin-left: 31px;
+			animation: dots 2.8s infinite;
+			span {
+				display: block;
+				float: left;
+				width: 16px;
+				height: 16px;
+				margin-left: 16px;
+				filter: blur(4px);
+				background: var(--primary-black);
+				border-radius: 50%;
+			}
+		}
+	}
+}

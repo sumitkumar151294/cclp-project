@@ -1,0 +1,33 @@
+$color_1: var(--bs-table-striped-color);
+$background-color_1: var(--primary-grey-row);
+
+.table.table-striped {
+	tbody {
+		tr {
+			&:nth-of-type(odd) {
+				background-color: $background-color_1;
+			}
+		}
+	}
+}
+.table.table-hover {
+	tr {
+		&:hover {
+			background-color: $background-color_1;
+		}
+	}
+}
+.table-striped {
+	>tbody {
+		>tr {
+			&:nth-of-type(odd) {
+				--bs-table-accent-bg: var(--bs-table-striped-bg);
+				color: $color_1;
+			}
+		}
+	}
+}
+
+.cd-body-responsive {
+	padding: 1.875rem;
+}

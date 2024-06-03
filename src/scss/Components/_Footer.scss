@@ -1,0 +1,31 @@
+$color_1: var(--primary-black);
+$color_2: var(--primary);
+$color_3: var(--deznav-menu);
+$background-color_1: var(--primary-white-2);
+.footer {
+	.copyright {
+		p {
+			text-align: center;
+			color: $color_1;
+			font-size: 0.875rem;
+		}
+		a {
+			color: $color_2;
+		}
+	}
+}
+.copyright {
+	padding: 0 1.875rem;
+	color: $color_3;
+	margin-top: 1rem;
+	p {
+		font-size: 0.75rem;
+	}
+	strong {
+		display: block;
+		font-size: 0.875rem;
+	}
+}
+.footer-link{
+	color: var(--primary) !important;
+}

@@ -1,0 +1,106 @@
+$color_1: var(--primary-grey);
+$border-color_1: var(--primary-skin);
+$border-color_2: var(--bs-skin);
+$border-color_3: inherit;
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table {
+    caption-side: bottom;
+    border-collapse: collapse;
+}
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-striped-color: var(--primary-grey);
+    --bs-table-striped-bg: var(--rgba-primary-18);
+    --bs-table-active-color: var(--primary-grey);
+    --bs-table-active-bg: var(--rgba-primary-19);
+    --bs-table-hover-color: var(--primary-grey);
+    --bs-table-hover-bg: var(--rgba-primary-20);
+    width: var(--w100);
+    margin-bottom: 1rem;
+    color: $color_1;
+    vertical-align: top;
+    border-color: $border-color_1;
+    width: var(--w100) !important;
+    thead {
+        th {
+            border-bottom: 0.0625rem solid var(--primary-skin);
+            text-transform: capitalize;
+            font-size: 1.125rem;
+            white-space: nowrap;
+            font-weight: 500;
+            letter-spacing: 0.0313rem;
+            border-color: $border-color_2 !important;
+            text-align: left;
+        }
+    }
+    td {
+        border-color: $border-color_2;
+        padding: 0.9375rem 0.625rem;
+        border-color: $border-color_2;
+        padding: 0.9375rem 0.625rem;
+    }
+    tbody {
+        tr {
+            td {
+                vertical-align: middle;
+                border-color: $border-color_2;
+                vertical-align: middle;
+                border-color: $border-color_2;
+            }
+        }
+    }
+    th {
+        padding: 0.9375rem 0.625rem;
+    }
+}
+thead,
+tbody,
+tfoot,
+td,
+tr,
+th {
+    border-color: $border-color_3;
+    border-style: solid;
+    border-width: 0;
+}
+.table-responsive-sm {
+    min-width: 30rem !important;
+    @media (max-width: 575.98px) {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+   @media (max-width: 1292px) {
+    .allocateBrandTable{
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .allocateBtn{
+        width: 100px;
+    }
+   }
+
+// .table > :not(caption) > * > * {
+//   padding: 0.5rem 0.5rem;
+//   background-color: var(--bs-table-bg);
+//   border-bottom-width: 1px;
+//   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+// }
+// .table th, .table td {
+//   border-color: var( --bs-skin);
+//   padding: 0.9375rem 0.625rem !important;
+// }
+
+    @media (max-width: 1325px) {
+        .client_Btn{
+            width: 80px !important;
+            display: flex;
+            align-items: center;
+        }
+       .scroll-Table-x{ overflow-x: auto;
+        -webkit-overflow-scrolling: touch;}
+    }

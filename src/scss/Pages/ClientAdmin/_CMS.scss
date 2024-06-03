@@ -1,0 +1,11 @@
+.card-body {
+    padding-top: 2rem !important;
+}
+
+textarea.form-control {
+    min-height: calc(3.5em + 0.75rem + 2px);
+}
+
+.if textarea.form-control {
+    min-height: calc(32.5em + 0.75rem + 2px);
+}
