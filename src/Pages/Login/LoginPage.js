@@ -1,17 +1,54 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import Button from "../../Components/Button/Button";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-// import Loader from "../../Components/Loader/Loader";
-// import Footer from "../../Layout/Footer/Footer";
+import {useFormik} from "formik";
+import  * as yup from "yup";
+import Footer from "../../Layout/Footer/Footer";
 import image from "../../Assets/img/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import {  onLoginSubmit } from "../../Store/Slices/loginSlice";
+
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const navigate=useNavigate();
+  const [isLogin,setIsLogin]=useState(false);
+  
+  //to get login details from redux
+  const loginDetails = useSelector((state) => state.loginReducer);
+  
+  const initialValues={
+    email:"",
+    password:""
+  };
+
+  // to validate login form using Yup
+  const validateForm=yup.object({
+      email:yup.string().email().required("Email is required"),
+      password:yup.string().required("Password is required")
+  });
+
+  // to handle form using formik
+  const {values,errors,touched,handleChange,handleSubmit} = useFormik({
+    initialValues:initialValues,
+    validationSchema:validateForm,
+    onSubmit:(values,action)=>{
+        setIsLogin(true);
+        dispatch(onLoginSubmit({values}));
+        action.resetForm();
+     },
+  });
+  useEffect(() => {
+    if (loginDetails?.status_code === "201" && isLogin) {
+      toast.success(loginDetails?.message);
+      navigate("/dashboard");
+    }
+  }, [loginDetails?.status_code,isLogin]);
  
   return (
     <>
+      <ToastContainer/>
       <div className="vh-100">
         <div className="authincation h-100">
           <div className="container h-100">
@@ -25,7 +62,7 @@ const LoginPage = () => {
                           <img className="w-100" src={image} alt="" />
                         </div>
                         <h4 className="text-center mb-4">SignIn</h4>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                           <div className="mb-3">
                             <label className="mb-1">
                               <strong>Email</strong>
@@ -33,8 +70,15 @@ const LoginPage = () => {
                             </label>
                             <InputField
                               type="email"
-                              className="form-control"
+                              className={` ${
+                                errors.email ? "border-danger" : "form-control"
+                              }`}
+                              name="email"
+                              placeholder="example@gmail.com"
+                              value={values.email}
+                              onChange={handleChange}
                             />
+                            {errors.email && touched.email && <p className="text-danger">{errors.email}</p>}
                           </div>
                           <div className="mb-3">
                             <label className="mb-1">
@@ -43,8 +87,15 @@ const LoginPage = () => {
                             </label>
                             <InputField
                               type="password"
-                              className="form-control"
+                              className={` ${
+                                errors.password ? "border-danger" : "form-control"
+                              }`}
+                              name="password"
+                              placeholder="........"
+                              value={values.password}
+                              onChange={handleChange}
                             />
+                            {errors.password && touched.password && <p className="text-danger">{errors.password}</p>}
                           </div>
                           <div className="row d-flex justify-content-between mt-4 mb-2 d-nonemo">
                             <div className="mb-3">
@@ -58,6 +109,7 @@ const LoginPage = () => {
                                   type="checkbox"
                                   className="form-check-input"
                                   id="basic_checkbox_1"
+                                  name="remember"
                                 />
                                 <label
                                   className="form-check-label"
@@ -84,8 +136,9 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+      
+      <Footer/>
     </>
   );
 };
 export default LoginPage;
-/* eslint-enable react-hooks/exhaustive-deps */

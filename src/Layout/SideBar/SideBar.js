@@ -1,6 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const SideBar = () => {
+    //const getModuleData = useSelector((state) => state.moduleReducer);
+
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">

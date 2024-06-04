@@ -1,6 +1,5 @@
 const API={
-    //test
-    test:"/test",
+    login:"/login",
 
 }
 export default API;

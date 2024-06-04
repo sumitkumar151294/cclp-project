@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import  testMasterReducer  from './Slices/testSlice';
+import  moduleReducer  from './Slices/moduleSlice';
+import loginReducer from './Slices/loginSlice';
+
 const reducers = combineReducers({
-    testMasterReducer:testMasterReducer
-    
+    moduleReducer:moduleReducer,
+    loginReducer:loginReducer
 });
 
 export default reducers;

@@ -5,17 +5,35 @@ import Layout from "../Layout/Layout";
 import CustomerSegment from "../Pages/CustomerSegment/CustomerSegment";
 import ProductContentList from "../Pages/ProductContentList/ProductContentList";
 import ProductSection from "../Pages/ProductSection/Productsection";
+import AddCoupon from "../Pages/AddCoupon/AddCoupon";
+import AddBulkCoupon from "../Pages/AddBulkCoupon/AddBulkCoupon";
+import DynamicCoupon from "../Pages/DynamicCoupon/DynamicCoupon";
+import CouponList from "../Pages/CouponList/CouponList";
+import CategoryMaster from "../Pages/CategoryMaster/CategoryMaster";
+import DealManagement from "../Pages/DealManagement/DealManagement";
+import DealList from "../Pages/DealList/DealList";
+import DealToSegment from "../Pages/DealToSegment/DealToSegment";
+import CompaignMaster from "../Pages/CompaignMaster/CompaignMaster";
 
 
 function RouteConfiq() {
   return (
     <Router>
       <Routes>
-        <Route path="data" element={<LoginPage/>} />
+        <Route path="/" element={<LoginPage/>} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />}/> 
         <Route path="/customerSegment" element={<Layout Component={CustomerSegment} />}/> 
         <Route path="/productContentList" element={<Layout Component={ProductContentList} />}/> 
         <Route path="/productSection" element={<Layout Component={ProductSection} />}/> 
+        <Route path="/addCoupon" element={<Layout Component={AddCoupon} />}/> 
+        <Route path="/addBulkCoupon" element={<Layout Component={AddBulkCoupon} />}/> 
+        <Route path="/dynamicCoupon" element={<Layout Component={DynamicCoupon} />}/> 
+        <Route path="/couponList" element={<Layout Component={CouponList} />}/> 
+        <Route path="/categoryMaster" element={<Layout Component={CategoryMaster} />}/> 
+        <Route path="/dealManagement" element={<Layout Component={DealManagement} />}/> 
+        <Route path="/dealList" element={<Layout Component={DealList} />}/> 
+        <Route path="/dealToSegment" element={<Layout Component={DealToSegment} />}/>
+        <Route path="/compaignMaster" element={<Layout Component={CompaignMaster} />}/> 
       </Routes>
     </Router>
   );
