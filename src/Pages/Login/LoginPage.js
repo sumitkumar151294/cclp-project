@@ -9,27 +9,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import {  onLoginSubmit } from "../../Store/Slices/loginSlice";
+import Loader from "../../Components/Loader/Loader";
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
-  const navigate=useNavigate();
   const [isLogin,setIsLogin]=useState(false);
-  
-  //to get login details from redux
+  const dispatch = useDispatch();
+  const navigate=useNavigate();  
+  //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
-  
+  // initial values for the input fields
   const initialValues={
     email:"",
     password:""
   };
-
-  // to validate login form using Yup
+  // to validate login form using Yup schema
   const validateForm=yup.object({
       email:yup.string().email().required("Email is required"),
       password:yup.string().required("Password is required")
   });
-
-  // to handle form using formik
+  // to handle form using useFormik hook
   const {values,errors,touched,handleChange,handleSubmit} = useFormik({
     initialValues:initialValues,
     validationSchema:validateForm,
@@ -39,12 +37,15 @@ const LoginPage = () => {
         action.resetForm();
      },
   });
+  //to handle navigation and toast notifications based on login status
   useEffect(() => {
-    if (loginDetails?.status_code === "201" && isLogin) {
+    if ( isLogin && loginDetails?.status_code === "201" ) {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
+    }else if (isLogin && loginDetails?.status_code){
+      toast.error(loginDetails?.message);
     }
-  }, [loginDetails?.status_code,isLogin]);
+  }, [loginDetails]);
  
   return (
     <>
@@ -91,12 +92,13 @@ const LoginPage = () => {
                                 errors.password ? "border-danger" : "form-control"
                               }`}
                               name="password"
-                              placeholder="........"
+                              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                               value={values.password}
                               onChange={handleChange}
                             />
                             {errors.password && touched.password && <p className="text-danger">{errors.password}</p>}
                           </div>
+                          {loginDetails?.isLoading && <Loader />}
                           <div className="row d-flex justify-content-between mt-4 mb-2 d-nonemo">
                             <div className="mb-3">
                               <span

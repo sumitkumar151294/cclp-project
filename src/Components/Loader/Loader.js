@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 const Loader = ({classType}) => {
     return (
         <div className={classType} id="preloader">
@@ -14,4 +14,4 @@ const Loader = ({classType}) => {
     )
 }
 
-export default Loader
+export default Loader;

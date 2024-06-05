@@ -1,16 +1,16 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callModuleApi } from "../Context/moduleApi";
 import { onGetModule, onGetModuleError, onGetModuleSuccess } from "../Store/Slices/moduleSlice";
+import { callModuleApi } from "../Context/ModuleApi";
+
 
 function* Module() {
   try {
     const moduleResponse = yield call(callModuleApi);
-    if (moduleResponse.httpStatusCode === 200) {
-
+    if (moduleResponse.httpStatusCode === "201") {
       yield put(
         onGetModuleSuccess({
           data: moduleResponse.response,  
-          // message: moduleResponse.response.errorMessage,
+          //message: moduleResponse.response.errorMessage,
 
         })
       );
@@ -18,9 +18,7 @@ function* Module() {
       yield put(
         onGetModuleError({
           data: moduleResponse.response,
-
           message: moduleResponse.response.message,
-
         })
       );
     }

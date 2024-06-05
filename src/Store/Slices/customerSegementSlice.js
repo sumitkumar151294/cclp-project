@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const moduleSlice = createSlice({
-  name: "module",
+export const customerSegementSlice = createSlice({
+  name: "customerSegement",
   initialState: {
     isLoading: false,
     isError: false,
@@ -9,7 +9,8 @@ export const moduleSlice = createSlice({
     message: "",
   },
   reducers: {
-    onGetModule: (state) => {
+    onGetCustomerSegement: (state) => {
+      debugger
       return {
         ...state,
         isLoading: true,
@@ -19,7 +20,8 @@ export const moduleSlice = createSlice({
       };
     },
 
-    onGetModuleSuccess: (state, { payload }) => {
+    onGetCustomerSegementSuccess: (state, { payload }) => {
+      debugger
       const { data = [], message = "", status_code  } = payload;
       return {
         ...state,
@@ -31,7 +33,7 @@ export const moduleSlice = createSlice({
       };
     },
 
-    onGetModuleError: (state, { payload }) => {
+    onGetCustomerSegementError: (state, { payload }) => {
       const { data = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
@@ -42,7 +44,7 @@ export const moduleSlice = createSlice({
         isError: true,
       };
     },
-    onGetModuleReset: (state) => {
+    onGetCustomerSegementReset: (state) => {
       return {
         ...state,
         data:null,
@@ -54,7 +56,7 @@ export const moduleSlice = createSlice({
     }
   },
 });
-export const {onGetModule, onGetModuleSuccess, onGetModuleError ,onGetModuleReset } =
-moduleSlice.actions;
+export const {onGetCustomerSegement,onGetCustomerSegementSuccess,onGetCustomerSegementError,onGetCustomerSegementReset } =
+customerSegementSlice.actions;
 
-export default moduleSlice.reducer;
+export default customerSegementSlice.reducer;
