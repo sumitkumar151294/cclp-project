@@ -1,29 +1,39 @@
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import Button from "../../Components/Button/Button";
+import ReactPaginate from "react-paginate";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetCustomerSegement } from "../../Store/Slices/customerSegementSlice";
+import NoRecord from "../../Components/NoRecord/NoRecord";
 
 const CustomerSegment = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
-  const customerSegData = useSelector((state) => state.customerSegmentReducer.data);
+  //to get customer segment data from redux store
+  const customerSegData = useSelector(
+    (state) => state.customerSegmentReducer.data
+  );
 
   useEffect(() => {
     dispatch(onGetCustomerSegement());
-  }, [dispatch]);
+  }, []);
 
   // filter the customerSegment data based on the search query
-  const filteredcustomerData = Array.isArray(customerSegData) && customerSegData.filter(
-    (item) =>
-      Object.values(item).some(
-        (value) =>
-          typeof value === "string" &&
-          value.toLowerCase().includes(searchQuery.toLowerCase())
-      ) ||
-      (item.segementName && item.segementName.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredcustomerData =
+    Array.isArray(customerSegData) &&
+    customerSegData.filter(
+      (item) =>
+        Object.values(item).some(
+          (value) =>
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchQuery.toLowerCase())
+        ) ||
+        (item.segmentName &&
+          item.segmentName.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
   // To search the data
   const handleSearch = (e) => {
@@ -31,18 +41,26 @@ const CustomerSegment = () => {
   };
 
   const namesArray = filteredcustomerData.map((data) => ({
-    id:data.id,
-    segementName: data.segementName,
+    id: data.id,
+    segementName: data.segmentName,
     currentStatus: data.currentStatus,
-    date: data.supplierBrandIddate,
+    date: data.date,
   }));
 
   const headers = [
     { label: "Id", key: "id" },
-    { label: "Segment Name", key: "segementName" },
+    { label: "Segment Name", key: "segmentName" },
     { label: "Current Status", key: "currentStatus" },
-    { label: "Date", key: "date" }
+    { label: "Date", key: "date" },
   ];
+
+  // for Pagination
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  // to handle page chnages
+  const handlePageChange = (selected) => {
+    setPage(selected.selected + 1);
+  };
 
   return (
     <div>
@@ -65,31 +83,30 @@ const CustomerSegment = () => {
                         onChange={handleSearch}
                       />
                       <span className="input-group-text">
-                        <a href="">
-                          <i className="flaticon-381-search-2"></i>
-                        </a>
+                          <i className="fa fa-search"></i>
                       </span>
                     </div>
                   </div>
                   <div className="d-flex align-items-center flex-wrap">
-                  {customerSegData && customerSegData.length > 0 && (
-                          <CSVLink
-                            data={namesArray}
-                            headers={headers}
-                            filename={"CustomerSegment.csv"}
-                          >
-                    {filteredcustomerData.length > 0 && (
-                      <Button
-                        className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
-                        text="Export"
-                        icons={"fa fa-file-excel"}
-                      />
+                    {customerSegData && customerSegData.length > 0 && (
+                      <CSVLink
+                        data={namesArray}
+                        headers={headers}
+                        filename={"CustomerSegment.csv"}
+                      >
+                        {filteredcustomerData.length > 0 && (
+                          <Button
+                            className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
+                            text="Export"
+                            icons={"fa fa-file-excel"}
+                          />
+                        )}
+                      </CSVLink>
                     )}
-                    </CSVLink>
-                  )}
                   </div>
                 </div>
               </div>
+              {Array.isArray(filteredcustomerData) && filteredcustomerData.length>0 ? (
               <div className="card-body">
                 <div className="table-responsive">
                   <table className="table header-border table-responsive-sm">
@@ -102,24 +119,55 @@ const CustomerSegment = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Array.isArray(filteredcustomerData) && filteredcustomerData.map((data, index) => (
-                        <tr key={index}>
-                          <td>{data.id}</td>
-                          <td>
-                            {data.segementName}<a href=""></a>
-                          </td>
-                          <td>
-                            <span className={`badge ${data.currentStatus === "active" ? "badge-success" : "badge-danger"}`}>
-                              {data.currentStatus}
-                            </span>
-                          </td>
-                          <td>{data.date}</td>
-                        </tr>
-                      ))}
+                      {Array.isArray(filteredcustomerData) &&
+                        filteredcustomerData.slice(startIndex, endIndex).map((data, index) => (
+                          <tr key={index}>
+                            <td>{data.id}</td>
+                            <td>
+                              {data.segmentName}
+                              <a href=""></a>
+                            </td>
+                            <td>
+                              <span
+                                className={`badge ${
+                                  data.currentStatus === "active"
+                                    ? "badge-success"
+                                    : "badge-danger"
+                                }`}
+                              >
+                                {data.currentStatus}
+                              </span>
+                            </td>
+                            <td>{data.date}</td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
+                  {filteredcustomerData.length > 5 && (
+                          <div className="pagination-container">
+                            <ReactPaginate
+                              previousLabel={"<"}
+                              nextLabel={" >"}
+                              breakLabel={"..."}
+                              pageCount={Math.ceil(
+                                filteredcustomerData.length / rowsPerPage
+                              )}
+                              marginPagesDisplayed={2}
+                              onPageChange={handlePageChange}
+                              containerClassName={"pagination"}
+                              activeClassName={"active"}
+                              initialPage={page - 1} // Use initialPage instead of forcePage
+                              previousClassName={
+                                page === 1 ? "disabled_Text" : ""
+                              }
+                            />
+                          </div>
+                        )}
                 </div>
               </div>
+               ):(
+                <NoRecord/>
+              )}
             </div>
           </div>
         </div>

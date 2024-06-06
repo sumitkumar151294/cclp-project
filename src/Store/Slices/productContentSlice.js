@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const customerSegementSlice = createSlice({
-  name: "customerSegement",
+export const productContentSlice = createSlice({
+  name: "productContent",
   initialState: {
     isLoading: false,
     isError: false,
@@ -9,7 +9,8 @@ export const customerSegementSlice = createSlice({
     message: "",
   },
   reducers: {
-    onGetCustomerSegement: (state) => {
+    onGetProductContent: (state) => {
+      debugger
       return {
         ...state,
         isLoading: true,
@@ -19,7 +20,8 @@ export const customerSegementSlice = createSlice({
       };
     },
 
-    onGetCustomerSegementSuccess: (state, { payload }) => {
+    onGetProductContentSuccess: (state, { payload }) => {
+      debugger
       const { data = [], message = "", status_code  } = payload;
       return {
         ...state,
@@ -31,7 +33,7 @@ export const customerSegementSlice = createSlice({
       };
     },
 
-    onGetCustomerSegementError: (state, { payload }) => {
+    onGetProductContentError: (state, { payload }) => {
       const { data = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
@@ -42,7 +44,7 @@ export const customerSegementSlice = createSlice({
         isError: true,
       };
     },
-    onGetCustomerSegementReset: (state) => {
+    onGetProductContentReset: (state) => {
       return {
         ...state,
         data:null,
@@ -54,7 +56,7 @@ export const customerSegementSlice = createSlice({
     }
   },
 });
-export const {onGetCustomerSegement,onGetCustomerSegementSuccess,onGetCustomerSegementError,onGetCustomerSegementReset } =
-customerSegementSlice.actions;
+export const {onGetProductContent,onGetProductContentSuccess,onGetProductContentError,onGetProductContentReset } =
+productContentSlice.actions;
 
-export default customerSegementSlice.reducer;
+export default productContentSlice.reducer;

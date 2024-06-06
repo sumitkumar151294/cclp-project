@@ -1,9 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 import img from "../../Assets/img/image.png";
 import Button from "../../Components/Button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetProductContent } from "../../Store/Slices/productContentSlice";
 
 const ProductContentList = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [status, setStatus] = useState("");
+  const [productType, setProductType] = useState("");
+  const [category, setCategory] = useState("");
+  const [sortOption, setSortOption] = useState("Relevance");
+  const dispatch=useDispatch();
+  const productContentData=useSelector((state)=>state?.productContentReducer?.data);
+  // to call onGProductionContent 
+  useEffect(() => {
+    dispatch(onGetProductContent());
+  }, []);
+  // options for status
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non-Active" },
+  ];
+  // options for type of product
+  const productTypesOptions = [
+    { value: "Gift Cards", label: "Gift Cards" },
+    { value: "Earbuds", label: "Earbuds" },
+    { value: "Mobile", label: "Mobile" },
+  ];
+  // options for category
+  const categoryOptions = [
+    { value: "Electronics", label: "Electronics" },
+    { value: "Grocery", label: "Grocery" },
+    { value: "Hotels", label: "Hotels" },
+  ];
+   // filter the productContentList data based on the search query
+   const filteredProductData = productContentData
+    ?.filter((item) => 
+      (!status || item.status === (status === "true")) &&
+      (!productType || item.type === productType) &&
+      (!category || item.category === category) &&
+      (Object.values(item).some(
+        (value) => typeof value === "string" && value.toLowerCase().includes(searchQuery.toLowerCase())
+      ))
+    );
+    const sortedProductData = filteredProductData?.sort((a, b) => {
+      if (sortOption === "Price (High to Low)") {
+        return b.price - a.price;
+      } else if (sortOption === "Price (Low to High)") {
+        return a.price - b.price;
+      }
+      return 0; // default is no sorting
+    });
+    const handleChange = (setter) => (event) => {
+      setter(event.target.value);
+    };
+  // To search the data
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  // to get icon dynamically
+  const iconDynamic = (img) => {
+    try {
+      return require(`../../Assets/img/${img}.png`);
+    } catch (err) {
+      console.error(`Cannot find module './${img}.png'`);
+    }
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -22,11 +87,11 @@ const ProductContentList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder="Search here......"
+                        value={searchQuery}
+                        onChange={handleSearch}
                       />
                         <span className="input-group-text">
-                          <a href="">
-                            <i className="flaticon-381-search-2"></i>
-                          </a>
+                            <i className="fa fa-search"></i>
                         </span>
                       </div>
                     </div>
@@ -42,39 +107,31 @@ const ProductContentList = () => {
                 <div className="container-fluid">
                   <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                     <div className="col-sm-2 form-group mb-2">
-                      <label for="name-f">Status Wise</label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Select</option>
-                        <option value="First Client">Active</option>
-                        <option value="First Client">Non-Active</option>
-                      </select>
+                      <label htmlFor="name-f">Status Wise</label>
+                      <Dropdown
+                            value={status}
+                            onChange={handleChange(setStatus)}
+                            className="form-select"
+                            options={statusOptions}
+                        />
                     </div>
                     <div className="col-sm-2 form-group mb-2">
-                      <label for="name-f">Type of Product</label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Select</option>
-                        <option value="First Client"> Gift Cards </option>
-                        <option value="First Client">Earbuds</option>
-                        <option value="Second Client">Mobile</option>
-                      </select>
+                      <label htmlFor="name-f">Type of Product</label>
+                      <Dropdown
+                            value={productType}
+                            onChange={handleChange(setProductType)}
+                            className="form-select"
+                            options={productTypesOptions}
+                        />
                     </div>
                     <div className="col-sm-2 form-group mb-2">
-                      <label for="name-f">Category</label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Select</option>
-                        <option value="First Client">electronics </option>
-                        <option value="First Client">grocery</option>
-                        <option value="Second Client">Hotels</option>
-                      </select>
+                      <label htmlFor="name-f">Category</label>
+                      <Dropdown
+                            value={category}
+                            onChange={handleChange(setCategory)}
+                            className="form-select"
+                            options={categoryOptions}
+                        />
                     </div>
                     <div className="col-xl-2">
                       <div className="example">
@@ -88,8 +145,10 @@ const ProductContentList = () => {
                       </div>
                     </div>
                     <div className="col-sm-2 form-group mb-2">
-                      <label for="name-f">sorted by </label>
+                      <label htmlFor="name-f">sorted by </label>
                       <select
+                        value={sortOption}
+                        onChange={handleChange(setSortOption)}
                         className="form-select"
                         aria-label="Default select example"
                       >
@@ -122,108 +181,34 @@ const ProductContentList = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>Amazon</td>
+                        {sortedProductData?.map((data,index) => (
+                            <tr key={index}>
+                            <td>{data.productName}</td>
                             <td>
-                              Gift card<a href="javascript:void();"></a>
+                              {data.typeOfProduct}
                             </td>
-                            <td>Amazon</td>
-                            <td>#5567</td>
-                            <td>Yes </td>
-                            <td>098</td>
-                            <td>2300</td>
+                            <td>{data.category}</td>
+                            <td>{data.id}</td>
+                            <td>{data.dealUnlock} </td>
+                            <td>{data.Points}</td>
+                            <td>{data.Price}</td>
+                            <td><a href="">{data.Link}</a></td>
                             <td>
-                              <a href="index.html">Profile</a>
-                            </td>
-                            <td>
-                              <img
-                                src={img}
-                                style={{width:"50px"}}
-                              />
+                            <img
+                               style={{width:"50px"}}
+                               src={iconDynamic(data.image)}
+                               alt={data.image}
+                             />
                               <br />
                             </td>
                             <td>
-                              <span class="badge badge-danger">Non-Active</span>
+                            <span className={`badge ${data.Status ? "badge-success" : "badge-danger"}`}>
+                                  {data.Status ? "Active" : "Non-Active"}
+                                </span>
                             </td>
-                            <td>15/2/2024</td>
+                            <td>{data.date}</td>
                           </tr>
-                          <tr>
-                            <td>Filpkart</td>
-                            <td>
-                              Ear buds<a href="javascript:void();"></a>
-                            </td>
-                            <td>Flipcart</td>
-                            <td>#45677</td>
-                            <td> NO</td>
-                            <td>903</td>
-                            <td>2345</td>
-                            <td>
-                              <a href="index.html">Profile</a>
-                            </td>
-                            <td>
-                              <img
-                                 src={img}
-                                 style={{width:"50px"}}
-                              />
-                              <br />
-                            </td>
-                            <td>
-                              <span class="badge badge-danger">Non-Active</span>
-                            </td>
-                            <td>14/2/2024</td>
-                          </tr>
-                          <tr>
-                            <td>Meesho</td>
-                            <td>
-                              Mobile<a href="javascript:void();"></a>
-                            </td>
-                            <td>Grocery</td>
-                            <td>#4567</td>
-                            <td>Yes </td>
-                            <td>364</td>
-                            <td>3400</td>
-                            <td>
-                              {" "}
-                              <a href="index.html">Profile</a>
-                            </td>
-                            <td>
-                              <img
-                                src={img}
-                                style={{width:"50px"}}
-                              />
-                              <br />
-                            </td>
-                            <td>
-                              <span class="badge badge-danger">Non-Active</span>
-                            </td>
-                            <td>13/2/2024</td>
-                          </tr>
-                          <tr>
-                            <td>Snapdeal</td>
-                            <td>
-                              Smart watch<a href="javascript:void();"></a>
-                            </td>
-                            <td>Electronic</td>
-                            <td>#4576</td>
-                            <td>Yes</td>
-                            <td>845</td>
-                            <td>4589</td>
-                            <td>
-                              {" "}
-                              <a href="index.html">Profile</a>
-                            </td>
-                            <td>
-                              <img
-                                 src={img}
-                                 style={{width:"50px"}}
-                              />
-                              <br />
-                            </td>
-                            <td>
-                              <span class="badge badge-danger">Non-Active</span>
-                            </td>
-                            <td>12/2/2024</td>
-                          </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>

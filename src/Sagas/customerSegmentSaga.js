@@ -3,7 +3,6 @@ import { onGetCustomerSegement, onGetCustomerSegementError, onGetCustomerSegemen
 import { callCustomerSegApi } from "../Context/customerSegmentApi";
 function* customerSegment({ payload }) {
   try {
-    debugger
     const customerSegmentResponse = yield call(callCustomerSegApi, payload);
     if (customerSegmentResponse.httpStatusCode === "201") {
       yield put(
