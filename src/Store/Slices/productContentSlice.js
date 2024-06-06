@@ -10,7 +10,6 @@ export const productContentSlice = createSlice({
   },
   reducers: {
     onGetProductContent: (state) => {
-      debugger
       return {
         ...state,
         isLoading: true,
@@ -21,7 +20,6 @@ export const productContentSlice = createSlice({
     },
 
     onGetProductContentSuccess: (state, { payload }) => {
-      debugger
       const { data = [], message = "", status_code  } = payload;
       return {
         ...state,

@@ -6,6 +6,7 @@ import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetCustomerSegement } from "../../Store/Slices/customerSegementSlice";
 import NoRecord from "../../Components/NoRecord/NoRecord";
+import Loader from "../../Components/Loader/Loader";
 
 const CustomerSegment = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,9 +14,8 @@ const CustomerSegment = () => {
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
   //to get customer segment data from redux store
-  const customerSegData = useSelector(
-    (state) => state.customerSegmentReducer.data
-  );
+  const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
+  const customerSegData = getCustomerData?.data;
 
   useEffect(() => {
     dispatch(onGetCustomerSegement());
@@ -83,7 +83,7 @@ const CustomerSegment = () => {
                         onChange={handleSearch}
                       />
                       <span className="input-group-text">
-                          <i className="fa fa-search"></i>
+                        <i className="fa fa-search"></i>
                       </span>
                     </div>
                   </div>
@@ -106,67 +106,72 @@ const CustomerSegment = () => {
                   </div>
                 </div>
               </div>
-              {Array.isArray(filteredcustomerData) && filteredcustomerData.length>0 ? (
-              <div className="card-body">
-                <div className="table-responsive">
-                  <table className="table header-border table-responsive-sm">
-                    <thead>
-                      <tr>
-                        <th>ID </th>
-                        <th>Segment Name</th>
-                        <th>Current Status </th>
-                        <th>Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array.isArray(filteredcustomerData) &&
-                        filteredcustomerData.slice(startIndex, endIndex).map((data, index) => (
-                          <tr key={index}>
-                            <td>{data.id}</td>
-                            <td>
-                              {data.segmentName}
-                              <a href=""></a>
-                            </td>
-                            <td>
-                              <span
-                                className={`badge ${
-                                  data.currentStatus === "active"
-                                    ? "badge-success"
-                                    : "badge-danger"
-                                }`}
-                              >
-                                {data.currentStatus}
-                              </span>
-                            </td>
-                            <td>{data.date}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                  {filteredcustomerData.length > 5 && (
-                          <div className="pagination-container">
-                            <ReactPaginate
-                              previousLabel={"<"}
-                              nextLabel={" >"}
-                              breakLabel={"..."}
-                              pageCount={Math.ceil(
-                                filteredcustomerData.length / rowsPerPage
-                              )}
-                              marginPagesDisplayed={2}
-                              onPageChange={handlePageChange}
-                              containerClassName={"pagination"}
-                              activeClassName={"active"}
-                              initialPage={page - 1} // Use initialPage instead of forcePage
-                              previousClassName={
-                                page === 1 ? "disabled_Text" : ""
-                              }
-                            />
-                          </div>
-                        )}
+              {getCustomerData.isLoading ? (
+                <div style={{ height: "400px" }}>
+                  <Loader classType={"absoluteLoader"} />
                 </div>
-              </div>
-               ):(
-                <NoRecord/>
+              ) : Array.isArray(filteredcustomerData) &&
+                filteredcustomerData.length > 0 ? (
+                <div className="card-body">
+                  <div className="table-responsive">
+                    <table className="table header-border table-responsive-sm">
+                      <thead>
+                        <tr>
+                          <th>ID </th>
+                          <th>Segment Name</th>
+                          <th>Current Status </th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Array.isArray(filteredcustomerData) &&
+                          filteredcustomerData
+                            .slice(startIndex, endIndex)
+                            .map((data, index) => (
+                              <tr key={index}>
+                                <td>{data.id}</td>
+                                <td>
+                                  {data.segmentName}
+                                  <a href=""></a>
+                                </td>
+                                <td>
+                                  <span
+                                    className={`badge ${
+                                      data.currentStatus === "active"
+                                        ? "badge-success"
+                                        : "badge-danger"
+                                    }`}
+                                  >
+                                    {data.currentStatus}
+                                  </span>
+                                </td>
+                                <td>{data.date}</td>
+                              </tr>
+                            ))}
+                      </tbody>
+                    </table>
+                    {filteredcustomerData.length > 5 && (
+                      <div className="pagination-container">
+                        <ReactPaginate
+                          previousLabel={"<"}
+                          nextLabel={" >"}
+                          breakLabel={"..."}
+                          pageCount={Math.ceil(
+                            filteredcustomerData.length / rowsPerPage
+                          )}
+                          marginPagesDisplayed={2}
+                          onPageChange={handlePageChange}
+                          containerClassName={"pagination"}
+                          activeClassName={"active"}
+                          initialPage={page - 1} // Use initialPage instead of forcePage
+                          previousClassName={page === 1 ? "disabled_Text" : ""}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <NoRecord />
               )}
             </div>
           </div>

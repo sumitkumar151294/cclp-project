@@ -3,7 +3,6 @@ import { onGetProductContent, onGetProductContentError, onGetProductContentSucce
 import { callProductContentApi } from "../Context/productContentApi";
 
 function* productContent({ payload }) {
-  debugger
   try {
     const productContentResponse = yield call(callProductContentApi, payload);
     if (productContentResponse.httpStatusCode === "201") {
