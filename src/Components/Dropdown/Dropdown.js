@@ -8,10 +8,12 @@ const Dropdown = ({
   defaultSelected = "Select",
   className,
   options,
+  name
 }) => {
   return (
     <div>
       <select
+        name={name}
         value={value}
         onChange={onChange}
         aria-label={ariaLabel}

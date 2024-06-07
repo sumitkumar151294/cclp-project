@@ -16,7 +16,7 @@ const CustomerSegment = () => {
   //to get customer segment data from redux store
   const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
   const customerSegData = getCustomerData?.data;
-
+// fetch Customer Segment list data on component mount
   useEffect(() => {
     dispatch(onGetCustomerSegement());
   }, []);

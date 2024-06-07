@@ -3,12 +3,14 @@ import moduleSaga from "./moduleSaga";
 import loginSaga from "./loginSaga";
 import customerSegmentSaga from "./customerSegmentSaga";
 import productContentSaga from './productContentSaga';
+import productSectionSaga from "./productSectionSaga";
 
 export default function* rootSaga() {
   yield all([
     moduleSaga(),
     loginSaga(),
     customerSegmentSaga(),
-    productContentSaga()
+    productContentSaga(),
+    productSectionSaga()
     ]);
 }

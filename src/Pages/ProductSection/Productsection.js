@@ -1,277 +1,291 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import Button from "../../Components/Button/Button";
+import Dropdown from "../../Components/Dropdown/Dropdown";
+import {
+  onGetProductSection,
+  onPostProductSectionReset,
+  onPostProductSetionSubmit,
+} from "../../Store/Slices/productSectionSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import Loader from "../../Components/Loader/Loader";
+import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 
 const ProductSection = () => {
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [status, setStatus] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
+  const dispatch = useDispatch();
+  const productSecData = useSelector(
+    (state) => state?.productSectionReducer?.getData
+  );
+  const postProductSecData = useSelector(
+    (state) => state?.productSectionReducer
+  );
+  // fetch product section data on component mount
+  useEffect(() => {
+    dispatch(onGetProductSection());
+  }, []);
+  // initial value for the input fields
+  const initialValues = {
+    sectionName: "",
+    status: "",
+    date: "",
+  };
+  // to validate product section form using Yup schema
+  const validateForm = yup.object({
+    sectionName: yup.string().required("Name is required"),
+    status: yup.string().required("Status is required"),
+    date: yup.string().required("Date is required"),
+  });
+  // to handle form using useFormik hook
+  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validateForm,
+    onSubmit: (values, action) => {
+      setIsSubmit(true);
+      dispatch(onPostProductSetionSubmit({ values }));
+      action.resetForm();
+    },
+  });
+  // options for status
+  const statusOptions = [
+    { value: "true", label: "Active" },
+    { value: "false", label: "Non-Active" },
+  ];
+  //to handle navigation and toast notifications based on productsectionform status
+  useEffect(() => {
+    if (isSubmit && postProductSecData?.status_code === "201") {
+      toast.success(postProductSecData?.message);
+      dispatch(onPostProductSectionReset());
+    } else if (isSubmit && postProductSecData?.status_code) {
+      toast.error(postProductSecData?.message);
+    }
+  }, [postProductSecData]);
+  // To search the data
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  // to handle select option
+  const handleStatus = (setter) => (event) => {
+    setter(event.target.value);
+  }
+   // Filter and sort the productContentList data
+   const filteredProductSecData = productSecData?.filter((item) => {
+    const matchesStatus = !status || item.currentStatus.toString() === status;
+    const matchesSearchQuery = !searchQuery || Object.values(item).some(
+      (value) => typeof value === "string" && value.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    return matchesStatus && matchesSearchQuery;
+  });
+  // for Pagination
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  // to handle page chnages
+  const handlePageChange = (selected) => {
+    setPage(selected.selected + 1);
+  };
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-xl-12 col-xxl-12">
-          <div className="card">
-            <div className="card-header">
-              <h4 className="card-title">Product Section</h4>
-            </div>
-
-            <div className="card-body pb-0 ">
-              <div className="container-fluid">
-                <form>
-                  <div className="row">
-                    <div className="col-sm-4 form-group mb-2">
-                      <label for="name-f">Section Name</label>
-                      <InputField
-                        type="text"
-                        className="form-control"
-                        name="fname"
-                        id="fname"
-                      />
-                    </div>
-
-                    <div className="col-sm-4 form-group mb-2">
-                      <label for="status">Status</label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Select</option>
-                        <option value="Active">Active</option>
-                        <option value="Non-Active">Non-Active</option>
-                      </select>
-                    </div>
-
-                    <div className="col-sm-4 form-group mb-2">
-                      <label for="pass">Date</label>
-                      <InputField
-                        type="date"
-                        className="form-control"
-                        name="date"
-                      />
-                    </div>
-
-                    <div className="col-lg-3 ">
-                      <br />
-                      <button className="btn btn-primary float-right pad-aa">
-                        Submit <i className="fa fa-arrow-right"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
+    <>
+      {" "}
+      <ToastContainer />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-xl-12 col-xxl-12">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Product Section</h4>
               </div>
-            </div>
+              {postProductSecData?.isLoading && <Loader />}
+              <div className="card-body pb-0 ">
+                <div className="container-fluid">
+                  <form onSubmit={handleSubmit}>
+                    <div className="row">
+                      <div className="col-sm-4 form-group mb-2">
+                        <label for="name-f">
+                          Section Name
+                          <span className="text-danger">*</span>
+                        </label>
+                        <InputField
+                          type="text"
+                          className={` ${
+                            errors.sectionName
+                              ? "border-danger"
+                              : "form-control"
+                          }`}
+                          name="sectionName"
+                          placeholder="example"
+                          value={values.sectionName}
+                          onChange={handleChange}
+                        />
+                        {errors.sectionName && touched.sectionName && <p className="text-danger">{errors.sectionName}</p>}
+                      </div>
 
-            <div className="container-fluid pt-0">
-              <div className="row">
-                <div className="col-lg-12">
-                  <div className="card">
-                    <div className="container-fluid mt-2 pt-0">
-                      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                        <div className="card-header">
-                          <h4 className="card-title">Product Section List</h4>
-                        </div>
-                        <div className="customer-search mb-sm-0 mb-3">
-                          <div className="input-group search-area">
-                            <InputField
-                              type="text"
-                              className="form-control only-high"
-                              placeholder="Search here......"
-                            />
-                            <span className="input-group-text">
-                              <a href="">
-                                <i className="flaticon-381-search-2"></i>
-                              </a>
-                            </span>
-                          </div>
-                        </div>
+                      <div className="col-sm-4 form-group mb-2">
+                        <label for="status">
+                          Status
+                          <span className="text-danger">*</span>
+                        </label>
+                        <Dropdown
+                          name="status"
+                          value={values.status}
+                          onChange={handleChange}
+                          className={` ${
+                            errors.sectionName
+                              ? "border-danger"
+                              : "form-select"
+                          }`}
+                          options={statusOptions}
+                        />
+                        {errors.status && touched.status && <p className="text-danger">{errors.status}</p>}
+                      </div>
 
+                      <div className="col-sm-4 form-group mb-2">
+                        <label for="pass">
+                          Date
+                          <span className="text-danger">*</span>
+                        </label>
+                        <InputField
+                          type="date"
+                          className={` ${
+                            errors.sectionName
+                              ? "border-danger"
+                              : "form-control"
+                          }`}
+                          name="date"
+                          value={values.date}
+                          onChange={handleChange}
+                        />
+                        {errors.date && touched.date && <p className="text-danger">{errors.date}</p>}
+                      </div>
+
+                      <div className="col-lg-3 ">
+                        <Button
+                          text="Submit"
+                          className="btn btn-primary float-right pad-aa"
+                          icon="fa fa-arrow-right"
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div className="container-fluid pt-0">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="card">
+                      <div className="container-fluid mt-2 pt-0">
                         <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                          <div className="col-lg-12 form-group mb-2">
-                            <label for="name-f">Status </label>
-                            <select
-                              className="form-select"
-                              aria-label="Default select example"
-                            >
-                              <option selected>Select</option>
-                              <option value="First Client">Active</option>
+                          <div className="card-header">
+                            <h4 className="card-title">Product Section List</h4>
+                          </div>
+                          <div className="customer-search mb-sm-0 mb-3">
+                            <div className="input-group search-area">
+                            <InputField
+                          type="text"
+                          className="form-control only-high"
+                          placeholder="Search here......"
+                          value={searchQuery}
+                          onChange={handleSearch}
+                        />
+                              <span className="input-group-text">
+                          <i className="fa fa-search"></i>
+                        </span>
+                            </div>
+                          </div>
 
-                              <option value="First Client">Non-active</option>
-                            </select>
+                          <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                            <div className="col-lg-12 form-group mb-2">
+                              <label for="name-f">Status </label>
+                              <Dropdown
+                                name="status"
+                                value={status}
+                                onChange={handleStatus(setStatus)}
+                                className="form-select"
+                                options={statusOptions}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="container-fluid">
-                      <div className="card-body">
-                        <div className="table-responsive">
-                          <table className="table header-border table-responsive-sm">
-                            <thead>
-                              <tr>
-                                <th>Section Name</th>
+                      <div className="container-fluid">
+                        <div className="card-body">
+                          <div className="table-responsive">
+                            <table className="table header-border table-responsive-sm">
+                              <thead>
+                                <tr>
+                                  <th>Section Name</th>
+                                  <th>Date</th>
+                                  <th>Status</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {filteredProductSecData?.slice(startIndex, endIndex).map((data)=>(
+                                <tr>
+                                  <td>
+                                    {data.name}
+                                    <a href=""></a>
+                                  </td>
+                                  <td>{data.date}</td>
+                                  <td>
+                                  <span className={`badge ${data.currentStatus ? "badge-success" : "badge-danger"}`}>
+                                  {data.currentStatus ? "Active" : "Non-Active"}
+                                </span>
+                                  </td>
+                                  <td>
+                                    <div class="d-flex">
+                                      <Button
+                                        className="btn btn-primary shadow btn-xs sharp me-1"
+                                        icon="fas fa-pencil-alt"
+                                      />
+                                      <Button
+                                        className="btn btn-danger shadow btn-xs sharp"
+                                        icon="fa fa-trash"
+                                      />
+                                    </div>
+                                  </td>
 
-                                <th>Date</th>
-
-                                <th>Status</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>
-                                  Bags, Wallets and Luggage
-                                  <a href="javascript:void();"></a>
-                                </td>
-
-                                <td>23/3/2024</td>
-                                <td>
-                                  <span class="badge badge-success">
-                                    Active
-                                  </span>
-                                </td>
-
-                                <td>
-                                  <div class="d-flex">
-                                    <a
-                                      href="#"
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                  <td>
+                                    <Link
+                                      to="/allocateProduct"
+                                      className="btn btn-primary btn-sm float-right"
                                     >
-                                      <i className="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                    >
-                                      <i className="fa fa-trash"></i>
-                                    </a>
-                                  </div>
-                                </td>
-
-                                <td>
-                                  <a
-                                    href="productallocation.html"
-                                    className="btn btn-primary btn-sm float-right"
-                                  >
-                                    <i className="fa fa-eye"></i>Allocate
-                                  </a>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Clothing & Accessories
-                                  <a href="javascript:void();"></a>
-                                </td>
-
-                                <td>23/3/2024</td>
-
-                                <td>
-                                  <span className="badge badge-danger">
-                                    Non-Active
-                                  </span>
-                                </td>
-
-                                <td>
-                                  <div className="d-flex">
-                                    <a
-                                      href="#"
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                    >
-                                      <i className="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                    >
-                                      <i className="fa fa-trash"></i>
-                                    </a>
-                                  </div>
-                                </td>
-
-                                <td>
-                                  <a
-                                    href="productallocation.html"
-                                    className="btn btn-primary btn-sm float-right"
-                                  >
-                                    <i className="fa fa-eye"></i>Allocate
-                                  </a>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Beauty<a href="javascript:void();"></a>
-                                </td>
-
-                                <td>23/3/2024</td>
-
-                                <td>
-                                  <span className="badge badge-success">
-                                    Active
-                                  </span>
-                                </td>
-
-                                <td>
-                                  <div className="d-flex">
-                                    <a
-                                      href="#"
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                    >
-                                      <i className="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                    >
-                                      <i className="fa fa-trash"></i>
-                                    </a>
-                                  </div>
-                                </td>
-
-                                <td>
-                                  <a
-                                    href="productallocation.html"
-                                    className="btn btn-primary btn-sm float-right"
-                                  >
-                                    <i className="fa fa-eye"></i>Allocate
-                                  </a>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Electronics<a href="javascript:void();"></a>
-                                </td>
-
-                                <td>23/3/2024</td>
-
-                                <td>
-                                  <span className="badge badge-danger">
-                                    Non-Active
-                                  </span>
-                                </td>
-
-                                <td>
-                                  <div className="d-flex">
-                                    <a
-                                      href="#"
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                    >
-                                      <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                    >
-                                      <i className="fa fa-trash"></i>
-                                    </a>
-                                  </div>
-                                </td>
-
-                                <td>
-                                  <a
-                                    href="productallocation.html"
-                                    className="btn btn-primary btn-sm float-right"
-                                  >
-                                    <i className="fa fa-eye"></i>Allocate
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                                      <i className="fa fa-eye"></i>Allocate
+                                    </Link>
+                                  </td>
+                                </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                            {filteredProductSecData.length > 5 && (
+                          <div className="pagination-container">
+                            <ReactPaginate
+                              previousLabel={"<"}
+                              nextLabel={" >"}
+                              breakLabel={"..."}
+                              pageCount={Math.ceil(
+                                filteredProductSecData.length / rowsPerPage
+                              )}
+                              marginPagesDisplayed={2}
+                              onPageChange={handlePageChange}
+                              containerClassName={"pagination"}
+                              activeClassName={"active"}
+                              initialPage={page - 1} // Use initialPage instead of forcePage
+                              previousClassName={
+                                page === 1 ? "disabled_Text" : ""
+                              }
+                            />
+                          </div>
+                        )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -282,7 +296,7 @@ const ProductSection = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

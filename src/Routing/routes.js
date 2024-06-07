@@ -4,7 +4,6 @@ import Dashboard from "../Pages/Dashboard/Dashboard";
 import Layout from "../Layout/Layout";
 import CustomerSegment from "../Pages/CustomerSegment/CustomerSegment";
 import ProductContentList from "../Pages/ProductContentList/ProductContentList";
-import ProductSection from "../Pages/ProductSection/Productsection";
 import AddCoupon from "../Pages/AddCoupon/AddCoupon";
 import AddBulkCoupon from "../Pages/AddBulkCoupon/AddBulkCoupon";
 import DynamicCoupon from "../Pages/DynamicCoupon/DynamicCoupon";
@@ -14,6 +13,8 @@ import DealManagement from "../Pages/DealManagement/DealManagement";
 import DealList from "../Pages/DealList/DealList";
 import DealToSegment from "../Pages/DealToSegment/DealToSegment";
 import CompaignMaster from "../Pages/CompaignMaster/CompaignMaster";
+import AllocateProduct from "../Pages/ProductSection/AllocateProduct";
+import ProductSection from "../Pages/ProductSection/ProductSection";
 
 
 function RouteConfiq() {
@@ -34,6 +35,7 @@ function RouteConfiq() {
         <Route path="/dealList" element={<Layout Component={DealList} />}/> 
         <Route path="/dealToSegment" element={<Layout Component={DealToSegment} />}/>
         <Route path="/compaignMaster" element={<Layout Component={CompaignMaster} />}/> 
+        <Route path="/allocateProduct" element={<Layout Component={AllocateProduct} />}/> 
       </Routes>
     </Router>
   );

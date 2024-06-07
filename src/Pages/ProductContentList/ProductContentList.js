@@ -13,8 +13,8 @@ import Loader from "../../Components/Loader/Loader";
 
 const ProductContentList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [dateStart, setDateStart] = useState();
-  const [dateEnd, setDateEnd] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [status, setStatus] = useState("");
   const [productType, setProductType] = useState("");
   const [category, setCategory] = useState("");
@@ -26,10 +26,10 @@ const ProductContentList = () => {
   const productContentList = useSelector((state) => state?.productContentReducer);
   const productContentData = productContentList?.data;
 
-  // to call onGetProductContent 
+  // fetch product content data on component mount
   useEffect(() => {
     dispatch(onGetProductContent());
-  }, [dispatch]);
+  }, []);
 
   // options for status
   const statusOptions = [
@@ -50,19 +50,34 @@ const ProductContentList = () => {
   ];
   // for date picker
   const onChangeHandler = (value) => {
-    setDateStart(value[0]);
-    setDateEnd(value[1]);
+    setStartDate(value[0]);
+    setEndDate(value[1]);
   };
-
+  
+  //for date format
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();    
+    //adding leading zeros if necessary
+    const formattedDay = day < 10 ? '0' + day : day;
+    const formattedMonth = month < 9 ? '0' + (month + 1) : (month + 1);  
+    return `${formattedDay}/${formattedMonth}/${year}`;
+  }
+ // convert start date and end date as we need
+  const formattedStartDate=formatDate(startDate);
+  const formattedEndDate=formatDate(endDate);
   // Filter and sort the productContentList data
   const filteredProductData = productContentData?.filter((item) => {
     const matchesStatus = !status || item.Status.toString() === status;
     const matchesProductType = !productType || item.typeOfProduct === productType;
     const matchesCategory = !category || item.category === category;
+    const matchesDate = !startDate || !endDate || (item.date >= formattedStartDate && item.date <= formattedEndDate);
     const matchesSearchQuery = !searchQuery || Object.values(item).some(
       (value) => typeof value === "string" && value.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    return matchesStatus && matchesProductType && matchesCategory && matchesSearchQuery;
+    return matchesStatus && matchesProductType && matchesCategory && matchesDate && matchesSearchQuery;
   });
  // sorting by price 
   const sortedProductData = filteredProductData?.sort((a, b) => {
@@ -71,11 +86,6 @@ const ProductContentList = () => {
     } else if (sortOption === "Price (Low to High)") {
       return a.Price - b.Price;
     } 
-    // else if (sortOption === "Date (Newest First)") {
-    //   return new Date(b.date) - new Date(a.date);
-    // } else if (sortOption === "Date (Oldest First)") {
-    //   return new Date(a.date) - new Date(b.date);
-    // }
     return 0; // default is no sorting
   });
   // to handle select option
@@ -109,7 +119,7 @@ const ProductContentList = () => {
     Status: data.Status,
     date: data.date,
   }));
-
+  
   const headers = [
     { label: "Product Name", key: "productName" },
     { label: "Type of Product", key: "typeOfProduct" },
@@ -130,7 +140,6 @@ const ProductContentList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-
   return (
     <div className="container-fluid">
       <div className="row">
@@ -212,13 +221,13 @@ const ProductContentList = () => {
                           id="dateStartEnd"
                           placeholderText="01/01/2015 1:30 PM - 01/01/2015 2:00 PM"
                           selectsRange={true}
-                          startDate={dateStart}
-                          endDate={dateEnd}
+                          startDate={startDate}
+                          endDate={endDate}
                           onChange={onChangeHandler}
                           dateFormat="dd MMM yyyy h:mm aa" // Date format including time
                           // showTimeSelect // Enable time selection
-                          timeFormat="HH:mm" // Time format
-                          className={"form-control form-control-sm"}
+                          timeFormat="HH:mm"
+                          className="form-control form-control-sm"
                           showDisabledMonthNavigation
                         />
                       </div>

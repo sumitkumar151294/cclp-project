@@ -3,5 +3,7 @@ const API={
     moduleApi:"/module",
     customerSegment:"/customerSegment",
     productContent:"/productContent",
+    postproductApi:"/postProductSection",
+    getProductApi:"/getProductSection"
 }
 export default API;
