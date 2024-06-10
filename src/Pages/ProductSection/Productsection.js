@@ -14,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+import NoRecord from "../../Components/NoRecord/NoRecord";
 
 const ProductSection = () => {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -22,9 +23,10 @@ const ProductSection = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
-  const productSecData = useSelector(
-    (state) => state?.productSectionReducer?.getData
+  const productSection = useSelector(
+    (state) => state?.productSectionReducer
   );
+  const productSecData=productSection?.getData;
   const postProductSecData = useSelector(
     (state) => state?.productSectionReducer
   );
@@ -216,6 +218,11 @@ const ProductSection = () => {
                         </div>
                       </div>
                       <div className="container-fluid">
+                      {productSection.isLoading ? (
+                      <div style={{ height: "400px" }}>
+                        <Loader classType={"absoluteLoader"} />
+                      </div>
+                    ) : Array.isArray(filteredProductSecData) && filteredProductSecData.length>0 ? (
                         <div className="card-body">
                           <div className="table-responsive">
                             <table className="table header-border table-responsive-sm">
@@ -287,6 +294,9 @@ const ProductSection = () => {
                         )}
                           </div>
                         </div>
+                         ):(
+                          <NoRecord/>
+                        )}
                       </div>
                     </div>
                   </div>

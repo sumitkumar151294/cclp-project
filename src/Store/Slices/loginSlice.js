@@ -5,6 +5,7 @@ export const loginSlice = createSlice({
   initialState: {
     isLoading: false,
     isError: false,
+    status_code:"",
     data: [],
     message: ""
   },

@@ -4,6 +4,7 @@ const API={
     customerSegment:"/customerSegment",
     productContent:"/productContent",
     postproductApi:"/postProductSection",
-    getProductApi:"/getProductSection"
+    getProductApi:"/getProductSection",
+    postRoleMaster:"/roleMaster"
 }
 export default API;

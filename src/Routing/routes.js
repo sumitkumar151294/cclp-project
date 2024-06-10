@@ -15,6 +15,7 @@ import DealToSegment from "../Pages/DealToSegment/DealToSegment";
 import CompaignMaster from "../Pages/CompaignMaster/CompaignMaster";
 import AllocateProduct from "../Pages/ProductSection/AllocateProduct";
 import ProductSection from "../Pages/ProductSection/ProductSection";
+import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 
 
 function RouteConfiq() {
@@ -36,6 +37,7 @@ function RouteConfiq() {
         <Route path="/dealToSegment" element={<Layout Component={DealToSegment} />}/>
         <Route path="/compaignMaster" element={<Layout Component={CompaignMaster} />}/> 
         <Route path="/allocateProduct" element={<Layout Component={AllocateProduct} />}/> 
+        <Route path="/roleMaster" element={<Layout Component={RoleMasterList} />}/> 
       </Routes>
     </Router>
   );
