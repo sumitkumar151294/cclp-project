@@ -5,6 +5,7 @@ import customerSegmentReducer from './Slices/customerSegementSlice';
 import productContentReducer from './Slices/productContentSlice';
 import productSectionReducer from './Slices/productSectionSlice';
 import userRoleReducer from './Slices/userRoleSlice';
+import userMasterReducer from './Slices/userMasterSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
     productContentReducer:productContentReducer,
     productSectionReducer:productSectionReducer,
     userRoleReducer: userRoleReducer,
+    userMasterReducer: userMasterReducer,
 });
 
 export default reducers;

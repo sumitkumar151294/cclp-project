@@ -1,27 +1,35 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import RoleMasterForm from "./RoleMasterForm";
 import ReactPaginate from "react-paginate";
+import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState();
   const dispatch = useDispatch();
-  // To get the label from DB
-  const roleAccessListData=3;
+  // To get the label from redux
+  debugger;
+  const roleAccessListData = useSelector(
+    (state) => state?.userRoleReducer?.userRoleData
+  );
+
+  useEffect(() => {
+    dispatch(onGetUserRole());
+  }, []);
+  // for pagination
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  
+
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
- 
+
   return (
     <>
-      <RoleMasterForm/>
+      <RoleMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -30,11 +38,7 @@ const RoleMasterList = () => {
                 <h4 className="card-title">Role Module Access List</h4>
               </div>
               <div className="card-body position-relative">
-                {/* {roleAccessListLoading && (
-                  <div style={{ height: "400px" }}>
-                    <Loader classType={"absoluteLoader"} />
-                  </div>
-                )} */}
+              {roleAccessListData?.getUserRoleLoading && <Loader />}
                 {roleAccessListData?.length > 0 ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">
@@ -45,7 +49,7 @@ const RoleMasterList = () => {
                           <th>action</th>
                         </tr>
                       </thead>
-                      {/* <tbody key="tbody">
+                      <tbody key="tbody">
                         {Array.isArray(roleAccessListData) &&
                           roleAccessListData
                             .slice(startIndex, endIndex)
@@ -54,7 +58,7 @@ const RoleMasterList = () => {
                                 <td>{data.name}</td>
                                 <td>
                                   <div className="d-flex">
-                                    {Array.isArray(userRoleAccessListData) &&
+                                    {/* {Array.isArray(userRoleAccessListData) &&
                                       userRoleAccessListData
                                         ?.filter(
                                           (item) =>
@@ -63,21 +67,16 @@ const RoleMasterList = () => {
                                               item.addAccess ||
                                               item.editAccess)
                                         )
-                                        .map((moduleData) => (
-                                          <span
-                                            className="badge badge-success mr-10"
-                                            key={moduleData.id}
-                                          >
-                                            {getModuleName(
-                                              moduleData?.moduleId
-                                            )}
-                                          </span>
-                                        ))}
+                                        .map((moduleData) => ( */}
+                                    <span className="badge badge-success mr-10">
+                                      {data.module}
+                                    </span>
+                                    {/* ))} */}
                                   </div>
                                 </td>
                                 <td>
                                   <button
-                                    onClick={() => handleEdit(data)}
+                                    //onClick={() => handleEdit(data)}
                                     className="btn btn-primary shadow btn-xs sharp me-1"
                                   >
                                     <i className="fas fa-pencil-alt"></i>
@@ -85,10 +84,10 @@ const RoleMasterList = () => {
                                 </td>
                               </tr>
                             ))}
-                      </tbody> */}
+                      </tbody>
                     </table>
                     <div className="pagination-container">
-                      {/* {roleAccessListData.length > 5 && (
+                      {roleAccessListData.length > 5 && (
                         <ReactPaginate
                           previousLabel={"<"}
                           nextLabel={" >"}
@@ -101,9 +100,9 @@ const RoleMasterList = () => {
                           containerClassName={"pagination"}
                           activeClassName={"active"}
                           initialPage={page - 1} // Use initialPage instead of forcePage
-                          previousClassName={page === 0 ? disabled_Text : ""}
+                          previousClassName={page === 0 ? "disabled_Text" : ""}
                         />
-                      )} */}
+                      )}
                     </div>
                   </div>
                 ) : (

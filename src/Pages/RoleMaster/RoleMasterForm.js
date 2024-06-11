@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
+import Loader from "../../Components/Loader/Loader";
 import { onPostUserRole } from "../../Store/Slices/userRoleSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {useFormik} from "formik";
@@ -12,9 +13,10 @@ const RoleMasterForm = ({ data, setData }) => {
   const [checkBoxError, setCheckBoxError] = useState(false);
   const [isSubmit,setIsSubmit]=useState(false);
   const dispatch=useDispatch();
-  //to get login details from redux store
+  //to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
-  console.log(userRoleData);
+  // to get module data from redux  store
+  const  moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
   // initial values for the input fields
   const initialValues={
     name:"",
@@ -54,11 +56,7 @@ const RoleMasterForm = ({ data, setData }) => {
                 <h4 className="card-title">Role Master</h4>
               </div>
               <div className="card-body">
-                {/* {isformLoading ? (
-                  <div style={{ height: "400px" }}>
-                    <Loader classType={"absoluteLoader"} />
-                  </div>
-                ) : ( */}
+                {userRoleData?.postLoading && <Loader />}
                   <div className="container-fluid">
                     <form onSubmit={handleSubmit}>
                       <div className="row">
@@ -70,7 +68,7 @@ const RoleMasterForm = ({ data, setData }) => {
                           <InputField
                             type="text"
                             className={` ${
-                              errors.password ? "border-danger" : "form-control"
+                              errors.name ? "border-danger" : "form-control"
                             }`}
                             name="name"
                             id="name-f"
@@ -93,24 +91,6 @@ const RoleMasterForm = ({ data, setData }) => {
                             value={values.description}
                             onChange={handleChange}
                           />
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="form-check mt-4 padd">
-                            <InputField
-                              className="form-check-input"
-                              type="checkbox"
-                              name="IsClientRole"
-                              value=""
-                              checked=""
-                              onChange=""
-                            />
-                            <label
-                              className="form-check-label fnt-15"
-                              htmlFor="flexCheckDefault1"
-                            >
-                              Is Client Role
-                            </label>
-                          </div>
                         </div>
                       </div>
 
@@ -141,27 +121,11 @@ const RoleMasterForm = ({ data, setData }) => {
                         </div>
                         <div className="col-lg-12 br pt-2">
                           <label htmlFor="name-f">Module Access</label>
-                         
+                             {moduleAccessData?.map((data,index)=>(
                                 <div className="row mb-3 mt-3" >
-                                  {/* <h4
-                                    className="col-lg-3"
-                                    htmlFor={`flexCheckDefault-${id}`}
-                                  >
-                                    {name
-                                      .replace(/([A-Z])/g, " $1")
-                                      .split(" ")
-                                      .map(
-                                        (word) =>
-                                          word.charAt(0).toUpperCase() +
-                                          word.slice(1).toLowerCase()
-                                      )
-                                      .join(" ")}{" "}
-                                    (
-                                    {isClientPlatformModule
-                                      ? `${client}`
-                                      : `${admin}`}
-                                    )
-                                  </h4> */}
+                                 <h4 className="col-lg-3">
+                                   {data.name}
+                                  </h4> 
                                   <div className="col-lg-9 d-flex justify-content-end">
                                     <div className="form-check form-check-inline">
                                       <label className="form-check-label">
@@ -207,16 +171,14 @@ const RoleMasterForm = ({ data, setData }) => {
                                     </div>
                                   </div>
                                 </div>
-                              {/* )
-                          )} */}
-
+                            ))}
                           {/* Checkbox Error Message */}
                           {checkBoxError && (
                             <span
                               className="form-check-label error-check text-danger"
                               htmlFor="basic_checkbox_1"
                             >
-                              checkBox_Error
+                              At least one module must be selected.
                             </span>
                           )}
                           <div className="col-sm-4 mt-4 mb-4">
@@ -231,7 +193,6 @@ const RoleMasterForm = ({ data, setData }) => {
                       </div>
                     </form>
                   </div>
-                {/* )} */}
               </div>
             </div>
           </div>
@@ -242,4 +203,3 @@ const RoleMasterForm = ({ data, setData }) => {
 };
 
 export default RoleMasterForm;
-/* eslint-enable react-hooks/exhaustive-deps */

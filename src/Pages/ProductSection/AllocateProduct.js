@@ -1,6 +1,7 @@
 import React from "react";
 import InputField from "../../Components/InputField/InputField";
 import image from "../../Assets/img/image.png";
+import Button from "../../Components/Button/Button";
 
 const AllocateProduct = () => {
   return (
@@ -30,12 +31,11 @@ const AllocateProduct = () => {
                       </div>
                     </div>
                     <div class="d-flex align-items-center flex-wrap">
-                      <a
-                        href="javascript:void(0);"
-                        class="btn btn-primary btn-sm btn-rounded me-3 mb-2"
-                      >
-                        <i class="fa fa-file-excel me-2"></i>Export
-                      </a>
+                    <Button
+                            className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
+                            text="Export"
+                            icons={"fa fa-file-excel"}
+                          />
                     </div>
                   </div>
                 </div>

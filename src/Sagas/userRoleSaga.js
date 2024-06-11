@@ -1,29 +1,29 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callUserRolePostApi } from "../Context/roleMasterApi";
-import { onGetUserRole, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess, onUpdateUserRole } from "../Store/Slices/userRoleSlice";
-// function* GetUserRole() {
-//   try {
-//     const getUserRoleResponse = yield call(callUserRoleGetApi);
-//     if (getUserRoleResponse.httpStatusCode === "200") {
-//       yield put(
-//         onGetUserRoleSuccess({
-//           data: getUserRoleResponse.response,
-//           message: getUserRoleResponse.errorMessage,
-//         })
-//       );
-//     } else {
-//       yield put(
-//         onGetUserRoleError({
-//           data: getUserRoleResponse.response,
-//           message: getUserRoleResponse.response.message,
-//         })
-//       );
-//     }
-//   } catch (error) {
-//     const message = error.response || "Something went wrong";
-//     yield put(onGetUserRoleError({ data: {}, message, status_code: 400 }));
-//   }
-// }
+import { callUserRoleGetApi, callUserRolePostApi } from "../Context/roleMasterApi";
+import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess } from "../Store/Slices/userRoleSlice";
+function* GetUserRole() {
+  try {
+    const getUserRoleResponse = yield call(callUserRoleGetApi);
+    if (getUserRoleResponse.httpStatusCode === "201") {
+      yield put(
+        onGetUserRoleSuccess({
+          data: getUserRoleResponse.response,
+          message: getUserRoleResponse.errorMessage,
+        })
+      );
+    } else {
+      yield put(
+        onGetUserRoleError({
+          data: getUserRoleResponse.response,
+          message: getUserRoleResponse.response.message,
+        })
+      );
+    }
+  } catch (error) {
+    const message = error.response || "Something went wrong";
+    yield put(onGetUserRoleError({ data: [], message, status_code: 400 }));
+  }
+}
 function* PostUserRole({ payload }) {
   try {
     const postUserRoleResponse = yield call(callUserRolePostApi, payload);
@@ -45,11 +45,11 @@ function* PostUserRole({ payload }) {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onPostUserRoleError({ data: {}, message, status_code: 400 }));
+    yield put(onPostUserRoleError({ data: [], message, status_code: 400 }));
   }
 }
 
 export default function* userRoleSaga() {
-  // yield takeLatest(onGetUserRole.type, GetUserRole);
+  yield takeLatest(onGetUserRole.type, GetUserRole);
   yield takeLatest(onPostUserRole.type, PostUserRole);
 }

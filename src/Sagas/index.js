@@ -5,6 +5,7 @@ import customerSegmentSaga from "./customerSegmentSaga";
 import productContentSaga from './productContentSaga';
 import productSectionSaga from "./productSectionSaga";
 import userRoleSaga from "./userRoleSaga";
+import userMasterSaga from "./userMasterSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     productContentSaga(),
     productSectionSaga(),
     userRoleSaga(),
+    userMasterSaga()
     ]);
 }

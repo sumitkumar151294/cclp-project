@@ -53,7 +53,7 @@ export const userRoleSlice = createSlice({
     },
 
     onPostUserRoleSuccess: (state, { payload }) => {
-      const { postData = [], message = "", status_code } = payload;
+      const { postData = [], message = "", status_code="201" } = payload;
       return {
         ...state,
         postLoading: false,
