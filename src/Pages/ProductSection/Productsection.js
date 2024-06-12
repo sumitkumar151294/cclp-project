@@ -110,7 +110,7 @@ const ProductSection = () => {
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
-                        <label for="name-f">
+                        <label htmlFor="name-f">
                           Section Name
                           <span className="text-danger">*</span>
                         </label>
@@ -130,7 +130,7 @@ const ProductSection = () => {
                       </div>
 
                       <div className="col-sm-4 form-group mb-2">
-                        <label for="status">
+                        <label htmlFor="status">
                           Status
                           <span className="text-danger">*</span>
                         </label>
@@ -149,7 +149,7 @@ const ProductSection = () => {
                       </div>
 
                       <div className="col-sm-4 form-group mb-2">
-                        <label for="pass">
+                        <label htmlFor="pass">
                           Date
                           <span className="text-danger">*</span>
                         </label>
@@ -205,7 +205,7 @@ const ProductSection = () => {
 
                           <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                             <div className="col-lg-12 form-group mb-2">
-                              <label for="name-f">Status </label>
+                              <label htmlFor="name-f">Status </label>
                               <Dropdown
                                 name="status"
                                 value={status}
@@ -248,7 +248,7 @@ const ProductSection = () => {
                                 </span>
                                   </td>
                                   <td>
-                                    <div class="d-flex">
+                                    <div className="d-flex">
                                       <Button
                                         className="btn btn-primary shadow btn-xs sharp me-1"
                                         icon="fas fa-pencil-alt"
