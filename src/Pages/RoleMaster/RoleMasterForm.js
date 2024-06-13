@@ -9,7 +9,7 @@ import {useFormik} from "formik";
 import  * as yup from "yup";
 
 // Component for RoleMasterForm
-const RoleMasterForm = ({ data, setData }) => {
+const RoleMasterForm = () => {
   const [checkBoxError, setCheckBoxError] = useState(false);
   const [isSubmit,setIsSubmit]=useState(false);
   const dispatch=useDispatch();
@@ -72,7 +72,7 @@ const RoleMasterForm = ({ data, setData }) => {
                             }`}
                             name="name"
                             id="name-f"
-                            placeholder=""
+                            placeholder="Role Name"
                             value={values.name}
                             onChange={handleChange}
                           />
@@ -87,7 +87,7 @@ const RoleMasterForm = ({ data, setData }) => {
                             className= "form-control"
                             name="description"
                             id="description"
-                            placeholder=""
+                            placeholder="Description"
                             value={values.description}
                             onChange={handleChange}
                           />

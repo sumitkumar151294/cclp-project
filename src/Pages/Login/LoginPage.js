@@ -1,55 +1,55 @@
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import Button from "../../Components/Button/Button";
-import {useFormik} from "formik";
-import  * as yup from "yup";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import Footer from "../../Layout/Footer/Footer";
 import image from "../../Assets/img/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import {  onLoginSubmit } from "../../Store/Slices/loginSlice";
+import { onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
 
 const LoginPage = () => {
-  const [isLogin,setIsLogin]=useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const dispatch = useDispatch();
-  const navigate=useNavigate();  
+  const navigate = useNavigate();
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
   // initial values for the input fields
-  const initialValues={
-    email:"",
-    password:""
+  const initialValues = {
+    email: "",
+    password: "",
   };
   // to validate login form using Yup schema
-  const validateForm=yup.object({
-      email:yup.string().email().required("Email is required"),
-      password:yup.string().required("Password is required")
+  const validateForm = yup.object({
+    email: yup.string().email().required("Email is required"),
+    password: yup.string().required("Password is required"),
   });
   // to handle form using useFormik hook
-  const {values,errors,touched,handleChange,handleSubmit} = useFormik({
-    initialValues:initialValues,
-    validationSchema:validateForm,
-    onSubmit:(values,action)=>{
-        setIsLogin(true);
-        dispatch(onLoginSubmit({values}));
-        action.resetForm();
-     },
+  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validateForm,
+    onSubmit: (values, action) => {
+      setIsLogin(true);
+      dispatch(onLoginSubmit({ values }));
+      action.resetForm();
+    },
   });
   //to handle navigation and toast notifications based on login status
   useEffect(() => {
-    if ( isLogin && loginDetails?.status_code === "201" ) {
+    if (isLogin && loginDetails?.status_code === "201") {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
-    }else if (isLogin && loginDetails?.status_code){
+    } else if (isLogin && loginDetails?.status_code) {
       toast.error(loginDetails?.message);
     }
   }, [loginDetails]);
- 
+
   return (
     <>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="vh-100">
         <div className="authincation h-100">
           <div className="container h-100">
@@ -79,7 +79,9 @@ const LoginPage = () => {
                               value={values.email}
                               onChange={handleChange}
                             />
-                            {errors.email && touched.email && <p className="text-danger">{errors.email}</p>}
+                            {errors.email && touched.email && (
+                              <p className="text-danger">{errors.email}</p>
+                            )}
                           </div>
                           <div className="mb-3">
                             <label className="mb-1">
@@ -89,14 +91,18 @@ const LoginPage = () => {
                             <InputField
                               type="password"
                               className={` ${
-                                errors.password ? "border-danger" : "form-control"
+                                errors.password
+                                  ? "border-danger"
+                                  : "form-control"
                               }`}
                               name="password"
                               placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                               value={values.password}
                               onChange={handleChange}
                             />
-                            {errors.password && touched.password && <p className="text-danger">{errors.password}</p>}
+                            {errors.password && touched.password && (
+                              <p className="text-danger">{errors.password}</p>
+                            )}
                           </div>
                           {loginDetails?.isLoading && <Loader />}
                           <div className="row d-flex justify-content-between mt-4 mb-2 d-nonemo">
@@ -104,8 +110,7 @@ const LoginPage = () => {
                               <span
                                 className="form-check-label"
                                 htmlFor="basic_checkbox_1"
-                              >
-                              </span>
+                              ></span>
                               <div className="form-check custom-checkbox ms-1">
                                 <InputField
                                   type="checkbox"
@@ -138,8 +143,8 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      
-      <Footer/>
+
+      <Footer />
     </>
   );
 };

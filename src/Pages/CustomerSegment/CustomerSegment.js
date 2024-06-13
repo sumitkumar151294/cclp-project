@@ -39,14 +39,14 @@ const CustomerSegment = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  // excel data to print
   const namesArray = filteredcustomerData.map((data) => ({
     id: data.id,
     segementName: data.segmentName,
     currentStatus: data.currentStatus,
     date: data.date,
   }));
-
+// headers of the excel data
   const headers = [
     { label: "Id", key: "id" },
     { label: "Segment Name", key: "segmentName" },

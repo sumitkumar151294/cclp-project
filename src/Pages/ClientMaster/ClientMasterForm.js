@@ -1,58 +1,58 @@
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-import {useFormik} from "formik";
-import  * as yup from "yup";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import Loader from "../../Components/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
-import { onPostClientMasterReset, onPostClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
+import {
+  onPostClientMasterReset,
+  onPostClientMasterSubmit,
+} from "../../Store/Slices/clientMasterSlice";
 const ClientMaster = ({ data, clientPayData, setdata }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   const clientMaster = useSelector((state) => state?.clientMasterReducer);
-  console.log(clientMaster);
-   // initial values for the input fields
-   const initialValues={
-    contactName:"",
-    contactNumber:"",
-    contactEmail:"",
-    contactplatformDomainUrl:"",
-    status:"",
-    color:"",
-    logo:"",
-    theme:"",
-    ipAddress:"",
-    username:"",
-    password:"",
-    dbName:""
+  // initial values for the input fields
+  const initialValues = {
+    contactName: "",
+    contactNumber: "",
+    contactEmail: "",
+    contactplatformDomainUrl: "",
+    status: "",
+    color: "",
+    logo: "",
+    theme: "",
+    ipAddress: "",
+    username: "",
+    password: "",
+    dbName: "",
   };
   // to validate login form using Yup schema
-  const validateForm=yup.object({
-      contactName:yup.string().required("Contact name is required"),
-      contactNumber:yup.string().required("Contact number is required"),
-      contactEmail:yup.string().email().required("Contact email is required"),
-      contactplatformDomainUrl:yup.string().required("Domain url is required"),
-      status:yup.string().required("Status is required"), 
-      color:yup.string().required("Color is required"), 
-      logo:yup.string().required("Logo is required"),
-      theme:yup.string().required("Theme is required"),
-      ipAddress:yup.string().required("Ip Address is required"),
-      username:yup.string().required("Username is required"),
-      password:yup.string().required("Password is required"),
-      dbName:yup.string().required("DBName is required"),
+  const validateForm = yup.object({
+    contactName: yup.string().required("Contact name is required"),
+    contactNumber: yup.string().required("Contact number is required"),
+    contactEmail: yup.string().email().required("Contact email is required"),
+    contactplatformDomainUrl: yup.string().required("Domain url is required"),
+    status: yup.string().required("Status is required"),
+    logo: yup.string().required("Logo is required"),
+    theme: yup.string().required("Theme is required"),
+    ipAddress: yup.string().required("IP Address is required"),
+    username: yup.string().required("Username is required"),
+    password: yup.string().required("Password is required"),
+    dbName: yup.string().required("Database Name is required"),
   });
   // to handle form using useFormik hook
-  const {values,errors,touched,handleChange,handleSubmit} = useFormik({
-    initialValues:initialValues,
-    validationSchema:validateForm,
-    onSubmit:(values,action)=>{
-      debugger
-        setIsSubmit(true);
-        dispatch(onPostClientMasterSubmit({values}));
-        action.resetForm();
-     },
+  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validateForm,
+    onSubmit: (values, action) => {
+      setIsSubmit(true);
+      dispatch(onPostClientMasterSubmit({ values }));
+      action.resetForm();
+    },
   });
   // option for status
   const statusOptions = [
@@ -66,13 +66,9 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
     { value: "Theme 3", label: "Theme 3" },
     { value: "Theme 4", label: "Theme 4" },
   ];
-  // option for mode
-  const modes = [
-    { value: "Live", label: "Live" },
-    { value: "Staging", label: "Staging" },
-  ];
-   //to handle toast notifications based on client Master form status
-   useEffect(() => {
+
+  //to handle toast notifications based on client Master form status
+  useEffect(() => {
     if (isSubmit && clientMaster?.post_status_code === "201") {
       toast.success(clientMaster?.postMessage);
       dispatch(onPostClientMasterReset());
@@ -80,7 +76,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
       toast.error(clientMaster?.postMessage);
     }
   }, [clientMaster]);
- 
+
   return (
     <>
       <div className="container-fluid">
@@ -88,17 +84,11 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">
-                  Client Master
-                </h4>
+                <h4 className="card-title">Client Master</h4>
               </div>
               <div className="card-body position-relative">
-                {/* {showLoader ? (
-                  <div style={{ height: "400px" }}>
-                    <Loader classType={"absoluteLoader"} />
-                  </div>
-                ) : ( */}
-                  <div className="container-fluid">
+                {clientMaster?.postClientLoading && <Loader />}
+                <div className="container-fluid">
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-sm-6 form-group mb-2">
@@ -109,14 +99,19 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.contactName ? "border-danger" : "form-control"
+                            errors.contactName
+                              ? "border-danger"
+                              : "form-control"
                           }`}
                           name="contactName"
                           id="contact-name"
+                          placeholder="Contact Name"
                           value={values.contactName}
                           onChange={handleChange}
                         />
-                        {errors.contactName && touched.contactName &&<p className="text-danger">{errors.contactName}</p>}
+                        {errors.contactName && touched.contactName && (
+                          <p className="text-danger">{errors.contactName}</p>
+                        )}
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="contact-number">
@@ -126,15 +121,20 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         <InputField
                           type="number"
                           className={` ${
-                            errors.contactNumber ? "border-danger" : "form-control"
+                            errors.contactNumber
+                              ? "border-danger"
+                              : "form-control"
                           }`}
                           name="contactNumber"
                           id="contact-number"
+                          placeholder="Contact Number"
                           value={values.contactNumber}
                           maxLength={10}
                           onChange={handleChange}
                         />
-                        {errors.contactNumber && touched.contactNumber &&<p className="text-danger">{errors.contactNumber}</p>}
+                        {errors.contactNumber && touched.contactNumber && (
+                          <p className="text-danger">{errors.contactNumber}</p>
+                        )}
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="contact-email">
@@ -144,31 +144,44 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         <InputField
                           type="email"
                           className={` ${
-                            errors.contactEmail ? "border-danger" : "form-control"
+                            errors.contactEmail
+                              ? "border-danger"
+                              : "form-control"
                           }`}
                           name="contactEmail"
                           id="contact-email"
+                          placeholder="example@gmail.com"
                           value={values.contactEmail}
                           onChange={handleChange}
                         />
-                        {errors.contactEmail && touched.contactEmail &&<p className="text-danger">{errors.contactEmail}</p>}
+                        {errors.contactEmail && touched.contactEmail && (
+                          <p className="text-danger">{errors.contactEmail}</p>
+                        )}
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="platformDomainUrl">
-                        Platform Domain Url
+                          Platform Domain Url
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
                           type="platformDomainUrl"
                           className={` ${
-                            errors.contactplatformDomainUrl ? "border-danger" : "form-control"
+                            errors.contactplatformDomainUrl
+                              ? "border-danger"
+                              : "form-control"
                           }`}
                           name="contactplatformDomainUrl"
                           id="contact-platformDomainUrl"
+                          placeholder="Platform Domain Url"
                           value={values.contactplatformDomainUrl}
                           onChange={handleChange}
                         />
-                       {errors.contactplatformDomainUrl && touched.contactplatformDomainUrl &&<p className="text-danger">{errors.contactplatformDomainUrl}</p>}
+                        {errors.contactplatformDomainUrl &&
+                          touched.contactplatformDomainUrl && (
+                            <p className="text-danger">
+                              {errors.contactplatformDomainUrl}
+                            </p>
+                          )}
                       </div>
                       <div className="col-sm-6 form-group mb-2">
                         <label htmlFor="status">
@@ -180,13 +193,13 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                           value={values.status}
                           onChange={handleChange}
                           className={` ${
-                            errors.status
-                              ? "border-danger"
-                              : "form-select"
+                            errors.status ? "border-danger" : "form-select"
                           }`}
                           options={statusOptions}
                         />
-                        {errors.status && touched.status &&<p className="text-danger">{errors.status}</p>}
+                        {errors.status && touched.status && (
+                          <p className="text-danger">{errors.status}</p>
+                        )}
                       </div>
                       <h3 className="mt-3 border">Theme Details </h3>
                       <div className="col-sm-3 form-group mb-2">
@@ -196,18 +209,16 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         </label>
                         <InputField
                           type="color"
-                          className={` ${
-                            errors.color ? "border-danger" : "form-control"
-                          }`}
+                          className="form-control"
                           name="color"
                           id="color"
                           value={values.color || "#000000"}
-                          onChange={ handleChange }
+                          onChange={handleChange}
                         />
                       </div>
                       <div className="col-sm-6 form-group mb-2">
                         <label htmlFor="logo">
-                        Logo Link
+                          Logo Link
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -217,53 +228,61 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                           }`}
                           name="logo"
                           id="logo"
+                          placeholder="Logo Link"
                           value={values.logo}
-                          onChange={ handleChange }
+                          onChange={handleChange}
                         />
-                         {errors.logo && touched.logo &&<p className="text-danger">{errors.logo}</p>}
+                        {errors.logo && touched.logo && (
+                          <p className="text-danger">{errors.logo}</p>
+                        )}
                       </div>
                       <div className="col-sm-3 form-group mb-2">
                         <label htmlFor="status">
-                        Select Theme
+                          Select Theme
                           <span className="text-danger">*</span>
                         </label>
                         <Dropdown
                           name="theme"
-                          onChange={ handleChange }
-                          value={values.theme }
+                          onChange={handleChange}
+                          value={values.theme}
                           // key={clientData.themes}
                           className={` ${
-                            errors.theme
-                              ? "border-danger"
-                              : "form-select"
+                            errors.theme ? "border-danger" : "form-select"
                           }`}
                           options={options}
                         />
-                        {errors.theme && touched.theme &&<p className="text-danger">{errors.theme}</p>}
+                        {errors.theme && touched.theme && (
+                          <p className="text-danger">{errors.theme}</p>
+                        )}
                       </div>
                       <div className="row mt-3">
                         <h3 className="border">Database Credentials</h3>
 
                         <div className="col-sm-3 form-group mb-2">
                           <h4>
-                          Database IP Address<span className="text-danger">*</span>
+                            Database IP Address
+                            <span className="text-danger">*</span>
                           </h4>
                           <InputField
                             type="text"
                             className={` ${
-                              errors.ipAddress ? "border-danger" : "form-control"
+                              errors.ipAddress
+                                ? "border-danger"
+                                : "form-control"
                             }`}
                             name="ipAddress"
                             id="ipAddress"
                             value={values.ipAddress}
-                            placeholder="Ip Address"
-                            onChange={ handleChange }
+                            placeholder="IP Address"
+                            onChange={handleChange}
                           />
-                          {errors.ipAddress && touched.ipAddress &&<p className="text-danger">{errors.ipAddress}</p>}
+                          {errors.ipAddress && touched.ipAddress && (
+                            <p className="text-danger">{errors.ipAddress}</p>
+                          )}
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                          Database User ID
+                            Database User ID
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -274,14 +293,16 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                             name="username"
                             id="user-name"
                             value={values.username}
-                            placeholder="user name"
-                            onChange={ handleChange }
+                            placeholder="Username"
+                            onChange={handleChange}
                           />
-                          {errors.username && touched.username &&<p className="text-danger">{errors.username}</p>}
+                          {errors.username && touched.username && (
+                            <p className="text-danger">{errors.username}</p>
+                          )}
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                          Database User Password
+                            Database User Password
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -292,14 +313,16 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                             name="password"
                             id="password"
                             value={values.password}
-                            placeholder="password"
-                            onChange={ handleChange }
+                            placeholder="Password"
+                            onChange={handleChange}
                           />
-                          {errors.password && touched.password &&<p className="text-danger">{errors.password}</p>}
+                          {errors.password && touched.password && (
+                            <p className="text-danger">{errors.password}</p>
+                          )}
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                          Database Name
+                            Database Name
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -310,10 +333,12 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                             name="dbName"
                             id="dbName"
                             value={values.dbName}
-                            placeholder="db name"
-                            onChange={ handleChange }
+                            placeholder="Database Name"
+                            onChange={handleChange}
                           />
-                          {errors.dbName && touched.dbName &&<p className="text-danger">{errors.dbName}</p>}
+                          {errors.dbName && touched.dbName && (
+                            <p className="text-danger">{errors.dbName}</p>
+                          )}
                         </div>
                       </div>
 
@@ -326,8 +351,8 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         <ToastContainer />
                       </div>
                     </div>
-                    </form>
-                  </div>
+                  </form>
+                </div>
                 {/* )} */}
               </div>
             </div>
@@ -339,4 +364,3 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
 };
 
 export default ClientMaster;
-/* eslint-enable react-hooks/exhaustive-deps */

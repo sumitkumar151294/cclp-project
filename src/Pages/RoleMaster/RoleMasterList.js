@@ -5,16 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import RoleMasterForm from "./RoleMasterForm";
 import ReactPaginate from "react-paginate";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
+import Button from "../../Components/Button/Button";
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
-  const [data, setData] = useState();
   const dispatch = useDispatch();
   // To get the label from redux
-  debugger;
   const roleAccessListData = useSelector(
     (state) => state?.userRoleReducer?.userRoleData
   );
-
+  // fetch Role Master data on component mount
   useEffect(() => {
     dispatch(onGetUserRole());
   }, []);
@@ -22,7 +21,7 @@ const RoleMasterList = () => {
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-
+  //to handle page 
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
@@ -38,7 +37,7 @@ const RoleMasterList = () => {
                 <h4 className="card-title">Role Module Access List</h4>
               </div>
               <div className="card-body position-relative">
-              {roleAccessListData?.getUserRoleLoading && <Loader />}
+                {roleAccessListData?.getUserRoleLoading && <Loader />}
                 {roleAccessListData?.length > 0 ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">
@@ -58,29 +57,17 @@ const RoleMasterList = () => {
                                 <td>{data.name}</td>
                                 <td>
                                   <div className="d-flex">
-                                    {/* {Array.isArray(userRoleAccessListData) &&
-                                      userRoleAccessListData
-                                        ?.filter(
-                                          (item) =>
-                                            item.roleId === data?.id &&
-                                            (item.viewAccess ||
-                                              item.addAccess ||
-                                              item.editAccess)
-                                        )
-                                        .map((moduleData) => ( */}
                                     <span className="badge badge-success mr-10">
                                       {data.module}
                                     </span>
-                                    {/* ))} */}
                                   </div>
                                 </td>
                                 <td>
-                                  <button
-                                    //onClick={() => handleEdit(data)}
+                                  <Button
+                                    onClick=""
                                     className="btn btn-primary shadow btn-xs sharp me-1"
-                                  >
-                                    <i className="fas fa-pencil-alt"></i>
-                                  </button>
+                                    icon={"fas fa-pencil-alt"}
+                                  />
                                 </td>
                               </tr>
                             ))}

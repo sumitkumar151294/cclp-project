@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Loader from "../../Components/Loader/Loader";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,31 +10,42 @@ import ClientMaster from "./ClientMasterForm";
 import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
 
 const ClientMasterList = () => {
-  const dispatch = useDispatch();
-  const clientListData = useSelector((state) => state.clientMasterReducer?.clientData);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
+  const dispatch = useDispatch();
+  const clientListData = useSelector(
+    (state) => state.clientMasterReducer?.clientData
+  );
 
   // to handle search query
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     setPage(1);
   };
-
+ // fetch Client Master data on component mount
   useEffect(() => {
     dispatch(onClientMasterSubmit());
-  }, [dispatch]);
-// filter the customerSegment data based on the search query
-const filteredClientData = Array.isArray(clientListData) &&
+  }, []);
+  // filter the customerSegment data based on the search query
+  const filteredClientData =
+    Array.isArray(clientListData) &&
     clientListData.filter(
       (item) =>
-        (item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.number && item.number.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.email && item.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.id && item.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (typeof item.status === "boolean" && (item.status ? "active" : "non-active").includes(searchQuery.toLowerCase()))
+        (item.name &&
+          item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.number &&
+          item.number.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.email &&
+          item.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.id &&
+          item.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (typeof item.status === "boolean" &&
+          (item.status ? "active" : "non-active").includes(
+            searchQuery.toLowerCase()
+          ))
     );
+  // headers of the excel data
   const headers = [
     { label: "Client Id", key: "clientID" },
     { label: "Contact Name", key: "contactName" },
@@ -46,17 +56,17 @@ const filteredClientData = Array.isArray(clientListData) &&
 
   // excel data to print
   const excelData = filteredClientData.map((data) => ({
-        contactName: data.name,
-        contactNumber: data.number,
-        contactEmail: data.email,
-        clientID: data.id,
-        status: data.status ? "Active" : "Non-Active",
-      }));
-
+    contactName: data.name,
+    contactNumber: data.number,
+    contactEmail: data.email,
+    clientID: data.id,
+    status: data.status ? "Active" : "Non-Active",
+  }));
+// to handle page
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-
+  // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   return (
@@ -101,77 +111,80 @@ const filteredClientData = Array.isArray(clientListData) &&
                 </div>
               </div>
               <div className="card-body">
-                {clientListData?.isLoading ? (
-                  <div style={{ height: "200px" }}>
-                    <Loader classType={"absoluteLoader"} />
+                {clientListData?.isLoading && <Loader />}
+                {filteredClientData?.length > 0 ? (
+                  <div className="table-responsive scroll-Table-x">
+                    <table className="table header-border table-responsive-sm">
+                      <thead>
+                        <tr>
+                          <th>Contact Name</th>
+                          <th>Contact Number</th>
+                          <th>Contact Email</th>
+                          <th>Client ID</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredClientData
+                          .slice(startIndex, endIndex)
+                          .map((data, index) => (
+                            <tr key={index}>
+                              <td>{data.name}</td>
+                              <td>{data.number}</td>
+                              <td>
+                                <span className="text-muted">{data.email}</span>
+                              </td>
+                              <td>{data.id}</td>
+                              <td>
+                                <span
+                                  className={`badge ${
+                                    data.status
+                                      ? "badge-success"
+                                      : "badge-danger"
+                                  }`}
+                                >
+                                  {data.status ? "Active" : "Non-Active"}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="d-flex">
+                                  <Button
+                                    className="btn btn-primary shadow btn-xs sharp me-1"
+                                    icon={"fas fa-pencil-alt"}
+                                    onClick=""
+                                  />
+                                  <Button
+                                    className="btn btn-danger shadow btn-xs sharp"
+                                    icon={"fa fa-trash"}
+                                    onClick=""
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    {filteredClientData.length > 5 && (
+                      <div className="pagination-container">
+                        <ReactPaginate
+                          previousLabel={"<"}
+                          nextLabel={">"}
+                          breakLabel={"..."}
+                          pageCount={Math.ceil(
+                            filteredClientData.length / rowsPerPage
+                          )}
+                          marginPagesDisplayed={2}
+                          onPageChange={handlePageChange}
+                          containerClassName={"pagination"}
+                          activeClassName={"active"}
+                          initialPage={page - 1}
+                        />
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <>
-                    <div className="table-responsive scroll-Table-x">
-                      <>
-                        <table className="table header-border table-responsive-sm">
-                          <thead>
-                            <tr>
-                              <th>Contact Name</th>
-                              <th>Contact Number</th>
-                              <th>Contact Email</th>
-                              <th>Client ID</th>
-                              <th>Status</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {filteredClientData
-                              .slice(startIndex, endIndex)
-                              .map((data, index) => (
-                                <tr key={index}>
-                                  <td>{data.name}</td>
-                                  <td>{data.number}</td>
-                                  <td>
-                                    <span className="text-muted">{data.email}</span>
-                                  </td>
-                                  <td>{data.id}</td>
-                                  <td>
-                                    <span className={`badge ${data.status ? "badge-success" : "badge-danger"}`}>
-                                      {data.status ? "Active" : "Non-Active"}
-                                    </span>
-                                  </td>
-                                  <td>
-                                    <div className="d-flex">
-                                      <Button
-                                        className="btn btn-primary shadow btn-xs sharp me-1"
-                                        icon={"fas fa-pencil-alt"}
-                                        onClick=""
-                                      />
-                                      <Button
-                                        className="btn btn-danger shadow btn-xs sharp"
-                                        icon={"fa fa-trash"}
-                                        onClick=""
-                                      />
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
-                        {filteredClientData.length > 5 && (
-                          <div className="pagination-container">
-                            <ReactPaginate
-                              previousLabel={"<"}
-                              nextLabel={">"}
-                              breakLabel={"..."}
-                              pageCount={Math.ceil(filteredClientData.length / rowsPerPage)}
-                              marginPagesDisplayed={2}
-                              onPageChange={handlePageChange}
-                              containerClassName={"pagination"}
-                              activeClassName={"active"}
-                              initialPage={page - 1}
-                            />
-                          </div>
-                        )}
-                      </>
-                    </div>
-                  </>
+                  <NoRecord />
                 )}
               </div>
             </div>
@@ -183,4 +196,3 @@ const filteredClientData = Array.isArray(clientListData) &&
 };
 
 export default ClientMasterList;
-/* eslint-enable react-hooks/exhaustive-deps */

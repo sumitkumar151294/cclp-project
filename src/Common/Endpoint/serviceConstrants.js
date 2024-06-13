@@ -6,7 +6,10 @@ const API={
     postproductApi:"/postProductSection",
     getProductApi:"/getProductSection",
     postRoleMaster:"/roleMaster",
+    getRoleMaster:"/getRoleMaster",
     clientMaster:"/clientMaster",
-    getclientMaster:"/getClientMaster"
+    getclientMaster:"/getClientMaster",
+    userMaster:"/userMaster",
+    getUserMaster:"/getUserMaster"
 }
 export default API;

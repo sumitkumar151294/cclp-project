@@ -5,8 +5,7 @@ export const userMasterSlice = createSlice({
   initialState: {
     isLoading: false,
     isError: false,
-    data: {},
-    error: {},
+    data: [],
     message: "",
   },
   reducers: {
@@ -15,15 +14,14 @@ export const userMasterSlice = createSlice({
         ...state,
         isLoading: true,
         isError: false,
-        postdata: {},
-        error: {},
+        postdata: [],
         message: "",
         status_code:null
       };
     },
 
     onUserSubmitSuccess: (state, { payload }) => {
-      const { postData = {}, message = "", status_code = 200 } = payload;
+      const { postData = [], message = "", status_code = "201" } = payload;
       return {
         ...state,
         isLoading: false,
@@ -31,7 +29,6 @@ export const userMasterSlice = createSlice({
         postdata:postData,
         message,
         status_code,
-        error: {},
       };
     },
 
@@ -43,7 +40,7 @@ export const userMasterSlice = createSlice({
     },
 
     onUserSubmitError: (state, { payload }) => {
-      const { postData = {}, message = "", status_code = 400 } = payload;
+      const { postData = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
         postdata:postData,
@@ -51,27 +48,25 @@ export const userMasterSlice = createSlice({
         status_code,
         isLoading: false,
         isError: true,
-        error: {},
       };
     },
 
     onGetUser: (state) => {
-      return { ...state, isLoading: true, getData: {}, getmessage: '', error: {}, isError: false };
+      return { ...state, isLoading: true, getData: [], getmessage: '', isError: false };
     },
     onGetUserSuccess: (state, { payload }) => {
-      const { data = {}, message = '', status_code } = payload;
+      const { data = [], message = '', status_code } = payload;
       return {
         ...state,
         isLoading: false,
         isError: false,
         getData:data,
-        error: {},
         getmessage:message,
         status_code
       };
     },
     onGetUserError: (state, { payload }) => {
-      const { data = {}, message = '', status_code } = payload;
+      const { data = [], message = '', status_code } = payload;
       return {
         ...state,
         isLoading: false,
@@ -86,15 +81,14 @@ export const userMasterSlice = createSlice({
         ...state,
         isLoading: true,
         isError: false,
-        updatedUserData: {},  
-        error: {},
+        updatedUserData: [],  
         message: "",
         status_code:null
       };
     },
 
     onUserUpdateSuccess: (state, { payload }) => {
-      const { updateData = {}, message = "", status_code = 200 } = payload;
+      const { updateData = [], message = "", status_code = 200 } = payload;
       return {
         ...state,
         isLoading: false,
@@ -102,12 +96,11 @@ export const userMasterSlice = createSlice({
         updatedUserData: updateData,  
         message,
         status_code,
-        error: {},
       };
     },
 
     onUserUpdateError: (state, { payload }) => {
-      const { updateData = {}, message = "", status_code = 400 } = payload;
+      const { updateData = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
         updatedUserData: updateData,  
@@ -115,13 +108,12 @@ export const userMasterSlice = createSlice({
         status_code,
         isLoading: false,
         isError: true,
-        error: {},
       };
     },
 
   },
 });
-export const { onUserSubmit, onUserSubmitReset, onUserSubmitError, onUserSubmitSuccess, onGetUser, onGetUserSuccess, onGetUserError, onUserUpdate, onUserUpdateSuccess, onUserUpdateError } =
+export const { onUserSubmit, onUserSubmitReset, onUserSubmitError, onUserSubmitSuccess, onGetUser,   onGetUserSuccess, onGetUserError, onUserUpdate, onUserUpdateSuccess, onUserUpdateError } =
   userMasterSlice.actions;
 
 export default userMasterSlice.reducer;

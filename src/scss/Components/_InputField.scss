@@ -106,3 +106,11 @@ $border-color_4: var(--rgba-primary-2);
 		width: var(--w100);
 	}
 }
+
+.dis2 {
+    height: 100px;
+    width: 100%;
+    border-radius: 1rem;
+    border: 3px solid var(--primary-greyish) !important;
+    padding: 20px;
+}

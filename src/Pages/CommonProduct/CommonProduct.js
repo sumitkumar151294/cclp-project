@@ -21,8 +21,8 @@ const CommonProduct = () => {
   const [sortOption, setSortOption] = useState("Relevance");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
-
   const dispatch = useDispatch();
+  //to get product content data from redux store
   const productContentList = useSelector((state) => state?.productContentReducer);
   const productContentData = productContentList?.data;
 
@@ -59,7 +59,7 @@ const CommonProduct = () => {
     const date = new Date(inputDate);
     const day = date.getDate();
     const month = date.getMonth();
-    const year = date.getFullYear();    
+    const year = date.getFullYear(); 
     //adding leading zeros if necessary
     const formattedDay = day < 10 ? '0' + day : day;
     const formattedMonth = month < 9 ? '0' + (month + 1) : (month + 1);  

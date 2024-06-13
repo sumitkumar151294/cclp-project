@@ -61,7 +61,7 @@ const ProductSection = () => {
     { value: "true", label: "Active" },
     { value: "false", label: "Non-Active" },
   ];
-  //to handle navigation and toast notifications based on productsectionform status
+  //to handle navigation and toast notifications based on product section form status
   useEffect(() => {
     if (isSubmit && postProductSecData?.status_code === "201") {
       toast.success(postProductSecData?.message);
@@ -122,7 +122,7 @@ const ProductSection = () => {
                               : "form-control"
                           }`}
                           name="sectionName"
-                          placeholder="example"
+                          placeholder="Section Name"
                           value={values.sectionName}
                           onChange={handleChange}
                         />
@@ -139,7 +139,7 @@ const ProductSection = () => {
                           value={values.status}
                           onChange={handleChange}
                           className={` ${
-                            errors.sectionName
+                            errors.status
                               ? "border-danger"
                               : "form-select"
                           }`}
@@ -156,7 +156,7 @@ const ProductSection = () => {
                         <InputField
                           type="date"
                           className={` ${
-                            errors.sectionName
+                            errors.date
                               ? "border-danger"
                               : "form-control"
                           }`}
