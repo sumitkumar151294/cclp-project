@@ -235,8 +235,8 @@ const ProductSection = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {filteredProductSecData?.slice(startIndex, endIndex).map((data)=>(
-                                <tr>
+                                {filteredProductSecData?.slice(startIndex, endIndex).map((data,index)=>(
+                                <tr key={index}>
                                   <td>
                                     {data.name}
                                     <a href=""></a>

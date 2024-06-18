@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
+import {GetTranslationData} from "../../Components/GetTranslationData/GetTranslationData ";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const sign = GetTranslationData("UIAdmin", "sign");
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
   // initial values for the input fields
@@ -62,7 +64,7 @@ const LoginPage = () => {
                         <div className="text-center mb-3">
                           <img className="w-100" src={image} alt="" />
                         </div>
-                        <h4 className="text-center mb-4">SignIn</h4>
+                        <h4 className="text-center mb-4">{sign}</h4>
                         <form onSubmit={handleSubmit}>
                           <div className="mb-3">
                             <label className="mb-1">

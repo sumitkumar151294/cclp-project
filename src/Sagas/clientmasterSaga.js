@@ -35,7 +35,6 @@ function* ClientMaster() {
   }
 }
 function* postClientMaster({ payload }) {
-  debugger
   try {
     const postClientMasterResponse = yield call(postClientMasterApi, payload);
     if (postClientMasterResponse.httpStatusCode === "201") {
