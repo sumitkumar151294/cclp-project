@@ -14,6 +14,7 @@ import {
 const ClientMaster = ({ data, clientPayData, setdata }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  // to get client master data from redux store
   const clientMaster = useSelector((state) => state?.clientMasterReducer);
   // initial values for the input fields
   const initialValues = {

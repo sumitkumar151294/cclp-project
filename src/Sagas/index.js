@@ -7,6 +7,7 @@ import productSectionSaga from "./productSectionSaga";
 import userRoleSaga from "./userRoleSaga";
 import userMasterSaga from "./userMasterSaga";
 import clientMasterSaga from "./clientmasterSaga";
+import addCouponSaga from "./addCouponSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -17,6 +18,7 @@ export default function* rootSaga() {
     productSectionSaga(),
     userRoleSaga(),
     userMasterSaga(),
-    clientMasterSaga()
+    clientMasterSaga(),
+    addCouponSaga(),
     ]);
 }

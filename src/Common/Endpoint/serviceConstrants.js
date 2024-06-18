@@ -10,6 +10,7 @@ const API={
     clientMaster:"/clientMaster",
     getclientMaster:"/getClientMaster",
     userMaster:"/userMaster",
-    getUserMaster:"/getUserMaster"
+    getUserMaster:"/getUserMaster",
+    addCoupon:"/addCoupon"
 }
 export default API;
