@@ -18,7 +18,6 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const translationData = useSelector((state) => state.translationReducer);
   const currentUrl = window.location.href;
-
   useEffect(() => {
     let matchingConfig = config.filter((item) => currentUrl.includes(item.API_URL));
 

@@ -25,7 +25,7 @@ export const translationSlice = createSlice({
         ...state,
         isLoading: false,
         isError: false,
-        data,
+        data:data,
         message,
         status_code,
       };
@@ -35,7 +35,7 @@ export const translationSlice = createSlice({
       const { data = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        data,
+        data:data,
         message,
         status_code,
         isLoading: false,
