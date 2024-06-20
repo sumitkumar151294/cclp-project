@@ -10,7 +10,7 @@ import clientMasterSaga from "./clientmasterSaga";
 import addCouponSaga from "./addCouponSaga";
 import translationSaga from "./translationSaga";
 import loginAuthSaga from "./loginAuthSaga";
-
+import userRoleModulesAccessSaga from "./userRoleModulesAccessSaga";
 export default function* rootSaga() {
   yield all([
     moduleSaga(),
@@ -21,6 +21,7 @@ export default function* rootSaga() {
     productContentSaga(),
     productSectionSaga(),
     userRoleSaga(),
+    userRoleModulesAccessSaga(),
     userMasterSaga(),
     clientMasterSaga(),
     addCouponSaga(),

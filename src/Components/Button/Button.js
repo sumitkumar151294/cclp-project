@@ -3,6 +3,7 @@ import React from 'react';
 const Button = ({ text, onClick, icon, icons, className, btn_css, value }) => {
   return (
     <button
+      text={text}
       type="submit"
       className={className}
       onClick={onClick}

@@ -11,9 +11,31 @@ import {
   onPostClientMasterReset,
   onPostClientMasterSubmit,
 } from "../../Store/Slices/clientMasterSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+
 const ClientMaster = ({ data, clientPayData, setdata }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  const client_master_label=GetTranslationData("UIAdmin", "client_master_label")
+  const contactName = GetTranslationData("UIAdmin", "contact_Name_label");
+  const contactNumber = GetTranslationData("UIAdmin", "contact_Number_label");
+  const email = GetTranslationData("UIAdmin", "contact_Email_label");
+  const ipAddress = GetTranslationData("UIAdmin", "IP Address_label");
+  const status = GetTranslationData("UIAdmin", "Status_label");
+  const color = GetTranslationData("UIAdmin", "Color_label");
+  const logo = GetTranslationData("UIAdmin", "Logo Link_label");
+  const theme = GetTranslationData("UIAdmin", "Select Theme_label");
+  const userId = GetTranslationData("UIAdmin", "database_User_ID_Label");
+  const userPassword = GetTranslationData(
+    "UIAdmin",
+    "database_User_Pass_Label"
+  );
+  const db_name = GetTranslationData("UIAdmin", "db_name");
+  const add = GetTranslationData("UIAdmin", "add_label");
+  const platformDomainUrl = GetTranslationData(
+    "UIAdmin",
+    "platform_Domain_Url"
+  );
   // to get client master data from redux store
   const clientMaster = useSelector((state) => state?.clientMasterReducer);
   // initial values for the input fields
@@ -85,7 +107,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Client Master</h4>
+                <h4 className="card-title">{client_master_label}</h4>
               </div>
               <div className="card-body position-relative">
                 {clientMaster?.postClientLoading && <Loader />}
@@ -94,7 +116,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                     <div className="row">
                       <div className="col-sm-6 form-group mb-2">
                         <label htmlFor="contact-name">
-                          Contact Name
+                          {contactName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -116,7 +138,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="contact-number">
-                          Contact Number
+                        {contactNumber}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -139,7 +161,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="contact-email">
-                          Contact Email
+                          {email}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -161,7 +183,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-6 form-group ">
                         <label htmlFor="platformDomainUrl">
-                          Platform Domain Url
+                        {platformDomainUrl}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -186,7 +208,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-6 form-group mb-2">
                         <label htmlFor="status">
-                          Status
+                        {status}
                           <span className="text-danger">*</span>
                         </label>
                         <Dropdown
@@ -205,7 +227,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       <h3 className="mt-3 border">Theme Details </h3>
                       <div className="col-sm-3 form-group mb-2">
                         <label htmlFor="color">
-                          Color
+                        {color}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -219,7 +241,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-6 form-group mb-2">
                         <label htmlFor="logo">
-                          Logo Link
+                        {logo}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -239,7 +261,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                       </div>
                       <div className="col-sm-3 form-group mb-2">
                         <label htmlFor="status">
-                          Select Theme
+                        {theme}
                           <span className="text-danger">*</span>
                         </label>
                         <Dropdown
@@ -261,7 +283,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
 
                         <div className="col-sm-3 form-group mb-2">
                           <h4>
-                            Database IP Address
+                          {ipAddress}
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -283,7 +305,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                            Database User ID
+                          {userId}
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -303,7 +325,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                            Database User Password
+                          {userPassword}
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -323,7 +345,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
                         </div>
                         <div className="col-sm-3 form-group mb-2">
                           <h4 htmlFor="contact-name">
-                            Database Name
+                          {db_name}
                             <span className="text-danger">*</span>
                           </h4>
                           <InputField
@@ -345,7 +367,7 @@ const ClientMaster = ({ data, clientPayData, setdata }) => {
 
                       <div className="col-sm-12 form-group mb-0 mt-2">
                         <Button
-                          text="Add"
+                          text={add}
                           icon={"fa fa-arrow-right"}
                           className="btn btn-primary btn-sm float-right p-btn mb-5 mt-2"
                         />

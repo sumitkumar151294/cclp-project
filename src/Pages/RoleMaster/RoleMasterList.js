@@ -6,8 +6,18 @@ import RoleMasterForm from "./RoleMasterForm";
 import ReactPaginate from "react-paginate";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
+   // To get the Translation label
+   const roleModuleAccessList = GetTranslationData(
+    "UIAdmin",
+    "role-module-access-list"
+  );
+  const roleName = GetTranslationData("UIAdmin", "role-name");
+  const modules = GetTranslationData("UIAdmin", "modules");
+  const action = GetTranslationData("UIAdmin", "action");
+  const disabled_Text = GetTranslationData("UIAdmin", "disabled_Text");
   const dispatch = useDispatch();
   // To get the label from redux
   const roleAccessListData = useSelector(
@@ -34,7 +44,7 @@ const RoleMasterList = () => {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Role Module Access List</h4>
+                <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
                 {roleAccessListData?.getUserRoleLoading && <Loader />}
@@ -43,9 +53,9 @@ const RoleMasterList = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead key="thead">
                         <tr>
-                          <th>roleName</th>
-                          <th>modules</th>
-                          <th>action</th>
+                          <th>{roleName}</th>
+                          <th>{modules}</th>
+                          <th>{action}</th>
                         </tr>
                       </thead>
                       <tbody key="tbody">
@@ -87,7 +97,7 @@ const RoleMasterList = () => {
                           containerClassName={"pagination"}
                           activeClassName={"active"}
                           initialPage={page - 1} // Use initialPage instead of forcePage
-                          previousClassName={page === 0 ? "disabled_Text" : ""}
+                          previousClassName={page === 0 ? disabled_Text : ""}
                         />
                       )}
                     </div>

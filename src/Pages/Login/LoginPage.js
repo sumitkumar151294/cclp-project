@@ -16,7 +16,15 @@ const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // Translation labels
   const sign = GetTranslationData("UIAdmin", "sign");
+  const email_label=GetTranslationData("UIAdmin", "email_label");
+  const email_placeholder=GetTranslationData("UIAdmin", "email_placeholder");
+  const password_label=GetTranslationData("UIAdmin", "password_label");
+  const password_placeholder=GetTranslationData("UIAdmin", "password_label");
+  const req_field=GetTranslationData("UIAdmin", "req_field");
+  const sign_me_label=GetTranslationData("UIAdmin", "sign_me_label");
+
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
   // initial values for the input fields
@@ -68,7 +76,7 @@ const LoginPage = () => {
                         <form onSubmit={handleSubmit}>
                           <div className="mb-3">
                             <label className="mb-1">
-                              <strong>Email</strong>
+                              <strong>{email_label}</strong>
                               <span className="text-danger">*</span>
                             </label>
                             <InputField
@@ -77,7 +85,7 @@ const LoginPage = () => {
                                 errors.email ? "border-danger" : "form-control"
                               }`}
                               name="email"
-                              placeholder="example@gmail.com"
+                              placeholder={email_placeholder}
                               value={values.email}
                               onChange={handleChange}
                             />
@@ -87,7 +95,7 @@ const LoginPage = () => {
                           </div>
                           <div className="mb-3">
                             <label className="mb-1">
-                              <strong>Password</strong>
+                              <strong>{password_label}</strong>
                               <span className="text-danger">*</span>
                             </label>
                             <InputField
@@ -98,7 +106,7 @@ const LoginPage = () => {
                                   : "form-control"
                               }`}
                               name="password"
-                              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+                              placeholder={password_placeholder}
                               value={values.password}
                               onChange={handleChange}
                             />
@@ -112,7 +120,7 @@ const LoginPage = () => {
                               <span
                                 className="form-check-label"
                                 htmlFor="basic_checkbox_1"
-                              ></span>
+                              >{req_field}</span>
                               <div className="form-check custom-checkbox ms-1">
                                 <InputField
                                   type="checkbox"
@@ -131,7 +139,7 @@ const LoginPage = () => {
                           </div>
                           <div className="text-center">
                             <Button
-                              text="Submit"
+                              text={sign_me_label}
                               className="btn btn-primary btn-block btn-sm float-right p-btn mt-2"
                             />
                           </div>

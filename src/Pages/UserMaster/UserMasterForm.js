@@ -150,34 +150,6 @@ const UserMasterForm = () => {
                         )}
                       </div>
                       <div className="col-lg-12 br pt-2">
-                        <label htmlFor="name-f">Client</label>
-                        <div className="row ml-4">
-                          {Array.isArray(clientList) &&
-                            clientList?.map((item) => (
-                              <div className="form-check mt-2 col-lg-3">
-                                <InputField
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  name={item.name}
-                                  value={item.id}
-                                  id={`flexCheckDefault-${item.id}`}
-                                  //checked={}
-                                  //onChange={}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`flexCheckDefault-${item.id}`}
-                                >
-                                  {item.name}
-                                </label>
-                              </div>
-                            ))}
-                          {/* <p className="text-danger">
-                              {errors.accessClientIds}
-                            </p> */}
-                        </div>
-                      </div>
-                      <div className="col-lg-12 br pt-2">
                         <label htmlFor="name-f">Role Name</label>
                         {/* admin */}
                         <div className="row ml-4">

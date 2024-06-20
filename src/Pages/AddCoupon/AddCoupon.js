@@ -84,6 +84,7 @@ const AddCoupon = () => {
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="status">Deal & Offer</label>
+                        <span className="text-danger">*</span>
                         <Dropdown
                           name="status"
                           className={` ${
@@ -97,6 +98,7 @@ const AddCoupon = () => {
 
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="pass"> Coupon code</label>
+                        <span className="text-danger">*</span>
                         <InputField
                           className={` ${
                             errors.couponCode ? "border-danger" : "form-control"
@@ -111,6 +113,7 @@ const AddCoupon = () => {
 
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="pass">Type of coupon</label>
+                        <span className="text-danger">*</span>
                         <Dropdown
                           name="typCoupon"
                           className={` ${
@@ -123,6 +126,7 @@ const AddCoupon = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="pass">Redemation link</label>
+                        <span className="text-danger">*</span>
                         <InputField
                           type="url"
                           name="link"
@@ -136,6 +140,7 @@ const AddCoupon = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="pass">Image</label>
+                        <span className="text-danger">*</span>
                         <InputField
                           type="file"
                           name="image"
@@ -148,6 +153,7 @@ const AddCoupon = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="pass">Validity Date</label>
+                        <span className="text-danger">*</span>
                         <InputField
                           type="date"
                           name="date"
@@ -161,6 +167,7 @@ const AddCoupon = () => {
                       <div className="row col-lg-12">
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="pass">Terms and condition</label>
+                          <span className="text-danger">*</span>
                           <InputField
                             type="text"
                             name="terms"
@@ -173,6 +180,7 @@ const AddCoupon = () => {
                         </div>
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="pass">Description</label>
+                          <span className="text-danger">*</span>
                           <InputField
                             type="text"
                             name="description"

@@ -3,10 +3,12 @@ import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import Loader from "../../Components/Loader/Loader";
-import { onPostUserRole } from "../../Store/Slices/userRoleSlice";
+import { onPostUserRole, onPostUserRoleReset } from "../../Store/Slices/userRoleSlice";
+import {onPostUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 // Component for RoleMasterForm
 const RoleMasterForm = () => {
@@ -15,6 +17,18 @@ const RoleMasterForm = () => {
   const [moduleAccess, setModuleAccess] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const dispatch = useDispatch();
+  // Translation labels
+  const roleMasterLabel = GetTranslationData("UIAdmin", "role-master");
+  const roleName = GetTranslationData("UIAdmin", "role-name");
+  const selectall = GetTranslationData("UIAdmin", "selectall");
+  const module_access = GetTranslationData("UIAdmin", "module-access");
+  const submit = GetTranslationData("UIAdmin", "submit_label");
+  const checkBox_Error = GetTranslationData("UIAdmin", "checkbox_error");
+  const view = GetTranslationData("UIAdmin", "view");
+  const add = GetTranslationData("UIAdmin", "add");
+  const edit = GetTranslationData("UIAdmin", "edit");
+  const description = GetTranslationData("UIAdmin", "description");
+  const mandatory_Req_Label = GetTranslationData("UIAdmin", "role_Req_Label");
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
   // to get module data from redux store
@@ -25,9 +39,9 @@ const RoleMasterForm = () => {
     description: "",
     modules: [],
   };
-  // to validate login form using Yup schema
+  // to validate form using Yup schema
   const validateForm = yup.object({
-    name: yup.string().required("Name is required"),
+    name: yup.string().required(mandatory_Req_Label),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
@@ -40,6 +54,8 @@ const RoleMasterForm = () => {
       }
       setIsSubmit(true);
       dispatch(onPostUserRole({ ...values, modules: moduleAccess }));
+      setModuleAccess([]);
+      setSelectAll(false);
       action.resetForm();
     },
   });
@@ -72,7 +88,6 @@ const RoleMasterForm = () => {
       }
       newModuleAccess.push(newAccess);
     }
-
     setModuleAccess(newModuleAccess);
     setCheckBoxError(false);
   };
@@ -81,20 +96,42 @@ const RoleMasterForm = () => {
     if (selectAll) {
       setModuleAccess([]);
     } else {
-      const allModules = moduleAccessData.map((data) => ({
-        name: data.name,
-        view: true,
-      }));
+      const allModules = moduleAccessData.map((data) => {
+        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
+        return {
+          name: data.name,
+          view: true,
+          add: existingModule?.add || false,
+          edit: existingModule?.edit || false,
+        };
+      });
       setModuleAccess(allModules);
     }
     setSelectAll(!selectAll);
   };
+  
+  useEffect(() => {
+    if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
+      const accessPostData = moduleAccessData.map((data) => {
+        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
+        return {
+          roleId: 43,  // Replace with actual roleId logic if needed
+          moduleId: data.id,
+          viewAccess: existingModule?.view || false,
+          addAccess: existingModule?.add || false,
+          editAccess: existingModule?.edit || false,
+        };
+      });
+      dispatch(onPostUserRoleModuleAccess(accessPostData));
+      dispatch(onPostUserRoleReset()); // Assuming this resets some state related to user role
+    }
+  }, [userRoleData, moduleAccessData, moduleAccess]);
+  
+
   // to handle navigation and toast notifications based on user role status
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
-    } else if (isSubmit && userRoleData?.status_code) {
-      toast.error(userRoleData?.message);
     }
   }, [userRoleData]);
   return (
@@ -104,7 +141,7 @@ const RoleMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Role Master</h4>
+                <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
                 {userRoleData?.postLoading && <Loader />}
@@ -113,7 +150,7 @@ const RoleMasterForm = () => {
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                          Role Name
+                        {roleName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -132,7 +169,7 @@ const RoleMasterForm = () => {
                         )}
                       </div>
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="description">Description</label>
+                        <label htmlFor="description">{description}</label>
                         <InputField
                           type="text"
                           className="form-control"
@@ -160,12 +197,12 @@ const RoleMasterForm = () => {
                             className="form-check-label fnt-17"
                             htmlFor="flexCheckDefault2"
                           >
-                            Select All
+                           {selectall}
                           </label>
                         </div>
                       </div>
                       <div className="col-lg-12 br pt-2">
-                        <label htmlFor="name-f">Module Access</label>
+                        <label htmlFor="name-f">{module_access}</label>
                         {moduleAccessData?.map((data, index) => {
                           const module =
                             moduleAccess.find(
@@ -186,7 +223,7 @@ const RoleMasterForm = () => {
                                         handleCheckboxChange(data.name, "view")
                                       }
                                     />
-                                    View
+                                    {view}
                                   </label>
                                 </div>
                                 <div className="form-check form-check-inline">
@@ -200,7 +237,7 @@ const RoleMasterForm = () => {
                                         handleCheckboxChange(data.name, "add")
                                       }
                                     />
-                                    Add
+                                    {add}
                                   </label>
                                 </div>
                                 <div className="form-check form-check-inline">
@@ -214,7 +251,7 @@ const RoleMasterForm = () => {
                                         handleCheckboxChange(data.name, "edit")
                                       }
                                     />
-                                    Edit
+                                    {edit}
                                   </label>
                                 </div>
                               </div>
@@ -226,12 +263,12 @@ const RoleMasterForm = () => {
                             className="form-check-label error-check text-danger"
                             htmlFor="basic_checkbox_1"
                           >
-                            At least one module must be selected.
+                           {checkBox_Error}
                           </span>
                         )}
                         <div className="col-sm-4 mt-4 mb-4">
                           <Button
-                            text="Submit"
+                            text={submit}
                             icon="fa fa-arrow-right"
                             className="btn btn-primary btn-sm float-right p-btn mt-2"
                           />

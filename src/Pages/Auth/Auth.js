@@ -55,7 +55,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (translationData.status_code === "201" && !translationData?.isLoading) {
-      dispatch(onTranslationReset());
+      //dispatch(onTranslationReset());
     } else if (
       translationData?.status_code !== "201" &&
       translationData?.status_code
