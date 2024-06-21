@@ -9,10 +9,21 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const UserMasterForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  //To get the labels from API
+  const userMaster = GetTranslationData("UIAdmin", "user_Master_label");
+  const email = GetTranslationData("UIAdmin", "email_label");
+  const mobile = GetTranslationData("UIAdmin", "mobile_label");
+  const role = GetTranslationData("UIAdmin", "role_name_label");
+  const requiredLevel = GetTranslationData("UIAdmin", "required_label");
+  const submit = GetTranslationData("UIAdmin", "submit_label");
+  const firstName = GetTranslationData("UIAdmin", "first-name");
+  const lastName = GetTranslationData("UIAdmin", "last-name");
+  const admin = GetTranslationData("UIAdmin", "admin_Label");
   //To get the data from redux store
   const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
@@ -64,7 +75,7 @@ const UserMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">User Master</h4>
+                <h4 className="card-title">{userMaster}</h4>
               </div>
               <div className="card-body">
                 {onSubmitData?.isLoading && <Loader />}
@@ -73,7 +84,7 @@ const UserMasterForm = () => {
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                          Email
+                        {email}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -92,7 +103,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                          Mobile
+                        {mobile}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -111,7 +122,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                          First Name
+                        {firstName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -131,7 +142,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                          Last Name
+                        {lastName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -150,11 +161,11 @@ const UserMasterForm = () => {
                         )}
                       </div>
                       <div className="col-lg-12 br pt-2">
-                        <label htmlFor="name-f">Role Name</label>
+                        <label htmlFor="name-f">{role}</label>
                         {/* admin */}
                         <div className="row ml-4">
                           <label className="role_name_bold" htmlFor="name-f">
-                            Admin
+                          {admin}
                           </label>
                           {Array.isArray(roleList?.userRoleData) &&
                             roleList?.userRoleData?.map((item) => (
@@ -186,11 +197,11 @@ const UserMasterForm = () => {
                           htmlFor="basic_checkbox_1"
                           style={{ marginLeft: "5px", marginTop: "10px" }}
                         >
-                          All the * fields are required.
+                         {requiredLevel}
                         </span>
                         <div className="col-sm-4 mt-2 mb-4">
                           <Button
-                            text="Submit"
+                            text={submit}
                             icon={"fa fa-arrow-right"}
                             className="btn btn-primary btn-sm float-right p-btn mt-2"
                           />

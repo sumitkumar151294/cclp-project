@@ -8,12 +8,22 @@ import InputField from "../../Components/InputField/InputField";
 import Button from "../../Components/Button/Button";
 import ClientMaster from "./ClientMasterForm";
 import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const ClientMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
+  const contactName = GetTranslationData("UIAdmin", "contact_Name_label");
+  const searchLabel = GetTranslationData("UIAdmin", "search_here_label");
+  const contactNumber = GetTranslationData("UIAdmin", "contact_Number_label");
+  const email = GetTranslationData("UIAdmin", "contact_Email_label");
+  const clientID = GetTranslationData("UIAdmin", "client ID_label");
+  const action = GetTranslationData("UIAdmin", "action_label");
+  const status = GetTranslationData("UIAdmin", "Status_label");
+  const exportLabel = GetTranslationData("UIAdmin", "export_label");
+  const clientListLabel = GetTranslationData("UIAdmin", "client List_label");
   const clientListData = useSelector(
     (state) => state.clientMasterReducer?.clientData
   );
@@ -23,7 +33,7 @@ const ClientMasterList = () => {
     setSearchQuery(e.target.value);
     setPage(1);
   };
- // fetch Client Master data on component mount
+  // fetch Client Master data on component mount
   useEffect(() => {
     dispatch(onClientMasterSubmit());
   }, []);
@@ -62,7 +72,7 @@ const ClientMasterList = () => {
     clientID: data.id,
     status: data.status ? "Active" : "Non-Active",
   }));
-// to handle page
+  // to handle page
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
@@ -79,14 +89,14 @@ const ClientMasterList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">Client List</h4>
+                    <h4 className="card-title">{clientListLabel}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder="search here...."
+                        placeholder={searchLabel}
                         value={searchQuery}
                         onChange={handleSearch}
                       />
@@ -103,7 +113,7 @@ const ClientMasterList = () => {
                     >
                       <Button
                         className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
-                        text="Export"
+                        text={exportLabel}
                         icons={"fa fa-file-excel me-2"}
                       />
                     </CSVLink>
@@ -117,12 +127,12 @@ const ClientMasterList = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>Contact Name</th>
-                          <th>Contact Number</th>
-                          <th>Contact Email</th>
-                          <th>Client ID</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>{contactName}</th>
+                          <th>{contactNumber}</th>
+                          <th>{email}</th>
+                          <th>{clientID}</th>
+                          <th>{status}</th>
+                          <th>{action}</th>
                         </tr>
                       </thead>
                       <tbody>
