@@ -162,12 +162,10 @@ const ClientMasterList = () => {
                                   <Button
                                     className="btn btn-primary shadow btn-xs sharp me-1"
                                     icon={"fas fa-pencil-alt"}
-                                    onClick=""
                                   />
                                   <Button
                                     className="btn btn-danger shadow btn-xs sharp"
                                     icon={"fa fa-trash"}
-                                    onClick=""
                                   />
                                 </div>
                               </td>

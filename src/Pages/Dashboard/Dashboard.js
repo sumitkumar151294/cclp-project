@@ -7,10 +7,9 @@ const Dashboard = () => {
   return (
     <div className="container-fluid">
           <div className="row">
-            {/* <ScrollToTop /> */}
             <Chart />
             <Revenue />
-            <Users />
+            {/* <Users /> */}
           </div>
     </div>
   );

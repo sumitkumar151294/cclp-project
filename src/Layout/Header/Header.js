@@ -41,7 +41,7 @@ const Header = ({ setSideBar, sidebar }) => {
         </Link>
         <div className="nav-control d-flex">
           <div
-            className={'hamburger ${hamburgerClass ? "is-active" : ""}'}
+            className={`hamburger ${hamburgerClass ? "is-active" : ""}`}
             onClick={handleShowSideBar}
           >
             <span className="line"></span>

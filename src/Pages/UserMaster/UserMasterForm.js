@@ -14,6 +14,7 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 const UserMasterForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+
   //To get the labels from API
   const userMaster = GetTranslationData("UIAdmin", "user_Master_label");
   const email = GetTranslationData("UIAdmin", "email_label");
@@ -24,41 +25,56 @@ const UserMasterForm = () => {
   const firstName = GetTranslationData("UIAdmin", "first-name");
   const lastName = GetTranslationData("UIAdmin", "last-name");
   const admin = GetTranslationData("UIAdmin", "admin_Label");
+
   //To get the data from redux store
   const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
-  const clientList = useSelector(
-    (state) => state.clientMasterReducer?.clientData
-  );
+
   // user-role get api call
   useEffect(() => {
     dispatch(onGetUserRole());
     dispatch(onClientMasterSubmit());
   }, [dispatch]);
+
   // initial values for the input fields
   const initialValues = {
     email: "",
     number: "",
     firstName: "",
     lastName: "",
+    roles: [],
   };
-  // to validate login form using Yup schema
+
+  // to validate user master form using Yup schema
   const validateForm = yup.object({
     email: yup.string().email().required("Email is required"),
     number: yup.string().required("Phone number is required"),
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
+    roles: yup.array().min(1, "At least one role must be selected").required(),
   });
+
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: initialValues,
-    validationSchema: validateForm,
-    onSubmit: (values, action) => {
-      setIsSubmit(true);
-      dispatch(onUserSubmit({ values }));
-      action.resetForm();
-    },
-  });
+  const { values, errors, touched, handleChange, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: initialValues,
+      validationSchema: validateForm,
+      onSubmit: (values, action) => {
+        setIsSubmit(true);
+        dispatch(onUserSubmit({ values }));
+        action.resetForm();
+      },
+    });
+
+  // to handle user-role checkbox
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;  
+    // update Formik values for roles
+    setFieldValue("roles", checked
+      ? [...values.roles, value]
+      : values.roles.filter(role => role !== value)
+    );
+  };
   //to handle navigation and toast notifications based on user status
   useEffect(() => {
     if (isSubmit && onSubmitData?.status_code === "201") {
@@ -66,7 +82,7 @@ const UserMasterForm = () => {
     } else if (isSubmit && onSubmitData?.status_code) {
       toast.error(onSubmitData?.message);
     }
-  }, [onSubmitData]);
+  }, [isSubmit, onSubmitData]);
 
   return (
     <>
@@ -84,7 +100,7 @@ const UserMasterForm = () => {
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                        {email}
+                          {email}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -103,7 +119,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                        {mobile}
+                          {mobile}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -122,7 +138,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                        {firstName}
+                          {firstName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -142,7 +158,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                        {lastName}
+                          {lastName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -165,22 +181,22 @@ const UserMasterForm = () => {
                         {/* admin */}
                         <div className="row ml-4">
                           <label className="role_name_bold" htmlFor="name-f">
-                          {admin}
+                            {admin}
                           </label>
                           {Array.isArray(roleList?.userRoleData) &&
-                            roleList?.userRoleData?.map((item) => (
+                            roleList?.userRoleData?.map((item, index) => (
                               <div
-                                key={item?.id}
+                                key={index}
                                 className="form-check mt-2 col-lg-3"
                               >
                                 <InputField
                                   id={item.id}
                                   type="checkbox"
                                   className="form-check-input"
-                                  name="role"
+                                  name="roles"
                                   value={item.id}
-                                  // checked={}
-                                  // onChange={}
+                                  checked={values.roles.includes(item.id)}
+                                  onChange={handleCheckboxChange}
                                 />
                                 <label
                                   className="form-check-label"
@@ -191,13 +207,15 @@ const UserMasterForm = () => {
                               </div>
                             ))}
                         </div>
-                        <p className="text-danger">{errors.clientRoleId}</p>
+                        {errors.roles && touched.roles && (
+                          <p className="text-danger">{errors.roles}</p>
+                        )}
                         <span
                           className="form-check-label"
                           htmlFor="basic_checkbox_1"
                           style={{ marginLeft: "5px", marginTop: "10px" }}
                         >
-                         {requiredLevel}
+                          {requiredLevel}
                         </span>
                         <div className="col-sm-4 mt-2 mb-4">
                           <Button

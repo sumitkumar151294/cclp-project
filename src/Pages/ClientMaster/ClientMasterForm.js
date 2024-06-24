@@ -13,9 +13,10 @@ import {
 } from "../../Store/Slices/clientMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const ClientMaster = ({ data, clientPayData, setdata }) => {
+const ClientMaster = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  // to get labels from API
   const client_master_label=GetTranslationData("UIAdmin", "client_master_label")
   const contactName = GetTranslationData("UIAdmin", "contact_Name_label");
   const contactNumber = GetTranslationData("UIAdmin", "contact_Number_label");
