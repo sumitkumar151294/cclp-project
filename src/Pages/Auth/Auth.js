@@ -16,15 +16,12 @@ const Auth = () => {
   });
 
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
-  const translationData = useSelector((state) => state.translationReducer);
   const currentUrl = window.location.href;
   useEffect(() => {
     let matchingConfig = config.filter((item) => currentUrl.includes(item.API_URL));
-
     if (matchingConfig) {
       matchingConfig = matchingConfig.find((item) => item.PARTNER_KEY === "UIAdmin");
     }
-
     if (matchingConfig && !loginAuthData?.data.length) {
       const { ACCESS_KEY, SECRET_KEY, PARTNER_KEY } = matchingConfig;
       dispatch(onTranslationReset());
@@ -52,23 +49,6 @@ const Auth = () => {
       });
     }
   }, [loginAuthData]);
-
-  useEffect(() => {
-    if (translationData.status_code === "201" && !translationData?.isLoading) {
-      //dispatch(onTranslationReset());
-    } else if (
-      translationData?.status_code !== "201" &&
-      translationData?.status_code
-    ) {
-      setPageError({
-        StatusCode: "500",
-        ErrorName: "Internal Server Error",
-        ErrorDesription: "You do not have permission to view this resource",
-        url: "/",
-        buttonText: "Back to Home",
-      });
-    }
-  }, [translationData]);
 
   return (
     <>

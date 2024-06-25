@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onAddCouponSubmit } from "../../Store/Slices/addCouponSlice";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../Components/Loader/Loader";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const AddCoupon = () => {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -68,6 +69,7 @@ const AddCoupon = () => {
   }, [addCouponData]);
   return (
     <>
+    <ScrollToTop/>
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">

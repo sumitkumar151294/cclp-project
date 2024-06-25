@@ -3,8 +3,11 @@ import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import Loader from "../../Components/Loader/Loader";
-import { onPostUserRole, onPostUserRoleReset } from "../../Store/Slices/userRoleSlice";
-import {onPostUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
+import {
+  onPostUserRole,
+  onPostUserRoleReset,
+} from "../../Store/Slices/userRoleSlice";
+import { onPostUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -97,7 +100,9 @@ const RoleMasterForm = () => {
       setModuleAccess([]);
     } else {
       const allModules = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
+        const existingModule = moduleAccess.find(
+          (mod) => mod.name === data.name
+        );
         return {
           name: data.name,
           view: true,
@@ -109,13 +114,15 @@ const RoleMasterForm = () => {
     }
     setSelectAll(!selectAll);
   };
-  
+
   useEffect(() => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
+        const existingModule = moduleAccess.find(
+          (mod) => mod.name === data.name
+        );
         return {
-          roleId: 43,  // Replace with actual roleId logic if needed
+          roleId: 43, // Replace with actual roleId logic if needed
           moduleId: data.id,
           viewAccess: existingModule?.view || false,
           addAccess: existingModule?.add || false,
@@ -126,7 +133,6 @@ const RoleMasterForm = () => {
       dispatch(onPostUserRoleReset()); // Assuming this resets some state related to user role
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
-  
 
   // to handle navigation and toast notifications based on user role status
   useEffect(() => {
@@ -150,7 +156,7 @@ const RoleMasterForm = () => {
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="name-f">
-                        {roleName}
+                          {roleName}
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
@@ -197,7 +203,7 @@ const RoleMasterForm = () => {
                             className="form-check-label fnt-17"
                             htmlFor="flexCheckDefault2"
                           >
-                           {selectall}
+                            {selectall}
                           </label>
                         </div>
                       </div>
@@ -263,7 +269,7 @@ const RoleMasterForm = () => {
                             className="form-check-label error-check text-danger"
                             htmlFor="basic_checkbox_1"
                           >
-                           {checkBox_Error}
+                            {checkBox_Error}
                           </span>
                         )}
                         <div className="col-sm-4 mt-4 mb-4">

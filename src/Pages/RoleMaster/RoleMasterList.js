@@ -7,10 +7,11 @@ import ReactPaginate from "react-paginate";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
-   // To get the Translation label
-   const roleModuleAccessList = GetTranslationData(
+  // To get the Translation label
+  const roleModuleAccessList = GetTranslationData(
     "UIAdmin",
     "role-module-access-list"
   );
@@ -20,9 +21,8 @@ const RoleMasterList = () => {
   const disabled_Text = GetTranslationData("UIAdmin", "disabled_Text");
   const dispatch = useDispatch();
   // To get the label from redux
-  const roleAccessListData = useSelector(
-    (state) => state?.userRoleReducer?.userRoleData
-  );
+  const roleAccessList = useSelector((state) => state?.userRoleReducer);
+  const roleAccessListData = roleAccessList?.userRoleData;
   // fetch Role Master data on component mount
   useEffect(() => {
     dispatch(onGetUserRole());
@@ -31,13 +31,14 @@ const RoleMasterList = () => {
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  //to handle page 
+  //to handle page
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
 
   return (
     <>
+      <ScrollToTop />
       <RoleMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -47,7 +48,8 @@ const RoleMasterList = () => {
                 <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
-                {roleAccessListData?.getUserRoleLoading && <Loader />}
+                {console.log(roleAccessList?.getUserRoleLoading)}
+                {roleAccessList?.getUserRoleLoading && <Loader />}
                 {roleAccessListData?.length > 0 ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">
@@ -74,7 +76,6 @@ const RoleMasterList = () => {
                                 </td>
                                 <td>
                                   <Button
-                                    onClick=""
                                     className="btn btn-primary shadow btn-xs sharp me-1"
                                     icon={"fas fa-pencil-alt"}
                                   />

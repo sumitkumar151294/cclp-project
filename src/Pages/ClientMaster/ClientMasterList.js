@@ -9,6 +9,7 @@ import Button from "../../Components/Button/Button";
 import ClientMaster from "./ClientMasterForm";
 import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const ClientMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,10 +25,9 @@ const ClientMasterList = () => {
   const status = GetTranslationData("UIAdmin", "Status_label");
   const exportLabel = GetTranslationData("UIAdmin", "export_label");
   const clientListLabel = GetTranslationData("UIAdmin", "client List_label");
-  const clientListData = useSelector(
-    (state) => state.clientMasterReducer?.clientData
-  );
-
+  // to get client data from redux
+  const clientList = useSelector((state) => state.clientMasterReducer);
+  const clientListData = clientList?.clientData;
   // to handle search query
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -80,7 +80,8 @@ const ClientMasterList = () => {
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   return (
-    <div>
+    <>
+      <ScrollToTop />
       <ClientMaster />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -121,7 +122,7 @@ const ClientMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {clientListData?.isLoading && <Loader />}
+                {clientList?.isLoading && <Loader />}
                 {filteredClientData?.length > 0 ? (
                   <div className="table-responsive scroll-Table-x">
                     <table className="table header-border table-responsive-sm">
@@ -199,7 +200,7 @@ const ClientMasterList = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,11 +1,11 @@
-//import { useEffect } from 'react';
+import { useEffect } from 'react';
 
-// const ScrollToTop = () => {
-//   useEffect(() => {
-//     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-//   }, []);
+const ScrollToTop = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
 
-//   return null;
-// };
+  return null;
+};
 
-//export default ScrollToTop;
+export default ScrollToTop;

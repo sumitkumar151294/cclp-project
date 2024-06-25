@@ -7,12 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { onGetCustomerSegement } from "../../Store/Slices/customerSegementSlice";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const CustomerSegment = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
+  // Translation labels
+  const customerSegment = GetTranslationData("UIAdmin", "customerSegment");
+  const exportLabel = GetTranslationData("UIAdmin", "export_label");
+  const currentStatus = GetTranslationData("UIAdmin", "currentStatus");
+  const id = GetTranslationData("UIAdmin", "id");
+  const segmentName = GetTranslationData("UIAdmin", "segmentName");
+  const date = GetTranslationData("UIAdmin", "date");
   //to get customer segment data from redux store
   const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
   const customerSegData = getCustomerData?.data;
@@ -63,7 +72,8 @@ const CustomerSegment = () => {
   };
 
   return (
-    <div>
+    <>
+    <ScrollToTop/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
@@ -71,7 +81,7 @@ const CustomerSegment = () => {
               <div className="container-fluid pt-0">
                 <div className="d-flex justify-content-between align-items-center flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">Customer Segment</h4>
+                    <h4 className="card-title">{customerSegment}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -97,7 +107,7 @@ const CustomerSegment = () => {
                         {filteredcustomerData.length > 0 && (
                           <Button
                             className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
-                            text="Export"
+                            text={exportLabel}
                             icons={"fa fa-file-excel"}
                           />
                         )}
@@ -117,10 +127,10 @@ const CustomerSegment = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>ID </th>
-                          <th>Segment Name</th>
-                          <th>Current Status </th>
-                          <th>Date</th>
+                          <th>{id} </th>
+                          <th>{segmentName}</th>
+                          <th>{currentStatus} </th>
+                          <th>{date}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -177,7 +187,7 @@ const CustomerSegment = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
