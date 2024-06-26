@@ -1,7 +1,30 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callUserRoleModuleAccessPostApi} from "../Context/userRoleModuleAccessApi";
-import {onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
+import { callUserRoleModuleAccessGetApi, callUserRoleModuleAccessPostApi} from "../Context/userRoleModuleAccessApi";
+import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRoleModuleAccessSuccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
 
+function* GetUserRoleModuleAccess() {
+  try {
+    const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi);
+    if (getUserRoleModuleAccessResponse.httpStatusCode === "200") {
+      yield put(
+        onGetUserRoleModuleAccessSuccess({
+          data: getUserRoleModuleAccessResponse.response,
+          message: getUserRoleModuleAccessResponse.errorMessage,
+        })
+      );
+    } else {
+      yield put(
+        onGetUserRoleModuleAccessError({
+          data: getUserRoleModuleAccessResponse.result,
+          message: getUserRoleModuleAccessResponse.result.message,
+        })
+      );
+    }
+  } catch (error) {
+    const message = error.response || "Something went wrong";
+    yield put(onGetUserRoleModuleAccessError({ data: [], message, status_code: 400 }));
+  }
+}
 function* PostUserRoleModuleAccess({ payload }) {
   try {
     const postUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
@@ -26,5 +49,6 @@ function* PostUserRoleModuleAccess({ payload }) {
   }
 }
 export default function* userRoleModuleAccessSaga() {
+  yield takeLatest(onGetUserRoleModuleAccess.type, GetUserRoleModuleAccess);
   yield takeLatest(onPostUserRoleModuleAccess.type, PostUserRoleModuleAccess);
 }

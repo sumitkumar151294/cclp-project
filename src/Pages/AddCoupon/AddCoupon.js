@@ -69,7 +69,7 @@ const AddCoupon = () => {
   }, [addCouponData]);
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">

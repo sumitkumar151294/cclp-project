@@ -25,7 +25,7 @@ const CustomerSegment = () => {
   //to get customer segment data from redux store
   const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
   const customerSegData = getCustomerData?.data;
-// fetch Customer Segment list data on component mount
+  // fetch Customer Segment list data on component mount
   useEffect(() => {
     dispatch(onGetCustomerSegement());
   }, []);
@@ -55,7 +55,7 @@ const CustomerSegment = () => {
     currentStatus: data.currentStatus,
     date: data.date,
   }));
-// headers of the excel data
+  // headers of the excel data
   const headers = [
     { label: "Id", key: "id" },
     { label: "Segment Name", key: "segmentName" },
@@ -73,7 +73,7 @@ const CustomerSegment = () => {
 
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">

@@ -48,7 +48,6 @@ const RoleMasterList = () => {
                 <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
-                {console.log(roleAccessList?.getUserRoleLoading)}
                 {roleAccessList?.getUserRoleLoading && <Loader />}
                 {roleAccessListData?.length > 0 ? (
                   <div className="table-responsive">
@@ -69,9 +68,11 @@ const RoleMasterList = () => {
                                 <td>{data.name}</td>
                                 <td>
                                   <div className="d-flex">
+                                  {data?.modules?.map((item) => (
                                     <span className="badge badge-success mr-10">
-                                      {data.module}
-                                    </span>
+                                    {item}
+                                  </span>
+                                  ))}
                                   </div>
                                 </td>
                                 <td>

@@ -40,7 +40,6 @@ const RoleMasterForm = () => {
   const initialValues = {
     name: "",
     description: "",
-    modules: [],
   };
   // to validate form using Yup schema
   const validateForm = yup.object({
@@ -57,15 +56,15 @@ const RoleMasterForm = () => {
       }
       setIsSubmit(true);
       dispatch(onPostUserRole({ ...values, modules: moduleAccess }));
-      setModuleAccess([]);
       setSelectAll(false);
       action.resetForm();
+      
     },
   });
   // to handle checkbox changes
   const handleCheckboxChange = (moduleName, accessType) => {
     const newModuleAccess = [...moduleAccess];
-    const moduleIndex = newModuleAccess.findIndex(
+    const moduleIndex = newModuleAccess?.findIndex(
       (mod) => mod.name === moduleName
     );
 
@@ -99,8 +98,8 @@ const RoleMasterForm = () => {
     if (selectAll) {
       setModuleAccess([]);
     } else {
-      const allModules = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find(
+      const allModules = moduleAccessData?.map((data) => {
+        const existingModule = moduleAccess?.find(
           (mod) => mod.name === data.name
         );
         return {
@@ -117,12 +116,12 @@ const RoleMasterForm = () => {
 
   useEffect(() => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
-      const accessPostData = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find(
+      const accessPostData = moduleAccessData?.map((data) => {
+        const existingModule = moduleAccess?.find(
           (mod) => mod.name === data.name
         );
         return {
-          roleId: 43, // Replace with actual roleId logic if needed
+          roleId: 43,
           moduleId: data.id,
           viewAccess: existingModule?.view || false,
           addAccess: existingModule?.add || false,
@@ -131,6 +130,7 @@ const RoleMasterForm = () => {
       });
       dispatch(onPostUserRoleModuleAccess(accessPostData));
       dispatch(onPostUserRoleReset()); // Assuming this resets some state related to user role
+      setModuleAccess([]);
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
 
@@ -211,7 +211,7 @@ const RoleMasterForm = () => {
                         <label htmlFor="name-f">{module_access}</label>
                         {moduleAccessData?.map((data, index) => {
                           const module =
-                            moduleAccess.find(
+                            moduleAccess?.find(
                               (mod) => mod.name === data.name
                             ) || {};
                           return (

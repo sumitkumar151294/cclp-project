@@ -1,17 +1,32 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetModule } from "../../Store/Slices/moduleSlice";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loader from "../../Components/Loader/Loader";
+import Logout from "../../Assets/icon/logout.png";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { onLogout } from "../../Store/Slices/loginSlice";
+import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 const SideBar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const currentUrl = useLocation();
+  // to get label from API
+  const logout = GetTranslationData("UIAdmin", "logout");
+  // to get module data from redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
   // to call onGetModule
   useEffect(() => {
     dispatch(onGetModule());
+    dispatch(onGetUserRoleModuleAccess());
   }, []);
+  // To reset the redux store (logout the user)
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(onLogout());
+    navigate("/")
+  };
   // to get icon dynamically
   const iconDynamic = (icon) => {
     try {
@@ -56,6 +71,16 @@ const SideBar = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+              <Link
+                className="ai-icon "
+                onClick={handleLogout}
+                aria-expanded="false"
+              >
+                <img className="w-20px" src={Logout} alt="file not exist" />
+                <span className="nav-text ps-1"> {logout}</span>
+              </Link>
+            </li>
           </ul>
       </div>
     </div>
