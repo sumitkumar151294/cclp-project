@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetModule } from "../../Store/Slices/moduleSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -8,26 +8,35 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import { onLogout } from "../../Store/Slices/loginSlice";
 import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 const SideBar = () => {
+  const [sideBarModules, setIsSideBarModules] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUrl = useLocation();
   // to get label from API
   const logout = GetTranslationData("UIAdmin", "logout");
-  // to get module data from redux store
+  // to get user role module access data from the Redux store
+  const userRoleModuleAccess = useSelector(
+    (state) => state.userRoleModuleAccessReducer?.data
+  );
+  // to get the current user's role ID from the Redux store
+  const userRoleID = useSelector(
+    (state) => state.loginReducer?.data?.[0]?.adminRoleId
+  );
+  // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
-  // to call onGetModule
+ // fetch module and user role module access data when the component mounts
   useEffect(() => {
     dispatch(onGetModule());
     dispatch(onGetUserRoleModuleAccess());
   }, []);
-  // To reset the redux store (logout the user)
+  // function to handle logout and navigate to the home page
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(onLogout());
     navigate("/")
   };
-  // to get icon dynamically
+  // function to dynamically import icons based on the icon name
   const iconDynamic = (icon) => {
     try {
       return require(`../../Assets/icon/${icon}.png`);
@@ -35,21 +44,43 @@ const SideBar = () => {
       console.error(`Cannot find module './${icon}.png'`);
     }
   };
-  // function to add active class on Li
+  // to add an active class to the clicked navigation item
   const hanleClick = (e) => {
     document.querySelectorAll(".mm-active").forEach((e) => {
       e.classList.remove("mm-active");
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
   };
-
+// filter and set sidebar modules based on user role access
+  useEffect(() => {
+    if (!getModule.isLoading && userRoleModuleAccess.length > 0) {
+      let tempideModules = JSON.parse(JSON.stringify(getModuleData));
+      const filterData = userRoleModuleAccess.filter((item) => {
+        return (
+          item.roleId === userRoleID &&
+          (item.addAccess || item.editAccess || item.viewAccess)
+        );
+      });
+      const filterModules = [];
+      for (var i = 0; i < tempideModules.length; i++) {
+        for (var j = 0; j < filterData?.length; j++) {
+          if (tempideModules[i].id === filterData[j].moduleId) {
+            //tempideModules[i].moduleId = filterData[j].moduleId;
+            filterModules.push(tempideModules[i]);
+          }
+        }
+      }
+      setIsSideBarModules(filterModules);
+    } else {
+    }
+  }, [getModuleData, userRoleModuleAccess]);
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
         {getModule?.isLoading && <Loader />}
           <ul className="metismenu mm-show" id="menu">
-            {getModuleData &&
-              getModuleData?.map((item, index) => (
+            {sideBarModules &&
+              sideBarModules?.map((item, index) => (
                 <li
                   key={index}
                   className={`nav-icn ${

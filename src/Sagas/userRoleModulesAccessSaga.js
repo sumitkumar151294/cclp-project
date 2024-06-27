@@ -5,7 +5,7 @@ import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRole
 function* GetUserRoleModuleAccess() {
   try {
     const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi);
-    if (getUserRoleModuleAccessResponse.httpStatusCode === "200") {
+    if (getUserRoleModuleAccessResponse.httpStatusCode === "201") {
       yield put(
         onGetUserRoleModuleAccessSuccess({
           data: getUserRoleModuleAccessResponse.response,

@@ -9,10 +9,22 @@ import { onAddCouponSubmit } from "../../Store/Slices/addCouponSlice";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../Components/Loader/Loader";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const AddCoupon = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  // to get labels from api
+  const addCoupon = GetTranslationData("UIAdmin", "addCoupon");
+  const dealOffer = GetTranslationData("UIAdmin", "dealOffer");
+  const submit = GetTranslationData("UIAdmin", "submit_label");
+  const couponcode= GetTranslationData("UIAdmin", "couponcode");
+  const typeOfCoupon=GetTranslationData("UIAdmin", "typeOfCoupon");
+  const redemationlink=GetTranslationData("UIAdmin", "redemationlink");
+  const image=GetTranslationData("UIAdmin", "image");
+  const validityDate=GetTranslationData("UIAdmin", "validityDate");
+  const termsAndCondition=GetTranslationData("UIAdmin", "termsAndCondition");
+  const description = GetTranslationData("UIAdmin", "description");
   // to get coupon data from redux store
   const addCouponData = useSelector((state) => state?.addCouponReducer);
   // initial values for the input fields
@@ -76,7 +88,7 @@ const AddCoupon = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Add Coupon</h4>
+                <h4 className="card-title">{addCoupon}</h4>
               </div>
 
               <div className="card-body ">
@@ -85,7 +97,7 @@ const AddCoupon = () => {
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="status">Deal & Offer</label>
+                        <label htmlFor="status">{dealOffer}</label>
                         <span className="text-danger">*</span>
                         <Dropdown
                           name="status"
@@ -99,7 +111,7 @@ const AddCoupon = () => {
                       </div>
 
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="pass"> Coupon code</label>
+                        <label htmlFor="pass">{couponcode}</label>
                         <span className="text-danger">*</span>
                         <InputField
                           className={` ${
@@ -114,7 +126,7 @@ const AddCoupon = () => {
                       </div>
 
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="pass">Type of coupon</label>
+                        <label htmlFor="pass">{typeOfCoupon}</label>
                         <span className="text-danger">*</span>
                         <Dropdown
                           name="typCoupon"
@@ -127,7 +139,7 @@ const AddCoupon = () => {
                         />
                       </div>
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="pass">Redemation link</label>
+                        <label htmlFor="pass">{redemationlink}</label>
                         <span className="text-danger">*</span>
                         <InputField
                           type="url"
@@ -141,7 +153,7 @@ const AddCoupon = () => {
                         />
                       </div>
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="pass">Image</label>
+                        <label htmlFor="pass">{image}</label>
                         <span className="text-danger">*</span>
                         <InputField
                           type="file"
@@ -154,7 +166,7 @@ const AddCoupon = () => {
                         />
                       </div>
                       <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="pass">Validity Date</label>
+                        <label htmlFor="pass">{validityDate}</label>
                         <span className="text-danger">*</span>
                         <InputField
                           type="date"
@@ -168,7 +180,7 @@ const AddCoupon = () => {
                       </div>
                       <div className="row col-lg-12">
                         <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="pass">Terms and condition</label>
+                          <label htmlFor="pass">{termsAndCondition}</label>
                           <span className="text-danger">*</span>
                           <InputField
                             type="text"
@@ -181,7 +193,7 @@ const AddCoupon = () => {
                           />
                         </div>
                         <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="pass">Description</label>
+                          <label htmlFor="pass">{description}</label>
                           <span className="text-danger">*</span>
                           <InputField
                             type="text"
@@ -198,7 +210,7 @@ const AddCoupon = () => {
                         <div className="col-sm-12 form-group mb-0 mt-2">
                           <Button
                             className="btn btn-primary float-right pad-aa"
-                            text="Submit"
+                            text={submit}
                             icon="fa fa-arrow-right"
                           />
                         </div>

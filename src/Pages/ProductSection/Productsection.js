@@ -35,6 +35,7 @@ const ProductSection = () => {
   const action = GetTranslationData("UIAdmin", "action");
   const date_label = GetTranslationData("UIAdmin", "date");
   const status_label = GetTranslationData("UIAdmin", "status");
+  const allocate = GetTranslationData("UIAdmin", "allocate");
   // to get product data
   const productSection = useSelector((state) => state?.productSectionReducer);
   const productSecData = productSection?.getData;
@@ -222,7 +223,7 @@ const ProductSection = () => {
 
                           <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                             <div className="col-lg-12 form-group mb-2">
-                              <label htmlFor="name-f">Status </label>
+                              <label htmlFor="name-f">{status_label} </label>
                               <Dropdown
                                 name="status"
                                 value={status}
@@ -294,7 +295,7 @@ const ProductSection = () => {
                                             className="btn btn-primary btn-sm float-right"
                                           >
                                             <i className="fa fa-eye"></i>
-                                            Allocate
+                                            {allocate}
                                           </Link>
                                         </td>
                                       </tr>
