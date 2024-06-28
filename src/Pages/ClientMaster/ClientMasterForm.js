@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import {
+  onClientMasterSubmit,
   onPostClientMasterReset,
   onPostClientMasterSubmit,
 } from "../../Store/Slices/clientMasterSlice";
@@ -32,11 +33,19 @@ const ClientMaster = () => {
     "database_User_Pass_Label"
   );
   const db_name = GetTranslationData("UIAdmin", "db_name");
-  const add = GetTranslationData("UIAdmin", "add_label");
   const platformDomainUrl = GetTranslationData(
     "UIAdmin",
     "platform_Domain_Url"
   );
+  const themeDetails = GetTranslationData("UIAdmin", "Theme_Details_Label");
+  const active = GetTranslationData("UIAdmin", "active");
+  const nonActive = GetTranslationData("UIAdmin", "nonActive");
+  const submit = GetTranslationData("UIAdmin", "submit_label");
+  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
+  const DatabaseCredentials = GetTranslationData("UIAdmin", " Database_Label");
+  const password_placeholder = GetTranslationData("UIAdmin", "password_label");
+  const ipAddress_label=GetTranslationData("UIAdmin", "ipAddress");
+  const username = GetTranslationData("UIAdmin", "usernamee_label");
   // to get client master data from redux store
   const clientMaster = useSelector((state) => state?.clientMasterReducer);
   // initial values for the input fields
@@ -58,8 +67,10 @@ const ClientMaster = () => {
   const validateForm = yup.object({
     contactName: yup.string().required("Contact name is required"),
     contactNumber: yup.string().required("Contact number is required"),
-    contactEmail: yup.string().email().required("Contact email is required"),
-    contactplatformDomainUrl: yup.string().required("Domain url is required"),
+    contactEmail: yup.string().email("Invalid email").required("Contact email is required"),
+    contactplatformDomainUrl: yup.string().matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      'Enter correct url').required("Domain url is required"),
     status: yup.string().required("Status is required"),
     logo: yup.string().required("Logo is required"),
     theme: yup.string().required("Theme is required"),
@@ -74,14 +85,14 @@ const ClientMaster = () => {
     validationSchema: validateForm,
     onSubmit: (values, action) => {
       setIsSubmit(true);
-      dispatch(onPostClientMasterSubmit({ values }));
+      dispatch(onPostClientMasterSubmit( values ));
       action.resetForm();
     },
   });
   // option for status
   const statusOptions = [
-    { value: true, label: "Active" },
-    { value: false, label: "Non Active" },
+    { value: true, label: active },
+    { value: false, label: nonActive },
   ];
   //options for theme
   const options = [
@@ -96,6 +107,7 @@ const ClientMaster = () => {
     if (isSubmit && clientMaster?.post_status_code === "201") {
       toast.success(clientMaster?.postMessage);
       dispatch(onPostClientMasterReset());
+      dispatch(onClientMasterSubmit());
     } else if (isSubmit && clientMaster?.post_status_code) {
       toast.error(clientMaster?.postMessage);
     }
@@ -123,13 +135,13 @@ const ClientMaster = () => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.contactName
+                            errors.contactName && touched.contactName
                               ? "border-danger"
                               : "form-control"
                           }`}
                           name="contactName"
                           id="contact-name"
-                          placeholder="Contact Name"
+                          placeholder={contactName}
                           value={values.contactName}
                           onChange={handleChange}
                         />
@@ -145,13 +157,13 @@ const ClientMaster = () => {
                         <InputField
                           type="number"
                           className={` ${
-                            errors.contactNumber
+                            errors.contactNumber && touched.contactNumber
                               ? "border-danger"
                               : "form-control"
                           }`}
                           name="contactNumber"
                           id="contact-number"
-                          placeholder="Contact Number"
+                          placeholder={contactNumber}
                           value={values.contactNumber}
                           maxLength={10}
                           onChange={handleChange}
@@ -166,15 +178,15 @@ const ClientMaster = () => {
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
-                          type="email"
+                          type="text"
                           className={` ${
-                            errors.contactEmail
+                            errors.contactEmail  && touched.contactEmail
                               ? "border-danger"
                               : "form-control"
                           }`}
                           name="contactEmail"
                           id="contact-email"
-                          placeholder="example@gmail.com"
+                          placeholder={email_placeholder}
                           value={values.contactEmail}
                           onChange={handleChange}
                         />
@@ -188,15 +200,16 @@ const ClientMaster = () => {
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
-                          type="platformDomainUrl"
+                          type="url"
                           className={` ${
-                            errors.contactplatformDomainUrl
+                            errors.contactplatformDomainUrl &&
+                            touched.contactplatformDomainUrl
                               ? "border-danger"
                               : "form-control"
                           }`}
                           name="contactplatformDomainUrl"
                           id="contact-platformDomainUrl"
-                          placeholder="Platform Domain Url"
+                          placeholder={platformDomainUrl}
                           value={values.contactplatformDomainUrl}
                           onChange={handleChange}
                         />
@@ -217,7 +230,7 @@ const ClientMaster = () => {
                           value={values.status}
                           onChange={handleChange}
                           className={` ${
-                            errors.status ? "border-danger" : "form-select"
+                            errors.status && touched.status ? "border-danger" : "form-select"
                           }`}
                           options={statusOptions}
                         />
@@ -225,7 +238,7 @@ const ClientMaster = () => {
                           <p className="text-danger">{errors.status}</p>
                         )}
                       </div>
-                      <h3 className="mt-3 border">Theme Details </h3>
+                      <h3 className="mt-3 border">{themeDetails}</h3>
                       <div className="col-sm-3 form-group mb-2">
                         <label htmlFor="color">
                         {color}
@@ -248,11 +261,11 @@ const ClientMaster = () => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.logo ? "border-danger" : "form-control"
+                            errors.logo && touched.logo ? "border-danger" : "form-control"
                           }`}
                           name="logo"
                           id="logo"
-                          placeholder="Logo Link"
+                          placeholder={logo}
                           value={values.logo}
                           onChange={handleChange}
                         />
@@ -271,7 +284,7 @@ const ClientMaster = () => {
                           value={values.theme}
                           // key={clientData.themes}
                           className={` ${
-                            errors.theme ? "border-danger" : "form-select"
+                            errors.theme && touched.theme ? "border-danger" : "form-select"
                           }`}
                           options={options}
                         />
@@ -280,7 +293,7 @@ const ClientMaster = () => {
                         )}
                       </div>
                       <div className="row mt-3">
-                        <h3 className="border">Database Credentials</h3>
+                        <h3 className="border">{DatabaseCredentials}</h3>
 
                         <div className="col-sm-3 form-group mb-2">
                           <h4>
@@ -290,14 +303,14 @@ const ClientMaster = () => {
                           <InputField
                             type="text"
                             className={` ${
-                              errors.ipAddress
+                              errors.ipAddress && touched.ipAddress
                                 ? "border-danger"
                                 : "form-control"
                             }`}
                             name="ipAddress"
                             id="ipAddress"
                             value={values.ipAddress}
-                            placeholder="IP Address"
+                            placeholder={ipAddress_label}
                             onChange={handleChange}
                           />
                           {errors.ipAddress && touched.ipAddress && (
@@ -312,12 +325,12 @@ const ClientMaster = () => {
                           <InputField
                             type="text"
                             className={` ${
-                              errors.username ? "border-danger" : "form-control"
+                              errors.username && touched.username ? "border-danger" : "form-control"
                             }`}
                             name="username"
                             id="user-name"
                             value={values.username}
-                            placeholder="Username"
+                            placeholder={username}
                             onChange={handleChange}
                           />
                           {errors.username && touched.username && (
@@ -332,12 +345,12 @@ const ClientMaster = () => {
                           <InputField
                             type="password"
                             className={` ${
-                              errors.password ? "border-danger" : "form-control"
+                              errors.password && touched.password ? "border-danger" : "form-control"
                             }`}
                             name="password"
                             id="password"
                             value={values.password}
-                            placeholder="Password"
+                            placeholder={password_placeholder}
                             onChange={handleChange}
                           />
                           {errors.password && touched.password && (
@@ -352,7 +365,7 @@ const ClientMaster = () => {
                           <InputField
                             type="text"
                             className={` ${
-                              errors.dbName ? "border-danger" : "form-control"
+                              errors.dbName && touched.dbName ? "border-danger" : "form-control"
                             }`}
                             name="dbName"
                             id="dbName"
@@ -368,7 +381,7 @@ const ClientMaster = () => {
 
                       <div className="col-sm-12 form-group mb-0 mt-2">
                         <Button
-                          text={add}
+                          text={submit}
                           icon={"fa fa-arrow-right"}
                           className="btn btn-primary btn-sm float-right p-btn mb-5 mt-2"
                         />

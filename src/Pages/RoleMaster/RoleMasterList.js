@@ -8,6 +8,7 @@ import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
   // To get the Translation label

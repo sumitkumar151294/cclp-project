@@ -82,7 +82,7 @@ const ProductSection = () => {
       toast.error(postProductSecData?.message);
     }
   }, [postProductSecData]);
-  // To search the data
+  // to search the data
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -90,7 +90,7 @@ const ProductSection = () => {
   const handleStatus = (setter) => (event) => {
     setter(event.target.value);
   };
-  // Filter and sort the productContentList data
+  // filter and sort the productContentList data
   const filteredProductSecData = productSecData?.filter((item) => {
     const matchesStatus = !status || item.currentStatus.toString() === status;
     const matchesSearchQuery =
@@ -133,7 +133,7 @@ const ProductSection = () => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.sectionName
+                            errors.sectionName && touched.sectionName
                               ? "border-danger"
                               : "form-control"
                           }`}
@@ -157,7 +157,7 @@ const ProductSection = () => {
                           value={values.status}
                           onChange={handleChange}
                           className={` ${
-                            errors.status ? "border-danger" : "form-select"
+                            errors.status && touched.status ? "border-danger" : "form-select"
                           }`}
                           options={statusOptions}
                         />
@@ -174,7 +174,7 @@ const ProductSection = () => {
                         <InputField
                           type="date"
                           className={` ${
-                            errors.date ? "border-danger" : "form-control"
+                            errors.date && touched.date ? "border-danger" : "form-control"
                           }`}
                           name="date"
                           value={values.date}

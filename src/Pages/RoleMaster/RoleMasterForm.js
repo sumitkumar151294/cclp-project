@@ -4,10 +4,11 @@ import { ToastContainer, toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import Loader from "../../Components/Loader/Loader";
 import {
+  onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
 } from "../../Store/Slices/userRoleSlice";
-import { onPostUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
+import { onGetUserRoleModuleAccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessReset } from "../../Store/Slices/userRoleModuleAccessSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -32,6 +33,7 @@ const RoleMasterForm = () => {
   const edit = GetTranslationData("UIAdmin", "edit");
   const description = GetTranslationData("UIAdmin", "description");
   const mandatory_Req_Label = GetTranslationData("UIAdmin", "role_Req_Label");
+  const description_place = GetTranslationData("UIAdmin", "description_place");
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
   // to get module data from redux store
@@ -138,6 +140,9 @@ const RoleMasterForm = () => {
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
+      dispatch(onGetUserRole());
+      dispatch(onGetUserRoleModuleAccess());
+      dispatch(onPostUserRoleModuleAccessReset());
     }
   }, [userRoleData]);
   return (
@@ -161,12 +166,12 @@ const RoleMasterForm = () => {
                         </label>
                         <InputField
                           type="text"
-                          className={` ${
-                            errors.name ? "border-danger" : "form-control"
+                          className={`form-control ${
+                            errors.name && touched.name ? "border-danger" : ""
                           }`}
                           name="name"
                           id="name-f"
-                          placeholder="Role Name"
+                          placeholder={roleName}
                           value={values.name}
                           onChange={handleChange}
                         />
@@ -181,7 +186,7 @@ const RoleMasterForm = () => {
                           className="form-control"
                           name="description"
                           id="description"
-                          placeholder="Description"
+                          placeholder={description_place}
                           value={values.description}
                           onChange={handleChange}
                         />

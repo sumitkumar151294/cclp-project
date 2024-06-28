@@ -19,7 +19,6 @@ const UserMasterList = () => {
   const email = GetTranslationData("UIAdmin", "email_label");
   const mobile = GetTranslationData("UIAdmin", "mobile_label");
   const username = GetTranslationData("UIAdmin", "usernamee_label");
-  const clients = GetTranslationData("UIAdmin", "clients_name_label");
   const action = GetTranslationData("UIAdmin", "action_label");
   //to get user master data from redux store
   const userList = useSelector((state) => state.userMasterReducer);
@@ -57,7 +56,6 @@ const UserMasterList = () => {
                           <th>{email}</th>
                           <th>{mobile}</th>
                           <th>{username}</th>
-                          <th>{clients}</th>
                           <th>{action}</th>
                         </tr>
                       </thead>
@@ -74,11 +72,6 @@ const UserMasterList = () => {
                               <td>{item.email}</td>
                               <td>{item.number}</td>
                               <td>{item.name}</td>
-                              <td>
-                                <span className="badge badge-secondary mr-10">
-                                  {item.client}
-                                </span>
-                              </td>
                               <td>
                                 <Button
                                   className="btn btn-primary shadow btn-xs sharp me-1"

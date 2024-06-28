@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { onUserSubmit } from "../../Store/Slices/userMasterSlice";
+import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
@@ -24,8 +24,7 @@ const UserMasterForm = () => {
   const submit = GetTranslationData("UIAdmin", "submit_label");
   const firstName = GetTranslationData("UIAdmin", "first-name");
   const lastName = GetTranslationData("UIAdmin", "last-name");
-  const admin = GetTranslationData("UIAdmin", "admin_Label");
-
+  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
   //To get the data from redux store
   const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
@@ -47,7 +46,7 @@ const UserMasterForm = () => {
 
   // to validate user master form using Yup schema
   const validateForm = yup.object({
-    email: yup.string().email().required("Email is required"),
+    email: yup.string().email("Invalid Email").required("Email is required"),
     number: yup.string().required("Phone number is required"),
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
@@ -61,7 +60,7 @@ const UserMasterForm = () => {
       validationSchema: validateForm,
       onSubmit: (values, action) => {
         setIsSubmit(true);
-        dispatch(onUserSubmit({ values }));
+        dispatch(onUserSubmit( values ));
         action.resetForm();
       },
     });
@@ -79,6 +78,8 @@ const UserMasterForm = () => {
   useEffect(() => {
     if (isSubmit && onSubmitData?.status_code === "201") {
       toast.success(onSubmitData?.message);
+      dispatch(onUserSubmitReset());
+      dispatch(onGetUser());
     } else if (isSubmit && onSubmitData?.status_code) {
       toast.error(onSubmitData?.message);
     }
@@ -107,10 +108,10 @@ const UserMasterForm = () => {
                           type="text"
                           name="email"
                           className={` ${
-                            errors.email ? "border-danger" : "form-control"
+                            errors.email && touched.email ? "border-danger" : "form-control"
                           }`}
                           onChange={handleChange}
-                          placeholder="example@gmail.com"
+                          placeholder={email_placeholder}
                           value={values.email}
                         />
                         {errors.email && touched.email && (
@@ -126,7 +127,7 @@ const UserMasterForm = () => {
                           type="number"
                           name="number"
                           className={` ${
-                            errors.number ? "border-danger" : "form-control"
+                            errors.number && touched.number ? "border-danger" : "form-control"
                           }`}
                           onChange={handleChange}
                           placeholder="Mobile Number"
@@ -144,7 +145,7 @@ const UserMasterForm = () => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.firstName ? "border-danger" : "form-control"
+                            errors.firstName && touched.firstName ? "border-danger" : "form-control"
                           }`}
                           name="firstName"
                           id="name-f"
@@ -164,7 +165,7 @@ const UserMasterForm = () => {
                         <InputField
                           type="text"
                           className={` ${
-                            errors.lastName ? "border-danger" : "form-control"
+                            errors.lastName && touched.lastName ? "border-danger" : "form-control"
                           }`}
                           name="lastName"
                           id="name-f"
@@ -178,11 +179,7 @@ const UserMasterForm = () => {
                       </div>
                       <div className="col-lg-12 br pt-2">
                         <label htmlFor="name-f">{role}</label>
-                        {/* admin */}
                         <div className="row ml-4">
-                          <label className="role_name_bold" htmlFor="name-f">
-                            {admin}
-                          </label>
                           {Array.isArray(roleList?.userRoleData) &&
                             roleList?.userRoleData?.map((item, index) => (
                               <div

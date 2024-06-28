@@ -6,6 +6,8 @@ import RouteConfiq from "../../Routing/routes";
 import { config } from "../../Common/Client/ClientConfig";
 
 const Auth = () => {
+  const [showLoader, setShowLoader] = useState(false);
+  const [showError, setShowError] = useState(false);
   const dispatch = useDispatch();
   const [pageError, setPageError] = useState({
     StatusCode: "",
@@ -18,6 +20,7 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const currentUrl = window.location.href;
   useEffect(() => {
+    setShowLoader(true);
     let matchingConfig = config.filter((item) => currentUrl.includes(item.API_URL));
     if (matchingConfig) {
       matchingConfig = matchingConfig.find((item) => item.PARTNER_KEY === "UIAdmin");
@@ -32,6 +35,18 @@ const Auth = () => {
           secretKey: SECRET_KEY,
         })
       );
+    }
+    else {
+      setShowLoader(false);
+      setShowError(true);
+      setPageError({
+        StatusCode: "401",
+        ErrorName: "Permission Denied",
+        ErrorDesription:
+          "Your application url is not registerd to our application",
+        url: "/",
+        buttonText: "Back to Home",
+      });
     }
   }, [currentUrl]);
 

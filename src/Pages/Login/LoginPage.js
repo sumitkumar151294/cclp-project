@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
-import {GetTranslationData} from "../../Components/GetTranslationData/GetTranslationData ";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -18,12 +18,12 @@ const LoginPage = () => {
   const navigate = useNavigate();
   // Translation labels
   const sign = GetTranslationData("UIAdmin", "sign");
-  const email_label=GetTranslationData("UIAdmin", "email_label");
-  const email_placeholder=GetTranslationData("UIAdmin", "email_placeholder");
-  const password_label=GetTranslationData("UIAdmin", "password_label");
-  const password_placeholder=GetTranslationData("UIAdmin", "password_label");
-  const req_field=GetTranslationData("UIAdmin", "req_field");
-  const sign_me_label=GetTranslationData("UIAdmin", "sign_me_label");
+  const email_label = GetTranslationData("UIAdmin", "email_label");
+  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
+  const password_label = GetTranslationData("UIAdmin", "password_label");
+  const password_placeholder = GetTranslationData("UIAdmin", "password_label");
+  const req_field = GetTranslationData("UIAdmin", "req_field");
+  const sign_me_label = GetTranslationData("UIAdmin", "sign_me_label");
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
@@ -34,7 +34,7 @@ const LoginPage = () => {
   };
   // to validate login form using Yup schema
   const validateForm = yup.object({
-    email: yup.string().email().required("Email is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
     password: yup.string().required("Password is required"),
   });
   // to handle form using useFormik hook
@@ -43,7 +43,7 @@ const LoginPage = () => {
     validationSchema: validateForm,
     onSubmit: (values, action) => {
       setIsLogin(true);
-      dispatch(onLoginSubmit({ values }));
+      dispatch(onLoginSubmit(values));
       action.resetForm();
     },
   });
@@ -80,9 +80,11 @@ const LoginPage = () => {
                               <span className="text-danger">*</span>
                             </label>
                             <InputField
-                              type="email"
-                              className={` ${
-                                errors.email ? "border-danger" : "form-control"
+                              type="text"
+                              className={`form-control ${
+                                errors.email && touched.email
+                                  ? "border-danger"
+                                  : ""
                               }`}
                               name="email"
                               placeholder={email_placeholder}
@@ -100,10 +102,10 @@ const LoginPage = () => {
                             </label>
                             <InputField
                               type="password"
-                              className={` ${
-                                errors.password
+                              className={`form-control ${
+                                errors.password && touched.password
                                   ? "border-danger"
-                                  : "form-control"
+                                  : ""
                               }`}
                               name="password"
                               placeholder={password_placeholder}
@@ -120,7 +122,9 @@ const LoginPage = () => {
                               <span
                                 className="form-check-label"
                                 htmlFor="basic_checkbox_1"
-                              >{req_field}</span>
+                              >
+                                {req_field}
+                              </span>
                               <div className="form-check custom-checkbox ms-1">
                                 <InputField
                                   type="checkbox"

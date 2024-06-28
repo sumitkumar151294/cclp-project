@@ -25,16 +25,18 @@ const SideBar = () => {
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
- // fetch module and user role module access data when the component mounts
+  // fetch module and user role module access data when the component mounts
   useEffect(() => {
-    dispatch(onGetModule());
-    dispatch(onGetUserRoleModuleAccess());
+    if (!getModule?.data?.length) {
+      dispatch(onGetModule());
+      dispatch(onGetUserRoleModuleAccess());
+    }
   }, []);
   // function to handle logout and navigate to the home page
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(onLogout());
-    navigate("/")
+    navigate("/");
   };
   // function to dynamically import icons based on the icon name
   const iconDynamic = (icon) => {
@@ -51,7 +53,7 @@ const SideBar = () => {
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
   };
-// filter and set sidebar modules based on user role access
+  // filter and set sidebar modules based on user role access
   useEffect(() => {
     if (!getModule.isLoading && userRoleModuleAccess.length > 0) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
@@ -78,41 +80,41 @@ const SideBar = () => {
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
         {getModule?.isLoading && <Loader />}
-          <ul className="metismenu mm-show" id="menu">
-            {sideBarModules &&
-              sideBarModules?.map((item, index) => (
-                <li
-                  key={index}
-                  className={`nav-icn ${
-                    item.routePath === currentUrl.pathname ? "mm-active" : ""
-                  }`}
-                  onClick={(e) => hanleClick(e)}
-                >
-                  <Link
-                    className="ai-icon"
-                    to={item.routePath}
-                    aria-expanded="false"
-                  >
-                    <img
-                      className="w-20px"
-                      src={iconDynamic(item.icon)}
-                      alt={item.icon}
-                    />
-                    <span className="nav-text ps-1">{item.name}</span>
-                  </Link>
-                </li>
-              ))}
-              <li>
-              <Link
-                className="ai-icon "
-                onClick={handleLogout}
-                aria-expanded="false"
+        <ul className="metismenu mm-show" id="menu">
+          {sideBarModules &&
+            sideBarModules?.map((item, index) => (
+              <li
+                key={index}
+                className={`nav-icn ${
+                  item.routePath === currentUrl.pathname ? "mm-active" : ""
+                }`}
+                onClick={(e) => hanleClick(e)}
               >
-                <img className="w-20px" src={Logout} alt="file not exist" />
-                <span className="nav-text ps-1"> {logout}</span>
-              </Link>
-            </li>
-          </ul>
+                <Link
+                  className="ai-icon"
+                  to={item.routePath}
+                  aria-expanded="false"
+                >
+                  <img
+                    className="w-20px"
+                    src={iconDynamic(item.icon)}
+                    alt={item.icon}
+                  />
+                  <span className="nav-text ps-1">{item.name}</span>
+                </Link>
+              </li>
+            ))}
+          <li>
+            <Link
+              className="ai-icon "
+              onClick={handleLogout}
+              aria-expanded="false"
+            >
+              <img className="w-20px" src={Logout} alt="file not exist" />
+              <span className="nav-text ps-1"> {logout}</span>
+            </Link>
+          </li>
+        </ul>
       </div>
     </div>
   );

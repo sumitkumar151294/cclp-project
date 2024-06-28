@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import InputField from "../../Components/InputField/InputField";
 import image from "../../Assets/img/image.png";
 import Button from "../../Components/Button/Button";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const AllocateProduct = () => {
-
+   // Translation labels
+  const productContentList = GetTranslationData(
+    "UIAdmin",
+    "productContentList"
+  );
+  const exportLabel = GetTranslationData("UIAdmin", "export_label");
+  const productName = GetTranslationData("UIAdmin", "productName");
+  const id = GetTranslationData("UIAdmin", "id");
+  const typeOfProduct = GetTranslationData("UIAdmin", "typeOfProduct");
+  const date_label = GetTranslationData("UIAdmin", "date");
+  const category_label = GetTranslationData("UIAdmin", "category");
+  const display = GetTranslationData("UIAdmin", "display");
+  const sortedBy = GetTranslationData("UIAdmin", "sortedBy");
+  const dealUnlock = GetTranslationData("UIAdmin", "dealUnlock");
+  const points = GetTranslationData("UIAdmin", "points");
+  const price = GetTranslationData("UIAdmin", "price");
+  const link_label = GetTranslationData("UIAdmin", "link_label");
+  const image = GetTranslationData("UIAdmin", "image");
+  const status_label = GetTranslationData("UIAdmin", "status");
+  const disabled_Text = GetTranslationData("UIAdmin", "disabled_Text");
+  const [searchQuery, setSearchQuery] = useState("");
+  // To search the data
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
   // options for status
   const statusOptions = [
     { value: "true", label: "Active" },
@@ -25,13 +50,13 @@ const AllocateProduct = () => {
                     </div>
                     <div className="customer-search mb-sm-0 mb-3">
                       <div className="input-group search-area">
-                        <InputField
-                          type="text"
-                          className="form-control only-high"
-                          placeholder="Search here......"
-                          value=""
-                          onChange=""
-                        />
+                      <InputField
+                            type="text"
+                            className="form-control only-high"
+                            placeholder="Search here......"
+                            value={searchQuery}
+                            onChange={handleSearch}
+                          />
                         <span className="input-group-text">
                           <i className="fa fa-search"></i>
                         </span>
@@ -108,18 +133,18 @@ const AllocateProduct = () => {
                       <table className="table header-border table-responsive-sm">
                         <thead>
                           <tr>
-                            <th> Product Name</th>
-                            <th> Type Of Product</th>
-                            <th>Category</th>
-                            <th>Deal Unlock</th>
-                            <th>Points</th>
-                            <th>Price</th>
-                            <th>ID</th>
-                            <th>Link</th>
-                            <th>Image</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Display</th>
+                          <th>{productName}</th>
+                                <th>{typeOfProduct}</th>
+                                <th>{category_label}</th>
+                                <th>{dealUnlock}</th>
+                                <th>{points}</th>
+                                <th>{price}</th>
+                                <th>{id}</th>
+                                <th>{link_label}</th>
+                                <th>{image}</th>
+                                <th>{status_label}</th>
+                                <th>{date_label}</th>
+                            <th>{display}</th>
                           </tr>
                         </thead>
                         <tbody>
