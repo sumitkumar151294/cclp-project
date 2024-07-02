@@ -5,20 +5,21 @@ import { onLoginAuthError, onLoginAuthSubmit, onLoginAuthSuccess } from "../Stor
 function* LoginAuth({payload}){
   try{
     const loginAuthResponse=yield call(loginAuthApi,payload);
-    if(loginAuthResponse.httpStatusCode==="201"){
+    if(loginAuthResponse.httpStatusCode===200){
       yield put(
         onLoginAuthSuccess({
-            data:loginAuthResponse.response,
-            message:loginAuthResponse.response
+            data:loginAuthResponse?.response,
+            message: loginAuthResponse?.message,
+            status_code:loginAuthResponse?.httpStatusCode
         })
       )
     }
     else{
       yield put(
         onLoginAuthError({
-          data: loginAuthResponse.response,
-          message: loginAuthResponse.errorMessage,
-          status_code:loginAuthResponse.httpStatusCode
+          data: loginAuthResponse?.response,
+          message: loginAuthResponse?.errorMessage,
+          status_code:loginAuthResponse?.httpStatusCode
         })
       )
     }

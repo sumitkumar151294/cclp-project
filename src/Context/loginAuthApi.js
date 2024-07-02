@@ -1,6 +1,6 @@
-import axiosInstance from "../Common/Axios/axiosInstance";
+import axiosInstanceClient from "../Common/Axios/axiosInstanceClient";
 import API from "../Common/Endpoint/serviceConstrants";
 export const loginAuthApi = async (payload) => {
-    const { data = {} } = await axiosInstance.post(API.loginAuth, payload);
+    const { data = {} } = await axiosInstanceClient.post(API.loginAuth, payload);
   return data;
 };

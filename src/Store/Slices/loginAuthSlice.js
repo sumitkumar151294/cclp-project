@@ -20,14 +20,14 @@ export const loginAuthSlice = createSlice({
     },
 
     onLoginAuthSuccess: (state, { payload }) => {
-      const { data = [], message = "", status_code = "201" } = payload;
+      const { data = [], message = "", status_code = "200" } = payload;
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data,
+        data:data,
         message,
-        status_code
+        status_code:status_code
       };
     },
 

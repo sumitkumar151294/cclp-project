@@ -3,7 +3,7 @@ const API = {
   loginAuth: "/generate-auth-token",
   login: "/login",
   //translation
-  translationApi: "/translation-content-get-by-clientid",
+  translationApi:"/translation-content-get-by-clientid", //"/translation-content/by-client-id",
   //module
   moduleApi: "/module",
   //customer segment get api

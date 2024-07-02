@@ -6,7 +6,7 @@ import { callModuleApi } from "../Context/ModuleApi";
 function* Module() {
   try {
     const moduleResponse = yield call(callModuleApi);
-    if (moduleResponse.httpStatusCode === "201") {
+    if (moduleResponse.httpStatusCode === "200") {
       yield put(
         onGetModuleSuccess({
           data: moduleResponse.response,  

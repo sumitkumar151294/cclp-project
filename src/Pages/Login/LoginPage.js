@@ -17,13 +17,13 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // Translation labels
-  const sign = GetTranslationData("UIAdmin", "sign");
-  const email_label = GetTranslationData("UIAdmin", "email_label");
-  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
-  const password_label = GetTranslationData("UIAdmin", "password_label");
-  const password_placeholder = GetTranslationData("UIAdmin", "password_label");
-  const req_field = GetTranslationData("UIAdmin", "req_field");
-  const sign_me_label = GetTranslationData("UIAdmin", "sign_me_label");
+  const sign = GetTranslationData("UIMasterAdmin", "sign");
+  const email_label = GetTranslationData("UIMasterAdmin", "email_label");
+  const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
+  const password_label = GetTranslationData("UIMasterAdmin", "password_label");
+  const password_placeholder = GetTranslationData("UIMasterAdmin", "password_label");
+  const req_field = GetTranslationData("UIMasterAdmin", "req_field");
+  const sign_me_label = GetTranslationData("UIMasterAdmin", "sign_me_label");
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
@@ -49,7 +49,7 @@ const LoginPage = () => {
   });
   //to handle navigation and toast notifications based on login status
   useEffect(() => {
-    if (isLogin && loginDetails?.status_code === "201") {
+    if (isLogin && loginDetails?.status_code === "200") {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
     } else if (isLogin && loginDetails?.status_code) {

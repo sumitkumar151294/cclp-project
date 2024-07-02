@@ -9,17 +9,20 @@ import {
 function* Translation() {
   try { 
     const translationResponse = yield call(translationApi);
-    if (translationResponse.httpStatusCode === "201") {
+    if (translationResponse.httpStatusCode === "200") {
       yield put(
         onTranslationSubmitSuccess({
-          data: translationResponse.response
+          status_code: translationResponse?.httpStatusCode,
+          message: translationResponse?.errorMessage,
+          data: translationResponse?.response
         })
       );
     } else {
       yield put(
         onTranslationSubmitError({
-          data: translationResponse.response,
-          message: translationResponse.errorMessage,
+          data: translationResponse?.response,
+          status_code: translationResponse?.httpStatusCode,
+          message: translationResponse?.errorMessage
         })
       );
     }

@@ -48,7 +48,13 @@ export const loginSlice = createSlice({
         isLoading: false,
         message: "",
       };
-    }
+    },
+    onPartnerKeyLoginSubmit: (state, { payload }) => {
+      return {
+        ...state,
+        partner_Key: payload,
+      };
+    },
   }
 });
 export const {
@@ -56,6 +62,7 @@ export const {
   onLoginSubmitError,
   onLoginSubmitSuccess,
   onLogout,
+  onPartnerKeyLoginSubmit
 } = loginSlice.actions;
 
 export default loginSlice.reducer;

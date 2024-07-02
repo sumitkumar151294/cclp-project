@@ -13,11 +13,12 @@ const SideBar = () => {
   const navigate = useNavigate();
   const currentUrl = useLocation();
   // to get label from API
-  const logout = GetTranslationData("UIAdmin", "logout");
+  const logout = GetTranslationData("UIMasterAdmin", "logout");
   // to get user role module access data from the Redux store
   const userRoleModuleAccess = useSelector(
-    (state) => state.userRoleModuleAccessReducer?.data
+    (state) => state?.userRoleModuleAccessReducer?.data
   );
+  console.log(userRoleModuleAccess)
   // to get the current user's role ID from the Redux store
   const userRoleID = useSelector(
     (state) => state.loginReducer?.data?.[0]?.adminRoleId
@@ -55,9 +56,10 @@ const SideBar = () => {
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
-    if (!getModule.isLoading && userRoleModuleAccess.length > 0) {
+    debugger
+    if (!getModule?.isLoading && userRoleModuleAccess?.length > 0) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
-      const filterData = userRoleModuleAccess.filter((item) => {
+      const filterData = userRoleModuleAccess?.filter((item) => {
         return (
           item.roleId === userRoleID &&
           (item.addAccess || item.editAccess || item.viewAccess)

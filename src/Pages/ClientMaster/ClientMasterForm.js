@@ -18,34 +18,34 @@ const ClientMaster = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get labels from API
-  const client_master_label=GetTranslationData("UIAdmin", "client_master_label")
-  const contactName = GetTranslationData("UIAdmin", "contact_Name_label");
-  const contactNumber = GetTranslationData("UIAdmin", "contact_Number_label");
-  const email = GetTranslationData("UIAdmin", "contact_Email_label");
-  const ipAddress = GetTranslationData("UIAdmin", "IP Address_label");
-  const status = GetTranslationData("UIAdmin", "Status_label");
-  const color = GetTranslationData("UIAdmin", "Color_label");
-  const logo = GetTranslationData("UIAdmin", "Logo Link_label");
-  const theme = GetTranslationData("UIAdmin", "Select Theme_label");
-  const userId = GetTranslationData("UIAdmin", "database_User_ID_Label");
+  const client_master_label=GetTranslationData("UIMasterAdmin", "client_master_label")
+  const contactName = GetTranslationData("UIMasterAdmin", "contact_Name_label");
+  const contactNumber = GetTranslationData("UIMasterAdmin", "contact_Number_label");
+  const email = GetTranslationData("UIMasterAdmin", "contact_Email_label");
+  const ipAddress = GetTranslationData("UIMasterAdmin", "IP Address_label");
+  const status = GetTranslationData("UIMasterAdmin", "Status_label");
+  const color = GetTranslationData("UIMasterAdmin", "Color_label");
+  const logo = GetTranslationData("UIMasterAdmin", "Logo Link_label");
+  const theme = GetTranslationData("UIMasterAdmin", "Select Theme_label");
+  const userId = GetTranslationData("UIMasterAdmin", "database_User_ID_Label");
   const userPassword = GetTranslationData(
-    "UIAdmin",
+    "UIMasterAdmin",
     "database_User_Pass_Label"
   );
-  const db_name = GetTranslationData("UIAdmin", "db_name");
+  const db_name = GetTranslationData("UIMasterAdmin", "db_name");
   const platformDomainUrl = GetTranslationData(
-    "UIAdmin",
+    "UIMasterAdmin",
     "platform_Domain_Url"
   );
-  const themeDetails = GetTranslationData("UIAdmin", "Theme_Details_Label");
-  const active = GetTranslationData("UIAdmin", "active");
-  const nonActive = GetTranslationData("UIAdmin", "nonActive");
-  const submit = GetTranslationData("UIAdmin", "submit_label");
-  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
-  const DatabaseCredentials = GetTranslationData("UIAdmin", " Database_Label");
-  const password_placeholder = GetTranslationData("UIAdmin", "password_label");
-  const ipAddress_label=GetTranslationData("UIAdmin", "ipAddress");
-  const username = GetTranslationData("UIAdmin", "usernamee_label");
+  const themeDetails = GetTranslationData("UIMasterAdmin", "Theme_Details_Label");
+  const active = GetTranslationData("UIMasterAdmin", "active");
+  const nonActive = GetTranslationData("UIMasterAdmin", "nonActive");
+  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
+  const DatabaseCredentials = GetTranslationData("UIMasterAdmin", " Database_Label");
+  const password_placeholder = GetTranslationData("UIMasterAdmin", "password_label");
+  const ipAddress_label=GetTranslationData("UIMasterAdmin", "ipAddress");
+  const username = GetTranslationData("UIMasterAdmin", "usernamee_label");
   // to get client master data from redux store
   const clientMaster = useSelector((state) => state?.clientMasterReducer);
   // initial values for the input fields

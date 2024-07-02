@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
-import { onLoginAuthReset, onLoginAuthSubmit } from "../../Store/Slices/loginAuthSlice";
-import { onTranslationReset, onTranslationSubmit } from "../../Store/Slices/translationSlice";
+import {
+  onLoginAuthReset,
+  onLoginAuthSubmit,
+} from "../../Store/Slices/loginAuthSlice";
+import {
+  onTranslationReset,
+  onTranslationSubmit,
+} from "../../Store/Slices/translationSlice";
+import PageError500 from "../../Components/PageError/PageError";
 import { useDispatch, useSelector } from "react-redux";
 import RouteConfiq from "../../Routing/routes";
 import { config } from "../../Common/Client/ClientConfig";
+import Loader from "../../Components/Loader/Loader";
+import { onPartnerKeyLoginSubmit } from "../../Store/Slices/loginSlice";
+import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
 
 const Auth = () => {
   const [showLoader, setShowLoader] = useState(false);
@@ -16,27 +26,48 @@ const Auth = () => {
     url: "",
     buttonText: "",
   });
-
+  const translationData = useSelector((state) => state.translationReducer);
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const currentUrl = window.location.href;
   useEffect(() => {
     setShowLoader(true);
-    let matchingConfig = config.filter((item) => currentUrl.includes(item.API_URL));
-    if (matchingConfig) {
-      matchingConfig = matchingConfig.find((item) => item.PARTNER_KEY === "UIAdmin");
-    }
-    if (matchingConfig && !loginAuthData?.data.length) {
-      const { ACCESS_KEY, SECRET_KEY, PARTNER_KEY } = matchingConfig;
-      dispatch(onTranslationReset());
-      dispatch(
-        onLoginAuthSubmit({
-          partnerCode: PARTNER_KEY,
-          accessKey: ACCESS_KEY,
-          secretKey: SECRET_KEY,
-        })
+    // find the configuration that matches the current URL
+    let matchingConfig = config.filter((item) =>
+      currentUrl.includes(item.API_URL)
+    );
+    if (matchingConfig.length > 1) {
+      matchingConfig = matchingConfig.find(
+        (item) => item.PARTNER_KEY === "UIAdmin"
       );
+    } else if (matchingConfig.length === 1) {
+      matchingConfig = matchingConfig[0];
     }
-    else {
+    // get data from present url
+    if (matchingConfig) {
+      const { ACCESS_KEY, SECRET_KEY, PARTNER_KEY } = matchingConfig;
+      // var APICalled = false;
+      // if (PARTNER_KEY !== loginDetails.partner_Key) {
+      //   APICalled = true;
+      // }
+      dispatch(onPartnerKeyLoginSubmit(PARTNER_KEY));
+      axiosInstanceClient.defaults.headers["partner-code"] = PARTNER_KEY;
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers["client-code"] =
+        loginAuthData?.data?.[0]?.clientId;
+      if (!loginAuthData?.data.length) {
+        dispatch(onTranslationReset());
+        dispatch(
+          onLoginAuthSubmit({
+            partnerCode: PARTNER_KEY,
+            accessKey: ACCESS_KEY,
+            secretKey: SECRET_KEY,
+          })
+        );
+      } else {
+        setShowError(false);
+        setShowLoader(false);
+      }
+    } else {
       setShowLoader(false);
       setShowError(true);
       setPageError({
@@ -51,10 +82,15 @@ const Auth = () => {
   }, [currentUrl]);
 
   useEffect(() => {
-    if (loginAuthData?.status_code === "201") {
+    if (loginAuthData?.status_code === "200") {
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers["client-code"] =
+        loginAuthData?.data?.[0]?.clientId;
       dispatch(onTranslationSubmit());
       dispatch(onLoginAuthReset());
-    } else if (loginAuthData?.status_code && loginAuthData?.status_code !== "201") {
+    } else if (loginAuthData?.status_code) {
+      setShowError(true);
+      setShowLoader(false);
       setPageError({
         StatusCode: loginAuthData.status_code,
         ErrorName: "Internal Server Error",
@@ -65,9 +101,35 @@ const Auth = () => {
     }
   }, [loginAuthData]);
 
+  useEffect(() => {
+    if (translationData.status_code === "200" && !translationData?.isLoading) {
+      setShowLoader(false);
+      setShowError(false);
+      dispatch(onTranslationReset());
+    } else if (
+      translationData?.status_code !== "200" &&
+      translationData?.status_code
+    ) {
+      setShowError(true);
+      setShowLoader(false);
+      setPageError({
+        StatusCode: "500",
+        ErrorName: "Internal Server Error",
+        ErrorDesription: "You do not have permission to view this resource",
+        url: "/",
+        buttonText: "Back to Home",
+      });
+    }
+  }, [translationData]);
   return (
     <>
-      <RouteConfiq />
+      {showLoader ? (
+        <Loader />
+      ) : (
+        <>
+          {showError ? <PageError500 pageError={pageError} /> : <RouteConfiq />}
+        </>
+      )}
     </>
   );
 };

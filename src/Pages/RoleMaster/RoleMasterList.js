@@ -11,15 +11,16 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
+  const [data, setData] = useState();
   // To get the Translation label
   const roleModuleAccessList = GetTranslationData(
-    "UIAdmin",
+    "UIMasterAdmin",
     "role-module-access-list"
   );
-  const roleName = GetTranslationData("UIAdmin", "role-name");
-  const modules = GetTranslationData("UIAdmin", "modules");
-  const action = GetTranslationData("UIAdmin", "action");
-  const disabled_Text = GetTranslationData("UIAdmin", "disabled_Text");
+  const roleName = GetTranslationData("UIMasterAdmin", "role-name");
+  const modules = GetTranslationData("UIMasterAdmin", "modules");
+  const action = GetTranslationData("UIMasterAdmin", "action");
+  const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   const dispatch = useDispatch();
   // To get the label from redux
   const roleAccessList = useSelector((state) => state?.userRoleReducer);
@@ -36,11 +37,17 @@ const RoleMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
+  // to handle edit functionality
+  const handleEdit = (data) => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const prefilled = data;
+    setData(prefilled);
+  };
 
   return (
     <>
       <ScrollToTop />
-      <RoleMasterForm />
+      <RoleMasterForm data={data} setData={setData}/>
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -80,6 +87,7 @@ const RoleMasterList = () => {
                                   <Button
                                     className="btn btn-primary shadow btn-xs sharp me-1"
                                     icon={"fas fa-pencil-alt"}
+                                    onClick={() => handleEdit(data)}
                                   />
                                 </td>
                               </tr>

@@ -4,11 +4,12 @@ import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole
 function* GetUserRole() {
   try {
     const getUserRoleResponse = yield call(callUserRoleGetApi);
-    if (getUserRoleResponse.httpStatusCode === "201") {
+    if (getUserRoleResponse.httpStatusCode === "200") {
       yield put(
         onGetUserRoleSuccess({
           data: getUserRoleResponse.response,
           message: getUserRoleResponse.errorMessage,
+          status_code:getUserRoleResponse.httpStatusCode
         })
       );
     } else {
@@ -16,6 +17,7 @@ function* GetUserRole() {
         onGetUserRoleError({
           data: getUserRoleResponse.response,
           message: getUserRoleResponse.response.message,
+          status_code:getUserRoleResponse.httpStatusCode
         })
       );
     }
@@ -27,7 +29,7 @@ function* GetUserRole() {
 function* PostUserRole({ payload }) {
   try {
     const postUserRoleResponse = yield call(callUserRolePostApi, payload);
-    if (postUserRoleResponse.httpStatusCode === "201") {
+    if (postUserRoleResponse.httpStatusCode === "200") {
       yield put(
         onPostUserRoleSuccess({
           postData: postUserRoleResponse.response,
@@ -40,6 +42,7 @@ function* PostUserRole({ payload }) {
         onPostUserRoleError({
           data: postUserRoleResponse.response,
           message: postUserRoleResponse.errorMessage,
+          status_code:postUserRoleResponse.httpStatusCode
         })
       );
     }

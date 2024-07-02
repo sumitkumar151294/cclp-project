@@ -15,25 +15,25 @@ import * as yup from "yup";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 // Component for RoleMasterForm
-const RoleMasterForm = () => {
+const RoleMasterForm = ({ data, setData }) => {
   const [checkBoxError, setCheckBoxError] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [moduleAccess, setModuleAccess] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const dispatch = useDispatch();
   // Translation labels
-  const roleMasterLabel = GetTranslationData("UIAdmin", "role-master");
-  const roleName = GetTranslationData("UIAdmin", "role-name");
-  const selectall = GetTranslationData("UIAdmin", "selectall");
-  const module_access = GetTranslationData("UIAdmin", "module-access");
-  const submit = GetTranslationData("UIAdmin", "submit_label");
-  const checkBox_Error = GetTranslationData("UIAdmin", "checkbox_error");
-  const view = GetTranslationData("UIAdmin", "view");
-  const add = GetTranslationData("UIAdmin", "add");
-  const edit = GetTranslationData("UIAdmin", "edit");
-  const description = GetTranslationData("UIAdmin", "description");
-  const mandatory_Req_Label = GetTranslationData("UIAdmin", "role_Req_Label");
-  const description_place = GetTranslationData("UIAdmin", "description_place");
+  const roleMasterLabel = GetTranslationData("UIMasterAdmin", "role-master");
+  const roleName = GetTranslationData("UIMasterAdmin", "role-name");
+  const selectall = GetTranslationData("UIMasterAdmin", "selectall");
+  const module_access = GetTranslationData("UIMasterAdmin", "module-access");
+  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const checkBox_Error = GetTranslationData("UIMasterAdmin", "checkbox_error");
+  const view = GetTranslationData("UIMasterAdmin", "view");
+  const add = GetTranslationData("UIMasterAdmin", "add");
+  const edit = GetTranslationData("UIMasterAdmin", "edit");
+  const description = GetTranslationData("UIMasterAdmin", "description");
+  const mandatory_Req_Label = GetTranslationData("UIMasterAdmin", "role_Req_Label");
+  const description_place = GetTranslationData("UIMasterAdmin", "description_place");
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
   // to get module data from redux store
@@ -143,6 +143,7 @@ const RoleMasterForm = () => {
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
+      setData();
     }
   }, [userRoleData]);
   return (
