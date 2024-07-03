@@ -13,18 +13,19 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const ClientMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [data, setdata] = useState();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
-  const contactName = GetTranslationData("UIAdmin", "contact_Name_label");
-  const searchLabel = GetTranslationData("UIAdmin", "search_here_label");
-  const contactNumber = GetTranslationData("UIAdmin", "contact_Number_label");
-  const email = GetTranslationData("UIAdmin", "contact_Email_label");
-  const clientID = GetTranslationData("UIAdmin", "client ID_label");
-  const action = GetTranslationData("UIAdmin", "action_label");
-  const status = GetTranslationData("UIAdmin", "Status_label");
-  const exportLabel = GetTranslationData("UIAdmin", "export_label");
-  const clientListLabel = GetTranslationData("UIAdmin", "client List_label");
+  const contactName = GetTranslationData("UIMasterAdmin", "contact_Name_label");
+  const searchLabel = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const contactNumber = GetTranslationData("UIMasterAdmin", "contact_Number_label");
+  const email = GetTranslationData("UIMasterAdmin", "contact_Email_label");
+  const clientID = GetTranslationData("UIMasterAdmin", "client ID_label");
+  const action = GetTranslationData("UIMasterAdmin", "action_label");
+  const status = GetTranslationData("UIMasterAdmin", "Status_label");
+  const exportLabel = GetTranslationData("UIMasterAdmin", "export_label");
+  const clientListLabel = GetTranslationData("UIMasterAdmin", "client List_label");
   // to get client data from redux
   const clientList = useSelector((state) => state.clientMasterReducer);
   const clientListData = clientList?.clientData;
@@ -78,11 +79,16 @@ const ClientMasterList = () => {
   };
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
+  const endIndex = startIndex + rowsPerPage; 
+  //to handle edit function
+  const handleEdit = (data) => {
+    const prefilled = data;
+    setdata(prefilled);
+  };
   return (
     <>
       <ScrollToTop />
-      <ClientMaster />
+      <ClientMaster data={data} setdata={setdata}/>
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -163,6 +169,7 @@ const ClientMasterList = () => {
                                   <Button
                                     className="btn btn-primary shadow btn-xs sharp me-1"
                                     icon={"fas fa-pencil-alt"}
+                                    onClick={() => handleEdit(data)}
                                   />
                                   <Button
                                     className="btn btn-danger shadow btn-xs sharp"

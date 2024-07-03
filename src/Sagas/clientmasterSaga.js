@@ -6,13 +6,16 @@ import {
   onClientMasterSubmit,
   onClientMasterSubmitError,
   onClientMasterSubmitSuccess,
+  onUpdateClientMasterSubmitSuccess,
+  onUpdateClientMasterSubmitError,
+  onUpdateClientMasterSubmit,
 } from "../Store/Slices/clientMasterSlice";
-import { getClientMasterApi, postClientMasterApi } from "../Context/clientMasterApi";
+import { getClientMasterApi, postClientMasterApi, updateClientMasterApi } from "../Context/clientMasterApi";
 
 function* ClientMaster() {
   try {
     const clientMasterResponse = yield call(getClientMasterApi);
-    if (clientMasterResponse.httpStatusCode === "201") {
+    if (clientMasterResponse.httpStatusCode === "200") {
       yield put(
         onClientMasterSubmitSuccess({
           data: clientMasterResponse.response,
@@ -37,7 +40,7 @@ function* ClientMaster() {
 function* postClientMaster({ payload }) {
   try {
     const postClientMasterResponse = yield call(postClientMasterApi, payload);
-    if (postClientMasterResponse.httpStatusCode === "201") {
+    if (postClientMasterResponse.httpStatusCode === "200") {
       yield put(
         onPostClientMasterSubmitSuccess({
           postData: postClientMasterResponse.response,
@@ -64,36 +67,36 @@ function* postClientMaster({ payload }) {
     );
   }
 }
-// function* updateClientMaster({ payload }) {
-//   try {
-//     const updateClientMasterResponse = yield call(  updateClientMasterApi, payload);
-//         if (updateClientMasterResponse.httpStatusCode === "201") {
-//       yield put(
-//         onUpdateClientMasterSubmitSuccess({
-//           data: updateClientMasterResponse.Response,
-//           message: updateClientMasterResponse.errorMessage,
-//           status_code: updateClientMasterResponse.httpStatusCode
-//         })
-//       );
-//     } else {
-//       yield put(
-//         onUpdateClientMasterSubmitError({
-//           data: updateClientMasterResponse.Response,
-//           message: updateClientMasterResponse.errorMessage,
-//           status_code: updateClientMasterResponse.httpStatusCode
-//         })
-//       );
-//     }
-//   } catch (error) {
-//     const message = error.response || "Something went wrong";
-//     yield put(
-//       onUpdateClientMasterSubmitError({ data: [], message, status_code: 400 })
-//     );
-//   }
-// }
+function* updateClientMaster({ payload }) {
+  try {
+    const updateClientMasterResponse = yield call(  updateClientMasterApi, payload);
+        if (updateClientMasterResponse.httpStatusCode === "200") {
+      yield put(
+        onUpdateClientMasterSubmitSuccess({
+          data: updateClientMasterResponse.Response,
+          message: updateClientMasterResponse.errorMessage,
+          status_code: updateClientMasterResponse.httpStatusCode
+        })
+      );
+    } else {
+      yield put(
+        onUpdateClientMasterSubmitError({
+          data: updateClientMasterResponse.Response,
+          message: updateClientMasterResponse.errorMessage,
+          status_code: updateClientMasterResponse.httpStatusCode
+        })
+      );
+    }
+  } catch (error) {
+    const message = error.response || "Something went wrong";
+    yield put(
+      onUpdateClientMasterSubmitError({ data: [], message, status_code: 400 })
+    );
+  }
+}
 
 export default function* clientMasterSaga() {
   yield takeLatest(onClientMasterSubmit.type, ClientMaster);
   yield takeLatest(onPostClientMasterSubmit.type, postClientMaster);
-  // yield takeLatest(onUpdateClientMasterSubmit.type, updateClientMaster);
+  yield takeLatest(onUpdateClientMasterSubmit.type, updateClientMaster);
 }

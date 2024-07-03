@@ -14,6 +14,7 @@ const API = {
   //user-role
   postRoleMaster: "/roleMaster",
   getRoleMaster: "/getRoleMaster",
+  roleMaster: "/roleMaster",
   // user-role-module-access
   userRole_moduleAccess: "/user-role-module-access",
   //client-master

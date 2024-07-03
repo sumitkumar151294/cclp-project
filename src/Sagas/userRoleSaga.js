@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callUserRoleGetApi, callUserRolePostApi } from "../Context/roleMasterApi";
-import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess } from "../Store/Slices/userRoleSlice";
+import { callUserRoleGetApi, callUserRolePostApi, callUserRoleUpdateApi } from "../Context/roleMasterApi";
+import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess, onUpdateUserRole, onUpdateUserRoleError, onUpdateUserRoleSuccess } from "../Store/Slices/userRoleSlice";
 function* GetUserRole() {
   try {
     const getUserRoleResponse = yield call(callUserRoleGetApi);
@@ -51,8 +51,31 @@ function* PostUserRole({ payload }) {
     yield put(onPostUserRoleError({ data: [], message, status_code: 400 }));
   }
 }
-
+function* UpdateUserRole({ payload }) {
+  try {
+    const updateUserRoleResponse = yield call(callUserRoleUpdateApi, payload);    
+    if (updateUserRoleResponse.httpStatusCode === "200") {
+      yield put(
+        onUpdateUserRoleSuccess({
+          status_code: updateUserRoleResponse.httpStatusCode,
+          message: updateUserRoleResponse.errorMessage,
+        })
+      );
+    } else {
+      yield put(
+        onUpdateUserRoleError({
+          data: updateUserRoleResponse.result,
+          message: updateUserRoleResponse.result.message,
+        })
+      );
+    }
+  } catch (error) {
+    const message = error.response || "Something went wrong";
+    yield put(onUpdateUserRoleError({ data: {}, message, status_code: 400 }));
+  }
+}
 export default function* userRoleSaga() {
   yield takeLatest(onGetUserRole.type, GetUserRole);
   yield takeLatest(onPostUserRole.type, PostUserRole);
+  yield takeLatest(onUpdateUserRole.type, UpdateUserRole);
 }

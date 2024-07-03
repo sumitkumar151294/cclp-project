@@ -14,7 +14,7 @@ import {
 } from "../../Store/Slices/clientMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const ClientMaster = () => {
+const ClientMaster = ({ data, setdata }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get labels from API
