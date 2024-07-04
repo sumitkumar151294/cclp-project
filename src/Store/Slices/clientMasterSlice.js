@@ -102,7 +102,7 @@ export const clientMasterSlice = createSlice({
       };
     },
     onUpdateClientMasterSubmitSuccess: (state, { payload }) => {
-      const { updateData = [], message = "", status_code = 200 } = payload;
+      const { updateData = [], message = "", status_code = "201" } = payload;
       return {
         ...state,
         updateLoading: false,

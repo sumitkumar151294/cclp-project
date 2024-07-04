@@ -7,9 +7,15 @@ import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
+  onUpdateUserRole,
   onUpdateUserRoleReset,
 } from "../../Store/Slices/userRoleSlice";
-import { onGetUserRoleModuleAccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessReset, onUpdateUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
+import {
+  onGetUserRoleModuleAccess,
+  onPostUserRoleModuleAccess,
+  onPostUserRoleModuleAccessReset,
+  onUpdateUserRoleModuleAccess,
+} from "../../Store/Slices/userRoleModuleAccessSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -34,41 +40,62 @@ const RoleMasterForm = ({ data, setData }) => {
   const add = GetTranslationData("UIMasterAdmin", "add");
   const edit = GetTranslationData("UIMasterAdmin", "edit");
   const description = GetTranslationData("UIMasterAdmin", "description");
-  const mandatory_Req_Label = GetTranslationData("UIMasterAdmin", "role_Req_Label");
-  const description_place = GetTranslationData("UIMasterAdmin", "description_place");
+  const mandatory_Req_Label = GetTranslationData(
+    "UIMasterAdmin",
+    "role_Req_Label"
+  );
+  const description_place = GetTranslationData(
+    "UIMasterAdmin",
+    "description_place"
+  );
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
   // to get module data from redux store
   const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
   // to get user-role-access data from redux store
-  const getModuleAccessData = useSelector((state) => state.userRoleModuleAccessReducer);
+  const getModuleAccessData = useSelector(
+    (state) => state.userRoleModuleAccessReducer
+  );
+  console.log(userRoleData?.status_code);
   // initial values for the input fields
   const initialValues = {
     name: "",
     description: "",
-    modules:[]
+    modules: [],
   };
   // to validate form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required(mandatory_Req_Label),
   });
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit,setValues } = useFormik({
-    initialValues: initialValues,
-    validationSchema: validateForm,
-    onSubmit: (values, action) => {
-      values.modules=[...moduleAccess];
-      if (moduleAccess.length === 0) {
-        setCheckBoxError(true);
-        return;
-      }
-      setIsSubmit(true);
-      dispatch(onPostUserRole(values));
-      setSelectAll(false);
-      action.resetForm();
-      
-    },
-  });
+  const { values, errors, touched, handleChange, handleSubmit, setValues } =
+    useFormik({
+      initialValues: initialValues,
+      validationSchema: validateForm,
+      onSubmit: (values, action) => {
+        values.modules = [...moduleAccess];
+        const postData = {
+          createdBy: 0,
+          deleted: false,
+          description: values?.description,
+          enabled: true,
+          name: values.name,
+          updatedBy: 0,
+        };
+        if (moduleAccess.length === 0) {
+          setCheckBoxError(true);
+          return;
+        }
+        if (data) {
+          dispatch(onUpdateUserRole(postData));
+        } else {
+          dispatch(onPostUserRole(postData));
+        }
+        setIsSubmit(true);
+        setSelectAll(false);
+        action.resetForm();
+      },
+    });
   // to handle checkbox changes
   const handleCheckboxChange = (moduleName, accessType) => {
     const newModuleAccess = [...moduleAccess];
@@ -77,7 +104,7 @@ const RoleMasterForm = ({ data, setData }) => {
     );
 
     if (moduleIndex >= 0) {
-      // Update the existing module access
+      // update the existing module access
       if (accessType === "view") {
         newModuleAccess[moduleIndex].view = !newModuleAccess[moduleIndex].view;
       } else if (accessType === "add") {
@@ -139,8 +166,8 @@ const RoleMasterForm = ({ data, setData }) => {
       dispatch(onPostUserRoleModuleAccess(accessPostData));
       dispatch(onPostUserRoleReset()); // Assuming this resets some state related to user role
       setModuleAccess([]);
-    }
-    else if (userRoleData?.status_code === "201" && !userRoleData?.updateLoading) {
+    } else if (userRoleData?.status_code === "201" && !userRoleData?.updateLoading
+    ) {
       let moduleAccess = JSON.parse(JSON.stringify(getModuleAccessData?.data));
       let moduleAccessList = moduleAccess?.filter(
         (item) => item.roleId === data?.id
@@ -162,6 +189,7 @@ const RoleMasterForm = ({ data, setData }) => {
   }, [userRoleData, moduleAccessData, moduleAccess]);
 
   // to handle navigation and toast notifications based on user role status
+  
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
@@ -170,20 +198,22 @@ const RoleMasterForm = ({ data, setData }) => {
       dispatch(onPostUserRoleModuleAccessReset());
       setData();
     }
-  }, [userRoleData]);
-  // Fetch module data and update form data on mount and when module data changes
+  }, [ userRoleData]);
+  // fetch module data and update form data on mount and when module data changes
   useEffect(() => {
     if (data) {
       setValues({
         name: data.name,
         description: data.description,
-        modules:data.modules
+        modules: data.modules,
       });
       const moduleAccessList = getModuleAccessData?.data?.filter(
         (item) => item.roleId === data.id
       );
       const modulesData = moduleAccessData?.map((module) => {
-        const moduleAccessItem = moduleAccessList?.find((mod) => mod.moduleId === module.id);
+        const moduleAccessItem = moduleAccessList?.find(
+          (mod) => mod.moduleId === module.id
+        );
         return {
           id: module.id,
           name: module.name,

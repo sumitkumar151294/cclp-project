@@ -29,7 +29,7 @@ function* GetUserRole() {
 function* PostUserRole({ payload }) {
   try {
     const postUserRoleResponse = yield call(callUserRolePostApi, payload);
-    if (postUserRoleResponse.httpStatusCode === "200") {
+    if (postUserRoleResponse.httpStatusCode === "201") {
       yield put(
         onPostUserRoleSuccess({
           postData: postUserRoleResponse.response,
@@ -54,11 +54,12 @@ function* PostUserRole({ payload }) {
 function* UpdateUserRole({ payload }) {
   try {
     const updateUserRoleResponse = yield call(callUserRoleUpdateApi, payload);    
-    if (updateUserRoleResponse.httpStatusCode === "200") {
+    if (updateUserRoleResponse.httpStatusCode === "201") {
       yield put(
         onUpdateUserRoleSuccess({
           status_code: updateUserRoleResponse.httpStatusCode,
           message: updateUserRoleResponse.errorMessage,
+          data:updateUserRoleResponse.response
         })
       );
     } else {

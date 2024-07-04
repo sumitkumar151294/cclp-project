@@ -8,6 +8,7 @@ import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
@@ -28,6 +29,7 @@ const RoleMasterList = () => {
   // fetch Role Master data on component mount
   useEffect(() => {
     dispatch(onGetUserRole());
+    dispatch(onGetUserRoleModuleAccess());
   }, []);
   // for pagination
   const [rowsPerPage] = useState(5);

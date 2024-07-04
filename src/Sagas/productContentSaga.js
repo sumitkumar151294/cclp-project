@@ -5,7 +5,7 @@ import { callProductContentApi } from "../Context/productContentApi";
 function* productContent({ payload }) {
   try {
     const productContentResponse = yield call(callProductContentApi, payload);
-    if (productContentResponse.httpStatusCode === "201") {
+    if (productContentResponse.httpStatusCode === "200") {
       yield put(
         onGetProductContentSuccess({
           data: productContentResponse.response,

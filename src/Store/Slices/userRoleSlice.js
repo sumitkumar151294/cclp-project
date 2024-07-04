@@ -97,7 +97,7 @@ export const userRoleSlice = createSlice({
     },
 
     onUpdateUserRoleSuccess: (state, { payload }) => {
-      const { message = "", status_code = 200 } = payload;
+      const { message = "", status_code = "201" } = payload;
       return {
         ...state,
         updateLoading: false,

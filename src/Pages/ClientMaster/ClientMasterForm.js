@@ -41,13 +41,14 @@ const ClientMaster = ({ data, setdata }) => {
   const active = GetTranslationData("UIMasterAdmin", "active");
   const nonActive = GetTranslationData("UIMasterAdmin", "nonActive");
   const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const update = GetTranslationData("UIMasterAdmin", "update_label");
   const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
   const DatabaseCredentials = GetTranslationData("UIMasterAdmin", " Database_Label");
   const password_placeholder = GetTranslationData("UIMasterAdmin", "password_label");
   const ipAddress_label=GetTranslationData("UIMasterAdmin", "ipAddress");
   const username = GetTranslationData("UIMasterAdmin", "usernamee_label");
   // to get client master data from redux store
-  const clientMaster = useSelector((state) => state?.clientMasterReducer);
+  const clientMasterDetails = useSelector((state) => state.clientMasterReducer);
   // initial values for the input fields
   const initialValues = {
     contactName: "",
@@ -55,7 +56,7 @@ const ClientMaster = ({ data, setdata }) => {
     contactEmail: "",
     contactplatformDomainUrl: "",
     status: "",
-    color: "",
+    color: "#000",
     logo: "",
     theme: "",
     ipAddress: "",
@@ -66,13 +67,12 @@ const ClientMaster = ({ data, setdata }) => {
   // to validate login form using Yup schema
   const validateForm = yup.object({
     contactName: yup.string().required("Contact name is required"),
-    contactNumber: yup.string().required("Contact number is required"),
+    contactNumber: yup.number().required("Contact number is required"),
     contactEmail: yup.string().email("Invalid email").required("Contact email is required"),
     contactplatformDomainUrl: yup.string().matches(
-      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url').required("Domain url is required"),
+     /^(https?:\/\/)?([\da-z.-]+\.[a-z.]{2,6})(\/[\w .-]*)*\/?$/,'Enter correct url').required("Domain url is required"),
     status: yup.string().required("Status is required"),
-    logo: yup.string().required("Logo is required"),
+    logo: yup.string().matches(/^(https?:\/\/)?([\da-z.-]+\.[a-z.]{2,6})(\/[\w .-]*)*\/?$/,'Enter correct url').required("Logo is required"),
     theme: yup.string().required("Theme is required"),
     ipAddress: yup.string().required("IP Address is required"),
     username: yup.string().required("Username is required"),
@@ -80,10 +80,11 @@ const ClientMaster = ({ data, setdata }) => {
     dbName: yup.string().required("Database Name is required"),
   });
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleChange, handleSubmit,setValues } = useFormik({
     initialValues: initialValues,
     validationSchema: validateForm,
     onSubmit: (values, action) => {
+      debugger
       setIsSubmit(true);
       dispatch(onPostClientMasterSubmit( values ));
       action.resetForm();
@@ -101,17 +102,34 @@ const ClientMaster = ({ data, setdata }) => {
     { value: "Theme 3", label: "Theme 3" },
     { value: "Theme 4", label: "Theme 4" },
   ];
-
+  //to update client master data
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    setValues({
+      contactName: data?.contactName || "",
+      contactNumber: data?.contactNumber || "",
+      id: 1,
+      contactEmail: data?.contactEmail || "",
+      ipAddress: data?.ipAddress || "",
+      color: data?.color || "#000",
+      logo: data?.logo || "",
+      themes: data?.themes || "",
+      password: data?.password || "",
+      username: data?.username || "",
+      dbName: data?.dbName || "",
+      contactplatformDomainUrl: data?.contactplatformDomainUrl,
+    });
+  }, [data]);
   //to handle toast notifications based on client Master form status
   useEffect(() => {
-    if (isSubmit && clientMaster?.post_status_code === "201") {
-      toast.success(clientMaster?.postMessage);
+    if (isSubmit && clientMasterDetails?.post_status_code === "201") {
+      toast.success(clientMasterDetails?.postMessage);
       dispatch(onPostClientMasterReset());
       dispatch(onClientMasterSubmit());
-    } else if (isSubmit && clientMaster?.post_status_code) {
-      toast.error(clientMaster?.postMessage);
+    } else if (isSubmit && clientMasterDetails?.post_status_code) {
+      toast.error(clientMasterDetails?.postMessage);
     }
-  }, [clientMaster]);
+  }, [clientMasterDetails]);
 
   return (
     <>
@@ -123,7 +141,7 @@ const ClientMaster = ({ data, setdata }) => {
                 <h4 className="card-title">{client_master_label}</h4>
               </div>
               <div className="card-body position-relative">
-                {clientMaster?.postClientLoading && <Loader />}
+                {clientMasterDetails?.postClientLoading && <Loader />}
                 <div className="container-fluid">
                   <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -200,7 +218,7 @@ const ClientMaster = ({ data, setdata }) => {
                           <span className="text-danger">*</span>
                         </label>
                         <InputField
-                          type="url"
+                          type="text"
                           className={` ${
                             errors.contactplatformDomainUrl &&
                             touched.contactplatformDomainUrl
@@ -381,7 +399,7 @@ const ClientMaster = ({ data, setdata }) => {
 
                       <div className="col-sm-12 form-group mb-0 mt-2">
                         <Button
-                          text={submit}
+                          text={data ? update : submit}
                           icon={"fa fa-arrow-right"}
                           className="btn btn-primary btn-sm float-right p-btn mb-5 mt-2"
                         />

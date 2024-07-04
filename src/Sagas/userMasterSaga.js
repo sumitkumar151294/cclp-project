@@ -4,7 +4,7 @@ import { callUserMasterApi, callUserMasterGetApi } from "../Context/userMasterAp
 function* userMaster({ payload }) {
   try {
     const userMasterResponse = yield call(callUserMasterApi, payload);
-    if (userMasterResponse.httpStatusCode === "200") {
+    if (userMasterResponse.httpStatusCode === "201") {
       yield put(
         onUserSubmitSuccess({
           data: userMasterResponse.response,

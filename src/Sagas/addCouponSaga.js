@@ -5,7 +5,7 @@ import { onAddCouponSubmit, onAddCouponSubmitError, onAddCouponSubmitSuccess } f
 function* AddCoupon({ payload }) {
   try {
     const addCouponResponse = yield call(callCouponApi, payload);
-    if (addCouponResponse) {
+    if (addCouponResponse.httpStatusCode==="201") {
       yield put(
         onAddCouponSubmitSuccess({
           status_code: addCouponResponse?.httpStatusCode,

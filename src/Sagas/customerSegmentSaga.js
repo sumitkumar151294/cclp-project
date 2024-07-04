@@ -4,7 +4,7 @@ import { callCustomerSegApi } from "../Context/customerSegmentApi";
 function* customerSegment({ payload }) {
   try {
     const customerSegmentResponse = yield call(callCustomerSegApi, payload);
-    if (customerSegmentResponse.httpStatusCode === "201") {
+    if (customerSegmentResponse.httpStatusCode === "200") {
       yield put(
         onGetCustomerSegementSuccess({
           data: customerSegmentResponse.response,

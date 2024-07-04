@@ -28,7 +28,7 @@ function* GetUserRoleModuleAccess() {
 function* PostUserRoleModuleAccess({ payload }) {
   try {
     const postUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
-    if (postUserRoleModuleAccessResponse.httpStatusCode === "200") {
+    if (postUserRoleModuleAccessResponse.httpStatusCode === "201") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
           status_code: postUserRoleModuleAccessResponse.httpStatusCode,
@@ -51,7 +51,7 @@ function* PostUserRoleModuleAccess({ payload }) {
 function* UpdateUserRoleModuleAccess({ payload }) {
   try {
     const updateUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessUpdateApi, payload);
-    if (updateUserRoleModuleAccessResponse.httpStatusCode === "200") {
+    if (updateUserRoleModuleAccessResponse.httpStatusCode === "201") {
       yield put(
         onUpdateUserRoleModuleAccessSuccess({
           status_code: updateUserRoleModuleAccessResponse.httpStatusCode,

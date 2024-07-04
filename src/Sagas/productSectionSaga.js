@@ -36,7 +36,7 @@ function* PostProductSection({ payload }) {
 function* GetProductSection() {
   try {
     const getProductSectionResponse = yield call(callGetProductApi);
-    if (getProductSectionResponse.httpStatusCode === "201") {
+    if (getProductSectionResponse.httpStatusCode === "200") {
       yield put(
         onGetProductSectionSuccess({
           getData: getProductSectionResponse.response,
