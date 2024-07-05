@@ -43,14 +43,12 @@ const ClientMasterList = () => {
     Array.isArray(clientListData) &&
     clientListData.filter(
       (item) =>
-        (item.name &&
-          item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.number &&
-          item.number.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.email &&
-          item.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.id &&
-          item.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.contactName &&
+          item.contactName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.contactNumber &&
+          item.contactNumber.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.contactEmail &&
+          item.contactEmail.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (typeof item.status === "boolean" &&
           (item.status ? "active" : "non-active").includes(
             searchQuery.toLowerCase()
@@ -147,10 +145,10 @@ const ClientMasterList = () => {
                           .slice(startIndex, endIndex)
                           .map((data, index) => (
                             <tr key={index}>
-                              <td>{data.name}</td>
-                              <td>{data.number}</td>
+                              <td>{data.contactName}</td>
+                              <td>{data.contactNumber}</td>
                               <td>
-                                <span className="text-muted">{data.email}</span>
+                                <span className="text-muted">{data.contactEmail}</span>
                               </td>
                               <td>{data.id}</td>
                               <td>

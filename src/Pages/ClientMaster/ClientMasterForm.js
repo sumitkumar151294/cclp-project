@@ -11,6 +11,7 @@ import {
   onClientMasterSubmit,
   onPostClientMasterReset,
   onPostClientMasterSubmit,
+  onUpdateClientMasterSubmit,
 } from "../../Store/Slices/clientMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
@@ -48,7 +49,7 @@ const ClientMaster = ({ data, setdata }) => {
   const ipAddress_label=GetTranslationData("UIMasterAdmin", "ipAddress");
   const username = GetTranslationData("UIMasterAdmin", "usernamee_label");
   // to get client master data from redux store
-  const clientMasterDetails = useSelector((state) => state.clientMasterReducer);
+  const clientMasterDetails = useSelector((state) => state?.clientMasterReducer);
   // initial values for the input fields
   const initialValues = {
     contactName: "",
@@ -84,9 +85,13 @@ const ClientMaster = ({ data, setdata }) => {
     initialValues: initialValues,
     validationSchema: validateForm,
     onSubmit: (values, action) => {
-      debugger
+      if (data) {
+        dispatch(onUpdateClientMasterSubmit(values));
+        setValues();
+      } else {
+        dispatch(onPostClientMasterSubmit( values ));
+      }
       setIsSubmit(true);
-      dispatch(onPostClientMasterSubmit( values ));
       action.resetForm();
     },
   });
@@ -106,17 +111,18 @@ const ClientMaster = ({ data, setdata }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     setValues({
-      contactName: data?.contactName || "",
-      contactNumber: data?.contactNumber || "",
+      contactName: data?.contactName,
+      contactNumber: data?.contactNumber,
       id: 1,
-      contactEmail: data?.contactEmail || "",
-      ipAddress: data?.ipAddress || "",
-      color: data?.color || "#000",
-      logo: data?.logo || "",
-      themes: data?.themes || "",
-      password: data?.password || "",
-      username: data?.username || "",
-      dbName: data?.dbName || "",
+      contactEmail: data?.contactEmail,
+      ipAddress: data?.ipAddress,
+      color: data?.color,
+      status:data?.status,
+      logo: data?.logo,
+      theme: data?.theme,
+      password: data?.password,
+      username: data?.username,
+      dbName: data?.dbName,
       contactplatformDomainUrl: data?.contactplatformDomainUrl,
     });
   }, [data]);

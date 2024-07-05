@@ -56,7 +56,6 @@ const RoleMasterForm = ({ data, setData }) => {
   const getModuleAccessData = useSelector(
     (state) => state.userRoleModuleAccessReducer
   );
-  console.log(userRoleData?.status_code);
   // initial values for the input fields
   const initialValues = {
     name: "",
@@ -88,6 +87,7 @@ const RoleMasterForm = ({ data, setData }) => {
         }
         if (data) {
           dispatch(onUpdateUserRole(postData));
+          setValues();
         } else {
           dispatch(onPostUserRole(postData));
         }

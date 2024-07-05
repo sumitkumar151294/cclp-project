@@ -49,7 +49,7 @@ const LoginPage = () => {
   });
   //to handle navigation and toast notifications based on login status
   useEffect(() => {
-    if (isLogin && loginDetails?.status_code === "200") {
+    if (isLogin && loginDetails?.status_code === "201") {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
     } else if (isLogin && loginDetails?.status_code) {
