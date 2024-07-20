@@ -55,7 +55,7 @@ function RouteConfiq() {
          <Route path="/lc-admin/addBulkCoupon" element={<Layout Component={AddBulkCoupon} />}/>
          <Route path="/lc-admin/dynamicCoupon" element={<Layout Component={DynamicCouponAdmin} />}/>
          <Route path="/lc-admin/categoryMaster" element={<Layout Component={CategoryMasterAdmin} />}/>
-         <Route path="/lc-admin/dealManagement" element={<Layout Component={AddBulkCoupon} />}/>
+         <Route path="/lc-admin/dealManagement" element={<Layout Component={deal} />}/>
       </Routes>
     </Router>
   );
