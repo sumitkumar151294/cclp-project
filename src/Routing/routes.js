@@ -18,6 +18,11 @@ import ProductSection from "../Pages/ProductSection/ProductSection";
 import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
+import ProuductContent from "../Pages/Admin/ProductContent/ProuductContent";
+import ProuductSection from "../Pages/Admin/ProductSection/ProuductSection";
+import AddCouponAdmin from "../Pages/Admin/AddCouponAdmin/AddCouponAdmin";
+import DynamicCouponAdmin from "../Pages/Admin/DynamicCouponAdmin/DynamicCouponAdmin";
+import CategoryMasterAdmin from "../Pages/Admin/CategoryMasterAdmin/CategoryMasterAdmin";
 
 
 function RouteConfiq() {
@@ -27,11 +32,11 @@ function RouteConfiq() {
         <Route path="/" element={<LoginPage/>} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />}/> 
         <Route path="/customerSegment" element={<Layout Component={CustomerSegment} />}/> 
-        <Route path="/productContentList" element={<Layout Component={ProductContentList} />}/> 
+        <Route path="/productContentList" element={<Layout Component={ProductContentList} />}/>
         <Route path="/productSection" element={<Layout Component={ProductSection} />}/> 
         <Route path="/addCoupon" element={<Layout Component={AddCoupon} />}/> 
         <Route path="/addBulkCoupon" element={<Layout Component={AddBulkCoupon} />}/> 
-        <Route path="/dynamicCoupon" element={<Layout Component={DynamicCoupon} />}/> 
+        <Route path="/dynamicCoupon" element={<Layout Component={DynamicCoupon} />}/>
         <Route path="/couponList" element={<Layout Component={CouponList} />}/> 
         <Route path="/categoryMaster" element={<Layout Component={CategoryMaster} />}/> 
         <Route path="/dealManagement" element={<Layout Component={DealManagement} />}/> 
@@ -42,6 +47,15 @@ function RouteConfiq() {
         <Route path="/roleMaster" element={<Layout Component={RoleMasterList} />}/> 
         <Route path="/clientMaster" element={<Layout Component={ClientMasterList} />}/>
         <Route path="/userMaster" element={<Layout Component={UserMasterList} />}/>
+        {/* admin routes */}
+        <Route path="/lc-admin/customerSegment" element={<Layout Component={CustomerSegment} />}/>
+         <Route path="/lc-admin/productContent" element={<Layout Component={ProuductContent} />}/>
+         <Route path="/lc-admin/productSection" element={<Layout Component={ProuductSection} />}/>
+         <Route path="/lc-admin/addCoupon" element={<Layout Component={AddCouponAdmin} />}/>
+         <Route path="/lc-admin/addBulkCoupon" element={<Layout Component={AddBulkCoupon} />}/>
+         <Route path="/lc-admin/dynamicCoupon" element={<Layout Component={DynamicCouponAdmin} />}/>
+         <Route path="/lc-admin/categoryMaster" element={<Layout Component={CategoryMasterAdmin} />}/>
+         <Route path="/lc-admin/dealManagement" element={<Layout Component={AddBulkCoupon} />}/>
       </Routes>
     </Router>
   );
