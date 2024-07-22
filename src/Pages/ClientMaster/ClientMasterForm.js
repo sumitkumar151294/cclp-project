@@ -87,7 +87,6 @@ const ClientMaster = ({ data, setdata }) => {
     onSubmit: (values, action) => {
       if (data) {
         dispatch(onUpdateClientMasterSubmit(values));
-        setValues();
       } else {
         dispatch(onPostClientMasterSubmit( values ));
       }
