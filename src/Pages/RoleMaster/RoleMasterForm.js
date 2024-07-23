@@ -87,7 +87,6 @@ const RoleMasterForm = ({ data, setData }) => {
         }
         if (data) {
           dispatch(onUpdateUserRole(postData));
-          setValues();
         } else {
           dispatch(onPostUserRole(postData));
         }
