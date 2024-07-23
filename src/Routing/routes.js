@@ -14,7 +14,7 @@ import DealList from "../Pages/DealList/DealList";
 import DealToSegment from "../Pages/DealToSegment/DealToSegment";
 import CompaignMaster from "../Pages/CompaignMaster/CompaignMaster";
 import AllocateProduct from "../Pages/ProductSection/AllocateProduct";
-import ProductSection from "../Pages/ProductSection/ProductSection";
+import ProductSection from "../Pages/ProductSection/Productsection";
 import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
