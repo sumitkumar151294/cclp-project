@@ -10,16 +10,17 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const UserMasterList = () => {
-  const [page, setPage] = useState(1); // Current page
+  const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
+  const [prefilledValues, setPrefilledValues] = useState();
   const dispatch = useDispatch();
   //To get the labels from API
-  const UserList = GetTranslationData("UIAdmin", "User_list_label");
-  const roleName = GetTranslationData("UIAdmin", "role_name_label");
-  const email = GetTranslationData("UIAdmin", "email_label");
-  const mobile = GetTranslationData("UIAdmin", "mobile_label");
-  const username = GetTranslationData("UIAdmin", "usernamee_label");
-  const action = GetTranslationData("UIAdmin", "action_label");
+  const UserList = GetTranslationData("UIMasterAdmin", "User_list_label");
+  const roleName = GetTranslationData("UIMasterAdmin", "role_name_label");
+  const email = GetTranslationData("UIMasterAdmin", "email_label");
+  const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
+  const username = GetTranslationData("UIMasterAdmin", "usernamee_label");
+  const action = GetTranslationData("UIMasterAdmin", "action_label");
   //to get user master data from redux store
   const userList = useSelector((state) => state.userMasterReducer);
   //fetch user master data on mount
@@ -33,11 +34,15 @@ const UserMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-
+  // to handle edit function
+  const handleEdit = (data) => {
+    const prefilled = data;
+    setPrefilledValues(prefilled);
+  };
   return (
     <>
       <ScrollToTop />
-      <UserMasterForm />
+      <UserMasterForm  prefilledValues={prefilledValues} setPrefilledValues={setPrefilledValues}/>
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -76,6 +81,7 @@ const UserMasterList = () => {
                                 <Button
                                   className="btn btn-primary shadow btn-xs sharp me-1"
                                   icon={"fas fa-pencil-alt"}
+                                  onClick={() => handleEdit(item)}
                                 />
                               </td>
                             </tr>
