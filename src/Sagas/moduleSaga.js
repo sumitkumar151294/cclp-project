@@ -1,7 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetModule, onGetModuleError, onGetModuleSuccess } from "../Store/Slices/moduleSlice";
-import { callModuleApi } from "../Context/ModuleApi";
-
+import { callModuleApi } from "../Context/moduleApi";
 
 function* Module() {
   try {
@@ -9,7 +8,7 @@ function* Module() {
     if (moduleResponse.httpStatusCode === "200") {
       yield put(
         onGetModuleSuccess({
-          data: moduleResponse.response,  
+          data: moduleResponse.response,
           //message: moduleResponse.response.errorMessage,
 
         })

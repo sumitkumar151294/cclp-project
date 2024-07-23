@@ -295,7 +295,7 @@ const RoleMasterForm = ({ data, setData }) => {
                       </div>
                       <div className="col-lg-12 br pt-2">
                         <label htmlFor="name-f">{module_access}</label>
-                        {moduleAccessData?.map((data, index) => {
+                        {Array.isArray(moduleAccessData) && moduleAccessData ?.map((data, index) => {
                           const module =
                             moduleAccess?.find(
                               (mod) => mod.name === data.name
