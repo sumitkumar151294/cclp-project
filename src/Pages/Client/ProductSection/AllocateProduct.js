@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import InputField from "../../Components/InputField/InputField";
-import image from "../../Assets/img/image.png";
-import Button from "../../Components/Button/Button";
-import Dropdown from "../../Components/Dropdown/Dropdown";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import InputField from "../../../Components/InputField/InputField";
+import image from "../../../Assets/img/image.png";
+import Button from "../../../Components/Button/Button";
+import Dropdown from "../../../Components/Dropdown/Dropdown";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 const AllocateProduct = () => {
    // Translation labels

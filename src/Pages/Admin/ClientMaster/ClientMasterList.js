@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Loader from "../../Components/Loader/Loader";
-import NoRecord from "../../Components/NoRecord/NoRecord";
+import Loader from "../../../Components/Loader/Loader";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
 import { useDispatch, useSelector } from "react-redux";
 import { CSVLink } from "react-csv";
 import ReactPaginate from "react-paginate";
-import InputField from "../../Components/InputField/InputField";
-import Button from "../../Components/Button/Button";
+import InputField from "../../../Components/InputField/InputField";
+import Button from "../../../Components/Button/Button";
 import ClientMaster from "./ClientMasterForm";
-import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { onClientMasterSubmit } from "../../../Store/Slices/clientMasterSlice";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
 
 const ClientMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");

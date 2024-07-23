@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
+import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../../Store/Slices/userMasterSlice";
 import { useDispatch, useSelector } from "react-redux";
-import InputField from "../../Components/InputField/InputField";
+import InputField from "../../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
-import Loader from "../../Components/Loader/Loader";
-import Button from "../../Components/Button/Button";
-import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
-import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Loader from "../../../Components/Loader/Loader";
+import Button from "../../../Components/Button/Button";
+import { onClientMasterSubmit } from "../../../Store/Slices/clientMasterSlice";
+import { onGetUserRole } from "../../../Store/Slices/userRoleSlice";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 const UserMasterForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);

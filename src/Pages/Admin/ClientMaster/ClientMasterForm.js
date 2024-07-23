@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
-import Dropdown from "../../Components/Dropdown/Dropdown";
+import InputField from "../../../Components/InputField/InputField";
+import Dropdown from "../../../Components/Dropdown/Dropdown";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Loader from "../../Components/Loader/Loader";
+import Loader from "../../../Components/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
-import Button from "../../Components/Button/Button";
+import Button from "../../../Components/Button/Button";
 import {
   onClientMasterSubmit,
   onPostClientMasterReset,
   onPostClientMasterSubmit,
   onUpdateClientMasterSubmit,
-} from "../../Store/Slices/clientMasterSlice";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+} from "../../../Store/Slices/clientMasterSlice";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 const ClientMaster = ({ data, setdata }) => {
   const [isSubmit, setIsSubmit] = useState(false);

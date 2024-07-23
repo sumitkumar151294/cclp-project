@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
-import Button from "../../Components/Button/Button";
+import InputField from "../../../Components/InputField/InputField";
+import Button from "../../../Components/Button/Button";
 import ReactPaginate from "react-paginate";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetCustomerSegement } from "../../Store/Slices/customerSegementSlice";
-import NoRecord from "../../Components/NoRecord/NoRecord";
-import Loader from "../../Components/Loader/Loader";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { onGetCustomerSegement } from "../../../Store/Slices/customerSegementSlice";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
+import Loader from "../../../Components/Loader/Loader";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
 
 const CustomerSegment = () => {
   const [searchQuery, setSearchQuery] = useState("");

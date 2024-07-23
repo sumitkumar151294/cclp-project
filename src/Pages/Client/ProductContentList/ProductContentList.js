@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
-import Dropdown from "../../Components/Dropdown/Dropdown";
-import Button from "../../Components/Button/Button";
+import InputField from "../../../Components/InputField/InputField";
+import Dropdown from "../../../Components/Dropdown/Dropdown";
+import Button from "../../../Components/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetProductContent } from "../../Store/Slices/productContentSlice";
+import { onGetProductContent } from "../../../Store/Slices/productContentSlice";
 import ReactPaginate from "react-paginate";
 import DatePicker from "react-datepicker";
 import { CSVLink } from "react-csv";
 import "react-datepicker/dist/react-datepicker.css";
-import NoRecord from "../../Components/NoRecord/NoRecord";
-import Loader from "../../Components/Loader/Loader";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
+import Loader from "../../../Components/Loader/Loader";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
 
 const ProductContentList = () => {
   const [searchQuery, setSearchQuery] = useState("");

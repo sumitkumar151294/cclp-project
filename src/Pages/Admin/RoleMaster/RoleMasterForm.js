@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
+import InputField from "../../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
-import Button from "../../Components/Button/Button";
-import Loader from "../../Components/Loader/Loader";
+import Button from "../../../Components/Button/Button";
+import Loader from "../../../Components/Loader/Loader";
 import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
   onUpdateUserRole,
   onUpdateUserRoleReset,
-} from "../../Store/Slices/userRoleSlice";
+} from "../../../Store/Slices/userRoleSlice";
 import {
   onGetUserRoleModuleAccess,
   onPostUserRoleModuleAccess,
   onPostUserRoleModuleAccessReset,
   onUpdateUserRoleModuleAccess,
-} from "../../Store/Slices/userRoleModuleAccessSlice";
+} from "../../../Store/Slices/userRoleModuleAccessSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 // Component for RoleMasterForm
 const RoleMasterForm = ({ data, setData }) => {

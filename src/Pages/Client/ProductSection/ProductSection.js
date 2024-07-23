@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
+import InputField from "../../../Components/InputField/InputField";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Button from "../../Components/Button/Button";
-import Dropdown from "../../Components/Dropdown/Dropdown";
+import Button from "../../../Components/Button/Button";
+import Dropdown from "../../../Components/Dropdown/Dropdown";
 import {
   onGetProductSection,
   onPostProductSectionReset,
   onPostProductSetionSubmit,
-} from "../../Store/Slices/productSectionSlice";
+} from "../../../Store/Slices/productSectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
-import Loader from "../../Components/Loader/Loader";
+import Loader from "../../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-import NoRecord from "../../Components/NoRecord/NoRecord";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
+
 
 const ProductSection = () => {
   const [isSubmit, setIsSubmit] = useState(false);

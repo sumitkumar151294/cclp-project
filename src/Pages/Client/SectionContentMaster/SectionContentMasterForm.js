@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import Loader from "../../Components/Loader/Loader";
-import Button from "../../Components/Button/Button";
+import Loader from "../../../Components/Loader/Loader";
+import Button from "../../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 

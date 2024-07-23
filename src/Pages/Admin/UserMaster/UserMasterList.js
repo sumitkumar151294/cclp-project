@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetUser } from "../../Store/Slices/userMasterSlice";
+import { onGetUser } from "../../../Store/Slices/userMasterSlice";
 import UserMasterForm from "./UserMasterForm";
-import NoRecord from "../../Components/NoRecord/NoRecord";
-import Loader from "../../Components/Loader/Loader";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
+import Loader from "../../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
-import Button from "../../Components/Button/Button";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Button from "../../../Components/Button/Button";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 const UserMasterList = () => {
   const [page, setPage] = useState(1); // Current page

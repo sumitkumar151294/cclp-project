@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../../Components/InputField/InputField";
-import Button from "../../Components/Button/Button";
-import Dropdown from "../../Components/Dropdown/Dropdown";
+import InputField from "../../../Components/InputField/InputField";
+import Button from "../../../Components/Button/Button";
+import Dropdown from "../../../Components/Dropdown/Dropdown";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { onAddCouponSubmit } from "../../Store/Slices/addCouponSlice";
+import { onAddCouponSubmit } from "../../../Store/Slices/addCouponSlice";
 import { ToastContainer, toast } from "react-toastify";
-import Loader from "../../Components/Loader/Loader";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Loader from "../../../Components/Loader/Loader";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
 
 const AddCoupon = () => {
   const [isSubmit, setIsSubmit] = useState(false);

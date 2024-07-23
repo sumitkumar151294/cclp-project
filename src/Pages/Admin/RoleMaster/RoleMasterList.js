@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import NoRecord from "../../Components/NoRecord/NoRecord";
-import Loader from "../../Components/Loader/Loader";
+import NoRecord from "../../../Components/NoRecord/NoRecord";
+import Loader from "../../../Components/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import RoleMasterForm from "./RoleMasterForm";
 import ReactPaginate from "react-paginate";
-import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import Button from "../../Components/Button/Button";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
+import { onGetUserRole } from "../../../Store/Slices/userRoleSlice";
+import Button from "../../../Components/Button/Button";
+import { GetTranslationData } from "../../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
+import { onGetUserRoleModuleAccess } from "../../../Store/Slices/userRoleModuleAccessSlice";
 
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
