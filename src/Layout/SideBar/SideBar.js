@@ -55,7 +55,7 @@ const SideBar = () => {
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
-    if (!getModule?.isLoading && userRoleModuleAccess?.length > 0) {
+    if (!getModule?.isLoading && userRoleModuleAccess?.length) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
       const filterData = userRoleModuleAccess?.filter((item) => {
         return (
@@ -76,6 +76,7 @@ const SideBar = () => {
     } else {
     }
   }, [getModuleData, userRoleModuleAccess]);
+console.log(getModuleData)
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
