@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
+import { onGetUser, onUserSubmit, onUserSubmitReset, onUserUpdate } from "../../Store/Slices/userMasterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
@@ -25,6 +25,7 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
   const firstName = GetTranslationData("UIMasterAdmin", "first-name");
   const lastName = GetTranslationData("UIMasterAdmin", "last-name");
   const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
+  const update = GetTranslationData("UIMasterAdmin", "update_label");
   //To get the data from redux store
   const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
@@ -54,36 +55,53 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
   });
 
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit, setFieldValue } =
+  const { values, errors, touched, handleChange, handleSubmit, setValues } =
     useFormik({
       initialValues: initialValues,
       validationSchema: validateForm,
       onSubmit: (values, action) => {
         setIsSubmit(true);
-        dispatch(onUserSubmit( values ));
+        if (prefilledValues) {
+          const updateUserData = {
+            enabled: true,
+            deleted: false,
+            createdBy: 0,
+            updatedBy: 0,
+            login_attempt: 0,
+            id: 1,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            mobile: values.number,
+            clientRoleId: values.roleName,
+          };
+          dispatch(onUserUpdate(updateUserData));
+          setPrefilledValues();
+        }
+        else{
+          dispatch(onUserSubmit( values ));
+        }
         action.resetForm();
       },
     });
-   // to update user data
+   // to update user master data
    useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    setFieldValue({
-      number: prefilledValues?.number,
+    setValues({
       email: prefilledValues?.email,
-      //roles: prefilledValues?.roles,
+      number: prefilledValues?.number ,
       firstName: prefilledValues?.firstName,
       lastName: prefilledValues?.lastName,
+      roles: prefilledValues?.roleName ? [prefilledValues?.roleName] :[]
     });
   }, [prefilledValues]);
   // to handle user-role checkbox
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    console.log(values.roles);
-    if (checked) {
-      setFieldValue("roles", [...values.roles, value]);
-    } else {
-      setFieldValue("roles", values.roles.filter((role) => role !== value));
-    }
+  const handleCheckboxChange = (id) => {
+    const isChecked = values.roles.includes(id);
+    const updatedRoles = isChecked
+      ? values.roles.filter((roleId) => roleId !== id)
+      : [...values.roles, id];
+    setValues({ ...values, roles: updatedRoles });
   };
   //to handle navigation and toast notifications based on user status
   useEffect(() => {
@@ -140,9 +158,9 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
                           className={` ${
                             errors.number && touched.number ? "border-danger" : "form-control"
                           }`}
-                          onChange={handleChange}
-                          placeholder="Mobile Number"
                           value={values.number}
+                          onChange={handleChange}
+                          placeholder="Mobile number"
                         />
                         {errors.number && touched.number && (
                           <p className="text-danger">{errors.number}</p>
@@ -202,9 +220,9 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
                                   type="checkbox"
                                   className="form-check-input"
                                   name="roles"
-                                  value={item.id}
-                                  checked={values?.roles?.includes(item.id)}
-                                  onChange={handleCheckboxChange}
+                                  value={item.name} // Use item.name for value
+                                  checked={values.roles.includes(item.name)}
+                                  onChange={() => handleCheckboxChange(item.name)}
                                 />
                                 <label
                                   className="form-check-label"
@@ -227,7 +245,7 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
                         </span>
                         <div className="col-sm-4 mt-2 mb-4">
                           <Button
-                            text={submit}
+                            text={prefilledValues ? update : submit}
                             icon={"fa fa-arrow-right"}
                             className="btn btn-primary btn-sm float-right p-btn mt-2"
                           />

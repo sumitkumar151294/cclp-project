@@ -20,8 +20,11 @@ const API = {
   //client-master
   clientMaster: "/clientMaster",
   getclientMaster: "/getClientMaster",
+  //userMaster
   userMaster: "/userMaster",
   getUserMaster: "/getUserMaster",
+  userMaster:"/userMaster",
+  //add Coupon
   addCoupon: "/addCoupon",
 };
 export default API;

@@ -76,7 +76,7 @@ const UserMasterList = () => {
                               </td>
                               <td>{item.email}</td>
                               <td>{item.number}</td>
-                              <td>{item.name}</td>
+                              <td>{item.firstName+" "+item.lastName}</td>
                               <td>
                                 <Button
                                   className="btn btn-primary shadow btn-xs sharp me-1"

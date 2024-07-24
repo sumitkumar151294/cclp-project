@@ -16,12 +16,12 @@ const CustomerSegment = () => {
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
   // Translation labels
-  const customerSegment = GetTranslationData("UIAdmin", "customerSegment");
-  const exportLabel = GetTranslationData("UIAdmin", "export_label");
-  const currentStatus = GetTranslationData("UIAdmin", "currentStatus");
-  const id = GetTranslationData("UIAdmin", "id");
-  const segmentName = GetTranslationData("UIAdmin", "segmentName");
-  const date = GetTranslationData("UIAdmin", "date");
+  const customerSegment = GetTranslationData("UIMasterAdmin", "customerSegment");
+  const exportLabel = GetTranslationData("UIMasterAdmin", "export_label");
+  const currentStatus = GetTranslationData("UIMasterAdmin", "currentStatus");
+  const id = GetTranslationData("UIMasterAdmin", "id");
+  const segmentName = GetTranslationData("UIMasterAdmin", "segmentName");
+  const date = GetTranslationData("UIMasterAdmin", "date");
   //to get customer segment data from redux store
   const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
   const customerSegData = getCustomerData?.data;
