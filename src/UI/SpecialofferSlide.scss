@@ -1,0 +1,57 @@
+h1, h2, h3, h4, h5,h6, p {
+    margin: 0 !important;
+    
+}
+/*================================
+       SPECIAL-OFFER-SLIDER
+==================================*/
+
+.special_offer_slider_wrapper {
+  .slider_header_title {
+    padding: 16px 0px 11px 0px;
+    h3 {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 19.36px;
+      letter-spacing: -0.04em;
+      color: #2f2f2f;
+    }
+  }
+  .card{
+    background-color:#E6E6E6;
+    border-radius: 14.9px;
+    padding-left: 12px;
+
+    .card-body{
+
+        .left_card_body{
+
+            .card-title{
+                margin-bottom: 0 !important;
+                font-family: Inter;
+                font-size: 22.23px;
+                font-weight: 500;
+                line-height: 26.9px;
+                letter-spacing: -0.03em;
+                color: #252525;                
+            }
+            .card-text{
+                font-family: Inter;
+font-size: 31.75px;
+font-weight: 700;
+line-height: 38.43px;
+letter-spacing: -0.03em;
+color: #252525;     
+margin: 0 !important;           
+
+
+            }
+        }
+    }
+  }
+}
+
+/*================================
+    SPECIAL-OFFER-SLIDER-END
+==================================*/

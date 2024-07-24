@@ -1,0 +1,64 @@
+/*================================
+            HERO-CAROUSEL
+==================================*/
+.hero_carousel_offer_wrapper {
+  padding-top: 26px;
+
+  .card {
+    border-radius: 8.08px;
+    padding: 0px 0px 21.54px 0px;
+    background-color: #f9f9f9;
+    margin: 16px;
+    box-shadow: unset;
+
+    .card-body {
+      padding: 21.54px 16.16px 0px 16.16px;
+      position: relative;
+      background-color:#F9F9F9;
+
+      .offer_tag {
+        position: absolute;
+        top: -30px;
+        right: 26px;
+        z-index: 1;
+      }
+      .card-title {
+        font-family: Inter;
+        font-size: 18.85px;
+        font-weight: 700;
+        line-height: 22.81px;
+        letter-spacing: -0.02em;
+        color: #404040;
+        width: 75%;
+
+      }
+      .card-text {
+        font-family: Inter;
+        font-size: 16.16px;
+        font-weight: 500;
+        line-height: 19.55px;
+        letter-spacing: -0.02em;
+        color: #1b1b1bb2;
+        padding: 10px 0px 42.97px 0px;
+      }
+      .btn_link {
+        font-weight: 600;
+        font-family: Inter;
+        font-size: 18px;
+        line-height: 22.81px;
+        color: var(--primaryColor);
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 18px;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+
+/*================================
+            HERO-CAROUSEL-END
+==================================*/
