@@ -21,7 +21,7 @@ import UserMasterList from "../Pages/UserMaster/UserMasterList";
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
 import DealCategory from "../Pages/DealCategory/DealCategory";
-import ModuleMaster from "../Pages/ModuleMaster/ModuleMaster";
+import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
 
 
 function RouteConfiq() {
@@ -49,7 +49,7 @@ function RouteConfiq() {
         <Route path="/sectionMaster" element={<Layout Component={SectionMasterList} />}/>
         <Route path="/sectionContentMaster" element={<Layout Component={SectionContentMasterList} />}/>
         <Route path="/dealCategory" element={<Layout Component={DealCategory} />}/>
-        <Route path="/moduleMaster" element={<Layout Component={ModuleMaster} />}/>
+        <Route path="/moduleMaster" element={<Layout Component={ModuleMasterList} />}/>
       </Routes>
     </Router>
   );

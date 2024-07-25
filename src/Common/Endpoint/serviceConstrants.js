@@ -5,7 +5,8 @@ const API = {
   //translation
   translationApi:"/translation-content-get-by-clientid", //"/translation-content/by-client-id",
   //module
-  moduleApi: "/module",
+  moduleApi:"/module-master",
+  getModuleApi: "/module-master",
   //customer segment get api
   customerSegment: "/customerSegment",
   productContent: "/productContent",
