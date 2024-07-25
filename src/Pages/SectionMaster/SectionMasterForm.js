@@ -5,9 +5,9 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-import { onPostsectionMaster } from "../../Store/Slices/sectionMasterSlice";
+import { onGetsectionMaster, onPostsectionMaster, onPostsectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
 const segmentOptions = [
   { value: 1, label: "Demo" },
   { value: 2, label: "Demo1" },
@@ -24,6 +24,7 @@ const sectionTypeOptions = [
   { value: 5, label: "Bottom" },
 ];
 const SectionMasterForm = () => {
+  const sectionMasterData=useSelector(state=>state.sectionMasterReducer)
   const [intialValue, setInitialValue] = useState({
     sectionName: "",
     sectionType: "",
@@ -47,17 +48,16 @@ const SectionMasterForm = () => {
     dispatch(onPostsectionMaster(values))
     }
   };
-  // useEffect(() => {
-  //   if (templateTypemasterData?.post_status_code === "201") {
-  //     toast.success(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //     dispatch(onGettemplateTypeMaster())
-  //   } else if (templateTypemasterData?.post_status_code) {
-  //     toast.error(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //   }
-
-  // }, [templateTypemasterData]);
+  useEffect(() => {
+    if (sectionMasterData?.post_status_code === "201") {
+      toast.success(sectionMasterData.postMessage)
+      dispatch(onPostsectionMasterReset())
+      dispatch(onGetsectionMaster())
+    } else if (sectionMasterData?.post_status_code) {
+      toast.error(sectionMasterData.postMessage)
+      dispatch(onPostsectionMasterReset())
+    }
+  }, [sectionMasterData]);
 
   // useEffect(() => {
   //   if (templateTypeData) {
@@ -70,7 +70,6 @@ const SectionMasterForm = () => {
     <>
       <ToastContainer />
       <div className="container-fluid">
-
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">

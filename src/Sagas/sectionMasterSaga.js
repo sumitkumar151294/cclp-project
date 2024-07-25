@@ -34,7 +34,7 @@ function* PostsectionMaster({ payload }) {
         onPostsectionMasterSuccess({
           postData: postsectionMasterResponse.response,
           message: postsectionMasterResponse.errorMessage,
-          httpStatusCode: postsectionMasterResponse.httpStatusCode,
+          status_code: postsectionMasterResponse.httpStatusCode,
         })
       );
     } else {
@@ -65,8 +65,9 @@ function* UpdatesectionMaster({ payload }) {
     } else {
       yield put(
         onUpdatesectionMasterError({
-          data: updatesectionMasterResponse.result,
-          message: updatesectionMasterResponse.result.message,
+          status_code: updatesectionMasterResponse.httpStatusCode,
+          message: updatesectionMasterResponse.errorMessage,
+          data:updatesectionMasterResponse.response
         })
       );
     }

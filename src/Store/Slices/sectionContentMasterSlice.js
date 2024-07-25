@@ -1,118 +1,118 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const sectionMasterSlice = createSlice({
-  name: "section-master",
+export const sectionContentMasterSlice = createSlice({
+  name: "section-content-master",
   initialState: {
     isLoading: false,
     isError: false,
-    sectionMasterData: [],
+    sectionContentMasterData: [],
     message: "",
   },
   reducers: {
-    onGetsectionMaster: (state) => {
+    onGetSectionContentMaster: (state) => {
       return {
         ...state,
         isgetLoading: true,
-        getsectionMasterData: [],
+        getSectionContentMasterData: [],
         getmessage: "",
       };
     },
 
-    onGetsectionMasterSuccess: (state, { payload }) => {
+    onGetSectionContentMasterSuccess: (state, { payload }) => {
       const { data = [], message = "", status_code = 200 } = payload;
       return {
         ...state,
         isgetLoading: false,
-        getsectionMasterData: data,
+        getSectionContentMasterData: data,
         getmessage:message,
         get_status_code:status_code,
       };
     },
 
-    onGetsectionMasterError: (state, { payload }) => {
+    onGetSectionContentMasterError: (state, { payload }) => {
       const { data = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        getsectionMasterData: data,
+        getSectionContentMasterData: data,
         getmessage:message,
         get_status_code:status_code,
         isgetLoading: false,
       };
     },
 
-    onPostsectionMaster: (state) => {
+    onPostSectionContentMaster: (state) => {
       return {
         ...state,
         isPostLoading: true,
-        postSectionMasterData: [],
+        postSectionContentMasterData: [],
       };
     },
 
-    onPostsectionMasterSuccess: (state, { payload }) => {
+    onPostSectionContentMasterSuccess: (state, { payload }) => {
       const { postData = [], message = "", status_code="201" } = payload;
       return {
         ...state,
         isPostLoading: false,
-        postSectionMasterData: postData,
+        postSectionContentMasterData: postData,
         postMessage:message,
         post_status_code:status_code,
       };
     },
 
-    onPostsectionMasterError: (state, { payload }) => {
+    onPostSectionContentMasterError: (state, { payload }) => {
       const { postData = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        postSectionMasterData: postData,
+        postSectionContentMasterData: postData,
         postMessage:message,
         post_status_code:status_code,
         isPostLoading: false,
       };
     },
-    onPostsectionMasterReset: (state) => {
+    onPostSectionContentMasterReset: (state) => {
       return {
         ...state,
-        postSectionMasterData: [],
+        postSectionContentMasterData: [],
         postMessage:"",
         post_status_code:null
       };
     },
 
-    onUpdatesectionMaster: (state) => {
+    onUpdateSectionContentMaster: (state) => {
       return {
         ...state,
         isUpdateLoading: true,
-        updateSectionMasterData: [],
+        updateSectionContentMasterData: [],
         updateMessage: "",
       };
     },
 
-    onUpdatesectionMasterSuccess: (state, { payload }) => {
+    onUpdateSectionContentMasterSuccess: (state, { payload }) => {
       const {data=[], message = "", status_code = "201" } = payload;
       return {
         ...state,
         isUpdateLoading: false,
-        updateSectionMasterData:data,
+        updateSectionContentMasterData:data,
         updateMessage:message,
         update_status_code:status_code,
       };
     },
 
-    onUpdatesectionMasterError: (state, { payload }) => {
+    onUpdateSectionContentMasterError: (state, { payload }) => {
       const {data=[], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        updateSectionMasterData:data,
+        updateSectionContentMasterData:data,
         updateMessage:message,
         update_status_code:status_code,
         isUpdateLoading: false,
       };
     },
-    onUpdatesectionMasterReset: (state) => {
+    onUpdateSectionContentMasterReset: (state) => {
       return {
         ...state,
         updateMessage:"",
-        updateSectionMasterData:[],
+        updateSectionContentMasterData:[],
         update_status_code:null,
       };
     },
@@ -120,17 +120,18 @@ export const sectionMasterSlice = createSlice({
 });
 
 export const {
-  onGetsectionMaster,
-  onGetsectionMasterSuccess,
-  onGetsectionMasterError,
-  onPostsectionMaster,
-  onPostsectionMasterSuccess,
-  onPostsectionMasterError,
-  onUpdatesectionMaster,
-  onUpdatesectionMasterSuccess,
-  onUpdatesectionMasterError,
-  onUpdatesectionMasterReset,
-  onPostsectionMasterReset
-} = sectionMasterSlice.actions;
+  onGetSectionContentMaster,
+  onGetSectionContentMasterSuccess,
+  onGetSectionContentMasterError,
+  onPostSectionContentMaster,
+  onPostSectionContentMasterSuccess,
+  onPostSectionContentMasterError,
+  onUpdateSectionContentMaster,
+  onUpdateSectionContentMasterSuccess,
+  onUpdateSectionContentMasterError,
+  onUpdateSectionContentMasterReset,
+  onPostSectionContentMasterReset
+} = sectionContentMasterSlice.actions;
 
-export default sectionMasterSlice.reducer;
+export default sectionContentMasterSlice.reducer;
+

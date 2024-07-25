@@ -7,30 +7,23 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import Dropdown from "../../Components/Dropdown/Dropdown";
 
-const contentSourceTypeOptions = [
-  { value: 1, label: "Deal" },
-  { value: 2, label: "Product" },
 
-];
 const SectionContentMasterForm = () => {
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     phoneImage: "",
-    callToAction: "",
     displayOrder: "",
-    text: "",
-    contentSourceType: "",
-    segmentId:""
+    categoryName:""
   });
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
     phoneImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
+    categoryName: Yup.string().required("Category Name is required")
   });
-  const handleSubmit = (values) => { };
+  const handleSubmit = (values) => {};
   // useEffect(() => {
   //   if (templateTypemasterData?.post_status_code === "201") {
   //     toast.success(templateTypemasterData.postMessage)
@@ -59,11 +52,10 @@ const SectionContentMasterForm = () => {
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">
-
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Section Content Master</h4>
+                <h4 className="card-title">Deal Category</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -81,44 +73,41 @@ const SectionContentMasterForm = () => {
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Content Source Type
-                                <span className="text-danger">*</span>
-                              </label>
-
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>Category Name</label>
                               <Field
-                                name="contentSourceType"
-                                component={Dropdown}
-                                options={contentSourceTypeOptions}
-                                className={`form-select ${errors.contentSourceType && touched.contentSourceType
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                type="text"
+                                name="categoryName"
+                                className={`form-control ${
+                                  errors.categoryName && touched.categoryName
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Call To Action"
                               />
                               <ErrorMessage
-                                name="contentSourceType"
+                                name="categoryName"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
+                            <div className="col-sm-4 form-group mb-2">
                               <label>
-                               Segment
+                                Display Order
                                 <span className="text-danger">*</span>
                               </label>
-
                               <Field
-                                name="segmentId"
-                                component={Dropdown}
-                                options={contentSourceTypeOptions}
-                                className={`form-select ${errors.segmentId && touched.segmentId
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                type="number"
+                                name="displayOrder"
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Display Order"
                               />
                               <ErrorMessage
-                                name="segmentId"
+                                name="displayOrder"
                                 component="div"
                                 className="error-message"
                               />
@@ -131,10 +120,11 @@ const SectionContentMasterForm = () => {
                               <input
                                 type="file"
                                 name="webImage"
-                                className={`form-control ${errors.webImage && touched.webImage
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.webImage && touched.webImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event)
                                 }
@@ -144,7 +134,8 @@ const SectionContentMasterForm = () => {
                                 component="div"
                                 className="error-message"
                               />
-                            </div>  <div className="col-sm-4 form-group mb-2">
+                            </div>{" "}
+                            <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Upload Image For Phone
                                 <span className="text-danger">*</span>
@@ -152,10 +143,11 @@ const SectionContentMasterForm = () => {
                               <input
                                 type="file"
                                 name="phoneImage"
-                                className={`form-control ${errors.phoneImage && touched.phoneImage
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.phoneImage && touched.phoneImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event)
                                 }
@@ -167,57 +159,6 @@ const SectionContentMasterForm = () => {
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Display Order
-                                <span className="text-danger">*</span>
-                              </label>
-                              <Field
-                                type="number"
-                                name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
-                                placeholder="Enter Display Order"
-                              />
-                              <ErrorMessage
-                                name="displayOrder"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Call To Action
-
-                              </label>
-                              <Field
-                                type="text"
-                                name="callToAction"
-                                className={`form-control ${errors.callToAction && touched.callToAction
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
-                                placeholder="Enter Call To Action"
-                              />
-
-                            </div>   <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Text
-
-                              </label>
-                              <Field
-                                type="text"
-                                name="text"
-                                className={`form-control ${errors.text && touched.text
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
-                                placeholder="Enter Text"
-                              />
-
-                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Sumbit"}
