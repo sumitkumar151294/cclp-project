@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetModule, onGetModuleError, onGetModuleSuccess, onPostModule, onPostModuleError, onPostModuleSuccess } from "../Store/Slices/moduleSlice";
-import { callModuleApi, callPostModuleApi } from "../Context/ModuleApi";
+import { callModuleApi, callPostModuleApi } from "../Context/moduleApi";
 
 function* Module() {
   try {

@@ -1,4 +1,3 @@
-import axiosInstance from '../Common/Axios/axiosInstance';
 import API from "../Common/Endpoint/serviceConstrants";
 import axiosInstanceClient from "../Common/Axios/axiosInstanceClient";
 
