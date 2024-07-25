@@ -15,91 +15,106 @@ const SectionMasterList = () => {
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },{
       sectionName: "TopOffers",
       sectionType: "Top Offers",
       displayOrder: "3",
       text: "i am offer master",
-      enabled:true
+      enabled:true,
+      poinToClaim:0
     },
 
 
@@ -176,6 +191,7 @@ const SectionMasterList = () => {
                                 <th>{"Section Type"}</th>
                                 <th>{"Display Order"}</th>
                                 <th>{"Text"}</th>
+                                <th>{"Points To Claim"}</th>
                                 <th>{"Status"}</th>
                                 <th>{"Action"}</th>
                                 <th>{"Section Data"}</th>
@@ -191,6 +207,7 @@ const SectionMasterList = () => {
                                   <td>{SectionMasterData.sectionType}</td>
                                   <td>{SectionMasterData.displayOrder}</td>
                                   <td>{SectionMasterData.text}</td>
+                                  <td>{SectionMasterData.poinToClaim}</td>
                                   <td>
                                   <span
                                     className={
