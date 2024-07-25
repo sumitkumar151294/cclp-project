@@ -28,14 +28,14 @@ const ProductSection = () => {
   // Translation labels
   const productSectionLabel = GetTranslationData("UIAdmin", "productSection");
   const productSectionList = GetTranslationData(
-    "UIAdmin",
+    "UIMasterAdmin",
     "productSectionList"
   );
-  const sectionName = GetTranslationData("UIAdmin", "sectionName");
-  const action = GetTranslationData("UIAdmin", "action");
-  const date_label = GetTranslationData("UIAdmin", "date");
-  const status_label = GetTranslationData("UIAdmin", "status");
-  const allocate = GetTranslationData("UIAdmin", "allocate");
+  const sectionName = GetTranslationData("UIMasterAdmin", "sectionName");
+  const action = GetTranslationData("UIMasterAdmin", "action");
+  const date_label = GetTranslationData("UIMasterAdmin", "date");
+  const status_label = GetTranslationData("UIMasterAdmin", "status");
+  const allocate = GetTranslationData("UIMasterAdmin", "allocate");
   // to get product data
   const productSection = useSelector((state) => state?.productSectionReducer);
   const productSecData = productSection?.getData;

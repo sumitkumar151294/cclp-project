@@ -87,7 +87,7 @@ const RoleMasterForm = ({ data, setData }) => {
         }
         if (data) {
           dispatch(onUpdateUserRole(postData));
-          setValues();
+          setData();
         } else {
           dispatch(onPostUserRole(postData));
         }
@@ -196,7 +196,6 @@ const RoleMasterForm = ({ data, setData }) => {
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
-      setData();
     }
   }, [ userRoleData]);
   // fetch module data and update form data on mount and when module data changes
