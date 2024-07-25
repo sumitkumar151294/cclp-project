@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
-import Button from "../../Components/Button/Button";
 import InputField from "../../Components/InputField/InputField";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
@@ -13,6 +11,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -20,6 +20,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -27,6 +29,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -34,6 +38,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -41,6 +47,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -48,6 +56,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -55,6 +65,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -62,6 +74,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -69,6 +83,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -76,6 +92,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -83,6 +101,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -90,6 +110,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -97,6 +119,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -104,13 +128,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
+      contentSourceType:"deal",
+      segment:"zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -168,6 +187,8 @@ const SectionContentMasterList = () => {
                               <tr>
                                 <th>{"Section Name"}</th>
                                 <th>{"Section Type"}</th>
+                                <th>{"Content Source Type"}</th>
+                                <th>{"Segment"}</th>
                                 <th>{"Display Order"}</th>
                                 <th>{"Text"}</th>
 
@@ -182,6 +203,8 @@ const SectionContentMasterList = () => {
                                 <tr key={index}>
                                   <td>{SectionMasterData.sectionName}</td>
                                   <td>{SectionMasterData.sectionType}</td>
+                                  <td>{SectionMasterData.contentSourceType}</td>
+                                  <td>{SectionMasterData.segment}</td>
                                   <td>{SectionMasterData.displayOrder}</td>
                                   <td>{SectionMasterData.text}</td>
                                 </tr>
