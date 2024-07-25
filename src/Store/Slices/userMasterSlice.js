@@ -77,6 +77,7 @@ export const userMasterSlice = createSlice({
       };
     },
     onUserUpdate: (state) => {
+      debugger
       return {
         ...state,
         isLoading: true,
@@ -89,6 +90,7 @@ export const userMasterSlice = createSlice({
 
     onUserUpdateSuccess: (state, { payload }) => {
       const { updateData = [], message = "", status_code = "201" } = payload;
+      debugger
       return {
         ...state,
         isLoading: false,

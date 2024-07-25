@@ -15,16 +15,16 @@ const AddCoupon = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get labels from api
-  const addCoupon = GetTranslationData("UIAdmin", "addCoupon");
-  const dealOffer = GetTranslationData("UIAdmin", "dealOffer");
-  const submit = GetTranslationData("UIAdmin", "submit_label");
-  const couponcode= GetTranslationData("UIAdmin", "couponcode");
-  const typeOfCoupon=GetTranslationData("UIAdmin", "typeOfCoupon");
-  const redemationlink=GetTranslationData("UIAdmin", "redemationlink");
-  const image=GetTranslationData("UIAdmin", "image");
-  const validityDate=GetTranslationData("UIAdmin", "validityDate");
-  const termsAndCondition=GetTranslationData("UIAdmin", "termsAndCondition");
-  const description = GetTranslationData("UIAdmin", "description");
+  const addCoupon = GetTranslationData("UIMasterAdmin", "addCoupon");
+  const dealOffer = GetTranslationData("UIMasterAdmin", "dealOffer");
+  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const couponcode= GetTranslationData("UIMasterAdmin", "couponcode");
+  const typeOfCoupon=GetTranslationData("UIMasterAdmin", "typeOfCoupon");
+  const redemationlink=GetTranslationData("UIMasterAdmin", "redemationlink");
+  const image=GetTranslationData("UIMasterAdmin", "image");
+  const validityDate=GetTranslationData("UIMasterAdmin", "validityDate");
+  const termsAndCondition=GetTranslationData("UIMasterAdmin", "termsAndCondition");
+  const description = GetTranslationData("UIMasterAdmin", "description");
   // to get coupon data from redux store
   const addCouponData = useSelector((state) => state?.addCouponReducer);
   // initial values for the input fields
