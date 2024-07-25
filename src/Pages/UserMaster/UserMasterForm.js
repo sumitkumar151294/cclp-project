@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -252,3 +254,4 @@ const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
 };
 
 export default UserMasterForm;
+/* eslint-enable react-hooks/exhaustive-deps */

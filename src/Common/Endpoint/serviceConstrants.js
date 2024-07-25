@@ -27,5 +27,9 @@ const API = {
   postsectionMaster:"/section-master",
   getsectionMaster:"/section-master",
   updatesectionMaster:"/section-master",
+  //section-content-master
+  postSectionContentMaster:"section-content-master",
+  getSectionContentMaster:"section-content-master",
+  updateSectionContentMaster:"section-content-master",
 };
 export default API;

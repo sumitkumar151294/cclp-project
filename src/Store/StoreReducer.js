@@ -12,6 +12,7 @@ import translationReducer from "./Slices/translationSlice";
 import loginAuthReducer from "./Slices/loginAuthSlice";
 import userRoleModuleAccessReducer from "./Slices/userRoleModuleAccessSlice";
 import  sectionMasterReducer  from './Slices/sectionMasterSlice';
+import sectionContentMasterReducer from './Slices/sectionContentMasterSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -26,7 +27,8 @@ const reducers = combineReducers({
     clientMasterReducer: clientMasterReducer,
     addCouponReducer:addCouponReducer,
     userRoleModuleAccessReducer: userRoleModuleAccessReducer,
-    sectionMasterReducer:sectionMasterReducer
+    sectionMasterReducer:sectionMasterReducer,
+    sectionContentMasterReducer:sectionContentMasterReducer,
 });
 
 export default reducers;
