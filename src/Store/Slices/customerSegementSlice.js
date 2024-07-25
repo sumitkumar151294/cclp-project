@@ -5,7 +5,7 @@ export const customerSegementSlice = createSlice({
   initialState: {
     isLoading: false,
     isError: false,
-    data:[],
+    data: [],
     message: "",
   },
   reducers: {
@@ -20,7 +20,7 @@ export const customerSegementSlice = createSlice({
     },
 
     onGetCustomerSegementSuccess: (state, { payload }) => {
-      const { data = [], message = "", status_code  } = payload;
+      const { data = [], message = "", status_code } = payload;
       return {
         ...state,
         isLoading: false,
@@ -45,16 +45,20 @@ export const customerSegementSlice = createSlice({
     onGetCustomerSegementReset: (state) => {
       return {
         ...state,
-        data:null,
-        message:null,
-        status_code:null,
+        data: null,
+        message: null,
+        status_code: null,
         isLoading: false,
         isError: true,
       };
-    }
+    },
   },
 });
-export const {onGetCustomerSegement,onGetCustomerSegementSuccess,onGetCustomerSegementError,onGetCustomerSegementReset } =
-customerSegementSlice.actions;
+export const {
+  onGetCustomerSegement,
+  onGetCustomerSegementSuccess,
+  onGetCustomerSegementError,
+  onGetCustomerSegementReset,
+} = customerSegementSlice.actions;
 
 export default customerSegementSlice.reducer;
