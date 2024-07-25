@@ -23,5 +23,9 @@ const API = {
   userMaster: "/userMaster",
   getUserMaster: "/getUserMaster",
   addCoupon: "/addCoupon",
+  //section-master
+  postsectionMaster:"/section-master",
+  getsectionMaster:"/section-master",
+  updatesectionMaster:"/section-master",
 };
 export default API;

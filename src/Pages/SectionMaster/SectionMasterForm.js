@@ -7,6 +7,11 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { onPostsectionMaster } from "../../Store/Slices/sectionMasterSlice";
+const segmentOptions = [
+  { value: 1, label: "Demo" },
+  { value: 2, label: "Demo1" },
+];
 const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
@@ -27,7 +32,8 @@ const SectionMasterForm = () => {
     text: "",
     claimLimit: "",
     pointsToClaim: "",
-    noOfPointsToClaim: ""
+    noOfPointsToClaim: 0,
+    segmentId:""
   });
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
@@ -36,7 +42,11 @@ const SectionMasterForm = () => {
     enabled: Yup.string().required("Status is required"),
     displayOrder: Yup.string().required("Display Order is required"),
   });
-  const handleSubmit = (values) => { };
+  const handleSubmit = (values) => {
+    if(values){
+    dispatch(onPostsectionMaster(values))
+    }
+  };
   // useEffect(() => {
   //   if (templateTypemasterData?.post_status_code === "201") {
   //     toast.success(templateTypemasterData.postMessage)
@@ -80,17 +90,17 @@ const SectionMasterForm = () => {
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched, values, setFieldValue }) => (
+                      {({ errors, touched, values }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>
                                 Section Type
                                 <span className="text-danger">*</span>
                               </label>
 
                               <Field
-                                name="clientId"
+                                name="sectionType"
                                 component={Dropdown}
                                 options={sectionTypeOptions}
                                 className={`form-select ${errors.sectionType && touched.sectionType
@@ -146,7 +156,7 @@ const SectionMasterForm = () => {
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2 mt-1">
                               <label>
                                 Claim Limit
                                 <span className="text-danger">*</span>
@@ -192,7 +202,7 @@ const SectionMasterForm = () => {
                                 <label className="px-1">Point To Claim</label>
                               </div>
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-1">
                               <label>
                                 No Of Points To Claim
                                 <span className="text-danger">*</span>
@@ -204,8 +214,10 @@ const SectionMasterForm = () => {
                                   ? "is-invalid"
                                   : ""
                                   }`}
-                                placeholder="Enter No Of Points To Claim"
 
+                                placeholder="Enter No Of Points To Claim"
+                                disabled={
+                                  values.pointsToClaim}
                               />
                               <ErrorMessage
                                 name="noOfPointsToClaim"
@@ -213,7 +225,28 @@ const SectionMasterForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 mt-1" >
+                            <div className="col-sm-4 form-group mb-2 " >
+                              <label>
+                                Segment
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="segmentId"
+                                component={Dropdown}
+                                options={segmentOptions}
+                                className={`form-select ${errors.segmentId && touched.segmentId
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="segmentId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2 " >
                               <label>
                                 Status
                                 <span className="text-danger">*</span>
