@@ -216,7 +216,7 @@ const SectionMasterForm = () => {
 
                                 placeholder="Enter No Of Points To Claim"
                                 disabled={
-                                  values.pointsToClaim}
+                                  !values.pointsToClaim}
                               />
                               <ErrorMessage
                                 name="noOfPointsToClaim"

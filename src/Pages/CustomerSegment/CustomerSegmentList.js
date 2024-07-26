@@ -9,8 +9,9 @@ import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import CustomerSegmentForm from "./CustomerSegmentForm";
 
-const CustomerSegment = () => {
+const CustomerSegmentList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -73,6 +74,7 @@ const CustomerSegment = () => {
 
   return (
     <>
+    <CustomerSegmentForm/>
       <ScrollToTop />
       <div className="container-fluid">
         <div className="row">
@@ -191,4 +193,4 @@ const CustomerSegment = () => {
   );
 };
 
-export default CustomerSegment;
+export default CustomerSegmentList;

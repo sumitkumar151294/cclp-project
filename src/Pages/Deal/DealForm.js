@@ -7,21 +7,42 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
-
-const SectionContentMasterForm = () => {
+const sectionTypeOptions = [
+  { value: 1, label: "Banner" },
+  { value: 2, label: "Offer" },
+  { value: 3, label: "Middle" },
+  { value: 4, label: "Tope" },
+  { value: 5, label: "Bottom" },
+];
+const DealForm = () => {
+  const FILE_SIZE = 160 * 1024;
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     phoneImage: "",
     displayOrder: "",
-    categoryName:""
+    categoryId:"",
+    dealName:"",
+    startDate:"",
+    endDate:"",
+    dealType:""
   });
+  const dealTypeOptions = [
+    { value: 1, label: "Common" },
+    { value: 2, label: "Unlock Deals" }
+  ];
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
     phoneImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
-    categoryName: Yup.string().required("Category Name is required")
+    categoryId: Yup.string().required("Category is required"),
+    dealName: Yup.string().required("Deal Name is required"),
+    dealType: Yup.string().required("Deal Type is required"),
+    startDate: Yup.string().required("Start Date is required"),
+    endDate: Yup.string().required("End Date is required"),
+
   });
   const handleSubmit = (values) => {};
   // useEffect(() => {
@@ -55,7 +76,7 @@ const SectionContentMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Category</h4>
+                <h4 className="card-title">Deal</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -74,19 +95,40 @@ const SectionContentMasterForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Category Name</label>
+                              <label>Deal Name</label>
                               <Field
                                 type="text"
-                                name="categoryName"
+                                name="dealName"
                                 className={`form-control ${
-                                  errors.categoryName && touched.categoryName
+                                  errors.dealName && touched.dealName
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Category Name"
+                                placeholder="Enter Deal Name"
                               />
                               <ErrorMessage
-                                name="categoryName"
+                                name="dealName"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                               Category
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="categoryId"
+                                component={Dropdown}
+                                options={sectionTypeOptions}
+                                className={`form-select ${errors.categoryId && touched.categoryId
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="categoryId"
                                 component="div"
                                 className="error-message"
                               />
@@ -125,9 +167,9 @@ const SectionContentMasterForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
+                                onChange={(event) => {
+                                  setFieldValue('webImage', event.currentTarget.files[0]);
+                                }}
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -148,9 +190,9 @@ const SectionContentMasterForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
+                                onChange={(event) => {
+                                  setFieldValue('phoneImage', event.currentTarget.files[0]);
+                                }}
                               />
                               <ErrorMessage
                                 name="phoneImage"
@@ -158,7 +200,63 @@ const SectionContentMasterForm = () => {
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>Start Date</label>
+                              <Field
+                                type="date"
+                                name="startDate"
+                                className={`form-control ${
+                                  errors.startDate && touched.startDate
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
 
+                              />
+                              <ErrorMessage
+                                name="startDate"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                             <div className="col-sm-4 form-group mb-2">
+                              <label>End Date</label>
+                              <Field
+                                type="date"
+                                name="endDate"
+                                className={`form-control ${
+                                  errors.endDate && touched.endDate
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+
+                              />
+                              <ErrorMessage
+                                name="endDate"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                               Deal Type
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="dealType"
+                                component={Dropdown}
+                                options={dealTypeOptions}
+                                className={`form-select ${errors.dealType && touched.dealType
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="dealType"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Sumbit"}
@@ -181,5 +279,5 @@ const SectionContentMasterForm = () => {
   );
 };
 
-export default SectionContentMasterForm;
+export default DealForm;
 /* eslint-enable react-hooks/exhaustive-deps */
