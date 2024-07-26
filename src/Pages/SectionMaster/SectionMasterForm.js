@@ -45,7 +45,7 @@ const SectionMasterForm = () => {
   });
   const handleSubmit = (values) => {
     if(values){
-    dispatch(onPostsectionMaster(values))
+      dispatch(onPostsectionMaster(values))
     }
   };
   useEffect(() => {

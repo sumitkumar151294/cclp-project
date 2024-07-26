@@ -1,14 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-
+import { onGetDeal, onPostDeal, onPostDealReset } from "../../Store/Slices/dealSlice";
 const sectionTypeOptions = [
   { value: 1, label: "Banner" },
   { value: 2, label: "Offer" },
@@ -16,23 +14,29 @@ const sectionTypeOptions = [
   { value: 4, label: "Tope" },
   { value: 5, label: "Bottom" },
 ];
+
 const DealForm = () => {
   const FILE_SIZE = 160 * 1024;
+  const dispatch = useDispatch();
+  // to get deal data from redux store
+  const dealData=useSelector(state=>state.dealReducer)
+  // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     phoneImage: "",
     displayOrder: "",
-    categoryId:"",
-    dealName:"",
-    startDate:"",
-    endDate:"",
-    dealType:""
+    categoryId: "",
+    dealName: "",
+    startDate: "",
+    endDate: "",
+    dealType: "",
   });
+  // options form deal type
   const dealTypeOptions = [
     { value: 1, label: "Common" },
-    { value: 2, label: "Unlock Deals" }
+    { value: 2, label: "Unlock Deals" },
   ];
-  const dispatch = useDispatch();
+  // to validate form using Yup schema
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
     phoneImage: Yup.string().required("Image is required"),
@@ -42,32 +46,24 @@ const DealForm = () => {
     dealType: Yup.string().required("Deal Type is required"),
     startDate: Yup.string().required("Start Date is required"),
     endDate: Yup.string().required("End Date is required"),
-
   });
-  const handleSubmit = (values) => {};
-  // useEffect(() => {
-  //   if (templateTypemasterData?.post_status_code === "201") {
-  //     toast.success(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //     dispatch(onGettemplateTypeMaster())
-  //   } else if (templateTypemasterData?.post_status_code) {
-  //     toast.error(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //   }
-
-  // }, [templateTypemasterData]);
-
-  // useEffect(() => {
-  //   if (templateTypeData) {
-  //     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //     setInitialValue(templateTypeData)
-  //     setButton("Update")
-  //   }
-  // }, [templateTypeData])
-  const handleImageChange = (setFieldValue, event) => {
-    setFieldValue("image", event.currentTarget.files[0]);
+  // to handle form submit
+  const handleSubmit = (values) => {
+    if (values) {
+      dispatch(onPostDeal(values));
+    }
   };
-
+  // to handle navigation and toast notifications based on deal category status
+  useEffect(() => {
+    if (dealData?.post_status_code === "201") {
+      toast.success(dealData?.postMessage)
+      dispatch(onPostDealReset())
+      dispatch(onGetDeal())
+    } else if (dealData?.post_status_code) {
+      toast.error(dealData.postMessage)
+      dispatch(onPostDealReset())
+    }
+  }, [dealData]);
   return (
     <>
       <ToastContainer />
@@ -114,7 +110,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                               Category
+                                Category
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -122,10 +118,11 @@ const DealForm = () => {
                                 name="categoryId"
                                 component={Dropdown}
                                 options={sectionTypeOptions}
-                                className={`form-select ${errors.categoryId && touched.categoryId
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-select ${
+                                  errors.categoryId && touched.categoryId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                               />
                               <ErrorMessage
                                 name="categoryId"
@@ -168,7 +165,10 @@ const DealForm = () => {
                                     : ""
                                 }`}
                                 onChange={(event) => {
-                                  setFieldValue('webImage', event.currentTarget.files[0]);
+                                  setFieldValue(
+                                    "webImage",
+                                    event.currentTarget.files[0]
+                                  );
                                 }}
                               />
                               <ErrorMessage
@@ -191,7 +191,10 @@ const DealForm = () => {
                                     : ""
                                 }`}
                                 onChange={(event) => {
-                                  setFieldValue('phoneImage', event.currentTarget.files[0]);
+                                  setFieldValue(
+                                    "phoneImage",
+                                    event.currentTarget.files[0]
+                                  );
                                 }}
                               />
                               <ErrorMessage
@@ -210,7 +213,6 @@ const DealForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-
                               />
                               <ErrorMessage
                                 name="startDate"
@@ -218,7 +220,7 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                             <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2">
                               <label>End Date</label>
                               <Field
                                 type="date"
@@ -228,7 +230,6 @@ const DealForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-
                               />
                               <ErrorMessage
                                 name="endDate"
@@ -238,7 +239,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                               Deal Type
+                                Deal Type
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -246,10 +247,11 @@ const DealForm = () => {
                                 name="dealType"
                                 component={Dropdown}
                                 options={dealTypeOptions}
-                                className={`form-select ${errors.dealType && touched.dealType
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-select ${
+                                  errors.dealType && touched.dealType
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                               />
                               <ErrorMessage
                                 name="dealType"

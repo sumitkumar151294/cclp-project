@@ -20,9 +20,9 @@ import UserMasterList from "../Pages/UserMaster/UserMasterList";
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
 import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
-import DealCategoryList from "../Pages/Deal Category/DealCategoryList";
+import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealsList from "../Pages/DealList/DealsList";
-import DealCouponList from "../Pages/Deal Coupon/DealCouponList";
+import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCauponCodeList from "../Pages/DealCouponCode/DealCauponCodeList";
 import CustomerSegmentList from "../Pages/CustomerSegment/CustomerSegmentList";
 
