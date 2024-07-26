@@ -7,21 +7,32 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
-
-const SectionContentMasterForm = () => {
+const typeOfCoupon = [
+  { value: 1, label: "Static" },
+  { value: 2, label: "Dynamic" },
+  { value: 3, label: "No Code" },
+  { value: 4, label: "Membership" },
+];
+const statusOptions = [
+  { value: true, label: "Active" },
+  { value: false, label: "Non Active" },
+];
+const CustomerSegmentForm = () => {
   const [intialValue, setInitialValue] = useState({
-    webImage: "",
-    phoneImage: "",
-    displayOrder: "",
-    categoryName:""
+    segmentName: "",
+    segmentCode: "",
+    segmentId: "",
+    validTill: "",
+
   });
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.string().required("Image is required"),
-    phoneImage: Yup.string().required("Image is required"),
-    displayOrder: Yup.string().required("Display Order is required"),
-    categoryName: Yup.string().required("Category Name is required")
+    segmentName: Yup.string().required("Segment Name is required"),
+    segmentCode: Yup.string().required("Segment Code is required"),
+    validTill: Yup.string().required(" Validity is required"),
+    segmentId: Yup.string().required("Segment Id is required"),
   });
   const handleSubmit = (values) => {};
   // useEffect(() => {
@@ -55,7 +66,7 @@ const SectionContentMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Category</h4>
+                <h4 className="card-title">Customer Segment</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -74,90 +85,79 @@ const SectionContentMasterForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Category Name</label>
+                              <label> Customer Segment Name</label>
                               <Field
                                 type="text"
-                                name="categoryName"
+                                name="segmentName"
                                 className={`form-control ${
-                                  errors.categoryName && touched.categoryName
+                                  errors.segmentName && touched.segmentName
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Category Name"
+                                placeholder="Enter Customer Segment Name"
                               />
                               <ErrorMessage
-                                name="categoryName"
+                                name="segmentName"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Display Order
-                                <span className="text-danger">*</span>
-                              </label>
+                              <label> Customer Segment Code</label>
                               <Field
-                                type="number"
-                                name="displayOrder"
+                                type="text"
+                                name="segmentCode"
                                 className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder
+                                  errors.segmentCode && touched.segmentCode
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder="Enter Customer Segment Code"
                               />
                               <ErrorMessage
-                                name="displayOrder"
+                                name="segmentCode"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Upload Image For Web
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="webImage"
+                              <label> Customer Segment Id</label>
+                              <Field
+                                type="text"
+                                name="segmentId"
                                 className={`form-control ${
-                                  errors.webImage && touched.webImage
+                                  errors.segmentId && touched.segmentId
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
+                                placeholder="Enter Customer Segment Id"
                               />
                               <ErrorMessage
-                                name="webImage"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>{" "}
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Upload Image For Phone
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="phoneImage"
-                                className={`form-control ${
-                                  errors.phoneImage && touched.phoneImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
-                              />
-                              <ErrorMessage
-                                name="phoneImage"
+                                name="segmentId"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label> Valid Till</label>
+                              <Field
+                                type="date"
+                                name="validTill"
+                                className={`form-control ${
+                                  errors.validTill && touched.validTill
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+
+                              />
+                              <ErrorMessage
+                                name="validTill"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+
+
 
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
@@ -181,5 +181,5 @@ const SectionContentMasterForm = () => {
   );
 };
 
-export default SectionContentMasterForm;
+export default CustomerSegmentForm;
 /* eslint-enable react-hooks/exhaustive-deps */

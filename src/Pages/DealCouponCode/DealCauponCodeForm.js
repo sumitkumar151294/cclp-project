@@ -7,21 +7,30 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
-
-const SectionContentMasterForm = () => {
+const typeOfCoupon = [
+  { value: 1, label: "Static" },
+  { value: 2, label: "Dynamic" },
+  { value: 3, label: "No Code" },
+  { value: 4, label: "Membership" },
+];
+const statusOptions = [
+  { value: true, label: "Active" },
+  { value: false, label: "Non Active" },
+];
+const DealCauponCodeForm = () => {
   const [intialValue, setInitialValue] = useState({
-    webImage: "",
-    phoneImage: "",
-    displayOrder: "",
-    categoryName:""
+    couponCode: "",
+    dealCouponId: "",
+    enabled: "",
+
   });
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.string().required("Image is required"),
-    phoneImage: Yup.string().required("Image is required"),
-    displayOrder: Yup.string().required("Display Order is required"),
-    categoryName: Yup.string().required("Category Name is required")
+    couponCode: Yup.string().required("Coupon Code is required"),
+    dealCouponId: Yup.string().required("Deal Coupon is required"),
+    enabled: Yup.string().required("Satus is required"),
   });
   const handleSubmit = (values) => {};
   // useEffect(() => {
@@ -55,7 +64,7 @@ const SectionContentMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Category</h4>
+                <h4 className="card-title">Deal Coupon Code</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -74,91 +83,66 @@ const SectionContentMasterForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Category Name</label>
+                              <label>Coupon Code</label>
                               <Field
                                 type="text"
-                                name="categoryName"
+                                name="couponCode"
                                 className={`form-control ${
-                                  errors.categoryName && touched.categoryName
+                                  errors.couponCode && touched.couponCode
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 placeholder="Enter Category Name"
                               />
                               <ErrorMessage
-                                name="categoryName"
+                                name="couponCode"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Display Order
+                               Deal Coupon
                                 <span className="text-danger">*</span>
                               </label>
+
                               <Field
-                                type="number"
-                                name="displayOrder"
-                                className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder="Enter Display Order"
+                                name="dealCouponId"
+                                component={Dropdown}
+                                options={typeOfCoupon}
+                                className={`form-select ${errors.dealCouponId && touched.dealCouponId
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
                               />
                               <ErrorMessage
-                                name="displayOrder"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Upload Image For Web
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="webImage"
-                                className={`form-control ${
-                                  errors.webImage && touched.webImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
-                              />
-                              <ErrorMessage
-                                name="webImage"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>{" "}
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Upload Image For Phone
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="phoneImage"
-                                className={`form-control ${
-                                  errors.phoneImage && touched.phoneImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
-                              />
-                              <ErrorMessage
-                                name="phoneImage"
+                                name="dealCouponId"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
 
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                             Status
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${errors.enabled && touched.enabled
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Sumbit"}
@@ -181,5 +165,5 @@ const SectionContentMasterForm = () => {
   );
 };
 
-export default SectionContentMasterForm;
+export default DealCauponCodeForm;
 /* eslint-enable react-hooks/exhaustive-deps */
