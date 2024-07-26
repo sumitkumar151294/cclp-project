@@ -45,7 +45,7 @@ const SectionMasterForm = () => {
   });
   const handleSubmit = (values) => {
     if(values){
-    dispatch(onPostsectionMaster(values))
+      dispatch(onPostsectionMaster(values))
     }
   };
   useEffect(() => {
@@ -216,7 +216,7 @@ const SectionMasterForm = () => {
 
                                 placeholder="Enter No Of Points To Claim"
                                 disabled={
-                                  values.pointsToClaim}
+                                  !values.pointsToClaim}
                               />
                               <ErrorMessage
                                 name="noOfPointsToClaim"
