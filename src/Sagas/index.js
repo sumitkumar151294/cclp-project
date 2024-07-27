@@ -13,6 +13,9 @@ import loginAuthSaga from "./loginAuthSaga";
 import userRoleModulesAccessSaga from "./userRoleModulesAccessSaga";
 import sectionMasterSaga from "./sectionMasterSaga";
 import SectionContentMasterSaga from "./sectionContentMasterSaga";
+import dealCategorySaga from "./dealCategorySaga";
+import dealSaga from "./dealSaga";
+import dealCouponSaga from "./dealCouponSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -29,6 +32,9 @@ export default function* rootSaga() {
     clientMasterSaga(),
     addCouponSaga(),
     sectionMasterSaga(),
-    SectionContentMasterSaga()
+    SectionContentMasterSaga(),
+    dealCategorySaga(),
+    dealSaga(),
+    dealCouponSaga
   ]);
 }

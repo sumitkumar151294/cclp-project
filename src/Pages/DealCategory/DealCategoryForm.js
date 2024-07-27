@@ -6,47 +6,49 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetDealCategory, onPostDealCategory, onPostDealCategoryReset } from "../../Store/Slices/dealCategorySlice";
 
-
-const SectionContentMasterForm = () => {
+const SectionContentMasterForm = () => { 
+  const dispatch = useDispatch();
+  // to get deal category data from redux store
+  const dealCategoryData=useSelector(state=>state.dealCategoryReducer)
+  // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     phoneImage: "",
     displayOrder: "",
     categoryName:""
   });
-  const dispatch = useDispatch();
+  // to validate form using Yup schema
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
     phoneImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
     categoryName: Yup.string().required("Category Name is required")
   });
-  const handleSubmit = (values) => {};
-  // useEffect(() => {
-  //   if (templateTypemasterData?.post_status_code === "201") {
-  //     toast.success(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //     dispatch(onGettemplateTypeMaster())
-  //   } else if (templateTypemasterData?.post_status_code) {
-  //     toast.error(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //   }
-
-  // }, [templateTypemasterData]);
-
-  // useEffect(() => {
-  //   if (templateTypeData) {
-  //     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //     setInitialValue(templateTypeData)
-  //     setButton("Update")
-  //   }
-  // }, [templateTypeData])
+  //to handle submit
+  const handleSubmit = (values) => {
+    debugger
+    if(values){
+      dispatch(onPostDealCategory(values))
+    }
+  };
+  // to handle image changes
   const handleImageChange = (setFieldValue, event) => {
     setFieldValue("image", event.currentTarget.files[0]);
   };
-
+  // to handle navigation and toast notifications based on deal category status
+  useEffect(() => {
+    if (dealCategoryData?.post_status_code === "201") {
+      toast.success(dealCategoryData.postMessage)
+      dispatch(onPostDealCategoryReset())
+      dispatch(onGetDealCategory())
+    } else if (dealCategoryData?.post_status_code) {
+      toast.error(dealCategoryData.postMessage)
+      dispatch(onPostDealCategoryReset())
+    }
+  }, [dealCategoryData]);
   return (
     <>
       <ToastContainer />
@@ -125,9 +127,9 @@ const SectionContentMasterForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
+                                onChange={(event) => {
+                                  setFieldValue('webImage', event.currentTarget.files[0]);
+                                }}
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -148,9 +150,9 @@ const SectionContentMasterForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
-                                }
+                                onChange={(event) => {
+                                  setFieldValue('phoneImage', event.currentTarget.files[0]);
+                                }}
                               />
                               <ErrorMessage
                                 name="phoneImage"

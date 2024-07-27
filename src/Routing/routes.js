@@ -19,10 +19,10 @@ import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
-import ModuleMaster from "../Pages/ModuleMaster/ModuleMaster";
-import DealCategoryList from "../Pages/Deal Category/DealCategoryList";
+import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
+import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealsList from "../Pages/DealList/DealsList";
-import DealCouponList from "../Pages/Deal Coupon/DealCouponList";
+import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCauponCodeList from "../Pages/DealCouponCode/DealCauponCodeList";
 import CustomerSegmentList from "../Pages/CustomerSegment/CustomerSegmentList";
 
@@ -51,8 +51,8 @@ function RouteConfiq() {
         <Route path="/userMaster" element={<Layout Component={UserMasterList} />}/>
         <Route path="/sectionMaster" element={<Layout Component={SectionMasterList} />}/>
         <Route path="/sectionContentMaster" element={<Layout Component={SectionContentMasterList} />}/>
+        <Route path="/moduleMaster" element={<Layout Component={ModuleMasterList} />}/>
         <Route path="/dealCategory" element={<Layout Component={DealCategoryList} />}/>
-        <Route path="/moduleMaster" element={<Layout Component={ModuleMaster} />}/>
         <Route path="/deal" element={<Layout Component={DealList} />}/>
         <Route path="/dealCoupon" element={<Layout Component={DealCouponList} />}/>
         <Route path="/dealCouponCode" element={<Layout Component={DealCauponCodeList} />}/>

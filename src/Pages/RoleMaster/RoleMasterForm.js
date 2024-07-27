@@ -148,7 +148,7 @@ const RoleMasterForm = ({ data, setData }) => {
     }
     setSelectAll(!selectAll);
   };
-
+  // to handle user role module access data
   useEffect(() => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData?.map((data) => {
@@ -189,7 +189,6 @@ const RoleMasterForm = ({ data, setData }) => {
   }, [userRoleData, moduleAccessData, moduleAccess]);
 
   // to handle navigation and toast notifications based on user role status
-  
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
