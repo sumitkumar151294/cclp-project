@@ -6,9 +6,9 @@ import Button from "../../Components/Button/Button";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
-import DealCouponForm from "./DealCouponForm";
+import DealCouponCodeForm from "./DealCouponCodeForm";
 
-const DealCouponList = () => {
+const DealCouponCodeList = () => {
   const dealCategoryData = [
     {
       categoryName: "TopOffers",
@@ -105,7 +105,7 @@ const DealCouponList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
-      <DealCouponForm />
+      <DealCouponCodeForm />
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -114,7 +114,7 @@ const DealCouponList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Coupon List"}</h4>
+                    <h4 className="card-title">Deal Coupon Code List</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -222,4 +222,4 @@ const DealCouponList = () => {
   );
 };
 
-export default DealCouponList;
+export default DealCouponCodeList;

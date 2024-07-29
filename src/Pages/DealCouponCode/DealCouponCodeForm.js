@@ -6,44 +6,55 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-
+import { onGetDealCouponCode, onPostDealCouponCode, onPostDealCouponCodeReset } from "../../Store/Slices/dealCouponCodeSlice";
+// options for type of coupon
 const typeOfCoupon = [
   { value: 1, label: "Static" },
   { value: 2, label: "Dynamic" },
   { value: 3, label: "No Code" },
   { value: 4, label: "Membership" },
 ];
+// options for status
 const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
-const DealCauponCodeForm = () => {
+const DealCouponCodeForm = () => {
+  const dispatch = useDispatch();
+  // to get deal coupon code data from redux store
+  const dealCouponCodeData=useSelector(state=>state.dealCouponCodeReducer);
+  // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
     couponCode: "",
     dealCouponId: "",
     enabled: "",
 
   });
-  const dispatch = useDispatch();
+   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     couponCode: Yup.string().required("Coupon Code is required"),
     dealCouponId: Yup.string().required("Deal Coupon is required"),
     enabled: Yup.string().required("Satus is required"),
   });
-  const handleSubmit = (values) => {};
-  // useEffect(() => {
-  //   if (templateTypemasterData?.post_status_code === "201") {
-  //     toast.success(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //     dispatch(onGettemplateTypeMaster())
-  //   } else if (templateTypemasterData?.post_status_code) {
-  //     toast.error(templateTypemasterData.postMessage)
-  //     dispatch(onPosttemplateTypeMasterReset())
-  //   }
-
-  // }, [templateTypemasterData]);
+  // to handle form submit
+  const handleSubmit = (values) => {
+    if (values) {
+      dispatch(onPostDealCouponCode(values));
+    }
+  };
+  // to handle navigation and toast notifications based on deal coupon code status
+  useEffect(() => {
+    if (dealCouponCodeData?.post_status_code === "201") {
+      toast.success(dealCouponCodeData?.postMessage)
+      dispatch(onPostDealCouponCodeReset());
+      dispatch(onGetDealCouponCode());
+    } else if (dealCouponCodeData?.post_status_code) {
+      toast.error(dealCouponCodeData?.postMessage)
+      dispatch(onPostDealCouponCodeReset());
+    }
+  }, [dealCouponCodeData]);
 
   // useEffect(() => {
   //   if (templateTypeData) {
@@ -165,5 +176,5 @@ const DealCauponCodeForm = () => {
   );
 };
 
-export default DealCauponCodeForm;
+export default DealCouponCodeForm;
 /* eslint-enable react-hooks/exhaustive-deps */
