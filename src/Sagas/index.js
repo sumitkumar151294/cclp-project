@@ -16,6 +16,7 @@ import SectionContentMasterSaga from "./sectionContentMasterSaga";
 import dealCategorySaga from "./dealCategorySaga";
 import dealSaga from "./dealSaga";
 import dealCouponSaga from "./dealCouponSaga";
+import dealCouponCodeSaga from "./dealCouponCodeSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -35,6 +36,7 @@ export default function* rootSaga() {
     SectionContentMasterSaga(),
     dealCategorySaga(),
     dealSaga(),
-    dealCouponSaga
+    dealCouponSaga(),
+    dealCouponCodeSaga()
   ]);
 }

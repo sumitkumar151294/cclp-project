@@ -36,7 +36,7 @@ const DealForm = () => {
     { value: 1, label: "Common" },
     { value: 2, label: "Unlock Deals" },
   ];
-  // to validate form using Yup schema
+  // to validate the form using Yup schema
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
     phoneImage: Yup.string().required("Image is required"),

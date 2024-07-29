@@ -23,7 +23,7 @@ import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
 import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealsList from "../Pages/DealList/DealsList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
-import DealCauponCodeList from "../Pages/DealCouponCode/DealCauponCodeList";
+import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 import CustomerSegmentList from "../Pages/CustomerSegment/CustomerSegmentList";
 
 
@@ -55,7 +55,7 @@ function RouteConfiq() {
         <Route path="/dealCategory" element={<Layout Component={DealCategoryList} />}/>
         <Route path="/deal" element={<Layout Component={DealList} />}/>
         <Route path="/dealCoupon" element={<Layout Component={DealCouponList} />}/>
-        <Route path="/dealCouponCode" element={<Layout Component={DealCauponCodeList} />}/>
+        <Route path="/dealCouponCode" element={<Layout Component={DealCouponCodeList} />}/>
       </Routes>
     </Router>
   );

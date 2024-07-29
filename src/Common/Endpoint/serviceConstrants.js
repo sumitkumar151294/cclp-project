@@ -47,6 +47,10 @@ const API = {
   postdealcoupon:"/deal-coupon",
   getdealcoupon:"/deal-coupon",
   updatedealcoupon:"/deal-coupon",
+  //deal-coupon-code
+  postdealcouponcode:"/deal-coupon-code",
+  getdealcouponcode:"/deal-coupon-code",
+  updatedealcouponcode:"/deal-coupon-code",
 
 };
 export default API;
