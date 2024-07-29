@@ -1,13 +1,20 @@
-h1, h2, h3, h4, h5,h6, p {
-    margin: 0 !important;
-    
+@import url("https://fonts.googleapis.com/css2?family=Playball&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0 !important;
 }
 /*================================
        SPECIAL-OFFER-SLIDER
 ==================================*/
 
-.special_offer_slider_wrapper {
-  .slider_header_title {
+.unlock_offer_card {
+  .unlock_offer_card_title {
     padding: 16px 0px 11px 0px;
     h3 {
       font-family: Inter;
@@ -18,36 +25,262 @@ h1, h2, h3, h4, h5,h6, p {
       color: #2f2f2f;
     }
   }
-  .card{
-    background-color:#E6E6E6;
+  .grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+  }
+  .slider_card {
+    background-color: #e6e6e6;
     border-radius: 14.9px;
-    padding-left: 12px;
+    padding-right: unset;
+    padding-top: 24.84px;
+    padding-bottom: 26.8px;
 
-    .card-body{
+    .card_body {
+      padding-left: 15px;
+      padding-top: 52px;
+      position: relative;
 
-        .left_card_body{
+      &:after {
+        content: "";
+        position: absolute;
+        background-color: #c7c7c7;
+        width: 1.24px;
+        height: 100%;
+        right: 12px;
+        top: 12px;
+      }
+      .card-title {
+        margin-bottom: 0 !important;
+        font-family: Inter;
+        font-size: 22.23px;
+        font-weight: 500;
+        line-height: 26.9px;
+        letter-spacing: -0.03em;
+        color: #252525;
+      }
+      .card-text {
+        font-family: Inter;
+        font-size: 31.75px;
+        font-weight: 700;
+        line-height: 38.43px;
+        letter-spacing: -0.03em;
+        color: #252525;
+        margin: 0 !important;
+      }
+      .swipe_button {
+        padding-top: 19px;
 
-            .card-title{
-                margin-bottom: 0 !important;
-                font-family: Inter;
-                font-size: 22.23px;
-                font-weight: 500;
-                line-height: 26.9px;
-                letter-spacing: -0.03em;
-                color: #252525;                
-            }
-            .card-text{
-                font-family: Inter;
-font-size: 31.75px;
-font-weight: 700;
-line-height: 38.43px;
-letter-spacing: -0.03em;
-color: #252525;     
-margin: 0 !important;           
+        .ReactSwipeButton {
+          position: relative;
+          .rsbContainer {
+            border: 1.24px solid rgba(0, 0, 0, 1);
+            background-color: rgba(219, 219, 219, 1);
+            width: 90%;
+          }
+          .rsbcSliderArrow {
+            border: 2px solid #000000;
+            border-left-color: transparent;
+            border-bottom-color: transparent;
+          }
 
-
-            }
+          .rsbcText {
+            font-family: Inter;
+            font-size: 15.42px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: #222222;
+            left: 25px;
+          }
+          .rsbcSliderCircle {
+            background: #fff;
+          }
         }
+        .rsbContainerUnlocked {
+          width: 90% !important;
+          margin-left: unset;
+        }
+        .rsbcSlider{
+          z-index: 7;
+
+        }
+        .rsbContainer.rsbContainerUnlocked {
+          .rsbcSlider {
+            background-color: #dbdbdb;
+          }
+          .rsbcText {
+            color: #6f6e6e;
+            font-size: 15.42px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            padding-left: 16px;
+            left: 25px;
+          }
+        }
+      }
+    }
+
+    .left__offer_slider {
+      // padding-left: 30px;
+      padding-right: unset;
+      padding-top: 35px;
+      .slick-slider{
+        max-width: 100vw;
+    width: 100%;
+    overflow: hidden;
+      }
+      .upper_card_slide {
+        .upper_slide {
+          margin-bottom: 5px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .img_circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24.84px;
+            height: 24.84px;
+            background-color: rgba(53, 53, 53, 0.25);
+            z-index: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  .right_card_body {
+    width: 494px;
+    background: #252525;
+    border-radius: 14.96px;
+    color: #ffffff;
+    .cred_card_top_sec {
+      padding: 50px 25px 39px 25px;
+
+      p {
+        font-family: Inter;
+        font-size: 27.37px;
+        font-weight: 700;
+        line-height: 33.12px;
+        letter-spacing: -0.03em;
+      }
+      span {
+        font-family: Inter;
+        font-size: 23.37px;
+        font-weight: 700;
+        line-height: 28.29px;
+        letter-spacing: 0.18em;
+      }
+    }
+  }
+  .cred_card_bottom_sec {
+    border-radius: 9.97px 9.97px 14.96px 14.96px;
+    background: linear-gradient(#252525, #141414);
+    border-top: 1px solid #d8d8d866;
+    padding: 40px 25px 25px 25px;
+    .left_point_balance {
+      color: rgba(255, 255, 255, 1);
+      position: relative;
+      flex-basis: 40%;
+      p {
+        font-family: Inter;
+        font-size: 22.21px;
+        font-weight: 700;
+        line-height: 26.88px;
+        letter-spacing: 0.08em;
+      }
+      span {
+        font-family: Inter;
+        font-size: 19.04px;
+        font-weight: 500;
+        line-height: 23.04px;
+        letter-spacing: 0.05em;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        height: 80px;
+        width: 1px;
+        background-color: #d8d8d866;
+        top: -10px;
+      }
+    }
+    .right_card_switch {
+      flex-basis: 60%;
+      .switch_loop_left {
+        padding-left: 50px;
+        color: rgba(255, 255, 255, 1);
+
+        p {
+          font-family: Inter;
+          font-size: 19.81px;
+          font-weight: 700;
+          line-height: 23.97px;
+          letter-spacing: 0.18em;
+        }
+        span {
+          font-family: "Playball", cursive;
+
+          font-size: 32.93px;
+          font-weight: 400;
+          line-height: 41.16px;
+          letter-spacing: -0.03em;
+        }
+      }
+      .switch_loop_right {
+        color: rgba(152, 152, 152, 1);
+        font-family: Inter;
+        font-size: 9.92px;
+        font-weight: 500;
+        line-height: 12.01px;
+        position: relative;
+        padding-right: 20px;
+
+        p {
+          margin: 0;
+        }
+        &:after {
+          content: ">";
+          position: absolute;
+          right: 2px;
+          top: 10px;
+          font-size: 12px;
+          color: #989898;
+        }
+      }
+    }
+  }
+  .unlock_brand_tag {
+    background: linear-gradient(#505050, #141414);
+    text-align: center;
+    color: #ffffff;
+    border-radius: 10.71px;
+    padding: 22px 0px 23px 0px;
+
+    p {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 19.36px;
+      letter-spacing: -0.02em;
+
+      span {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.36px;
+        letter-spacing: -0.02em;
+        text-align: center;
+      }
     }
   }
 }

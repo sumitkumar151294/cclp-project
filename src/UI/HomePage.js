@@ -10,8 +10,17 @@ import larrow from '../Assets/imgNewUI/left-arrow.svg';
 import rarrow from '../Assets/imgNewUI/right-arrow.svg';
 import offerTag from '../Assets/imgNewUI/offerTag.svg';
 import "../UI/HomePage.scss";
+import "../UI/responsive.scss";
+
 import HeroSection from "./HeroSection";
 import SpecialofferSlide from "./SpecialofferSlide";
+import TabBar from "./tab-component/TabBar";
+import SmartReward from "./smartReward/SmartReward";
+import BestSeller from "./bestSeller/BestSeller";
+import TopOffer from "./Topoffer/TopOffer";
+import GiftCard from "./giftCard-Component/GiftCard";
+import PointBanner from "./pointBanner/PointBanner";
+import SummerSpecial from "./summer/SummerSpecial";
 
 const HomePage = () => {
   const [active, setActive] = useState(false);
@@ -139,7 +148,13 @@ const HomePage = () => {
       <div className="container">
       <HeroSection/>
       <SpecialofferSlide/>
-
+      <TabBar/>
+      <SmartReward/>
+      <BestSeller/>
+      <TopOffer/>
+      <GiftCard/>
+      <PointBanner/>
+      <SummerSpecial/>
       </div>
     </>
   );
