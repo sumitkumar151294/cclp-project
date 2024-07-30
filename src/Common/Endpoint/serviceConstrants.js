@@ -13,11 +13,11 @@ const API = {
   postproductApi: "/postProductSection",
   getProductApi: "/getProductSection",
   //user-role
-  postRoleMaster: "/roleMaster",
-  getRoleMaster: "/getRoleMaster",
-  roleMaster: "/roleMaster",
+  postRoleMaster: "/user-role",
+  getRoleMaster: "/user-role",
   // user-role-module-access
-  userRole_moduleAccess: "/user-role-module-access",
+  postUserRoleModuleAccess: "/user-role-module-access",
+  getUserRoleModuleAccess: "/user-role-module-access-by-role-id",
   //client-master
   clientMaster: "/clientMaster",
   getclientMaster: "/getClientMaster",

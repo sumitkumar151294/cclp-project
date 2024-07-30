@@ -29,7 +29,6 @@ const SectionContentMasterForm = () => {
   });
   //to handle submit
   const handleSubmit = (values) => {
-    debugger
     if(values){
       dispatch(onPostDealCategory(values))
     }

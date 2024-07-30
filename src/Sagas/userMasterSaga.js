@@ -53,7 +53,6 @@ function* getUser() {
 }
 function* UpdateUser({ payload }) {
   try {
-    debugger
     const updateUserResponse = yield call(callUserMasterUpdateApi, payload);
     if (updateUserResponse.httpStatusCode === "201") {
       yield put(

@@ -52,7 +52,7 @@ const LoginPage = () => {
     if (isLogin && loginDetails?.status_code === "201") {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
-    } else if (isLogin && loginDetails?.status_code) {
+    } else if (isLogin && loginDetails?.status_code==="400") {
       toast.error(loginDetails?.message);
     }
   }, [loginDetails]);
