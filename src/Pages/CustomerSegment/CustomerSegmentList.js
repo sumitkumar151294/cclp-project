@@ -9,19 +9,20 @@ import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import CustomerSegmentForm from "./CustomerSegmentForm";
 
-const CustomerSegment = () => {
+const CustomerSegmentList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
   // Translation labels
-  const customerSegment = GetTranslationData("UIAdmin", "customerSegment");
-  const exportLabel = GetTranslationData("UIAdmin", "export_label");
-  const currentStatus = GetTranslationData("UIAdmin", "currentStatus");
-  const id = GetTranslationData("UIAdmin", "id");
-  const segmentName = GetTranslationData("UIAdmin", "segmentName");
-  const date = GetTranslationData("UIAdmin", "date");
+  const customerSegment = GetTranslationData("UIMasterAdmin", "customerSegment");
+  const exportLabel = GetTranslationData("UIMasterAdmin", "export_label");
+  const currentStatus = GetTranslationData("UIMasterAdmin", "currentStatus");
+  const id = GetTranslationData("UIMasterAdmin", "id");
+  const segmentName = GetTranslationData("UIMasterAdmin", "segmentName");
+  const date = GetTranslationData("UIMasterAdmin", "date");
   //to get customer segment data from redux store
   const getCustomerData = useSelector((state) => state?.customerSegmentReducer);
   const customerSegData = getCustomerData?.data;
@@ -73,6 +74,7 @@ const CustomerSegment = () => {
 
   return (
     <>
+    <CustomerSegmentForm/>
       <ScrollToTop />
       <div className="container-fluid">
         <div className="row">
@@ -191,4 +193,4 @@ const CustomerSegment = () => {
   );
 };
 
-export default CustomerSegment;
+export default CustomerSegmentList;

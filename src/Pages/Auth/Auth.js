@@ -13,7 +13,7 @@ import RouteConfiq from "../../Routing/routes";
 import { config } from "../../Common/Client/ClientConfig";
 import Loader from "../../Components/Loader/Loader";
 import { onPartnerKeyLoginSubmit } from "../../Store/Slices/loginSlice";
-import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
+import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
 
 const Auth = () => {
   const [showLoader, setShowLoader] = useState(false);
@@ -50,9 +50,9 @@ const Auth = () => {
       //   APICalled = true;
       // }
       dispatch(onPartnerKeyLoginSubmit(PARTNER_KEY));
-      axiosInstanceClient.defaults.headers["partner-code"] = PARTNER_KEY;
-      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceClient.defaults.headers["client-code"] =
+      axiosInstanceAdmin.defaults.headers["partner-code"] = PARTNER_KEY;
+      axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
       if (!loginAuthData?.data.length) {
         dispatch(onTranslationReset());
@@ -83,8 +83,8 @@ const Auth = () => {
 
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
-      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceClient.defaults.headers["client-code"] =
+      axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
       dispatch(onTranslationSubmit());
       dispatch(onLoginAuthReset());
