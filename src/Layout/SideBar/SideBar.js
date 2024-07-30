@@ -20,7 +20,7 @@ const SideBar = () => {
   );
   // to get the current user's role ID from the Redux store
   const userRoleID = useSelector(
-    (state) => state.loginReducer?.data?.[0]?.adminRoleId
+    (state) => state.loginReducer?.data?.[0]?.clientRoleId
   );
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
@@ -76,7 +76,6 @@ const SideBar = () => {
     } else {
     }
   }, [getModuleData, userRoleModuleAccess]);
-console.log(getModuleData)
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
