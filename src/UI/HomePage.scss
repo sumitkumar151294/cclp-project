@@ -1,0 +1,124 @@
+:root {
+  --primary_btn: #9a1b24;
+  --textColor: #000000;
+  --bodyColor: #f9f9f9;
+  --primaryColor:#9a1b24;
+}
+@import url("../UI/HomePage.scss");
+*{
+  box-sizing: border-box;
+}
+body{
+  background-color: #ffffff !important;
+}
+
+h1, h2, h3, h4, h5,h6, p {
+    margin: 0 !important;
+    
+}
+
+/*================================
+            HEADER
+==================================*/
+.header_main_wrapper {
+  padding: 13px 0px;
+  box-shadow: 0px 4px 18.6px 0px #00000008;
+
+  .sidebar {
+    min-width: 430px;
+    max-width: 430px;
+    background: #7386d5;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    background-color: var(--bodyColor);
+    height: 100%;
+
+    .sidebar-header {
+      padding: 20px;
+      background: #9a1b24;
+    }
+    .sidebar_menu_header {
+      background-color: #ffffff;
+      box-shadow: 0px -11px 38.4px 0px #5c5c5c40;
+      padding: 16px;
+      cursor: pointer;
+
+      h3 {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.36px;
+        text-align: left;
+      }
+    }
+    .sidebar_subMenu {
+      padding: 24px;
+
+      ul {
+        background-color: #ffffff;
+        padding: 24px;
+        border-radius: 8px;
+        margin-bottom: 29px;
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 24px;
+          cursor: pointer;
+          
+          span {
+            display: flex;
+            align-items: center;
+
+            .menu_icon {
+              border: 1px solid #dadada;
+              border-radius: 4px;
+              padding: 8px;
+              margin-right: 10.5px;
+            }
+            .sub_text {
+              font-family: Inter;
+              font-size: 14px;
+              font-weight: 500;
+              line-height: 16.94px;
+              color:#828282;
+              ;
+            }
+            p {
+              font-family: Inter;
+              font-size: 16px;
+              font-weight: 600;
+              line-height: 19.36px;
+              color: var(--textColor);
+            }
+          }
+        }
+      }
+    }
+    .btn_toggle {
+    }
+  }
+  .login_wrapper_btn {
+    .btn.btn_login {
+      color: var(--primary_btn);
+      border-radius: 18px !important;
+      border: 1px solid var(--primary_btn);
+      padding: 3.56px 11.56px 3.56px 11.56px;
+      box-shadow: 0px 4.44px 3.56px 0px #eeeeee40 inset;
+      &:hover {
+        color: #fff;
+        background-color: var(--primary_btn);
+      }
+    }
+  }
+
+  .sidebar.active {
+    margin-left: -440px;
+  }
+}
+/*================================
+            HEADER-END
+==================================*/
