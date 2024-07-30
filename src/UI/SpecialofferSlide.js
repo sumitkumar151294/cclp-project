@@ -50,7 +50,6 @@ const SpecialofferSlide = () => {
     ]
   };
   const onSuccess = () => {
-    console.log("Successfully Swiped!");
   };
   return (
     <>

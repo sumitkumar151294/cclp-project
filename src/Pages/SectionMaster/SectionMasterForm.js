@@ -48,7 +48,6 @@ const SectionMasterForm = () => {
   });
 
   const handleSubmit = (values) => {
-    debugger
     if (values) {
       const SectionformData = {
         ...values,

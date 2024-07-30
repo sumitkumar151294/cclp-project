@@ -20,7 +20,6 @@ const SectionMasterList = () => {
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const SectionMasterData=useSelector(state=>state?.sectionMasterReducer?.getsectionMasterData)
-  // console.log(sectionMasterData )
   useEffect(()=>{
     dispatch(onGetsectionMaster());
   },[])

@@ -72,7 +72,6 @@ const RoleMasterForm = ({ data, setData }) => {
       initialValues: initialValues,
       validationSchema: validateForm,
       onSubmit: (values, action) => {
-        debugger
         values.modules = [...moduleAccess];
         const postData = {
           createdBy: 0,
@@ -189,7 +188,6 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess([]);
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
-   console.log(userRoleData);
   // to handle navigation and toast notifications based on user role status
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {

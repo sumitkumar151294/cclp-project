@@ -37,7 +37,6 @@ const SectionContentMasterForm = () => {
   const handleSubmit = (values) => {};
 
   const handleImageChange = (setFieldValue, event) => {
-    debugger
     setFieldValue("phoneImage", event.currentTarget.files[0]);
     setFieldValue("webImage", event.currentTarget.files[0]);
   };
