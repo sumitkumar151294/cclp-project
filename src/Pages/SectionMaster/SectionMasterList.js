@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
@@ -7,126 +7,133 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import SectionMasterForm from "./SectionMasterForm";
 import InputField from "../../Components/InputField/InputField";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetsectionMaster } from "../../Store/Slices/sectionMasterSlice";
 
 const SectionMasterList = () => {
-  const SectionMasterData = [
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },{
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled:true,
-      poinToClaim:0
-    },
-
-
-  ];
-
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
+  const dispatch= useDispatch()
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  const SectionMasterData=useSelector(state=>state?.sectionMasterReducer?.getsectionMasterData)
+  // console.log(sectionMasterData )
+  useEffect(()=>{
+    dispatch(onGetsectionMaster());
+  },[])
+  // const SectionMasterData = [
+  //   {
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },{
+  //     sectionName: "TopOffers",
+  //     sectionType: "Top Offers",
+  //     displayOrder: "3",
+  //     text: "i am offer master",
+  //     enabled:true,
+  //     poinToClaim:0
+  //   },
+
+
+  // ];
   return (
     <>
       <SectionMasterForm />
@@ -146,36 +153,17 @@ const SectionMasterList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
-                        // value={searchQuery}
-                        // onChange={handleSearch}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
                       </span>
                     </div>
                   </div>
-                  {/* <div className="d-flex align-items-center flex-wrap">
-                        {clientList?.clientData &&
-                          clientList?.clientData?.length > 0 && (
-                            <CSVLink
-                              data={excelData}
-                              headers={headers}
-                              filename={"ClientMaster.csv"}
-                            >
-                              {filteredClientList.length > 0 && (
-                                <Button
-                                  className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
-                                  text={exportLabel}
-                                  icons={"fa fa-file-excel me-2"}
-                                />
-                              )}
-                            </CSVLink>
-                          )}
-                      </div> */}
+
                 </div>
               </div>
               <div className="card-body">
-                {SectionMasterData?.isLoading ? (
+                {SectionMasterData?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -191,7 +179,7 @@ const SectionMasterList = () => {
                                 <th>{"Section Type"}</th>
                                 <th>{"Display Order"}</th>
                                 <th>{"Text"}</th>
-                                <th>{"Points To Claim"}</th>
+                                {/* <th>{"Points To Claim"}</th> */}
                                 <th>{"Status"}</th>
                                 <th>{"Action"}</th>
                                 <th>{"Section Data"}</th>
@@ -207,7 +195,7 @@ const SectionMasterList = () => {
                                   <td>{SectionMasterData.sectionType}</td>
                                   <td>{SectionMasterData.displayOrder}</td>
                                   <td>{SectionMasterData.text}</td>
-                                  <td>{SectionMasterData.poinToClaim}</td>
+                                  {/* <td>{SectionMasterData.poinToClaim}</td> */}
                                   <td>
                                   <span
                                     className={
@@ -247,7 +235,7 @@ const SectionMasterList = () => {
                                   <td>
                                     <Link
                                       to="/sectionContentMaster"
-                                      // state={{ id: data.id }}
+                                      state={{ sectionType: SectionMasterData.sectionType }}
                                       className="btn btn-primary btn-sm float-right client_Btn"
                                     >
                                       <i className="fa fa-eye"></i>&nbsp;

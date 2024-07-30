@@ -5,8 +5,10 @@ import InputField from "../../Components/InputField/InputField";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import SectionContentMasterForm from "./SectionContentMasterForm";
+import { useLocation } from "react-router-dom";
 
 const SectionContentMasterList = () => {
+
   const SectionMasterData = [
     {
       sectionName: "TopOffers",

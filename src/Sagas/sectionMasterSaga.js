@@ -5,6 +5,7 @@ function* GetsectionMaster() {
   try {
     const getsectionMasterResponse = yield call(callsectionMasterGetApi);
     if (getsectionMasterResponse.httpStatusCode === "200") {
+      debugger
       yield put(
         onGetsectionMasterSuccess({
           data: getsectionMasterResponse.response,

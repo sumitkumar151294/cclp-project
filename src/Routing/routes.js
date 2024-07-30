@@ -27,7 +27,6 @@ import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealsList from "../Pages/DealList/DealsList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
-import CustomerSegmentList from "../Pages/CustomerSegment/CustomerSegmentList";
 
 
 
@@ -37,7 +36,6 @@ function RouteConfiq() {
       <Routes>
         <Route path="/" element={<LoginPage/>} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />}/>
-        <Route path="/customerSegment" element={<Layout Component={CustomerSegmentList} />}/>
         <Route path="/productContentList" element={<Layout Component={ProductContentList} />}/>
         <Route path="/productSection" element={<Layout Component={ProductSection} />}/> 
         <Route path="/addCoupon" element={<Layout Component={AddCoupon} />}/> 

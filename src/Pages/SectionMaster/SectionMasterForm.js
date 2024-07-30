@@ -16,26 +16,29 @@ const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
-const sectionTypeOptions = [
-  { value: 1, label: "Banner" },
-  { value: 2, label: "Offer" },
-  { value: 3, label: "Middle" },
-  { value: 4, label: "Tope" },
-  { value: 5, label: "Bottom" },
-];
+
 const SectionMasterForm = () => {
-  const sectionMasterData=useSelector(state=>state.sectionMasterReducer)
+  const [showFields, setShowFields] = useState(false);
+  const sectionMasterData = useSelector(state => state.sectionMasterReducer)
   const [intialValue, setInitialValue] = useState({
     sectionName: "",
     sectionType: "",
     enabled: "",
     displayOrder: "",
+    displayLimit: "",
     text: "",
     claimLimit: "",
-    pointsToClaim: "",
-    noOfPointsToClaim: 0,
-    segmentId:""
+    pointToClaim: "",
+    noOfpointToClaim: 0,
+    segmentId: ""
   });
+
+  const sectionTypeOptions = [
+    { value: "Banner", label: "Banner" },
+    { value: "UnlockStaticCard", label: "Unlock Static Card" },
+    { value: "CustomerBenefits", label: "Customer Benefits" },
+    { value: "SupportingBanner", label: "Supporting Banner" },
+  ];
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     sectionName: Yup.string().required("Section Name is required"),
@@ -43,11 +46,27 @@ const SectionMasterForm = () => {
     enabled: Yup.string().required("Status is required"),
     displayOrder: Yup.string().required("Display Order is required"),
   });
+
   const handleSubmit = (values) => {
-    if(values){
-      dispatch(onPostsectionMaster(values))
+    debugger
+    if (values) {
+      const SectionformData = {
+        ...values,
+        deleted: false,
+        enabled: values.enabled ? true : false,
+        clientId:"4",
+        displayOrder: JSON.stringify(values.displayOrder),
+        displayLimit: JSON.stringify(values.displayOrder),
+        claimLimit:"1",
+        pointToClaim:false,
+        segmentId:"3",
+        text:"zcds"
+      };
+      dispatch(onPostsectionMaster(SectionformData));
+      setShowFields(false)
     }
   };
+
   useEffect(() => {
     if (sectionMasterData?.post_status_code === "201") {
       toast.success(sectionMasterData.postMessage)
@@ -59,13 +78,7 @@ const SectionMasterForm = () => {
     }
   }, [sectionMasterData]);
 
-  // useEffect(() => {
-  //   if (templateTypeData) {
-  //     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //     setInitialValue(templateTypeData)
-  //     setButton("Update")
-  //   }
-  // }, [templateTypeData])
+
   return (
     <>
       <ToastContainer />
@@ -77,10 +90,10 @@ const SectionMasterForm = () => {
                 <h4 className="card-title">Section Master</h4>
               </div>
               <div className="card-body">
-                {false ? (
-                  <div style={{ height: "200px" }}>
-                    <Loader />
-                  </div>
+                {sectionMasterData?.isPostLoading ? (
+                <div style={{ height: "350px" }}>
+                  <Loader classType={"absoluteLoader"} />
+                </div>
                 ) : (
                   <div className="container-fluid">
                     <Formik
@@ -92,27 +105,6 @@ const SectionMasterForm = () => {
                       {({ errors, touched, values }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Section Type
-                                <span className="text-danger">*</span>
-                              </label>
-
-                              <Field
-                                name="sectionType"
-                                component={Dropdown}
-                                options={sectionTypeOptions}
-                                className={`form-select ${errors.sectionType && touched.sectionType
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
-                              />
-                              <ErrorMessage
-                                name="sectionType"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Section Name
@@ -129,6 +121,31 @@ const SectionMasterForm = () => {
                               />
                               <ErrorMessage
                                 name="sectionName"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                                Section Type
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="sectionType"
+                                component={Dropdown}
+                                options={sectionTypeOptions}
+                                className={`form-select ${errors.sectionType && touched.sectionType
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                                onChange={(e) => {
+                                  setShowFields(e === "Banner" || e === "UnlockStaticCard"  || e === "CustomerBenefits"
+                                  )
+                                }}
+                              />
+                              <ErrorMessage
+                                name="sectionType"
                                 component="div"
                                 className="error-message"
                               />
@@ -155,27 +172,48 @@ const SectionMasterForm = () => {
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-2 mt-1">
+                            <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Claim Limit
+                                Display Limit
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="number"
-                                name="claimLimit"
-                                className={`form-control ${errors.claimLimit && touched.claimLimit
+                                name="displayLimit"
+                                className={`form-control ${errors.displayLimit && touched.displayLimit
                                   ? "is-invalid"
                                   : ""
                                   }`}
-                                placeholder="Enter Claim Limit"
+                                placeholder="Enter Display Order"
                               />
                               <ErrorMessage
-                                name="claimLimit"
+                                name="displayLimit"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 mt-1" >
+                            {!showFields &&
+                              <div className="col-sm-4 form-group mb-2 mt-1">
+                                <label>
+                                  Claim Limit
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <Field
+                                  type="number"
+                                  name="claimLimit"
+                                  className={`form-control ${errors.claimLimit && touched.claimLimit
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                  placeholder="Enter Claim Limit"
+                                />
+                                <ErrorMessage
+                                  name="claimLimit"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>}
+                            {!showFields && <div className="col-sm-4 form-group mb-2 mt-1" >
                               <label>
                                 Text
 
@@ -190,61 +228,65 @@ const SectionMasterForm = () => {
                                 placeholder="Enter Text "
                               />
 
-                            </div>
-                            <div className="col-lg-4 py-4">
-                              <div className="form-check  mb-2 padd">
+                            </div>}
+                            {!showFields &&
+                              <div className="col-lg-4 py-4">
+
+                                <div className="form-check  mb-2 padd">
+                                  <Field
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="pointToClaim"
+                                  />
+                                  <label className="px-1">Point To Claim</label>
+                                </div>
+                              </div>}
+                            {!showFields &&
+                              <div className="col-sm-4 form-group mb-1">
+                                <label>
+                                  No Of Points To Claim
+                                  <span className="text-danger">*</span>
+                                </label>
                                 <Field
-                                  type="checkbox"
-                                  className="form-check-input"
-                                  name="pointsToClaim"
+                                  type="number"
+                                  name="noOfpointToClaim"
+                                  className={`form-control ${errors.noOfpointToClaim && touched.noOfpointToClaim
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+
+                                  placeholder="Enter No Of Points To Claim"
+                                  disabled={
+                                    !values.pointToClaim}
                                 />
-                                <label className="px-1">Point To Claim</label>
-                              </div>
-                            </div>
-                            <div className="col-sm-4 form-group mb-1">
-                              <label>
-                                No Of Points To Claim
-                                <span className="text-danger">*</span>
-                              </label>
-                              <Field
-                                type="number"
-                                name="noOfPointsToClaim"
-                                className={`form-control ${errors.noOfPointsToClaim && touched.noOfPointsToClaim
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                <ErrorMessage
+                                  name="noOfpointToClaim"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>}
+                            {!showFields &&
+                              <div className="col-sm-4 form-group mb-2 " >
+                                <label>
+                                  Segment
+                                  <span className="text-danger">*</span>
+                                </label>
 
-                                placeholder="Enter No Of Points To Claim"
-                                disabled={
-                                  !values.pointsToClaim}
-                              />
-                              <ErrorMessage
-                                name="noOfPointsToClaim"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-2 " >
-                              <label>
-                                Segment
-                                <span className="text-danger">*</span>
-                              </label>
-
-                              <Field
-                                name="segmentId"
-                                component={Dropdown}
-                                options={segmentOptions}
-                                className={`form-select ${errors.segmentId && touched.segmentId
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
-                              />
-                              <ErrorMessage
-                                name="segmentId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
+                                <Field
+                                  name="segmentId"
+                                  component={Dropdown}
+                                  options={segmentOptions}
+                                  className={`form-select ${errors.segmentId && touched.segmentId
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                />
+                                <ErrorMessage
+                                  name="segmentId"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>}
                             <div className="col-sm-4 form-group mb-2 " >
                               <label>
                                 Status
