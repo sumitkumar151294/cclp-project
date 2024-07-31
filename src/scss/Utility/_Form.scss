@@ -103,3 +103,7 @@ $rgba-primary-17: var(--rgba-primary-17);
 .form-control:disabled,.form-select:disabled {
   cursor: not-allowed !important;
 }
+.is-invalid{
+  border-color: #dc3545 !important;
+
+}

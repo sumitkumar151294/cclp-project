@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetsectionMaster, onPostsectionMaster, onPostsectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 const segmentOptions = [
   { value: 1, label: "Demo" },
   { value: 2, label: "Demo1" },
@@ -17,8 +18,11 @@ const statusOptions = [
   { value: false, label: "Non Active" },
 ];
 
-const SectionMasterForm = () => {
+const SectionMasterForm = ({sectionData}) => {
+  console.log(sectionData,"")
   const [showFields, setShowFields] = useState(false);
+  const [show, setShow] = useState(false);
+console.log(show)
   const sectionMasterData = useSelector(state => state.sectionMasterReducer)
   const [intialValue, setInitialValue] = useState({
     sectionName: "",
@@ -29,7 +33,7 @@ const SectionMasterForm = () => {
     text: "",
     claimLimit: "",
     pointToClaim: "",
-    noOfpointToClaim: 0,
+    noOfpointToClaim: "",
     segmentId: ""
   });
 
@@ -43,8 +47,10 @@ const SectionMasterForm = () => {
   const validations = Yup.object().shape({
     sectionName: Yup.string().required("Section Name is required"),
     sectionType: Yup.string().required("Section Type is required"),
-    enabled: Yup.string().required("Status is required"),
+    enabled:Yup.required("Status is required"),
     displayOrder: Yup.string().required("Display Order is required"),
+    displayLimit: Yup.string().required("Display Limit is required"),
+
   });
 
   const handleSubmit = (values) => {
@@ -52,14 +58,15 @@ const SectionMasterForm = () => {
       const SectionformData = {
         ...values,
         deleted: false,
-        enabled: values.enabled ? true : false,
-        clientId:"4",
-        displayOrder: JSON.stringify(values.displayOrder),
-        displayLimit: JSON.stringify(values.displayOrder),
-        claimLimit:"1",
-        pointToClaim:false,
-        segmentId:"3",
-        text:"zcds"
+        enabled: values?.enabled ,
+        clientId:4,
+        displayOrder: JSON?.stringify(values?.displayOrder),
+        displayLimit: JSON?.stringify(values?.displayOrder),
+        claimLimit:values?.claimLimit ? values?.claimLimit : null,
+        segmentId:values?.segmentId ? values?.segmentId : null,
+        noOfpointToClaim:values?.noOfpointToClaim ? values?.noOfpointToClaim : null,
+        pointToClaim:values?.pointToClaim ? values?.pointToClaim : false,
+
       };
       dispatch(onPostsectionMaster(SectionformData));
       setShowFields(false)
@@ -69,9 +76,10 @@ const SectionMasterForm = () => {
   useEffect(() => {
     if (sectionMasterData?.post_status_code === "201") {
       toast.success(sectionMasterData.postMessage)
-      dispatch(onPostsectionMasterReset())
       dispatch(onGetsectionMaster())
+      dispatch(onPostsectionMasterReset())
     } else if (sectionMasterData?.post_status_code) {
+      debugger
       toast.error(sectionMasterData.postMessage)
       dispatch(onPostsectionMasterReset())
     }
@@ -80,6 +88,7 @@ const SectionMasterForm = () => {
 
   return (
     <>
+    <ScrollToTop/>
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">
@@ -100,6 +109,7 @@ const SectionMasterForm = () => {
                       validationSchema={validations}
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
+
                     >
                       {({ errors, touched, values }) => (
                         <Form>
@@ -112,10 +122,11 @@ const SectionMasterForm = () => {
                               <Field
                                 type="text"
                                 name="sectionName"
-                                className={`form-control ${errors.sectionName && touched.sectionName
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.sectionName && touched.sectionName
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 placeholder="Enter Section Name"
                               />
                               <ErrorMessage
@@ -139,7 +150,7 @@ const SectionMasterForm = () => {
                                   : ""
                                   }`}
                                 onChange={(e) => {
-                                  setShowFields(e === "Banner" || e === "UnlockStaticCard"  || e === "CustomerBenefits"
+                                  setShowFields(e==="SupportingBanner"
                                   )
                                 }}
                               />
@@ -183,7 +194,7 @@ const SectionMasterForm = () => {
                                   ? "is-invalid"
                                   : ""
                                   }`}
-                                placeholder="Enter Display Order"
+                                placeholder="Enter Display Limit"
                               />
                               <ErrorMessage
                                 name="displayLimit"
@@ -191,11 +202,11 @@ const SectionMasterForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            {!showFields &&
+                            {showFields &&
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>
                                   Claim Limit
-                                  <span className="text-danger">*</span>
+
                                 </label>
                                 <Field
                                   type="number"
@@ -212,7 +223,7 @@ const SectionMasterForm = () => {
                                   className="error-message"
                                 />
                               </div>}
-                            {!showFields && <div className="col-sm-4 form-group mb-2 mt-1" >
+                            {showFields && <div className="col-sm-4 form-group mb-2 mt-1" >
                               <label>
                                 Text
 
@@ -228,23 +239,23 @@ const SectionMasterForm = () => {
                               />
 
                             </div>}
-                            {!showFields &&
+                            {showFields &&
                               <div className="col-lg-4 py-4">
 
-                                <div className="form-check  mb-2 padd">
+                                <div className="form-check  mb-2 padd mt-2">
                                   <Field
                                     type="checkbox"
                                     className="form-check-input"
                                     name="pointToClaim"
                                   />
-                                  <label className="px-1">Point To Claim</label>
+                                  <label className="px-1">Points To Claim</label>
                                 </div>
                               </div>}
-                            {!showFields &&
+                            {values.pointToClaim &&
                               <div className="col-sm-4 form-group mb-1">
                                 <label>
                                   No Of Points To Claim
-                                  <span className="text-danger">*</span>
+
                                 </label>
                                 <Field
                                   type="number"
@@ -255,8 +266,7 @@ const SectionMasterForm = () => {
                                     }`}
 
                                   placeholder="Enter No Of Points To Claim"
-                                  disabled={
-                                    !values.pointToClaim}
+
                                 />
                                 <ErrorMessage
                                   name="noOfpointToClaim"
@@ -264,11 +274,11 @@ const SectionMasterForm = () => {
                                   className="error-message"
                                 />
                               </div>}
-                            {!showFields &&
+                            {showFields &&
                               <div className="col-sm-4 form-group mb-2 " >
                                 <label>
                                   Segment
-                                  <span className="text-danger">*</span>
+
                                 </label>
 
                                 <Field
@@ -289,7 +299,7 @@ const SectionMasterForm = () => {
                             <div className="col-sm-4 form-group mb-2 " >
                               <label>
                                 Status
-                                <span className="text-danger">*</span>
+
                               </label>
 
                               <Field
@@ -309,7 +319,7 @@ const SectionMasterForm = () => {
                             </div>
                             <div className="col-sm-12 form-group mb-0">
                               <Button
-                                text={"Sumbit"}
+                                text={"Submit"}
                                 icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
