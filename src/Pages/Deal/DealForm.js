@@ -23,10 +23,10 @@ const DealForm = () => {
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
-    phoneImage: "",
+    mobImage: "",
     displayOrder: "",
-    categoryId: "",
-    dealName: "",
+    category: "",
+    name: "",
     startDate: "",
     endDate: "",
     dealType: "",
@@ -39,18 +39,31 @@ const DealForm = () => {
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
-    phoneImage: Yup.string().required("Image is required"),
+    mobImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
-    categoryId: Yup.string().required("Category is required"),
-    dealName: Yup.string().required("Deal Name is required"),
+    category: Yup.string().required("Category is required"),
+    name: Yup.string().required("Deal Name is required"),
     dealType: Yup.string().required("Deal Type is required"),
     startDate: Yup.string().required("Start Date is required"),
     endDate: Yup.string().required("End Date is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {
+    debugger
     if (values) {
-      dispatch(onPostDeal(values));
+      const DealFormData = {
+        ...values,
+        deleted: false,
+        enabled: values.enabled ? true : false,
+        clientId:1,
+        category: values.category,
+        name: values.name,
+        displayOrder: values.displayOrder,
+        webImage: values.webImage,
+        mobImage:values.mobImage,
+        dealType: values.dealType,
+      };
+      dispatch(onPostDeal(DealFormData));
     }
   };
   // to handle navigation and toast notifications based on deal category status
@@ -72,7 +85,7 @@ const DealForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal</h4>
+                <h4 className="card-title">Deal Form</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -94,16 +107,16 @@ const DealForm = () => {
                               <label>Deal Name</label>
                               <Field
                                 type="text"
-                                name="dealName"
+                                name="name"
                                 className={`form-control ${
-                                  errors.dealName && touched.dealName
+                                  errors.name && touched.name
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 placeholder="Enter Deal Name"
                               />
                               <ErrorMessage
-                                name="dealName"
+                                name="name"
                                 component="div"
                                 className="error-message"
                               />
@@ -115,17 +128,17 @@ const DealForm = () => {
                               </label>
 
                               <Field
-                                name="categoryId"
+                                name="category"
                                 component={Dropdown}
                                 options={sectionTypeOptions}
                                 className={`form-select ${
-                                  errors.categoryId && touched.categoryId
+                                  errors.category && touched.category
                                     ? "is-invalid"
                                     : ""
                                 }`}
                               />
                               <ErrorMessage
-                                name="categoryId"
+                                name="category"
                                 component="div"
                                 className="error-message"
                               />
@@ -184,21 +197,21 @@ const DealForm = () => {
                               </label>
                               <input
                                 type="file"
-                                name="phoneImage"
+                                name="mobImage"
                                 className={`form-control ${
-                                  errors.phoneImage && touched.phoneImage
+                                  errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 onChange={(event) => {
                                   setFieldValue(
-                                    "phoneImage",
+                                    "mobImage",
                                     event.currentTarget.files[0]
                                   );
                                 }}
                               />
                               <ErrorMessage
-                                name="phoneImage"
+                                name="mobImage"
                                 component="div"
                                 className="error-message"
                               />

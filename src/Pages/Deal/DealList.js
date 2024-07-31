@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
@@ -7,83 +7,17 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealForm from "./DealForm";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetDeal } from "../../Store/Slices/dealSlice";
 
 const DealList = () => {
-  const dealCategoryData = [
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-      displayOrder: "3",
-    },
-  ];
-
+  const dispatch=useDispatch();
+  // to fetch deal data from redux store
+  const getDealData=useSelector((state)=>state.dealReducer);
+  useEffect(()=>{
+    dispatch(onGetDeal());
+  },[]);
+  // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
@@ -102,7 +36,7 @@ const DealList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Category List"}</h4>
+                    <h4 className="card-title">Deal List</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -121,13 +55,13 @@ const DealList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCategoryData?.isLoading ? (
+                {getDealData?.isLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <>
-                    {dealCategoryData.length ? (
+                    {getDealData?.getDealData?.length ? (
                       <div className="table-responsive scroll-Table-x ">
                         <>
                           <table className="table header-border table-responsive-sm">
@@ -141,14 +75,13 @@ const DealList = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              {dealCategoryData
-                                .slice(startIndex, endIndex)
-                                .map((dealCategoryData, index) => (
+                              {getDealData?.getDealData?.slice(startIndex, endIndex)
+                                .map((item, index) => (
                                   <tr key={index}>
-                                    <td>{dealCategoryData.categoryName}</td>
-                                    <td>{dealCategoryData.displayOrder}</td>
-                                    <td>{dealCategoryData.mobileImage}</td>
-                                    <td>{dealCategoryData.webImage}</td>
+                                    <td>{item.category}</td>
+                                    <td>{item.displayOrder}</td>
+                                    <td>{item.mobImage}</td>
+                                    <td>{item.webImage}</td>
                                     <td>
                                       <div className="d-flex">
                                         <Button
@@ -174,14 +107,14 @@ const DealList = () => {
                                 ))}
                             </tbody>
                           </table>
-                          {dealCategoryData.length > 5 && (
+                          {getDealData?.getDealData?.length > 5 && (
                             <div className="pagination-container">
                               <ReactPaginate
                                 previousLabel={"<"}
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  dealCategoryData.length / rowsPerPage
+                                  getDealData?.getDealData?.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}

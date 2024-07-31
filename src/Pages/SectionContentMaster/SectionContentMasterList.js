@@ -6,9 +6,17 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import SectionContentMasterForm from "./SectionContentMasterForm";
 import { useLocation } from "react-router-dom";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const SectionContentMasterList = () => {
-
+  // to get column heading name from translation
+  const section_name = GetTranslationData("UIMasterAdmin", "section_name");
+  const section_type = GetTranslationData("UIMasterAdmin", "section_type");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const content_source_type = GetTranslationData("UIMasterAdmin", "content_source_type");
+  const section_content_master_list = GetTranslationData("UIMasterAdmin", "section_content_master_list");
+  const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const SectionMasterData = [
     {
       sectionName: "TopOffers",

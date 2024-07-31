@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetsectionMaster, onPostsectionMaster, onPostsectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 const segmentOptions = [
   { value: 1, label: "Demo" },
   { value: 2, label: "Demo1" },
@@ -32,7 +33,25 @@ const SectionMasterForm = () => {
     noOfpointToClaim: 0,
     segmentId: ""
   });
-
+  // Translation labels
+  const section_master = GetTranslationData("UIMasterAdmin", "section_master");
+  const section_name = GetTranslationData("UIMasterAdmin", "section_name");
+  const section_type = GetTranslationData("UIMasterAdmin", "section_type");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
+  const claim_limit = GetTranslationData("UIMasterAdmin", "claim_limit");
+  const text_label = GetTranslationData("UIMasterAdmin", "text_label");
+  const no_Of_Points_To_Claim = GetTranslationData("UIMasterAdmin", "no_Of_Points_To_Claim");
+  const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const sectionNamePlaceholder = GetTranslationData("UIMasterAdmin", "sectionMasterPlaceholder");
+  const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin", "displayOrderPlaceholder");
+  const displayLimitPlaceholder = GetTranslationData("UIMasterAdmin", "displayLimitPlaceholder");
+  const claimLimitPlaceholder = GetTranslationData("UIMasterAdmin", "claimLimitPlaceholder");
+  const text_placeholder = GetTranslationData("UIMasterAdmin", "text_placeholder");
+  const PointsToClaimPlaceholder = GetTranslationData("UIMasterAdmin", "PointsToClaimPlaceholder");
   const sectionTypeOptions = [
     { value: "Banner", label: "Banner" },
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
