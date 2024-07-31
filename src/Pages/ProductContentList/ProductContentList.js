@@ -29,21 +29,21 @@ const ProductContentList = () => {
     "UIAdmin",
     "productContentList"
   );
-  const exportLabel = GetTranslationData("UIAdmin", "export_label");
-  const productName = GetTranslationData("UIAdmin", "productName");
-  const id = GetTranslationData("UIAdmin", "id");
-  const typeOfProduct = GetTranslationData("UIAdmin", "typeOfProduct");
-  const date_label = GetTranslationData("UIAdmin", "date");
-  const category_label = GetTranslationData("UIAdmin", "category");
-  const statusWise = GetTranslationData("UIAdmin", "statusWise");
-  const sortedBy = GetTranslationData("UIAdmin", "sortedBy");
-  const dealUnlock = GetTranslationData("UIAdmin", "dealUnlock");
-  const points = GetTranslationData("UIAdmin", "points");
-  const price = GetTranslationData("UIAdmin", "price");
-  const link_label = GetTranslationData("UIAdmin", "link_label");
-  const image = GetTranslationData("UIAdmin", "image");
-  const status_label = GetTranslationData("UIAdmin", "status");
-  const disabled_Text = GetTranslationData("UIAdmin", "disabled_Text");
+  const exportLabel = GetTranslationData("UIMasterAdmin", "export_label");
+  const productName = GetTranslationData("UIMasterAdmin", "productName");
+  const id = GetTranslationData("UIMasterAdmin", "id");
+  const typeOfProduct = GetTranslationData("UIMasterAdmin", "typeOfProduct");
+  const date_label = GetTranslationData("UIMasterAdmin", "date");
+  const category_label = GetTranslationData("UIMasterAdmin", "category");
+  const statusWise = GetTranslationData("UIMasterAdmin", "statusWise");
+  const sortedBy = GetTranslationData("UIMasterAdmin", "sortedBy");
+  const dealUnlock = GetTranslationData("UIMasterAdmin", "dealUnlock");
+  const points = GetTranslationData("UIMasterAdmin", "points");
+  const price = GetTranslationData("UIMasterAdmin", "price");
+  const link_label = GetTranslationData("UIMasterAdmin", "link_label");
+  const image = GetTranslationData("UIMasterAdmin", "image");
+  const status_label = GetTranslationData("UIMasterAdmin", "status");
+  const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   //to get product content data from redux store
   const productContentListData = useSelector(
     (state) => state?.productContentReducer

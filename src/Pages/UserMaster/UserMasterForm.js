@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
+import { onGetUser, onUserSubmit, onUserSubmitReset, onUserUpdate } from "../../Store/Slices/userMasterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,20 +13,21 @@ import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const UserMasterForm = () => {
+const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
 
   //To get the labels from API
-  const userMaster = GetTranslationData("UIAdmin", "user_Master_label");
-  const email = GetTranslationData("UIAdmin", "email_label");
-  const mobile = GetTranslationData("UIAdmin", "mobile_label");
-  const role = GetTranslationData("UIAdmin", "role_name_label");
-  const requiredLevel = GetTranslationData("UIAdmin", "required_label");
-  const submit = GetTranslationData("UIAdmin", "submit_label");
-  const firstName = GetTranslationData("UIAdmin", "first-name");
-  const lastName = GetTranslationData("UIAdmin", "last-name");
-  const email_placeholder = GetTranslationData("UIAdmin", "email_placeholder");
+  const userMaster = GetTranslationData("UIMasterAdmin", "user_Master_label");
+  const email = GetTranslationData("UIMasterAdmin", "email_label");
+  const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
+  const role = GetTranslationData("UIMasterAdmin", "role_name_label");
+  const requiredLevel = GetTranslationData("UIMasterAdmin", "required_label");
+  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const firstName = GetTranslationData("UIMasterAdmin", "first-name");
+  const lastName = GetTranslationData("UIMasterAdmin", "last-name");
+  const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
+  const update = GetTranslationData("UIMasterAdmin", "update_label");
   //To get the data from redux store
   const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
@@ -54,25 +57,53 @@ const UserMasterForm = () => {
   });
 
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit, setFieldValue } =
+  const { values, errors, touched, handleChange, handleSubmit, setValues } =
     useFormik({
       initialValues: initialValues,
       validationSchema: validateForm,
       onSubmit: (values, action) => {
         setIsSubmit(true);
-        dispatch(onUserSubmit( values ));
+        if (prefilledValues) {
+          const updateUserData = {
+            enabled: true,
+            deleted: false,
+            createdBy: 0,
+            updatedBy: 0,
+            login_attempt: 0,
+            id: 1,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            mobile: values.number,
+            clientRoleId: values.roleName,
+          };
+          dispatch(onUserUpdate(updateUserData));
+          setPrefilledValues();
+        }
+        else{
+          dispatch(onUserSubmit( values ));
+        }
         action.resetForm();
       },
     });
-
+   // to update user master data
+   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    setValues({
+      email: prefilledValues?.email,
+      number: prefilledValues?.number ,
+      firstName: prefilledValues?.firstName,
+      lastName: prefilledValues?.lastName,
+      roles: prefilledValues?.roleName ? [prefilledValues?.roleName] :[]
+    });
+  }, [prefilledValues]);
   // to handle user-role checkbox
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;  
-    // update Formik values for roles
-    setFieldValue("roles", checked
-      ? [...values.roles, value]
-      : values.roles.filter(role => role !== value)
-    );
+  const handleCheckboxChange = (id) => {
+    const isChecked = values.roles.includes(id);
+    const updatedRoles = isChecked
+      ? values.roles.filter((roleId) => roleId !== id)
+      : [...values.roles, id];
+    setValues({ ...values, roles: updatedRoles });
   };
   //to handle navigation and toast notifications based on user status
   useEffect(() => {
@@ -129,9 +160,9 @@ const UserMasterForm = () => {
                           className={` ${
                             errors.number && touched.number ? "border-danger" : "form-control"
                           }`}
-                          onChange={handleChange}
-                          placeholder="Mobile Number"
                           value={values.number}
+                          onChange={handleChange}
+                          placeholder="Mobile number"
                         />
                         {errors.number && touched.number && (
                           <p className="text-danger">{errors.number}</p>
@@ -191,9 +222,9 @@ const UserMasterForm = () => {
                                   type="checkbox"
                                   className="form-check-input"
                                   name="roles"
-                                  value={item.id}
-                                  checked={values.roles.includes(item.id)}
-                                  onChange={handleCheckboxChange}
+                                  value={item.name} // Use item.name for value
+                                  checked={values.roles.includes(item.name)}
+                                  onChange={() => handleCheckboxChange(item.name)}
                                 />
                                 <label
                                   className="form-check-label"
@@ -216,7 +247,7 @@ const UserMasterForm = () => {
                         </span>
                         <div className="col-sm-4 mt-2 mb-4">
                           <Button
-                            text={submit}
+                            text={prefilledValues ? update : submit}
                             icon={"fa fa-arrow-right"}
                             className="btn btn-primary btn-sm float-right p-btn mt-2"
                           />
@@ -236,3 +267,4 @@ const UserMasterForm = () => {
 };
 
 export default UserMasterForm;
+/* eslint-enable react-hooks/exhaustive-deps */

@@ -23,14 +23,31 @@ const RoleMasterList = () => {
   const action = GetTranslationData("UIMasterAdmin", "action");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   const dispatch = useDispatch();
-  // To get the label from redux
+  // to get the user-role-data from redux
   const roleAccessList = useSelector((state) => state?.userRoleReducer);
   const roleAccessListData = roleAccessList?.userRoleData;
+  // to get the user-role-module-access data from redux
+  const userRoleAccessListData = useSelector(
+    (state) => state.userRoleModuleAccessReducer.data
+  );
+  // to get the module data from redux
+  const moduleList = useSelector((state) => state.moduleReducer?.data);
   // fetch Role Master data on component mount
   useEffect(() => {
     dispatch(onGetUserRole());
     dispatch(onGetUserRoleModuleAccess());
   }, []);
+  //to get module name
+  const getModuleName = (id) => {
+    if (Array.isArray(moduleList)) {
+      let moduleName = moduleList?.filter((item) => item.id === id);
+      if (moduleName?.length > 0) {
+        return moduleName[0].name;
+      } else {
+        return "";
+      }
+    }
+  };
   // for pagination
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
@@ -78,11 +95,25 @@ const RoleMasterList = () => {
                                 <td>{data.name}</td>
                                 <td>
                                   <div className="d-flex">
-                                  {data?.modules?.map((item) => (
-                                    <span className="badge badge-success mr-10">
-                                    {item}
-                                  </span>
-                                  ))}
+                                  {Array.isArray(userRoleAccessListData) &&
+                                      userRoleAccessListData
+                                        ?.filter(
+                                          (item) =>
+                                            item.roleId === data?.id &&
+                                            (item.viewAccess ||
+                                              item.addAccess ||
+                                              item.editAccess)
+                                        )
+                                        .map((moduleData) => (
+                                          <span
+                                            className="badge badge-success mr-10"
+                                            key={moduleData.id}
+                                          >
+                                            {getModuleName(
+                                              moduleData?.moduleId
+                                            )}
+                                          </span>
+                                        ))}
                                   </div>
                                 </td>
                                 <td>

@@ -11,6 +11,12 @@ import addCouponReducer from './Slices/addCouponSlice';
 import translationReducer from "./Slices/translationSlice";
 import loginAuthReducer from "./Slices/loginAuthSlice";
 import userRoleModuleAccessReducer from "./Slices/userRoleModuleAccessSlice";
+import  sectionMasterReducer  from './Slices/sectionMasterSlice';
+import sectionContentMasterReducer from './Slices/sectionContentMasterSlice';
+import dealCategoryReducer from './Slices/dealCategorySlice';
+import dealReducer from './Slices/dealSlice';
+import dealCouponReducer from './Slices/dealCouponSlice';
+import dealCouponCodeReducer from './Slices/dealCouponCodeSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -25,6 +31,12 @@ const reducers = combineReducers({
     clientMasterReducer: clientMasterReducer,
     addCouponReducer:addCouponReducer,
     userRoleModuleAccessReducer: userRoleModuleAccessReducer,
+    sectionMasterReducer:sectionMasterReducer,
+    sectionContentMasterReducer:sectionContentMasterReducer,
+    dealCategoryReducer:dealCategoryReducer,
+    dealReducer:dealReducer,
+    dealCouponReducer:dealCouponReducer,
+    dealCouponCodeReducer:dealCouponCodeReducer
 });
 
 export default reducers;

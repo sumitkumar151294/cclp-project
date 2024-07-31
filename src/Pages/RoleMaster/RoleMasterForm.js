@@ -72,6 +72,7 @@ const RoleMasterForm = ({ data, setData }) => {
       initialValues: initialValues,
       validationSchema: validateForm,
       onSubmit: (values, action) => {
+        debugger
         values.modules = [...moduleAccess];
         const postData = {
           createdBy: 0,
@@ -86,9 +87,10 @@ const RoleMasterForm = ({ data, setData }) => {
           return;
         }
         if (data) {
+          postData.id = data.id;
           dispatch(onUpdateUserRole(postData));
-          setValues();
-        } else {
+          setData();
+        } else if(!data){
           dispatch(onPostUserRole(postData));
         }
         setIsSubmit(true);
@@ -148,7 +150,7 @@ const RoleMasterForm = ({ data, setData }) => {
     }
     setSelectAll(!selectAll);
   };
-
+  // to handle user role module access data
   useEffect(() => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData?.map((data) => {
@@ -156,7 +158,7 @@ const RoleMasterForm = ({ data, setData }) => {
           (mod) => mod.name === data.name
         );
         return {
-          roleId: 43,
+          roleId: 5,
           moduleId: data.id,
           viewAccess: existingModule?.view || false,
           addAccess: existingModule?.add || false,
@@ -187,16 +189,14 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess([]);
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
-
+   console.log(userRoleData);
   // to handle navigation and toast notifications based on user role status
-  
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
-      setData();
     }
   }, [ userRoleData]);
   // fetch module data and update form data on mount and when module data changes
@@ -295,7 +295,7 @@ const RoleMasterForm = ({ data, setData }) => {
                       </div>
                       <div className="col-lg-12 br pt-2">
                         <label htmlFor="name-f">{module_access}</label>
-                        {moduleAccessData?.map((data, index) => {
+                        {Array.isArray(moduleAccessData) && moduleAccessData ?.map((data, index) => {
                           const module =
                             moduleAccess?.find(
                               (mod) => mod.name === data.name

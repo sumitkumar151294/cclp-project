@@ -20,7 +20,7 @@ const SideBar = () => {
   );
   // to get the current user's role ID from the Redux store
   const userRoleID = useSelector(
-    (state) => state.loginReducer?.data?.[0]?.adminRoleId
+    (state) => state.loginReducer?.data?.[0]?.clientRoleId
   );
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
@@ -55,7 +55,7 @@ const SideBar = () => {
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
-    if (!getModule?.isLoading && userRoleModuleAccess?.length > 0) {
+    if (!getModule?.isLoading && userRoleModuleAccess?.length) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
       const filterData = userRoleModuleAccess?.filter((item) => {
         return (

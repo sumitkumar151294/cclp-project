@@ -1,14 +1,14 @@
-import axiosInstance from '../Common/Axios/axiosInstance';
+import axiosInstanceClient from '../Common/Axios/axiosInstanceClient';
 import API from '../Common/Endpoint/serviceConstrants';
 export const callUserRoleModuleAccessGetApi = async () => {
-  const { data = {} } = await axiosInstance.get(API.userRole_moduleAccess);
+  const { data = {} } = await axiosInstanceClient.get(API.getUserRoleModuleAccess);
   return data;
 };
 export const callUserRoleModuleAccessPostApi = async (payload) => {
-  const { data = {} } = await axiosInstance.post(API.userRole_moduleAccess, payload);
+  const { data = {} } = await axiosInstanceClient.post(API.postUserRoleModuleAccess, payload);
   return data;
 };
 export const callUserRoleModuleAccessUpdateApi = async (payload) => {
-  const { data = {} } = await axiosInstance.put(API.userRole_moduleAccess, payload);
+  const { data = {} } = await axiosInstanceClient.put(API.postUserRoleModuleAccess, payload);
   return data;
 };
