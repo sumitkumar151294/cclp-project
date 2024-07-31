@@ -19,6 +19,7 @@ import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
 import HomePage from "../UI/HomePage";
+import TopOfferPage from "../UI/pages/top-offer-component/TopOfferPage";
 
 
 function RouteConfiq() {
@@ -45,6 +46,7 @@ function RouteConfiq() {
         <Route path="/userMaster" element={<Layout Component={UserMasterList} />}/>
         {/* New-UI */}
         <Route path="/home" element={<HomePage/>}/>
+        <Route path="/topOffer" element={<TopOfferPage/>}/>
       </Routes>
     </Router>
   );
