@@ -13,8 +13,11 @@ function* GetsectionMaster() {
         })
       );
     } else {
+      debugger
       yield put(
+
         onGetsectionMasterError({
+
           data: getsectionMasterResponse.response,
           message: getsectionMasterResponse.response.message,
           status_code:getsectionMasterResponse.httpStatusCode
@@ -27,6 +30,7 @@ function* GetsectionMaster() {
   }
 }
 function* PostsectionMaster({ payload }) {
+  debugger
   try {
     const postsectionMasterResponse = yield call(callsectionMasterPostApi, payload);
     if (postsectionMasterResponse.httpStatusCode === "201") {
@@ -38,10 +42,11 @@ function* PostsectionMaster({ payload }) {
         })
       );
     } else {
+      debugger
       yield put(
         onPostsectionMasterError({
           data: postsectionMasterResponse.response,
-          message: postsectionMasterResponse.errorMessage,
+          message: postsectionMasterResponse?.data?.errorMessage,
           status_code:postsectionMasterResponse.httpStatusCode
         })
       );

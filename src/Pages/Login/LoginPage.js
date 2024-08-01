@@ -8,7 +8,7 @@ import image from "../../Assets/img/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { onLoginSubmit } from "../../Store/Slices/loginSlice";
+import { onLoginReset, onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
@@ -52,8 +52,9 @@ const LoginPage = () => {
     if (isLogin && loginDetails?.status_code === "201") {
       toast.success(loginDetails?.message);
       navigate("/dashboard");
-    } else if (isLogin && loginDetails?.status_code==="400") {
+    } else if (isLogin && loginDetails?.status_code) {
       toast.error(loginDetails?.message);
+      dispatch(onLoginReset())
     }
   }, [loginDetails]);
 

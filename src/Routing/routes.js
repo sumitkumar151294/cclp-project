@@ -19,6 +19,7 @@ import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
 
 import HomePage from "../UI/HomePage";
+import TopOfferPage from "../UI/pages/top-offer-component/TopOfferPage";
 
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
@@ -54,6 +55,7 @@ function RouteConfiq() {
 
         {/* New-UI */}
         <Route path="/home" element={<HomePage/>}/>
+        <Route path="/topOffer" element={<TopOfferPage/>}/>
 
         <Route path="/sectionMaster" element={<Layout Component={SectionMasterList} />}/>
         <Route path="/sectionContentMaster" element={<Layout Component={SectionContentMasterList} />}/>

@@ -9,7 +9,11 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { useLocation } from "react-router-dom";
+
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
@@ -19,6 +23,7 @@ const contentSourceTypeOptions = [
 const SectionContentMasterForm = () => {
   const location = useLocation();
   const [showFields, setShowFields] = useState(false);
+
   const type = location?.state?.sectionType;
   // get labels and placeholder from translation
   const section_content_master = GetTranslationData("UIMasterAdmin", "section_content_master");
@@ -34,6 +39,8 @@ const SectionContentMasterForm = () => {
   const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin", "displayOrderPlaceholder");
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const text_placeholder = GetTranslationData("UIMasterAdmin", "text_placeholder");
+
+  const type = location.state.sectionType;
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     phoneImage: "",
@@ -58,6 +65,7 @@ const SectionContentMasterForm = () => {
 
   return (
     <>
+    <ScrollToTop/>
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">
@@ -108,7 +116,7 @@ const SectionContentMasterForm = () => {
                                 className="error-message"
                               />
                             </div>
-                           { !showFields &&
+                           { !showFields  &&
                             <div className="col-sm-4 form-group mb-4">
                               <label>
                                 Segment

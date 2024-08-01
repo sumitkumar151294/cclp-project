@@ -7,6 +7,7 @@ export const sectionMasterSlice = createSlice({
     isError: false,
     sectionMasterData: [],
     message: "",
+    isgetLoading: true,
   },
   reducers: {
     onGetsectionMaster: (state) => {
@@ -61,7 +62,9 @@ export const sectionMasterSlice = createSlice({
 
     onPostsectionMasterError: (state, { payload }) => {
       const { postData = [], message = "", status_code = 400 } = payload;
+      debugger
       return {
+
         ...state,
         postSectionMasterData: postData,
         postMessage:message,
