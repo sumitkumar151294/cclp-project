@@ -23,8 +23,6 @@ const contentSourceTypeOptions = [
 const SectionContentMasterForm = () => {
   const location = useLocation();
   const [showFields, setShowFields] = useState(false);
-
-  const type = location?.state?.sectionType;
   // get labels and placeholder from translation
   const section_content_master = GetTranslationData("UIMasterAdmin", "section_content_master");
   const content_source_type = GetTranslationData("UIMasterAdmin", "content_source_type");

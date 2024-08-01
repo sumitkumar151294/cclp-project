@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callUserRoleGetApi, callUserRolePostApi, callUserRoleUpdateApi } from "../Context/roleMasterApi";
+import { callUserRoleGetApi, callUserRolePostApi } from "../Context/roleMasterApi";
 import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess, onUpdateUserRole, onUpdateUserRoleError, onUpdateUserRoleSuccess } from "../Store/Slices/userRoleSlice";
 function* GetUserRole() {
   try {

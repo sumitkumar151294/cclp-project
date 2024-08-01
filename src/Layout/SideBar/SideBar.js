@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetModule } from "../../Store/Slices/moduleSlice";
+import {
+  allowModules,
+  onGetModule,
+  resetAllowModules,
+} from "../../Store/Slices/moduleSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loader from "../../Components/Loader/Loader";
 import Logout from "../../Assets/icon/logout.png";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onLogout } from "../../Store/Slices/loginSlice";
 import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
+import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
+import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
+
 const SideBar = () => {
   const [sideBarModules, setIsSideBarModules] = useState([]);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUrl = useLocation();
@@ -22,14 +30,35 @@ const SideBar = () => {
   const userRoleID = useSelector(
     (state) => state.loginReducer?.data?.[0]?.clientRoleId
   );
+  //to get loginAuthData from redux store
+  const loginAuthData = useSelector((state) => state.loginAuthReducer);
+  //to get login Data from redux store
+  const loginDetails = useSelector((state) => state.loginReducer);
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
   // fetch module and user role module access data when the component mounts
+  // useEffect(() => {
+  //   if (!getModule?.data?.length) {
+  //     dispatch(onGetModule());
+  //     dispatch(onGetUserRoleModuleAccess());
+  //   }
+  // }, []);
   useEffect(() => {
-    if (!getModule?.data?.length) {
+    axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+    axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+    axiosInstanceAdmin.defaults.headers["partner-code"] =
+      loginDetails?.partner_Key;
+    axiosInstanceClient.defaults.headers["partner-code"] =
+      loginDetails?.partner_Key;
+    axiosInstanceClient.defaults.headers["client-code"] =
+      loginAuthData?.data?.[0]?.clientId;
+    axiosInstanceAdmin.defaults.headers["client-code"] =
+      loginAuthData?.data?.[0]?.clientId;
+    if (!getModuleData?.data?.length) {
       dispatch(onGetModule());
       dispatch(onGetUserRoleModuleAccess());
+      dispatch(resetAllowModules());
     }
   }, []);
   // function to handle logout and navigate to the home page
@@ -47,11 +76,13 @@ const SideBar = () => {
     }
   };
   // to add an active class to the clicked navigation item
-  const hanleClick = (e) => {
+  const hanleClick = (e, moduleId) => {
     document.querySelectorAll(".mm-active").forEach((e) => {
       e.classList.remove("mm-active");
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
+    setSelectedModuleId(moduleId);
+    dispatch(resetAllowModules());
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
@@ -67,7 +98,7 @@ const SideBar = () => {
       for (var i = 0; i < tempideModules.length; i++) {
         for (var j = 0; j < filterData?.length; j++) {
           if (tempideModules[i].id === filterData[j].moduleId) {
-            //tempideModules[i].moduleId = filterData[j].moduleId;
+            tempideModules[i].moduleId = filterData[j].moduleId;
             filterModules.push(tempideModules[i]);
           }
         }
@@ -76,6 +107,38 @@ const SideBar = () => {
     } else {
     }
   }, [getModuleData, userRoleModuleAccess]);
+  // to filter module access data
+  const getModuleDataAccess = userRoleModuleAccess.filter((item) => {
+    return (
+      item.roleId === userRoleID &&
+      (item.addAccess || item.editAccess || item.viewAccess)
+    );
+  });
+  useEffect(() => {
+    if (
+      getModuleDataAccess &&
+      selectedModuleId !== null &&
+      !getModuleData?.filteredData?.length
+    ) {
+      const roleAcessValues = getModuleDataAccess.filter(
+        (item) => item.moduleId === selectedModuleId
+      );
+      dispatch(allowModules(roleAcessValues));
+    } else if (
+      getModuleDataAccess &&
+      selectedModuleId === null &&
+      !getModuleData?.filteredData?.length
+    ) {
+      const data = sideBarModules.find(
+        (item) =>
+          item.routePath.toLowerCase() === currentUrl.pathname.toLowerCase()
+      );
+      const roleAcessValues = getModuleDataAccess.filter(
+        (item) => item.moduleId === data?.moduleId
+      );
+      dispatch(allowModules(roleAcessValues));
+    }
+  }, [userRoleModuleAccess, selectedModuleId, sideBarModules]);
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
@@ -88,7 +151,7 @@ const SideBar = () => {
                 className={`nav-icn ${
                   item.routePath === currentUrl.pathname ? "mm-active" : ""
                 }`}
-                onClick={(e) => hanleClick(e)}
+                onClick={(e) => hanleClick(e, item.id)}
               >
                 <Link
                   className="ai-icon"

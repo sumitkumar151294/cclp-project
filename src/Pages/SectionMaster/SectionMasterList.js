@@ -8,17 +8,13 @@ import Loader from "../../Components/Loader/Loader";
 import SectionMasterForm from "./SectionMasterForm";
 import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
-
-import { onGetsectionMaster } from "../../Store/Slices/sectionMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-
 import {
   onGetsectionMaster,
   onUpdatesectionMaster,
   onUpdatesectionMasterReset,
 } from "../../Store/Slices/sectionMasterSlice";
 import { toast } from "react-toastify";
-
 
 const SectionMasterList = () => {
   // to get column heading name from translation
@@ -30,6 +26,10 @@ const SectionMasterList = () => {
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  // to get module filtered data from redux
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
   // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -47,7 +47,6 @@ const SectionMasterList = () => {
   const SectionMaster = useSelector((state) => state?.sectionMasterReducer);
 
   const handleSumbit = (sectionData, isEdit) => {
-    debugger;
     const sectionMasterData = {
       id: sectionData?.id,
       enabled: sectionData?.enabled,
@@ -71,7 +70,7 @@ const SectionMasterList = () => {
       dispatch(onUpdatesectionMaster(sectionMasterData));
     }
   };
-  const filteredData = SectionMasterData.filter(data =>
+  const filteredData = SectionMasterData?.filter(data =>
     data.sectionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     data.sectionType.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -110,7 +109,9 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <SectionMasterForm sectionData={sectionData} />
+      {getRoleAccess[0]?.addAccess && (
+        <SectionMasterForm sectionData={sectionData} />
+      )}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -152,12 +153,12 @@ const SectionMasterList = () => {
                             <th>{"Section Type"}</th>
                             <th>{"Display Order"}</th>
                             <th>{"Status"}</th>
-                            <th>{"Action"}</th>
+                            {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                             <th>{"Section Data"}</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredData.slice(startIndex, endIndex).map(
+                          {filteredData?.slice(startIndex, endIndex).map(
                             (SectionMasterData, index) => (
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
@@ -178,7 +179,7 @@ const SectionMasterList = () => {
                                       : "Non Active"}
                                   </span>
                                 </td>
-
+                                {getRoleAccess[0]?.editAccess && (
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -199,7 +200,7 @@ const SectionMasterList = () => {
                                     />
                                   </div>
                                 </td>
-
+                                )}
                                 <td>
                                   <Link
                                     to="/sectionContentMaster"
@@ -219,14 +220,14 @@ const SectionMasterList = () => {
                           )}
                         </tbody>
                       </table>
-                      {filteredData.length > 5 && (
+                      {filteredData?.length > 5 && (
                         <div className="pagination-container">
                           <ReactPaginate
                             previousLabel={"<"}
                             nextLabel={">"}
                             breakLabel={"..."}
                             pageCount={Math.ceil(
-                              filteredData.length / rowsPerPage
+                              filteredData?.length / rowsPerPage
                             )}
                             marginPagesDisplayed={2}
                             onPageChange={handlePageChange}

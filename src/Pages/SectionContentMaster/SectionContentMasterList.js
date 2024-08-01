@@ -145,7 +145,7 @@ const SectionContentMasterList = () => {
       enabled: true,
     },
   ];
-
+  // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
@@ -155,8 +155,8 @@ const SectionContentMasterList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
-      <SectionContentMasterForm />
       <ScrollToTop />
+      <SectionContentMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
