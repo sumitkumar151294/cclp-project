@@ -22,6 +22,7 @@ const SectionMasterList = () => {
     setPage(selected.selected + 1);
   };
   const [sectionData, setSectionData] = useState("")
+  const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -55,11 +56,22 @@ const SectionMasterList = () => {
       dispatch(onUpdatesectionMaster(sectionMasterData));
     }
   };
+  const filteredData = SectionMasterData.filter(data =>
+    data.sectionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    data.sectionType.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
   useEffect(() => {
     dispatch(onGetsectionMaster());
   }, []);
   useEffect(() => {
     if (SectionMaster?.update_status_code == "204") {
+      toast.success(SectionMaster?.updateMessage);
+      dispatch(onGetsectionMaster());
+      dispatch(onUpdatesectionMasterReset());
+    } else if (SectionMaster?.update_status_code == "205") {
       toast.success(SectionMaster?.updateMessage);
       dispatch(onGetsectionMaster());
       dispatch(onUpdatesectionMasterReset());
@@ -79,7 +91,7 @@ const SectionMasterList = () => {
   }, [SectionMasterData]);
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  });
+  }, [window.location.href]);
   return (
     <>
       <ScrollToTop />
@@ -99,6 +111,8 @@ const SectionMasterList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
@@ -108,11 +122,11 @@ const SectionMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {SectionMaster?.isgetLoading ? (
+                {SectionMaster?.isgetLoading || SectionMaster?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
-                ) : SectionMasterData?.length ? (
+                ) : filteredData?.length ? (
                   <div className="table-responsive scroll-Table-x">
                     <>
                       <table className="table header-border table-responsive-sm">
@@ -121,15 +135,13 @@ const SectionMasterList = () => {
                             <th>{"Section Name"}</th>
                             <th>{"Section Type"}</th>
                             <th>{"Display Order"}</th>
-                            {/* <th>{"Text"}</th> */}
-                            {/* <th>{"Points To Claim"}</th> */}
                             <th>{"Status"}</th>
                             <th>{"Action"}</th>
                             <th>{"Section Data"}</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {SectionMasterData.slice(startIndex, endIndex).map(
+                          {filteredData.slice(startIndex, endIndex).map(
                             (SectionMasterData, index) => (
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
@@ -189,14 +201,14 @@ const SectionMasterList = () => {
                           )}
                         </tbody>
                       </table>
-                      {SectionMasterData.length > 5 && (
+                      {filteredData.length > 5 && (
                         <div className="pagination-container">
                           <ReactPaginate
                             previousLabel={"<"}
                             nextLabel={">"}
                             breakLabel={"..."}
                             pageCount={Math.ceil(
-                              SectionMasterData.length / rowsPerPage
+                              filteredData.length / rowsPerPage
                             )}
                             marginPagesDisplayed={2}
                             onPageChange={handlePageChange}
