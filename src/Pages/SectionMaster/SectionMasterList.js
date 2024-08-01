@@ -8,6 +8,10 @@ import Loader from "../../Components/Loader/Loader";
 import SectionMasterForm from "./SectionMasterForm";
 import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
+
+import { onGetsectionMaster } from "../../Store/Slices/sectionMasterSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+
 import {
   onGetsectionMaster,
   onUpdatesectionMaster,
@@ -15,7 +19,18 @@ import {
 } from "../../Store/Slices/sectionMasterSlice";
 import { toast } from "react-toastify";
 
+
 const SectionMasterList = () => {
+  // to get column heading name from translation
+  const section_name = GetTranslationData("UIMasterAdmin", "section_name");
+  const section_type = GetTranslationData("UIMasterAdmin", "section_type");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const section_data = GetTranslationData("UIMasterAdmin", "section_data");
+  const section_master_list = GetTranslationData("UIMasterAdmin", "section_master_list");
+  const text_label = GetTranslationData("UIMasterAdmin", "text_label");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
@@ -126,6 +141,7 @@ const SectionMasterList = () => {
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
+
                 ) : filteredData?.length ? (
                   <div className="table-responsive scroll-Table-x">
                     <>
@@ -149,6 +165,7 @@ const SectionMasterList = () => {
                                 <td>{SectionMasterData?.displayOrder}</td>
 
                                 <td>
+
                                   <span
                                     className={
                                       SectionMasterData.enabled
@@ -198,6 +215,7 @@ const SectionMasterList = () => {
                                 </td>
                               </tr>
                             )
+
                           )}
                         </tbody>
                       </table>

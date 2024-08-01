@@ -55,7 +55,7 @@ function* PostDeal({ payload }) {
 function* UpdateDeal({ payload }) {
   try {
     const updateDealResponse = yield call(callDealUpdateApi, payload);
-    if (updateDealResponse.httpStatusCode === "201") {
+    if (updateDealResponse.httpStatusCode === "205") {
       yield put(
         onUpdateDealSuccess({
           status_code: updateDealResponse.httpStatusCode,

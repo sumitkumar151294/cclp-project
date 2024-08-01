@@ -51,7 +51,7 @@ function* PostUserRoleModuleAccess({ payload }) {
 function* UpdateUserRoleModuleAccess({ payload }) {
   try {
     const updateUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessUpdateApi, payload);
-    if (updateUserRoleModuleAccessResponse.httpStatusCode === "201") {
+    if (updateUserRoleModuleAccessResponse.httpStatusCode === "205") {
       yield put(
         onUpdateUserRoleModuleAccessSuccess({
           status_code: updateUserRoleModuleAccessResponse.httpStatusCode,

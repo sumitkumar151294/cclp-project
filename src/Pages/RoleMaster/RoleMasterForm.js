@@ -75,7 +75,7 @@ const RoleMasterForm = ({ data, setData }) => {
         values.modules = [...moduleAccess];
         const postData = {
           createdBy: 0,
-          deleted: false,
+          // deleted: false,
           description: values?.description,
           enabled: true,
           name: values.name,
@@ -109,17 +109,16 @@ const RoleMasterForm = ({ data, setData }) => {
       if (accessType === "view") {
         newModuleAccess[moduleIndex].view = !newModuleAccess[moduleIndex].view;
       } else if (accessType === "add") {
-        newModuleAccess[moduleIndex].view = true;
         newModuleAccess[moduleIndex].add = !newModuleAccess[moduleIndex].add;
       } else if (accessType === "edit") {
-        newModuleAccess[moduleIndex].view = true;
-        newModuleAccess[moduleIndex].add = true;
         newModuleAccess[moduleIndex].edit = !newModuleAccess[moduleIndex].edit;
       }
     } else {
       // Add new module access
       const newAccess = { name: moduleName, view: true };
-      if (accessType === "add") newAccess.add = true;
+      if (accessType === "add") {
+        newAccess.add = true;
+      }
       if (accessType === "edit") {
         newAccess.add = true;
         newAccess.edit = true;
@@ -151,13 +150,14 @@ const RoleMasterForm = ({ data, setData }) => {
   };
   // to handle user role module access data
   useEffect(() => {
+    debugger
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData?.map((data) => {
         const existingModule = moduleAccess?.find(
           (mod) => mod.name === data.name
         );
         return {
-          roleId: 5,
+          roleId: userRoleData?.postRoleData?.[0]?.roleId,
           moduleId: data.id,
           viewAccess: existingModule?.view || false,
           addAccess: existingModule?.add || false,
@@ -165,9 +165,9 @@ const RoleMasterForm = ({ data, setData }) => {
         };
       });
       dispatch(onPostUserRoleModuleAccess(accessPostData));
-      dispatch(onPostUserRoleReset()); // Assuming this resets some state related to user role
+      dispatch(onPostUserRoleReset()); // assuming this resets some state related to user role
       setModuleAccess([]);
-    } else if (userRoleData?.status_code === "201" && !userRoleData?.updateLoading
+    } else if (userRoleData?.status_code === "205" && !userRoleData?.updateLoading
     ) {
       let moduleAccess = JSON.parse(JSON.stringify(getModuleAccessData?.data));
       let moduleAccessList = moduleAccess?.filter(
@@ -190,15 +190,22 @@ const RoleMasterForm = ({ data, setData }) => {
   }, [userRoleData, moduleAccessData, moduleAccess]);
   // to handle navigation and toast notifications based on user role status
   useEffect(() => {
+    debugger
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
     }
+    else if (isSubmit && userRoleData?.status_code === "205") {
+      toast.success(userRoleData?.message);
+      dispatch(onGetUserRole());
+      dispatch(onGetUserRoleModuleAccess());
+    }
   }, [ userRoleData]);
   // fetch module data and update form data on mount and when module data changes
   useEffect(() => {
+    debugger
     if (data) {
       setValues({
         name: data.name,
