@@ -6,14 +6,18 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { useLocation } from "react-router-dom";
 
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-
+import { onGetSectionContentMaster, onPostSectionContentMaster, onPostSectionContentMasterReset } from "../../Store/Slices/sectionContentMasterSlice";
+import {
+  onPostuploadImage,
+  onPostuploadMobileImage,
+} from "../../Store/Slices/uploadSlice";
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
@@ -22,29 +26,65 @@ const contentSourceTypeOptions = [
 ];
 const SectionContentMasterForm = () => {
   const location = useLocation();
-  const [showFields, setShowFields] = useState(false);
+  const getmobImage = useSelector(
+    (state) => state.uploadReducer?.postuploadMobileImageData
+  );
+  const getSectionContenMasterData = useSelector(
+    (state) => state?.sectionContentMasterReducer
+  );
+  const getwebImage = useSelector(
+    (state) => state.uploadReducer?.postuploadImageData
+  );
+  const uploadImage=useSelector(
+    (state) => state.uploadReducer);
 
   const type = location?.state?.sectionType;
+  const typeID = location?.state?.sectionId;
+  const sectionLimit = location?.state?.sectionLimit;
+
   // get labels and placeholder from translation
-  const section_content_master = GetTranslationData("UIMasterAdmin", "section_content_master");
-  const content_source_type = GetTranslationData("UIMasterAdmin", "content_source_type");
-  const upload_image_for_web = GetTranslationData("UIMasterAdmin", "upload_image_for_web");
+  const section_content_master = GetTranslationData(
+    "UIMasterAdmin",
+    "section_content_master"
+  );
+  const content_source_type = GetTranslationData(
+    "UIMasterAdmin",
+    "content_source_type"
+  );
+  const upload_image_for_web = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_web"
+  );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const upload_image_for_phone = GetTranslationData("UIMasterAdmin", "upload_image_for_phone");
-  const call_to_action = GetTranslationData("UIMasterAdmin", "content_source_type");
-  const call_to_action_placeholder = GetTranslationData("UIMasterAdmin", "upload_image_for_web");
+  const upload_image_for_phone = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_phone"
+  );
+  const call_to_action = GetTranslationData(
+    "UIMasterAdmin",
+    "content_source_type"
+  );
+  const call_to_action_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_web"
+  );
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
-  const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin", "displayOrderPlaceholder");
+  const displayOrderPlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "displayOrderPlaceholder"
+  );
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
-  const text_placeholder = GetTranslationData("UIMasterAdmin", "text_placeholder");
+  const text_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "text_placeholder"
+  );
 
-  const type = location.state.sectionType;
   const [intialValue, setInitialValue] = useState({
     webImage: "",
-    phoneImage: "",
-    callToAction: "",
+    mobImage: "",
+    cta: "",
     displayOrder: "",
     text: "",
     contentSourceType: "",
@@ -53,19 +93,57 @@ const SectionContentMasterForm = () => {
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
-    phoneImage: Yup.string().required("Image is required"),
+    mobImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
   });
-  const handleSubmit = (values) => {};
-
-  const handleImageChange = (setFieldValue, event) => {
-    setFieldValue("phoneImage", event.currentTarget.files[0]);
-    setFieldValue("webImage", event.currentTarget.files[0]);
+  const handleSubmit = (values) => {
+    if (values) {
+      Promise.all([
+        dispatch(onPostuploadImage(values.webImage)),
+        dispatch(onPostuploadMobileImage(values.mobImage)),
+      ]).then(() => {
+        if (uploadImage?.postMobileStatusCode=="201" && uploadImage?.post_status_code=="201"  ) {
+          const sectionContentMasteData = {
+            webImage: getwebImage,
+            mobImage: getmobImage,
+            clientId: 4,
+            deleted: false,
+            sectionMasterId: typeID,
+            displayOrder:JSON.stringify(values?.displayOrder),
+            linkedMasterId: 10,
+            segmentId:10,
+            contentSourceType:'Product',
+            cta:values?.cta,
+            text: "dsrtwqeryu",
+          };
+          dispatch(onPostSectionContentMaster(sectionContentMasteData));
+        }
+      });
+    }
   };
-
+  const handleImageChange = (setFieldValue, event, isMobile) => {
+    const file = event.currentTarget.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    if (isMobile) {
+      setFieldValue("mobImage", formData);
+    } else {
+      setFieldValue("webImage", formData);
+    }
+  };
+useEffect(()=>{
+if(getSectionContenMasterData?.post_status_code==="201"){
+  toast.success(getSectionContenMasterData?.postMessage)
+  dispatch(onGetSectionContentMaster());
+  dispatch(onPostSectionContentMasterReset());
+}else if(getSectionContenMasterData?.post_status_code){
+  toast.error(getSectionContenMasterData?.postMessage);
+  dispatch(onPostSectionContentMasterReset());
+}
+},[getSectionContenMasterData])
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">
@@ -75,7 +153,7 @@ const SectionContentMasterForm = () => {
                 <h4 className="card-title">Section Content Master</h4>
               </div>
               <div className="card-body">
-                {false ? (
+                {getSectionContenMasterData?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader />
                   </div>
@@ -90,55 +168,56 @@ const SectionContentMasterForm = () => {
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Content Source Type
-                                <span className="text-danger">*</span>
-                              </label>
+                            {!type === "Banner" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  Content Source Type
+                                  <span className="text-danger">*</span>
+                                </label>
 
-                              <Field
-                                name="contentSourceType"
-                                component={Dropdown}
-                                options={contentSourceTypeOptions}
-                                className={`form-select ${
-                                  errors.contentSourceType &&
-                                  touched.contentSourceType
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(e) => {
-                                  setShowFields(e === "Image");
-                                }}
-                              />
-                              <ErrorMessage
-                                name="contentSourceType"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                           { !showFields  &&
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Segment
-                                <span className="text-danger">*</span>
-                              </label>
+                                <Field
+                                  name="contentSourceType"
+                                  component={Dropdown}
+                                  options={contentSourceTypeOptions}
+                                  className={`form-select ${
+                                    errors.contentSourceType &&
+                                    touched.contentSourceType
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
 
-                              <Field
-                                name="segmentId"
-                                component={Dropdown}
-                                options={contentSourceTypeOptions}
-                                className={`form-select ${
-                                  errors.segmentId && touched.segmentId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="segmentId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>}
+                                />
+                                <ErrorMessage
+                                  name="contentSourceType"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                            {!type === "Banner" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  Segment
+                                  <span className="text-danger">*</span>
+                                </label>
+
+                                <Field
+                                  name="segmentId"
+                                  component={Dropdown}
+                                  options={contentSourceTypeOptions}
+                                  className={`form-select ${
+                                    errors.segmentId && touched.segmentId
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
+                                <ErrorMessage
+                                  name="segmentId"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Upload Image For Web
@@ -153,7 +232,7 @@ const SectionContentMasterForm = () => {
                                     : ""
                                 }`}
                                 onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
+                                  handleImageChange(setFieldValue, event, false)
                                 }
                               />
                               <ErrorMessage
@@ -169,18 +248,18 @@ const SectionContentMasterForm = () => {
                               </label>
                               <input
                                 type="file"
-                                name="phoneImage"
+                                name="mobImage"
                                 className={`form-control ${
-                                  errors.phoneImage && touched.phoneImage
+                                  errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 onChange={(event) =>
-                                  handleImageChange(setFieldValue, event)
+                                  handleImageChange(setFieldValue, event, true)
                                 }
                               />
                               <ErrorMessage
-                                name="phoneImage"
+                                name="mobImage"
                                 component="div"
                                 className="error-message"
                               />
@@ -210,29 +289,28 @@ const SectionContentMasterForm = () => {
                               <label>Call To Action</label>
                               <Field
                                 type="text"
-                                name="callToAction"
+                                name="cta"
                                 className={`form-control ${
-                                  errors.callToAction && touched.callToAction
-                                    ? "is-invalid"
-                                    : ""
+                                  errors.cta && touched.cta ? "is-invalid" : ""
                                 }`}
                                 placeholder="Enter Call To Action"
                               />
                             </div>
-                              {!showFields && <div className="col-sm-4 form-group mb-2">
-                              <label>Text</label>
-                              <Field
-                                type="text"
-                                name="text"
-                                className={`form-control ${
-                                  errors.text && touched.text
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder="Enter Text"
-                              />
-                            </div>}
-
+                            {!type === "Banner" && (
+                              <div className="col-sm-4 form-group mb-2">
+                                <label>Text</label>
+                                <Field
+                                  type="text"
+                                  name="text"
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  placeholder="Enter Text"
+                                />
+                              </div>
+                            )}
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Sumbit"}

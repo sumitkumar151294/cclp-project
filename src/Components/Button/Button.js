@@ -1,17 +1,17 @@
 import React from 'react';
 
-const Button = ({ text, onClick, icon, icons, className, btn_css, value }) => {
+const Button = ({ text, onClick, icon, icons, className, btn_css, value, disabled }) => {
   return (
     <button
-      text={text}
       type="submit"
-      className={className}
-      onClick={onClick}
+      className={`${className} ${disabled ? 'disabled' : ''}`}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
     >
-      {<i className={icons }></i>}
+      {icons && <i className={icons}></i>}
       {" "}{text}{" "}
-      {<i className={icon}></i>}
-      {<span className={btn_css}>{value}</span>}
+      {icon && <i className={icon}></i>}
+      {value && <span className={btn_css}>{value}</span>}
     </button>
   );
 };

@@ -8,7 +8,6 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 
-import { onGetsectionMaster, onPostsectionMaster, onPostsectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 import {
@@ -29,7 +28,6 @@ const statusOptions = [
 ];
 
 const SectionMasterForm = ({ sectionData }) => {
-  console.log(sectionData, "");
   const [showFields, setShowFields] = useState(false);
   const sectionMasterData = useSelector((state) => state.sectionMasterReducer);
   const [intialValue, setInitialValue] = useState({
@@ -46,6 +44,7 @@ const SectionMasterForm = ({ sectionData }) => {
   });
   // Translation labels
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
+
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");

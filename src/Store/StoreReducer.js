@@ -17,6 +17,7 @@ import dealCategoryReducer from './Slices/dealCategorySlice';
 import dealReducer from './Slices/dealSlice';
 import dealCouponReducer from './Slices/dealCouponSlice';
 import dealCouponCodeReducer from './Slices/dealCouponCodeSlice';
+import uploadReducer from './Slices/uploadSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -36,7 +37,8 @@ const reducers = combineReducers({
     dealCategoryReducer:dealCategoryReducer,
     dealReducer:dealReducer,
     dealCouponReducer:dealCouponReducer,
-    dealCouponCodeReducer:dealCouponCodeReducer
+    dealCouponCodeReducer:dealCouponCodeReducer,
+    uploadReducer:uploadReducer
 });
 
 export default reducers;

@@ -150,7 +150,6 @@ const RoleMasterForm = ({ data, setData }) => {
   };
   // to handle user role module access data
   useEffect(() => {
-    debugger
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData?.map((data) => {
         const existingModule = moduleAccess?.find(
@@ -190,7 +189,6 @@ const RoleMasterForm = ({ data, setData }) => {
   }, [userRoleData, moduleAccessData, moduleAccess]);
   // to handle navigation and toast notifications based on user role status
   useEffect(() => {
-    debugger
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
       dispatch(onGetUserRole());
@@ -205,7 +203,6 @@ const RoleMasterForm = ({ data, setData }) => {
   }, [ userRoleData]);
   // fetch module data and update form data on mount and when module data changes
   useEffect(() => {
-    debugger
     if (data) {
       setValues({
         name: data.name,

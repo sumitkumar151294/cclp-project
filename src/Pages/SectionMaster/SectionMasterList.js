@@ -9,7 +9,6 @@ import SectionMasterForm from "./SectionMasterForm";
 import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
 
-import { onGetsectionMaster } from "../../Store/Slices/sectionMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 import {
@@ -19,14 +18,16 @@ import {
 } from "../../Store/Slices/sectionMasterSlice";
 import { toast } from "react-toastify";
 
-
 const SectionMasterList = () => {
   // to get column heading name from translation
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const section_data = GetTranslationData("UIMasterAdmin", "section_data");
-  const section_master_list = GetTranslationData("UIMasterAdmin", "section_master_list");
+  const section_master_list = GetTranslationData(
+    "UIMasterAdmin",
+    "section_master_list"
+  );
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
@@ -36,8 +37,8 @@ const SectionMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  const [sectionData, setSectionData] = useState("")
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sectionData, setSectionData] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -47,7 +48,6 @@ const SectionMasterList = () => {
   const SectionMaster = useSelector((state) => state?.sectionMasterReducer);
 
   const handleSumbit = (sectionData, isEdit) => {
-    debugger;
     const sectionMasterData = {
       id: sectionData?.id,
       enabled: sectionData?.enabled,
@@ -66,14 +66,15 @@ const SectionMasterList = () => {
       segmentId: sectionData?.segmentId,
     };
     if (isEdit) {
-      setSectionData(sectionMasterData)
+      setSectionData(sectionMasterData);
     } else {
       dispatch(onUpdatesectionMaster(sectionMasterData));
     }
   };
-  const filteredData = SectionMasterData.filter(data =>
-    data.sectionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    data.sectionType.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredData = SectionMasterData?.filter(
+    (data) =>
+      data.sectionName?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+      data.sectionType?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -137,11 +138,11 @@ const SectionMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {SectionMaster?.isgetLoading || SectionMaster?.isUpdateLoading ? (
+                {SectionMaster?.isgetLoading ||
+                  SectionMaster?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
-
                 ) : filteredData?.length ? (
                   <div className="table-responsive scroll-Table-x">
                     <>
@@ -151,21 +152,31 @@ const SectionMasterList = () => {
                             <th>{"Section Name"}</th>
                             <th>{"Section Type"}</th>
                             <th>{"Display Order"}</th>
+                            <th>{"Display Limit"}</th>
+                            <th>{"Claim Limit"}</th>
                             <th>{"Status"}</th>
                             <th>{"Action"}</th>
                             <th>{"Section Data"}</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredData.slice(startIndex, endIndex).map(
-                            (SectionMasterData, index) => (
+                          {filteredData
+                            .slice(startIndex, endIndex)
+                            .map((SectionMasterData, index) => (
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
                                 <td>{SectionMasterData?.sectionType}</td>
                                 <td>{SectionMasterData?.displayOrder}</td>
+                                <td>{SectionMasterData?.displayLimit}</td>
+                                <td>
+                                  {SectionMasterData?.claimLimit ? (
+                                    SectionMasterData?.claimLimit
+                                  ) : (
+                                    <div> -</div>
+                                  )}
+                                </td>
 
                                 <td>
-
                                   <span
                                     className={
                                       SectionMasterData.enabled
@@ -206,17 +217,20 @@ const SectionMasterList = () => {
                                     state={{
                                       sectionType:
                                         SectionMasterData.sectionType,
+                                        sectionId: SectionMasterData.id,
+                                        sectionLimit:SectionMasterData.displayLimit,
                                     }}
-                                    className="btn btn-primary btn-sm float-right client_Btn"
                                   >
-                                    <i className="fa fa-eye"></i>&nbsp;
-                                    {"Update"}
+                                    <Button
+                                      disabled={!SectionMasterData?.enabled}
+                                      text={"Update"}
+                                      icon={"fa fa-eye"}
+                                      className="btn btn-primary btn-sm float-right client_Btn"
+                                    />
                                   </Link>
                                 </td>
                               </tr>
-                            )
-
-                          )}
+                            ))}
                         </tbody>
                       </table>
                       {filteredData.length > 5 && (

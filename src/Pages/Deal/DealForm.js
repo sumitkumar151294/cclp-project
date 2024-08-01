@@ -49,7 +49,6 @@ const DealForm = () => {
   });
   // to handle form submit
   const handleSubmit = (values) => {
-    debugger
     if (values) {
       const DealFormData = {
         ...values,
