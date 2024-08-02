@@ -38,12 +38,6 @@ const SideBar = () => {
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
   // fetch module and user role module access data when the component mounts
-  // useEffect(() => {
-  //   if (!getModule?.data?.length) {
-  //     dispatch(onGetModule());
-  //     dispatch(onGetUserRoleModuleAccess());
-  //   }
-  // }, []);
   useEffect(() => {
     axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
     axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
@@ -98,7 +92,7 @@ const SideBar = () => {
       for (var i = 0; i < tempideModules.length; i++) {
         for (var j = 0; j < filterData?.length; j++) {
           if (tempideModules[i].id === filterData[j].moduleId) {
-            tempideModules[i].moduleId = filterData[j].moduleId;
+           // tempideModules[i].moduleId = filterData[j].moduleId;
             filterModules.push(tempideModules[i]);
           }
         }
@@ -114,6 +108,7 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
+  console.log(getModuleDataAccess);
   useEffect(() => {
     if (
       getModuleDataAccess &&
@@ -142,28 +137,28 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        {getModule?.isLoading && <Loader />}
+        {getModule?.isLoading && <Loader/>}
         <ul className="metismenu mm-show" id="menu">
           {sideBarModules &&
-            sideBarModules?.map((item, index) => (
+            sideBarModules?.map((module, index) => (
               <li
                 key={index}
                 className={`nav-icn ${
-                  item.routePath === currentUrl.pathname ? "mm-active" : ""
+                  module.routePath === currentUrl.pathname ? "mm-active" : ""
                 }`}
-                onClick={(e) => hanleClick(e, item.id)}
+                onClick={(e) => hanleClick(e, module.id)}
               >
                 <Link
                   className="ai-icon"
-                  to={item.routePath}
+                  to={module.routePath}
                   aria-expanded="false"
                 >
                   <img
                     className="w-20px"
-                    src={iconDynamic(item.icon)}
-                    alt={item.icon}
+                    src={iconDynamic(module.icon)}
+                    alt={module.icon}
                   />
-                  <span className="nav-text ps-1">{item.name}</span>
+                  <span className="nav-text ps-1">{module.name}</span>
                 </Link>
               </li>
             ))}

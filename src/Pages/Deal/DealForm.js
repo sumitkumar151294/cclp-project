@@ -54,7 +54,7 @@ const DealForm = () => {
         ...values,
         deleted: false,
         enabled: values.enabled ? true : false,
-        clientId:1,
+        clientId:0,
         category: values.category,
         name: values.name,
         displayOrder: values.displayOrder,

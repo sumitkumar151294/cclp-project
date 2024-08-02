@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { onLoginReset, onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -27,6 +28,7 @@ const LoginPage = () => {
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
+  console.log(loginDetails)
   // initial values for the input fields
   const initialValues = {
     email: "",
@@ -34,7 +36,7 @@ const LoginPage = () => {
   };
   // to validate login form using Yup schema
   const validateForm = yup.object({
-    email: yup.string().email("Invalid email").required("Email is required"),
+    email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,"Invalid email address").required("Email is required"),
     password: yup.string().required("Password is required"),
   });
   // to handle form using useFormik hook
@@ -51,15 +53,28 @@ const LoginPage = () => {
   useEffect(() => {
     if (isLogin && loginDetails?.status_code === "201") {
       toast.success(loginDetails?.message);
+      sessionStorage.setItem("login",true);
       navigate("/dashboard");
     } else if (isLogin && loginDetails?.status_code) {
       toast.error(loginDetails?.message);
       dispatch(onLoginReset())
     }
   }, [loginDetails]);
+  // to handle checkbox
+  const handleCheckboxChange = async (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      sessionStorage.setItem("userEmail", values.email);
+      sessionStorage.setItem("userPassword", values.password);
+    } else {
+      sessionStorage.removeItem("userEmail");
+      sessionStorage.removeItem("userPassword");
+    }
+  };
 
   return (
     <>
+      <ScrollToTop/>
       <ToastContainer />
       <div className="vh-100">
         <div className="authincation h-100">
@@ -84,7 +99,7 @@ const LoginPage = () => {
                               type="text"
                               className={`form-control ${
                                 errors.email && touched.email
-                                  ? "border-danger"
+                                  ? "is-invalid"
                                   : ""
                               }`}
                               name="email"
@@ -93,7 +108,7 @@ const LoginPage = () => {
                               onChange={handleChange}
                             />
                             {errors.email && touched.email && (
-                              <p className="text-danger">{errors.email}</p>
+                              <p className="error-message">{errors.email}</p>
                             )}
                           </div>
                           <div className="mb-3">
@@ -105,7 +120,7 @@ const LoginPage = () => {
                               type="password"
                               className={`form-control ${
                                 errors.password && touched.password
-                                  ? "border-danger"
+                                  ? "is-invalid"
                                   : ""
                               }`}
                               name="password"
@@ -114,7 +129,7 @@ const LoginPage = () => {
                               onChange={handleChange}
                             />
                             {errors.password && touched.password && (
-                              <p className="text-danger">{errors.password}</p>
+                              <p className="error-message">{errors.password}</p>
                             )}
                           </div>
                           {loginDetails?.isLoading && <Loader />}
@@ -131,7 +146,7 @@ const LoginPage = () => {
                                   type="checkbox"
                                   className="form-check-input"
                                   id="basic_checkbox_1"
-                                  name="remember"
+                                  onChange={handleCheckboxChange}
                                 />
                                 <label
                                   className="form-check-label"
