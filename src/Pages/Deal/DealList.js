@@ -14,6 +14,10 @@ const DealList = () => {
   const dispatch=useDispatch();
   // to fetch deal data from redux store
   const getDealData=useSelector((state)=>state.dealReducer);
+  // to get module filtered data from redux
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
   useEffect(()=>{
     dispatch(onGetDeal());
   },[]);
@@ -27,8 +31,8 @@ const DealList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
-      <DealForm />
       <ScrollToTop />
+      {getRoleAccess[0]?.addAccess && (<DealForm />)}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -71,7 +75,7 @@ const DealList = () => {
                                 <th>{"Display Name"}</th>
                                 <th>{"Mobile Image"}</th>
                                 <th>{"Web Image "}</th>
-                                <th>{"Action"}</th>
+                                {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                               </tr>
                             </thead>
                             <tbody>
@@ -82,6 +86,7 @@ const DealList = () => {
                                     <td>{item.displayOrder}</td>
                                     <td>{item.mobImage}</td>
                                     <td>{item.webImage}</td>
+                                    {getRoleAccess[0]?.editAccess && (
                                     <td>
                                       <div className="d-flex">
                                         <Button
@@ -103,6 +108,7 @@ const DealList = () => {
                                         />
                                       </div>
                                     </td>
+                                    )}
                                   </tr>
                                 ))}
                             </tbody>

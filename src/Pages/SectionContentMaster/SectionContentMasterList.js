@@ -166,6 +166,7 @@ const SectionContentMasterList = () => {
   const location = useLocation();
   const type = location?.state?.sectionId;
 
+
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
@@ -236,6 +237,7 @@ const SectionContentMasterList = () => {
     <>
       <SectionContentMasterForm  sectionMasterData={sectionMasterData}/>
       <ScrollToTop />
+      <SectionContentMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

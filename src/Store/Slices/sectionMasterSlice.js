@@ -63,7 +63,6 @@ export const sectionMasterSlice = createSlice({
     onPostsectionMasterError: (state, { payload }) => {
       const { postData = [], message = "", status_code = 400 } = payload;
       return {
-
         ...state,
         postSectionMasterData: postData,
         postMessage:message,

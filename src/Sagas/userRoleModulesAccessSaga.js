@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { callUserRoleModuleAccessGetApi, callUserRoleModuleAccessPostApi, callUserRoleModuleAccessUpdateApi} from "../Context/userRoleModuleAccessApi";
+import { callUserRoleModuleAccessGetApi, callUserRoleModuleAccessPostApi} from "../Context/userRoleModuleAccessApi";
 import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRoleModuleAccessSuccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess, onUpdateUserRoleModuleAccess, onUpdateUserRoleModuleAccessError, onUpdateUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
 
 function* GetUserRoleModuleAccess() {
@@ -50,10 +50,11 @@ function* PostUserRoleModuleAccess({ payload }) {
 }
 function* UpdateUserRoleModuleAccess({ payload }) {
   try {
-    const updateUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessUpdateApi, payload);
+    const updateUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
     if (updateUserRoleModuleAccessResponse.httpStatusCode === "205") {
       yield put(
         onUpdateUserRoleModuleAccessSuccess({
+          data: updateUserRoleModuleAccessResponse.result,
           status_code: updateUserRoleModuleAccessResponse.httpStatusCode,
           message: updateUserRoleModuleAccessResponse.errorMessage,
         })

@@ -7,6 +7,7 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealCouponCodeForm from "./DealCouponCodeForm";
+import { useSelector } from "react-redux";
 
 const DealCouponCodeList = () => {
   const dealCategoryData = [
@@ -95,7 +96,11 @@ const DealCouponCodeList = () => {
       displayOrder: "3",
     },
   ];
-
+  // to get data from translation 
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
+  // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
@@ -105,8 +110,8 @@ const DealCouponCodeList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
-      <DealCouponCodeForm />
       <ScrollToTop />
+      {getRoleAccess[0]?.addAccess && (<DealCouponCodeForm />)}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -149,7 +154,7 @@ const DealCouponCodeList = () => {
                                 <th>{"Display Name"}</th>
                                 <th>{"Mobile Image"}</th>
                                 <th>{"Web Image "}</th>
-                                <th>{"Action"}</th>
+                                {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                               </tr>
                             </thead>
                             <tbody>
@@ -161,6 +166,7 @@ const DealCouponCodeList = () => {
                                     <td>{dealCategoryData.displayOrder}</td>
                                     <td>{dealCategoryData.mobileImage}</td>
                                     <td>{dealCategoryData.webImage}</td>
+                                    {getRoleAccess[0]?.editAccess && (
                                     <td>
                                       <div className="d-flex">
                                         <Button
@@ -182,6 +188,7 @@ const DealCouponCodeList = () => {
                                         />
                                       </div>
                                     </td>
+                                    )}
                                   </tr>
                                 ))}
                             </tbody>

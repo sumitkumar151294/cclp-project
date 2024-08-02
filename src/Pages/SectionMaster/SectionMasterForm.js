@@ -7,9 +7,6 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-
 import {
   onGetsectionMaster,
   onPostsectionMaster,
@@ -17,6 +14,7 @@ import {
   onUpdatesectionMaster,
 } from "../../Store/Slices/sectionMasterSlice";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const segmentOptions = [
   { value: 1, label: "Demo" },
