@@ -7,6 +7,9 @@ import Loader from "../../Components/Loader/Loader";
 import SectionContentMasterForm from "./SectionContentMasterForm";
 import { useLocation } from "react-router-dom";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetSectionContentMaster } from "../../Store/Slices/sectionContentMasterSlice";
+import Button from "../../Components/Button/Button";
 
 const SectionContentMasterList = () => {
   // to get column heading name from translation
@@ -14,15 +17,23 @@ const SectionContentMasterList = () => {
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
-  const content_source_type = GetTranslationData("UIMasterAdmin", "content_source_type");
-  const section_content_master_list = GetTranslationData("UIMasterAdmin", "section_content_master_list");
+  const content_source_type = GetTranslationData(
+    "UIMasterAdmin",
+    "content_source_type"
+  );
+  const section_content_master_list = GetTranslationData(
+    "UIMasterAdmin",
+    "section_content_master_list"
+  );
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const SectionMasterData = [
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -30,8 +41,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -39,8 +50,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -48,8 +59,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -57,8 +68,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -66,8 +77,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -75,8 +86,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -84,8 +95,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -93,8 +104,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -102,8 +113,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -111,8 +122,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -120,8 +131,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -129,8 +140,8 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
@@ -138,21 +149,44 @@ const SectionContentMasterList = () => {
     {
       sectionName: "TopOffers",
       sectionType: "Top Offers",
-      contentSourceType:"deal",
-      segment:"zomato",
+      contentSourceType: "deal",
+      segment: "zomato",
       displayOrder: "3",
       text: "i am offer master",
       enabled: true,
     },
   ];
-  // to handle pagination
+  const location = useLocation();
+  const type = location?.state?.sectionId;
+
+
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
+  const dispatch = useDispatch();
+  const getSectionContenMasterData = useSelector(
+    (state) => state?.sectionContentMasterReducer
+  );
+  const filteredData = getSectionContenMasterData?.getSectionContentMasterData?.filter(
+    (data) =>
+      (data.contentSourceType
+        ?.toLowerCase()
+        ?.includes(searchQuery?.toLowerCase()) ||
+        data.contentSourceType
+        ?.toLowerCase()
+        ?.includes(searchQuery?.toLowerCase())) &&
+      data.sectionMasterId === type
+  );
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  useEffect(() => {
+    dispatch(onGetSectionContentMaster());
+  }, []);
   return (
     <>
       <ScrollToTop />
@@ -164,7 +198,9 @@ const SectionContentMasterList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Section Content Master List"}</h4>
+                    <h4 className="card-title">
+                      {"Section Content Master List"}
+                    </h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -172,8 +208,8 @@ const SectionContentMasterList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
-                        // value={searchQuery}
-                        // onChange={handleSearch}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
@@ -183,52 +219,72 @@ const SectionContentMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {SectionMasterData?.isLoading ? (
+                {getSectionContenMasterData?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <>
-                    {SectionMasterData.length ? (
+                    {filteredData?.length ? (
                       <div className="table-responsive scroll-Table-x">
                         <>
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Section Name"}</th>
-                                <th>{"Section Type"}</th>
-                                <th>{"Content Source Type"}</th>
-                                <th>{"Segment"}</th>
+                                <th>{"Mobile Image"}</th>
+                                <th>{"Web Image"}</th>
                                 <th>{"Display Order"}</th>
-                                <th>{"Text"}</th>
-
-
+                                <th>{"Call To Action"}</th>
+                                <th>{"Action"}</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {SectionMasterData.slice(
-                                startIndex,
-                                endIndex
-                              ).map((SectionMasterData, index) => (
-                                <tr key={index}>
-                                  <td>{SectionMasterData.sectionName}</td>
-                                  <td>{SectionMasterData.sectionType}</td>
-                                  <td>{SectionMasterData.contentSourceType}</td>
-                                  <td>{SectionMasterData.segment}</td>
-                                  <td>{SectionMasterData.displayOrder}</td>
-                                  <td>{SectionMasterData.text}</td>
-                                </tr>
-                              ))}
+                              {filteredData
+                                ?.slice(startIndex, endIndex)
+                               ?.map((sectionContent, index) => (
+                                  <tr key={index}>
+                                    <td>{sectionContent.mobImage}</td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.mobImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
+                                    <td>{sectionContent.displayOrder}</td>
+                                    <td>{sectionContent.cta}</td>
+                                    <td>
+                                      <div className="d-flex">
+                                        <Button
+                                          className="btn btn-primary shadow btn-xs sharp me-1"
+                                          icon={"fas fa-pencil-alt"}
+                                          // onClick={() =>
+                                          //   // handleSumbit(SectionMasterData, {
+                                          //   //   isEdit: true,
+                                          //   // })
+                                          // }
+                                        />
+                                        <Button
+                                          className="btn btn-danger shadow btn-xs sharp"
+                                          icon={"fa fa-trash"}
+                                          // onClick={() =>
+                                          //   // handleSumbit(SectionMasterData)
+                                          // }
+                                        />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
                             </tbody>
                           </table>
-                          {SectionMasterData.length > 5 && (
+                          {filteredData?.length > 5 && (
                             <div className="pagination-container">
                               <ReactPaginate
                                 previousLabel={"<"}
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  SectionMasterData.length / rowsPerPage
+                                  filteredData?.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}

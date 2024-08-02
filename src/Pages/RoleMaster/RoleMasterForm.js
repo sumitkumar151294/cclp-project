@@ -189,6 +189,7 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess([]);
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
+
   // fetch module data and update form data on mount and when module data changes
   useEffect(() => {
     if (data) {
