@@ -87,9 +87,9 @@ const SectionMasterForm = ({ sectionData }) => {
             ? values.displayOrder
             : JSON.stringify(values?.displayOrder),
         displayLimit:
-          typeof values?.displayOrder === "string"
-            ? values.displayOrder
-            : JSON.stringify(values?.displayOrder),
+          typeof values?.displayLimit === "string"
+            ? values.displayLimit
+            : JSON.stringify(values?.displayLimit),
         claimLimit: values?.claimLimit ? values?.claimLimit : null,
         segmentId: values?.segmentId ? values?.segmentId : null,
         noOfpointToClaim: values?.noOfpointToClaim
@@ -340,6 +340,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             )}
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>Status</label>
+                              <span className="text-danger">*</span>
 
                               <Field
                                 name="enabled"

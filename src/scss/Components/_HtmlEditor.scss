@@ -1,0 +1,24 @@
+$color_1: var(--bs-table-dark-bg-2);
+
+.quill {
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	appearance: none;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	background: var(--primary-white);
+	border: 3px solid var(--primary-greyish);
+	padding: 0.3125rem 1.25rem;
+	color: $color_1;
+	border-radius: 1rem;
+}
+.ql-container.ql-snow {
+	border: none !important;
+	height: 20vh;
+}
+@media only screen and (max-width: 767px) {
+	.ql-container.ql-snow {
+		width: 100% !important;
+	}
+}

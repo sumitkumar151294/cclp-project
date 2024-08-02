@@ -146,3 +146,25 @@ border-color: var(--primary);
 background-color: var(--primary);
   cursor: not-allowed;
 }
+.back-button {
+  padding: 10px 20px;
+  border: 1px solid #ccc; /* Adding a border for better visibility */
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  display: inline-block; /* Ensures button has appropriate spacing */
+  margin-bottom: 20px; /* Adjust based on placement */
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #e2e6ea;
+  color: #000;
+}
+
+.back-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Focus ring */
+}

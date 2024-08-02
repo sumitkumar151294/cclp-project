@@ -110,8 +110,9 @@ const DealCouponCodeList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
+    { console.log(getRoleAccess[0]?.addAccess )}
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (<DealCouponCodeForm />)}
+      {getRoleAccess[0]?.addAccess ? getRoleAccess[0]?.addAcces && (<DealCouponCodeForm />) : (<DealCouponCodeForm />)}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

@@ -9,6 +9,6 @@ export const callDealPostApi = async (payload) => {
   return data;
 };
 export const callDealUpdateApi = async (payload) => {
-  const { data = {} } = await axiosInstanceClient.put(API.updatedeal, payload);
+  const { data = {} } = await axiosInstanceClient.post(API.updatedeal, payload);
   return data;
 };

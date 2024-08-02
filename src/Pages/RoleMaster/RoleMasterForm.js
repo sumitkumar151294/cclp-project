@@ -261,7 +261,9 @@ const RoleMasterForm = ({ data, setData }) => {
                 <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
-                {userRoleData?.postLoading && <Loader />}
+                {userRoleData?.postLoading &&  <div style={{ height: "350px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>}
                 <div className="container-fluid">
                   <form onSubmit={handleSubmit}>
                     <div className="row">

@@ -8,10 +8,18 @@ import SectionContentMasterForm from "./SectionContentMasterForm";
 import { useLocation } from "react-router-dom";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetSectionContentMaster } from "../../Store/Slices/sectionContentMasterSlice";
+import {
+  onGetSectionContentMaster,
+  onUpdateSectionContentMaster,
+  onUpdateSectionContentMasterReset,
+} from "../../Store/Slices/sectionContentMasterSlice";
 import Button from "../../Components/Button/Button";
+import { toast } from "react-toastify";
+import { onPostuploadImageReset, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
 
 const SectionContentMasterList = () => {
+  const [sectionMasterData, setSectionMasterData] = useState("");
+
   // to get column heading name from translation
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
@@ -169,16 +177,17 @@ const SectionContentMasterList = () => {
   const getSectionContenMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
-  const filteredData = getSectionContenMasterData?.getSectionContentMasterData?.filter(
-    (data) =>
-      (data.contentSourceType
-        ?.toLowerCase()
-        ?.includes(searchQuery?.toLowerCase()) ||
-        data.contentSourceType
-        ?.toLowerCase()
-        ?.includes(searchQuery?.toLowerCase())) &&
-      data.sectionMasterId === type
-  );
+  const filteredData =
+    getSectionContenMasterData?.getSectionContentMasterData?.filter(
+      (data) =>
+        (data.contentSourceType
+          ?.toLowerCase()
+          ?.includes(searchQuery?.toLowerCase()) ||
+          data.contentSourceType
+            ?.toLowerCase()
+            ?.includes(searchQuery?.toLowerCase())) &&
+        data.sectionMasterId === type
+    );
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -187,10 +196,53 @@ const SectionContentMasterList = () => {
   useEffect(() => {
     dispatch(onGetSectionContentMaster());
   }, []);
+  const handleSumbit = (sectionContent, isEdit) => {
+    const sectionMasterData = {
+      id: sectionContent.id,
+      enabled: sectionContent.enabled,
+      deleted: true,
+      createdBy: 0,
+      updatedBy: 0,
+      clientId: 0,
+      sectionMasterId: sectionContent?.sectionMasterId,
+      webImage: sectionContent?.webImage,
+      mobImage: sectionContent?.mobImage,
+      cta: sectionContent?.cta,
+      text: sectionContent?.text,
+      displayOrder: sectionContent?.displayOrder,
+      contentSourceType: sectionContent?.contentSourceType,
+      linkedMasterId: sectionContent?.linkedMasterId,
+      segmentId: sectionContent?.sectionContent,
+    };
+    if (isEdit) {
+      setSectionMasterData(sectionMasterData);
+    } else {
+      dispatch(onUpdateSectionContentMaster(sectionMasterData));
+    }
+  };
+  useEffect(() => {
+    if (getSectionContenMasterData?.update_status_code == "204") {
+      toast.success(getSectionContenMasterData?.updateMessage);
+      dispatch(onGetSectionContentMaster());
+      dispatch(onUpdateSectionContentMasterReset());
+    } else if (getSectionContenMasterData?.update_status_code == "205") {
+      toast.success(getSectionContenMasterData?.updateMessage);
+      dispatch(onGetSectionContentMaster());
+      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadMobileImageReset())
+      dispatch(onUpdateSectionContentMasterReset());
+    } else if (getSectionContenMasterData?.update_status_code) {
+      toast.error(getSectionContenMasterData?.updateMessage);
+      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadMobileImageReset())
+      dispatch(onUpdateSectionContentMasterReset());
+      dispatch(onUpdateSectionContentMasterReset());
+    }
+  }, [getSectionContenMasterData]);
   return (
     <>
+      <SectionContentMasterForm  sectionMasterData={sectionMasterData}/>
       <ScrollToTop />
-      <SectionContentMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -219,7 +271,8 @@ const SectionContentMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getSectionContenMasterData?.isgetLoading ? (
+                {getSectionContenMasterData?.isgetLoading ||
+                getSectionContenMasterData?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -241,7 +294,7 @@ const SectionContentMasterList = () => {
                             <tbody>
                               {filteredData
                                 ?.slice(startIndex, endIndex)
-                               ?.map((sectionContent, index) => (
+                                ?.map((sectionContent, index) => (
                                   <tr key={index}>
                                     <td>{sectionContent.mobImage}</td>
                                     <td>
@@ -258,18 +311,18 @@ const SectionContentMasterList = () => {
                                         <Button
                                           className="btn btn-primary shadow btn-xs sharp me-1"
                                           icon={"fas fa-pencil-alt"}
-                                          // onClick={() =>
-                                          //   // handleSumbit(SectionMasterData, {
-                                          //   //   isEdit: true,
-                                          //   // })
-                                          // }
+                                          onClick={() =>
+                                            handleSumbit(sectionContent, {
+                                              isEdit: true,
+                                            })
+                                          }
                                         />
                                         <Button
                                           className="btn btn-danger shadow btn-xs sharp"
                                           icon={"fa fa-trash"}
-                                          // onClick={() =>
-                                          //   // handleSumbit(SectionMasterData)
-                                          // }
+                                          onClick={() =>
+                                            handleSumbit(sectionContent)
+                                          }
                                         />
                                       </div>
                                     </td>
