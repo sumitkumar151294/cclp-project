@@ -7,6 +7,7 @@ import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetModule, onPostModule, onPostModuleReset } from "../../Store/Slices/moduleSlice";
 import Loader from "../../Components/Loader/Loader";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const ModuleMaster = () => {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -49,6 +50,7 @@ const ModuleMaster = () => {
 
   return (
     <>
+    <ScrollToTop/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
@@ -57,7 +59,9 @@ const ModuleMaster = () => {
                 <h4 className="card-title">Module Master</h4>
               </div>
               <div className="card-body">
-              {moduleData?.postLoading && <Loader />}
+              {moduleData?.postLoading && (<div style={{ height: "350px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>)}
                 <div className="container-fluid">
                   <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -70,7 +74,7 @@ const ModuleMaster = () => {
                           type="text"
                           className={`form-control ${
                             errors.name && touched.name
-                              ? "border-danger"
+                              ? "is-invalid"
                               : ""
                           }`}
                           name="name"
@@ -80,7 +84,7 @@ const ModuleMaster = () => {
                           onChange={handleChange}
                         />
                         {errors.name && touched.name && (
-                          <p className="text-danger">{errors.name}</p>
+                          <p className="error-message">{errors.name}</p>
                         )}
                       </div>
                       <div className="col-sm-4 form-group mb-2">
@@ -92,7 +96,7 @@ const ModuleMaster = () => {
                           type="text"
                           className={`form-control ${
                             errors.routePath && touched.routePath
-                              ? "border-danger"
+                              ? "is-invalid"
                               : ""
                           }`}
                           name="routePath"
@@ -102,7 +106,7 @@ const ModuleMaster = () => {
                           onChange={handleChange}
                         />
                         {errors.routePath && touched.routePath && (
-                          <p className="text-danger">{errors.routePath}</p>
+                          <p className="error-message">{errors.routePath}</p>
                         )}
                       </div>
 
@@ -113,7 +117,7 @@ const ModuleMaster = () => {
                         <InputField
                           className={`form-control ${
                             errors.icon && touched.icon
-                              ? "border-danger"
+                              ? "is-invalid"
                               : ""
                           }`}
                           type="text"
@@ -124,7 +128,7 @@ const ModuleMaster = () => {
                           onChange={handleChange}
                         />
                         {errors.icon && touched.icon && (
-                          <p className="text-danger">{errors.icon}</p>
+                          <p className="error-message">{errors.icon}</p>
                         )}
                       </div>
                     </div>

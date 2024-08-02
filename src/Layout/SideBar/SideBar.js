@@ -38,12 +38,6 @@ const SideBar = () => {
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
   // fetch module and user role module access data when the component mounts
-  // useEffect(() => {
-  //   if (!getModule?.data?.length) {
-  //     dispatch(onGetModule());
-  //     dispatch(onGetUserRoleModuleAccess());
-  //   }
-  // }, []);
   useEffect(() => {
     axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
     axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
@@ -82,7 +76,6 @@ const SideBar = () => {
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
     setSelectedModuleId(moduleId);
-    dispatch(resetAllowModules());
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
@@ -104,7 +97,6 @@ const SideBar = () => {
         }
       }
       setIsSideBarModules(filterModules);
-    } else {
     }
   }, [getModuleData, userRoleModuleAccess]);
   // to filter module access data
@@ -114,6 +106,7 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
+  
   useEffect(() => {
     if (
       getModuleDataAccess &&
