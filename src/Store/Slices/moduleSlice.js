@@ -7,8 +7,22 @@ export const moduleSlice = createSlice({
     isError: false,
     data:[],
     message: "",
+    filteredData: [],
   },
   reducers: {
+    allowModules:(state , { payload }) => {
+      return{
+        ...state,
+        filteredData: payload,
+        apiCalled:true,
+      }
+    }, 
+    resetAllowModules:(state ) => {
+      return{
+        ...state,
+        filteredData: []
+      }
+    }, 
     onGetModule: (state) => {
       return {
         ...state,
@@ -97,7 +111,7 @@ export const moduleSlice = createSlice({
 
   },
 });
-export const {onGetModule, onGetModuleSuccess, onGetModuleError ,onGetModuleReset,onPostModule,onPostModuleSuccess,onPostModuleError,onPostModuleReset } =
+export const {allowModules, resetAllowModules,onGetModule, onGetModuleSuccess, onGetModuleError ,onGetModuleReset,onPostModule,onPostModuleSuccess,onPostModuleError,onPostModuleReset } =
 moduleSlice.actions;
 
 export default moduleSlice.reducer;
