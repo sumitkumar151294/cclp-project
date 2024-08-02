@@ -76,7 +76,6 @@ const SideBar = () => {
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
     setSelectedModuleId(moduleId);
-    dispatch(resetAllowModules());
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
@@ -92,7 +91,7 @@ const SideBar = () => {
       for (var i = 0; i < tempideModules.length; i++) {
         for (var j = 0; j < filterData?.length; j++) {
           if (tempideModules[i].id === filterData[j].moduleId) {
-           // tempideModules[i].moduleId = filterData[j].moduleId;
+            tempideModules[i].moduleId = filterData[j].moduleId;
             filterModules.push(tempideModules[i]);
           }
         }
@@ -108,7 +107,7 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
-  console.log(getModuleDataAccess);
+  
   useEffect(() => {
     if (
       getModuleDataAccess &&
