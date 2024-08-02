@@ -20,7 +20,7 @@ const DealCouponForm = () => {
   const dealCouponData=useSelector(state=>state.dealCouponReducer);
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
-    couponCode: "",
+    coupounCode: "",
     dealId: "",
     couponType: "",
     image: "",
@@ -32,7 +32,7 @@ const DealCouponForm = () => {
   });
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    couponCode: Yup.string().required("Coupon Code is required"),
+    coupounCode: Yup.string().required("Coupon Code is required"),
     dealId: Yup.string().required("Deal is required"),
     startDate: Yup.string().required("Start Data is required"),
     endDate: Yup.string().required("End Date is required"),
@@ -68,7 +68,25 @@ const DealCouponForm = () => {
   const handleImageChange = (setFieldValue, event) => {
     setFieldValue("image", event.currentTarget.files[0]);
   };
-
+  // {
+  //   "id": 0,
+  //   "enabled": true,
+  //   "deleted": true,
+  //   "createdBy": 0,
+  //   "updatedBy": 0,
+  //   "clientId": 0,
+  //   "coupounCode": "string",
+  //   "dealId": "string",
+  //   "typeOfCoupoun": "string",
+  //   "cta": "string",
+  //   "image": "string",
+  //   "title": "string",
+  //   "terms": "string",
+  //   "description": "string",
+  //   "segmentId": 0,
+  //   "startDate": "2024-08-02T10:47:45.967Z",
+  //   "endDate": "2024-08-02T10:47:45.967Z"
+  // }
   return (
     <>
       <ToastContainer />
@@ -99,15 +117,15 @@ const DealCouponForm = () => {
                               <label> Coupon Code</label>
                               <Field
                                 type="text"
-                                name="couponCode"
-                                className={`form-control ${errors.couponCode && touched.couponCode
+                                name="coupounCode"
+                                className={`form-control ${errors.coupounCode && touched.coupounCode
                                   ? "is-invalid"
                                   : ""
                                   }`}
                                 placeholder="Enter Coupon Code"
                               />
                               <ErrorMessage
-                                name="couponCode"
+                                name="coupounCode"
                                 component="div"
                                 className="error-message"
                               />

@@ -142,39 +142,42 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        {getModule?.isLoading && <Loader />}
+        {getModule?.isLoading &&
+        <div >
+        <Loader classType={"z-index"} />
+      </div>}
         <ul className="metismenu mm-show" id="menu">
           {sideBarModules &&
-            sideBarModules?.map((item, index) => (
+            sideBarModules?.map((sideBar, index) => (
               <li
                 key={index}
                 className={`nav-icn ${
-                  item.routePath === currentUrl.pathname ? "mm-active" : ""
+                  sideBar.routePath === currentUrl.pathname ? "mm-active" : ""
                 }`}
-                onClick={(e) => hanleClick(e, item.id)}
+                onClick={(e) => hanleClick(e, sideBar.id)}
               >
                 <Link
                   className="ai-icon"
-                  to={item.routePath}
+                  to={sideBar.routePath}
                   aria-expanded="false"
                 >
                   <img
                     className="w-20px"
-                    src={iconDynamic(item.icon)}
-                    alt={item.icon}
+                    src={iconDynamic(sideBar.icon)}
+                    alt={sideBar.icon}
                   />
-                  <span className="nav-text ps-1">{item.name}</span>
+                  <span className="nav-text ps-1">{sideBar.name}</span>
                 </Link>
               </li>
             ))}
-          <li>
+          <li className="p-b-3">
             <Link
-              className="ai-icon "
+              className="ai-icon"
               onClick={handleLogout}
               aria-expanded="false"
             >
               <img className="w-20px" src={Logout} alt="file not exist" />
-              <span className="nav-text ps-1"> {logout}</span>
+              <span className="nav-text ps-1 "> {logout}</span>
             </Link>
           </li>
         </ul>

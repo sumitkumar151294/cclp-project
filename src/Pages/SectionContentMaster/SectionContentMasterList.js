@@ -15,6 +15,7 @@ import {
 } from "../../Store/Slices/sectionContentMasterSlice";
 import Button from "../../Components/Button/Button";
 import { toast } from "react-toastify";
+import { onPostuploadImageReset, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
 
 const SectionContentMasterList = () => {
   const [sectionMasterData, setSectionMasterData] = useState("");
@@ -227,9 +228,14 @@ const SectionContentMasterList = () => {
     } else if (getSectionContenMasterData?.update_status_code == "205") {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
+      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadMobileImageReset())
       dispatch(onUpdateSectionContentMasterReset());
     } else if (getSectionContenMasterData?.update_status_code) {
       toast.error(getSectionContenMasterData?.updateMessage);
+      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadMobileImageReset())
+      dispatch(onUpdateSectionContentMasterReset());
       dispatch(onUpdateSectionContentMasterReset());
     }
   }, [getSectionContenMasterData]);
@@ -237,7 +243,6 @@ const SectionContentMasterList = () => {
     <>
       <SectionContentMasterForm  sectionMasterData={sectionMasterData}/>
       <ScrollToTop />
-      <SectionContentMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

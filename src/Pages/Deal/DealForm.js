@@ -47,13 +47,29 @@ const DealForm = () => {
     startDate: Yup.string().required("Start Date is required"),
     endDate: Yup.string().required("End Date is required"),
   });
+  // {
+  //   "id": 0,
+  //   "enabled": true,
+  //   "deleted": true,
+  //   "createdBy": 0,
+  //   "updatedBy": 0,
+  //   "clientId": 0,
+  //   "webImage": "string",
+  //   "mobImage": "string",
+  //   "dealType": "string",
+  //   "name": "string",
+  //   "category": 0,
+  //   "displayOrder": 0,
+  //   "startDate": "2024-08-02T10:51:18.769Z",
+  //   "endDate": "2024-08-02T10:51:18.769Z"
+  // }
   // to handle form submit
   const handleSubmit = (values) => {
     if (values) {
       const DealFormData = {
         ...values,
         deleted: false,
-        enabled: values.enabled ? true : false,
+        enabled: values.enabled ===true,
         clientId:1,
         category: values.category,
         name: values.name,

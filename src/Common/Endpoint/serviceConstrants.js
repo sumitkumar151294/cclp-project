@@ -21,10 +21,10 @@ const API = {
   //client-master
   clientMaster: "/clientMaster",
   getclientMaster: "/getClientMaster",
-  //user-master
-  userMaster: "/userMaster",
-  getUserMaster: "/getUserMaster",
-  userMaster:"/userMaster",
+  //client-user
+  userMaster: "/client-user",
+  getUserMaster: "/client-user",
+  userMaster:"/client-user",
   //add Coupon
   addCoupon: "/addCoupon",
   //section-master
