@@ -89,9 +89,9 @@ const SectionMasterForm = ({ sectionData }) => {
             ? values.displayOrder
             : JSON.stringify(values?.displayOrder),
         displayLimit:
-          typeof values?.displayOrder === "string"
-            ? values.displayOrder
-            : JSON.stringify(values?.displayOrder),
+          typeof values?.displayLimit === "string"
+            ? values.displayLimit
+            : JSON.stringify(values?.displayLimit),
         claimLimit: values?.claimLimit ? values?.claimLimit : null,
         segmentId: values?.segmentId ? values?.segmentId : null,
         noOfpointToClaim: values?.noOfpointToClaim

@@ -24,18 +24,18 @@ const contentSourceTypeOptions = [
   { value: "Product", label: "Product" },
   { value: "Image", label: "Image" },
 ];
-const SectionContentMasterForm = () => {
+const SectionContentMasterForm = ({sectionMasterData}) => {
   const location = useLocation();
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
-  const getSectionContenMasterData = useSelector(
+  const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
-  const uploadImage=useSelector(
+  const uploadImage = useSelector(
     (state) => state.uploadReducer);
 
   const type = location?.state?.sectionType;
@@ -96,29 +96,36 @@ const SectionContentMasterForm = () => {
     mobImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
   });
+  debugger
+  const displayLimit = getSectiontContentMasterData?.getSectionContentMasterData.filter(sectionContent => sectionContent?.sectionMasterId === typeID).length === sectionLimit
+
   const handleSubmit = (values) => {
-    if (values) {
-      Promise.all([
-        dispatch(onPostuploadImage(values.webImage)),
-        dispatch(onPostuploadMobileImage(values.mobImage)),
-      ]).then(() => {
-        if (uploadImage?.postMobileStatusCode=="201" && uploadImage?.post_status_code=="201"  ) {
-          const sectionContentMasteData = {
-            webImage: getwebImage,
-            mobImage: getmobImage,
-            clientId: 4,
-            deleted: false,
-            sectionMasterId: typeID,
-            displayOrder:JSON.stringify(values?.displayOrder),
-            linkedMasterId: 10,
-            segmentId:10,
-            contentSourceType:'Product',
-            cta:values?.cta,
-            text: "dsrtwqeryu",
-          };
-          dispatch(onPostSectionContentMaster(sectionContentMasteData));
-        }
-      });
+    if (displayLimit) {
+      toast.error("Display Limit Exceeded")
+    } else {
+      if (values) {
+        Promise.all([
+          dispatch(onPostuploadImage(values.webImage)),
+          dispatch(onPostuploadMobileImage(values.mobImage)),
+        ]).then(() => {
+          if (uploadImage?.postMobileStatusCode == "201" && uploadImage?.post_status_code == "201") {
+            const sectionContentMasteData = {
+              webImage: getwebImage,
+              mobImage: getmobImage,
+              clientId: 4,
+              deleted: false,
+              sectionMasterId: typeID,
+              displayOrder: JSON.stringify(values?.displayOrder),
+              linkedMasterId: null,
+              segmentId: null,
+              contentSourceType:"",
+              cta: "",
+              text: "",
+            };
+            dispatch(onPostSectionContentMaster(sectionContentMasteData));
+          }
+        });
+      }
     }
   };
   const handleImageChange = (setFieldValue, event, isMobile) => {
@@ -131,16 +138,28 @@ const SectionContentMasterForm = () => {
       setFieldValue("webImage", formData);
     }
   };
-useEffect(()=>{
-if(getSectionContenMasterData?.post_status_code==="201"){
-  toast.success(getSectionContenMasterData?.postMessage)
-  dispatch(onGetSectionContentMaster());
-  dispatch(onPostSectionContentMasterReset());
-}else if(getSectionContenMasterData?.post_status_code){
-  toast.error(getSectionContenMasterData?.postMessage);
-  dispatch(onPostSectionContentMasterReset());
-}
-},[getSectionContenMasterData])
+  useEffect(() => {
+    if (getSectiontContentMasterData?.post_status_code === "201") {
+      toast.success(getSectiontContentMasterData?.postMessage)
+      dispatch(onGetSectionContentMaster());
+      dispatch(onPostSectionContentMasterReset());
+    } else if (getSectiontContentMasterData?.post_status_code) {
+      toast.error(getSectiontContentMasterData?.postMessage);
+      dispatch(onPostSectionContentMasterReset());
+    }
+  }, [getSectiontContentMasterData])
+  useEffect(()=>{
+    if(displayLimit){
+      toast.error("Maximum Display Limit Reached")
+    }
+  },[])
+  useEffect(() => {
+    if (sectionMasterData) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(sectionMasterData);
+    }
+
+  }, [sectionMasterData]);
   return (
     <>
       <ScrollToTop />
@@ -153,9 +172,9 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                 <h4 className="card-title">Section Content Master</h4>
               </div>
               <div className="card-body">
-                {getSectionContenMasterData?.isPostLoading ? (
+                {getSectiontContentMasterData?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                    <Loader />
+                    <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="container-fluid">
@@ -179,13 +198,11 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                                   name="contentSourceType"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${
-                                    errors.contentSourceType &&
-                                    touched.contentSourceType
+                                  className={`form-select ${errors.contentSourceType &&
+                                      touched.contentSourceType
                                       ? "is-invalid"
                                       : ""
-                                  }`}
-
+                                    }`}
                                 />
                                 <ErrorMessage
                                   name="contentSourceType"
@@ -205,11 +222,10 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                                   name="segmentId"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${
-                                    errors.segmentId && touched.segmentId
+                                  className={`form-select ${errors.segmentId && touched.segmentId
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                 />
                                 <ErrorMessage
                                   name="segmentId"
@@ -226,14 +242,15 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                               <input
                                 type="file"
                                 name="webImage"
-                                className={`form-control ${
-                                  errors.webImage && touched.webImage
+                                className={`form-control ${errors.webImage && touched.webImage
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, false)
                                 }
+                                disabled={displayLimit}
+
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -249,14 +266,15 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                               <input
                                 type="file"
                                 name="mobImage"
-                                className={`form-control ${
-                                  errors.mobImage && touched.mobImage
+                                className={`form-control ${errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, true)
                                 }
+                                disabled={displayLimit}
+
                               />
                               <ErrorMessage
                                 name="mobImage"
@@ -272,12 +290,13 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                               <Field
                                 type="number"
                                 name="displayOrder"
-                                className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder
+                                className={`form-control ${errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 placeholder="Enter Display Order"
+                                disabled={displayLimit}
+
                               />
                               <ErrorMessage
                                 name="displayOrder"
@@ -290,10 +309,11 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                               <Field
                                 type="text"
                                 name="cta"
-                                className={`form-control ${
-                                  errors.cta && touched.cta ? "is-invalid" : ""
-                                }`}
+                                className={`form-control ${errors.cta && touched.cta ? "is-invalid" : ""
+                                  }`}
                                 placeholder="Enter Call To Action"
+                                disabled={displayLimit}
+
                               />
                             </div>
                             {!type === "Banner" && (
@@ -302,12 +322,13 @@ if(getSectionContenMasterData?.post_status_code==="201"){
                                 <Field
                                   type="text"
                                   name="text"
-                                  className={`form-control ${
-                                    errors.text && touched.text
+                                  className={`form-control ${errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   placeholder="Enter Text"
+                                disabled={displayLimit}
+
                                 />
                               </div>
                             )}
