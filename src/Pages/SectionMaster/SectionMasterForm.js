@@ -42,6 +42,7 @@ const SectionMasterForm = ({ sectionData }) => {
   });
   // Translation labels
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
+
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");

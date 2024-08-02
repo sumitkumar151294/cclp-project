@@ -134,3 +134,15 @@ $w100: var(--w100);
     margin-top: 1rem !important;
   }
 }
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+button:disabled:hover,
+button:disabled:focus,
+button:disabled:active {
+
+border-color: var(--primary);
+background-color: var(--primary);
+  cursor: not-allowed;
+}
