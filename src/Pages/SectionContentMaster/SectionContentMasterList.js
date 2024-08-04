@@ -100,7 +100,6 @@ const SectionContentMasterList = () => {
       dispatch(onUpdateSectionContentMasterReset());
     } else if (getSectionContenMasterData?.update_status_code == "205") {
       toast.success(getSectionContenMasterData?.updateMessage);
-      
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset())
       dispatch(onPostuploadMobileImageReset())
