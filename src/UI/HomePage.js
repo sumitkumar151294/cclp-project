@@ -11,6 +11,7 @@ import TopOffer from "./Topoffer/TopOffer";
 import GiftCard from "./giftCard-Component/GiftCard";
 import PointBanner from "./pointBanner/PointBanner";
 import SummerSpecial from "./summer/SummerSpecial";
+import BestSellergift from "./bestSeller/BestSellergift";
 
 const HomePage = () => {
  
@@ -24,6 +25,7 @@ const HomePage = () => {
       <SmartReward/>
       <BestSeller/>
       <TopOffer/>
+      <BestSellergift/>
       <GiftCard/>
       <PointBanner/>
       <SummerSpecial/>

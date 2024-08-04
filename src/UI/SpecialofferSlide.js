@@ -61,7 +61,7 @@ const SpecialofferSlide = () => {
         <div className="grid">
           <div className="left_card_body slider_card">
             <div className="d-flex">
-              <div className="card_body col-lg-5 col-md-5 col-sm-5 col-5">
+            <div className="card_body col-lg-6 col-md-6 col-sm-6 col-6">
                 <h5 className="card-title">Welcome Bonus </h5>
                 <h4 className="card-text">5000 points</h4>
                 <div className="swipe_button">
@@ -73,9 +73,7 @@ const SpecialofferSlide = () => {
                   />
                 </div>
               </div>
-              <div className="left__offer_slider col-lg-7 col-md-7 col-sm-7 col-7">
-                <Slider {...cardSlideSetting}>
-                  <div>
+              <div className="left__offer_slider col-lg-6 col-md-6 col-sm-6 col-6 grid_inner">
                   <div className="card_slider_wrapper">
                     <div className="upper_card_slide">
                       <div className="upper_slide">
@@ -92,8 +90,6 @@ const SpecialofferSlide = () => {
                       </div>
                     </div>
                   </div>
-                  </div>
-                 <div>
                  <div className="card_slider_wrapper">
                     <div className="upper_card_slide">
                       <div className="upper_slide">
@@ -110,8 +106,6 @@ const SpecialofferSlide = () => {
                       </div>
                     </div>
                   </div>
-                 </div>
-                 <div>
                  <div className="card_slider_wrapper">
                     <div className="upper_card_slide">
                       <div className="upper_slide">
@@ -128,9 +122,6 @@ const SpecialofferSlide = () => {
                       </div>
                     </div>
                   </div>
-                 </div>
-                
-                </Slider>
               </div>
             </div>
           </div>
@@ -164,7 +155,7 @@ const SpecialofferSlide = () => {
         </div>
 
         {/* unlock_border */}
-        <div className="container pt-3 pb-3">
+        <div className="pt-3 pb-3">
             <div className="unlock_brand_tag">
               <p>Unlock a world of <span>rewards</span> with <span>IDFC FIRST Cards</span> across <span>Travel, Products, Gift Cards </span>and <span>Deals</span></p>
             </div>

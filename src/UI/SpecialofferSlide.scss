@@ -36,7 +36,16 @@ p {
     padding-right: unset;
     padding-top: 24.84px;
     padding-bottom: 26.8px;
-
+.grid_inner{
+  display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+    width: 50% !important;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    cursor: pointer;
+}
     .card_body {
       padding-left: 15px;
       padding-top: 52px;
