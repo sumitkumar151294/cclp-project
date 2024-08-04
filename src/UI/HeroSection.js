@@ -34,16 +34,25 @@ const HeroSection = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          variableWidth: true,
+          className: "slider variable-width",
+          adaptiveHeight: true
+
         }
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          variableWidth: true,
+          className: "slider variable-width",
+          adaptiveHeight: true
+
+
+
         }
       }
     ]

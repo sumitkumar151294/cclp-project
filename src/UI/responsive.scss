@@ -1,35 +1,53 @@
 // X-Small devices (portrait phones, less than 576px)
 @media (max-width: 575.98px) {
+  .d_none_lg{
+    display: block !important;
+  }
+  .d_none_sm{
+    display: none;
+  }
   /*======Header=========*/
 
   .header_main_wrapper {
     .sidebar {
       width: 100%;
-      max-width: unset;
-      min-width: unset;
+      max-width: unset !important;
+      min-width: unset !important;
     }
   }
   /*======Header=END========*/
 
   /*=========Hero-Section=======*/
   .hero_carousel_offer_wrapper {
+    .card {
+      margin: 0px 6px !important;
+    }
     .card-body {
       &:after {
         right: -1px !important;
       }
       .card-title {
         font-size: 14px !important;
+        width: 100% !important;
       }
       .card-text {
         font-size: 12px !important;
+        padding: 10px 0px 12.97px 0px !important;
+      }
+      .offer_tag {
+        top: -52px !important;
+        right: 12px !important;
       }
       .btn_link {
         font-size: 12px !important;
       }
     }
+    .slick-slide {
+      width: 244px !important;
+    }
   }
   .right_card_body {
-    width: 80% !important;
+    width: 100% !important;
 
     .cred_card_top_sec {
       p {
@@ -55,7 +73,8 @@
         font-size: 22px;
       }
     }
-    .cred_card_top_sec, .cred_card_bottom_sec{
+    .cred_card_top_sec,
+    .cred_card_bottom_sec {
       padding: 10px 15px 10px 15px !important;
     }
   }
@@ -71,14 +90,29 @@
   /*============unlocked+grid==============*/
   .unlock_offer_card {
     .grid {
-      grid-template-columns: auto !important;
+      display: flex !important;
+      flex-direction: column;
+    }
+    .slider_card {
+      padding-top: 12.84px !important;
+      padding-bottom: 12.8px !important;
     }
     .left_card_body {
       .card-title {
-        font-size: 17.9px !important;
+        font-size: 16.9px !important;
+        line-height: 6.9px !important;
       }
       .card-text {
-        font-size: 25px !important;
+        font-size: 23px !important;
+      }
+    }
+    .rsbContainer {
+      width: 89% !important;
+      margin-left: -8px !important;
+    }
+    .ReactSwipeButton {
+      .rsbcText {
+        font-size: 12px !important;
       }
     }
   }
@@ -87,7 +121,11 @@
   /*========top-offer==============*/
   .top_offer_wrapper_container {
     .top_offer_card_container {
-      grid-template-columns: auto auto !important;
+      width: 98%;
+      overflow-x: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      cursor: pointer;
       .offer_card {
         margin-bottom: 40px;
       }
@@ -97,14 +135,40 @@
 
   /*=========Tab=Menu==========*/
   .tab_bar_wrapper {
-    padding: 21px 18px 37px 18px !important;
+    padding: 0px 0px 16px 0px !important;
+    .sub_menu_bar_wrapper {
+      // .menu_bar{
+      //   width: 66.98px !important;
+      //   height: 66.98px !important;
+      // }
+      img {
+        width: 51px !important;
+        height: 51px !important;
+      }
+      p {
+        font-size: 10.2px !important;
+      }
+      span {
+        display: block;
+        font-size: 8px !important;
+        padding-top: 8px;
+        width: 34px;
+        margin: 0 auto;
+        line-height: 10px !important;
+      }
+    }
   }
   /*=========Tab=Menu==========*/
 
   /*=======smart===========*/
   .smart_reward_wrapper {
+    padding-bottom: 24px;
+    h3 {
+      padding: 10px 0px 16px 0px;
+      margin: unset !important;
+    }
     img {
-      width: 90%;
+      width: 100%;
     }
   }
   /*=======smart====END=======*/
@@ -122,9 +186,12 @@
 
   /*===========bonus-banner============*/
   .bonus_banner_wrapper_container {
-    .banner_grid {
-      grid-template-columns: auto !important;
+    .bottom_banner_grid{
+      padding-top: 5px !important;
     }
+    // .banner_grid {
+    //   grid-template-columns: auto !important;
+    // }
     img {
       width: 100%;
     }
@@ -148,70 +215,427 @@
 
 // Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
-  .header_main_wrapper {
-    .sidebar {
-      width: 100%;
-      max-width: unset;
-      min-width: unset;
-    }
+  .d_none_lg{
+    display: block !important;
   }
-  /*=========Hero-Section=======*/
-  .hero_carousel_offer_wrapper {
-    .card-body {
-      &:after {
-        right: -1px !important;
-      }
-      .card-title {
-        font-size: 14px !important;
-      }
-      .card-text {
-        font-size: 12px !important;
-      }
-      .btn_link {
-        font-size: 12px !important;
-      }
-    }
+  .d_none_sm{
+    display: none;
   }
-  .right_card_body {
-    width: 80% !important;
+ /*======Header=========*/
 
-    .cred_card_top_sec {
-      p {
-        font-size: 18px !important;
-      }
-      span {
-        font-size: 14px !important;
-      }
-    }
-    .left_point_balance {
-      p {
-        font-size: 14px !important;
-      }
-      span {
-        font-size: 14px !important;
-      }
-    }
-    .switch_loop_left {
-      p {
-        font-size: 14px !important;
-      }
-      span {
-        font-size: 22px;
-      }
-    }
+ .header_main_wrapper {
+  .sidebar {
+    width: 100%;
+    max-width: unset !important;
+    min-width: unset !important;
   }
+}
+/*======Header=END========*/
 
-  .unlock_brand_tag {
-    p,
-    span {
+/*=========Hero-Section=======*/
+.hero_carousel_offer_wrapper {
+  .card {
+    margin: 0px 6px !important;
+  }
+  .card-body {
+    &:after {
+      right: -1px !important;
+    }
+    .card-title {
+      font-size: 14px !important;
+      width: 100% !important;
+    }
+    .card-text {
+      font-size: 12px !important;
+      padding: 10px 0px 12.97px 0px !important;
+    }
+    .offer_tag {
+      top: -52px !important;
+      right: 12px !important;
+    }
+    .btn_link {
       font-size: 12px !important;
     }
   }
-  /*=========Hero-Section=END======*/
+ 
+}
+.right_card_body {
+  width: 100% !important;
+
+  .cred_card_top_sec {
+    p {
+      font-size: 18px !important;
+    }
+    span {
+      font-size: 14px !important;
+    }
+  }
+  .left_point_balance {
+    p {
+      font-size: 14px !important;
+    }
+    span {
+      font-size: 14px !important;
+    }
+  }
+  .switch_loop_left {
+    p {
+      font-size: 14px !important;
+    }
+    span {
+      font-size: 22px;
+    }
+  }
+  .cred_card_top_sec,
+  .cred_card_bottom_sec {
+    padding: 10px 15px 10px 15px !important;
+  }
+}
+
+.unlock_brand_tag {
+  p,
+  span {
+    font-size: 12px !important;
+  }
+}
+/*=========Hero-Section=END======*/
+
+/*============unlocked+grid==============*/
+.unlock_offer_card {
+  .grid {
+    display: flex !important;
+    flex-direction: column;
+  }
+  .slider_card {
+    padding-top: 12.84px !important;
+    padding-bottom: 12.8px !important;
+  }
+  .left_card_body {
+    .card-title {
+      font-size: 16.9px !important;
+      line-height: 6.9px !important;
+    }
+    .card-text {
+      font-size: 23px !important;
+    }
+  }
+  .rsbContainer {
+    width: 89% !important;
+    margin-left: -8px !important;
+  }
+  .ReactSwipeButton {
+    .rsbcText {
+      font-size: 12px !important;
+    }
+  }
+}
+/*============unlocked+grid===END===========*/
+
+/*========top-offer==============*/
+.top_offer_wrapper_container {
+  .top_offer_card_container {
+    width: 98%;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    cursor: pointer;
+    .offer_card {
+      margin-bottom: 40px;
+    }
+  }
+}
+/*========top-offer==END============*/
+
+/*=========Tab=Menu==========*/
+.tab_bar_wrapper {
+  padding: 0px 0px 16px 0px !important;
+  .sub_menu_bar_wrapper {
+    // .menu_bar{
+    //   width: 66.98px !important;
+    //   height: 66.98px !important;
+    // }
+    img {
+      width: 51px !important;
+      height: 51px !important;
+    }
+    p {
+      font-size: 10.2px !important;
+    }
+    span {
+      display: block;
+      font-size: 8px !important;
+      padding-top: 8px;
+      width: 34px;
+      margin: 0 auto;
+      line-height: 10px !important;
+    }
+  }
+}
+/*=========Tab=Menu==========*/
+
+/*=======smart===========*/
+.smart_reward_wrapper {
+  padding-bottom: 24px;
+  h3 {
+    padding: 10px 0px 16px 0px;
+    margin: unset !important;
+  }
+  img {
+    width: 100%;
+  }
+}
+/*=======smart====END=======*/
+
+/*========gift_card======*/
+.gift_card_wrapper_container {
+  // .gift_card_grid{
+  //     grid-template-columns: auto auto !important;
+  //     .gift_card{
+  //         margin-bottom: 40px;
+  //     }
+  // }
+}
+/*========gift_card=END=====*/
+
+/*===========bonus-banner============*/
+.bonus_banner_wrapper_container {
+  .bottom_banner_grid{
+    padding-top: 5px !important;
+  }
+  // .banner_grid {
+  //   grid-template-columns: auto !important;
+  // }
+  img {
+    width: 100%;
+  }
+  .bottom_banner_grid {
+    img {
+      &:nth-child(1),
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+}
+
+/*===========bonus-banner============*/
+
+/*============Summer_grid==========*/
+.summer_card_grid {
+}
+/*============Summer_grid==========*/
 }
 
 // Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
+  .d_none_lg{
+    display: block !important;
+  }
+  .d_none_sm{
+    display: none;
+  }
+ /*======Header=========*/
+
+ .header_main_wrapper {
+  .sidebar {
+    width: 100%;
+   
+  }
+}
+/*======Header=END========*/
+
+/*=========Hero-Section=======*/
+.hero_carousel_offer_wrapper {
+  .card {
+    margin: 0px 6px !important;
+  }
+  .card-body {
+    &:after {
+      right: -1px !important;
+    }
+    .card-title {
+      font-size: 14px !important;
+      width: 100% !important;
+    }
+    .card-text {
+      font-size: 12px !important;
+      padding: 10px 0px 12.97px 0px !important;
+    }
+    .offer_tag {
+      top: -52px !important;
+      right: 12px !important;
+    }
+    .btn_link {
+      font-size: 12px !important;
+    }
+  }
+
+}
+.right_card_body {
+  width: 100% !important;
+
+  .cred_card_top_sec {
+    p {
+      font-size: 18px !important;
+    }
+    span {
+      font-size: 14px !important;
+    }
+  }
+  .left_point_balance {
+    p {
+      font-size: 14px !important;
+    }
+    span {
+      font-size: 14px !important;
+    }
+  }
+  .switch_loop_left {
+    p {
+      font-size: 14px !important;
+    }
+    span {
+      font-size: 22px;
+    }
+  }
+  .cred_card_top_sec,
+  .cred_card_bottom_sec {
+    padding: 10px 15px 10px 15px !important;
+  }
+}
+
+.unlock_brand_tag {
+  p,
+  span {
+    font-size: 12px !important;
+  }
+}
+/*=========Hero-Section=END======*/
+
+/*============unlocked+grid==============*/
+.unlock_offer_card {
+  .grid {
+    display: flex !important;
+    flex-direction: column;
+  }
+  .slider_card {
+    padding-top: 12.84px !important;
+    padding-bottom: 12.8px !important;
+  }
+  .left_card_body {
+    .card-title {
+      font-size: 16.9px !important;
+      line-height: 6.9px !important;
+    }
+    .card-text {
+      font-size: 23px !important;
+    }
+  }
+  .rsbContainer {
+    width: 89% !important;
+    margin-left: -8px !important;
+  }
+  .ReactSwipeButton {
+    .rsbcText {
+      font-size: 12px !important;
+    }
+  }
+}
+/*============unlocked+grid===END===========*/
+
+/*========top-offer==============*/
+.top_offer_wrapper_container {
+  .top_offer_card_container {
+    width: 98%;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    cursor: pointer;
+    .offer_card {
+      margin-bottom: 40px;
+    }
+  }
+}
+/*========top-offer==END============*/
+
+/*=========Tab=Menu==========*/
+.tab_bar_wrapper {
+  padding: 0px 0px 16px 0px !important;
+  .sub_menu_bar_wrapper {
+    // .menu_bar{
+    //   width: 66.98px !important;
+    //   height: 66.98px !important;
+    // }
+    img {
+      width: 51px !important;
+      height: 51px !important;
+    }
+    p {
+      font-size: 10.2px !important;
+    }
+    span {
+      display: block;
+      font-size: 8px !important;
+      padding-top: 8px;
+      width: 34px;
+      margin: 0 auto;
+      line-height: 10px !important;
+    }
+  }
+}
+/*=========Tab=Menu==========*/
+
+/*=======smart===========*/
+.smart_reward_wrapper {
+  padding-bottom: 24px;
+  h3 {
+    padding: 10px 0px 16px 0px;
+    margin: unset !important;
+  }
+  img {
+    width: 100%;
+  }
+}
+/*=======smart====END=======*/
+
+/*========gift_card======*/
+.gift_card_wrapper_container {
+  // .gift_card_grid{
+  //     grid-template-columns: auto auto !important;
+  //     .gift_card{
+  //         margin-bottom: 40px;
+  //     }
+  // }
+}
+/*========gift_card=END=====*/
+
+/*===========bonus-banner============*/
+.bonus_banner_wrapper_container {
+  .bottom_banner_grid{
+    padding-top: 5px !important;
+  }
+  // .banner_grid {
+  //   grid-template-columns: auto !important;
+  // }
+  img {
+    width: 100%;
+  }
+  .bottom_banner_grid {
+    img {
+      &:nth-child(1),
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+}
+
+/*===========bonus-banner============*/
+
+/*============Summer_grid==========*/
+.summer_card_grid {
+}
+/*============Summer_grid==========*/
 }
 
 // Large devices (desktops, less than 1200px)
