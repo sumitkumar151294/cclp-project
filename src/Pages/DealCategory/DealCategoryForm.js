@@ -7,45 +7,93 @@ import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetDealCategory, onPostDealCategory, onPostDealCategoryReset } from "../../Store/Slices/dealCategorySlice";
+import {
+  onGetDealCategory,
+  onPostDealCategory,
+  onPostDealCategoryReset,
+} from "../../Store/Slices/dealCategorySlice";
+import {
+  onPostuploadImage,
+  onPostuploadImageReset,
+  onPostuploadMobileImage,
+  onPostuploadMobileImageReset,
+} from "../../Store/Slices/uploadSlice";
 
-const SectionContentMasterForm = () => { 
+const SectionContentMasterForm = () => {
+  const [values, setValues] = useState(null);
+  const getwebImage = useSelector(
+    (state) => state.uploadReducer?.postuploadImageData
+  );
+  const getmobImage = useSelector(
+    (state) => state.uploadReducer?.postuploadMobileImageData
+  );
+
+  const uploadImage = useSelector((state) => state.uploadReducer);
   const dispatch = useDispatch();
   // to get deal category data from redux store
-  const dealCategoryData=useSelector(state=>state.dealCategoryReducer)
+  const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
-    phoneImage: "",
+    mobImage: "",
     displayOrder: "",
-    categoryName:""
+    name: "",
   });
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     webImage: Yup.string().required("Image is required"),
-    phoneImage: Yup.string().required("Image is required"),
+    mobImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
-    categoryName: Yup.string().required("Category Name is required")
+    name: Yup.string().required("Category Name is required"),
   });
   //to handle submit
   const handleSubmit = (values) => {
-    if(values){
-      dispatch(onPostDealCategory(values))
+    if (values) {
+
+        dispatch(onPostuploadImage(values.webImage));
+        dispatch(onPostuploadMobileImage(values.mobImage));
+        setValues(values);
+
     }
   };
   // to handle image changes
-  const handleImageChange = (setFieldValue, event) => {
-    setFieldValue("image", event.currentTarget.files[0]);
+  const handleImageChange = (setFieldValue, event, isMobile) => {
+    const file = event.currentTarget.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    if (isMobile) {
+      setFieldValue("mobImage", formData);
+    } else {
+      setFieldValue("webImage", formData);
+    }
   };
+  useEffect(() => {
+    if (
+      uploadImage?.postMobileStatusCode == "201" &&
+      uploadImage?.post_status_code == "201"
+    ) {
+      const dealCategoryData = {
+        webImage: getwebImage,
+        mobImage: getmobImage,
+        clientId: 4,
+        deleted: false,
+        name: values?.name,
+        displayOrder: JSON.stringify(values?.displayOrder),
+      };
+      dispatch(onPostDealCategory(dealCategoryData));
+    }
+  }, [uploadImage, values]);
   // to handle navigation and toast notifications based on deal category status
   useEffect(() => {
     if (dealCategoryData?.post_status_code === "201") {
-      toast.success(dealCategoryData.postMessage)
-      dispatch(onPostDealCategoryReset())
-      dispatch(onGetDealCategory())
+      toast.success(dealCategoryData.postMessage);
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostDealCategoryReset());
+      dispatch(onGetDealCategory());
     } else if (dealCategoryData?.post_status_code) {
-      toast.error(dealCategoryData.postMessage)
-      dispatch(onPostDealCategoryReset())
+      toast.error(dealCategoryData.postMessage);
+      dispatch(onPostDealCategoryReset());
     }
   }, [dealCategoryData]);
   return (
@@ -59,9 +107,9 @@ const SectionContentMasterForm = () => {
                 <h4 className="card-title">Deal Category</h4>
               </div>
               <div className="card-body">
-                {false ? (
+                       {dealCategoryData?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                    <Loader />
+                   <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="container-fluid">
@@ -75,19 +123,21 @@ const SectionContentMasterForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Category Name</label>
+                              <label> Name</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="text"
-                                name="categoryName"
+                                name="name"
                                 className={`form-control ${
-                                  errors.categoryName && touched.categoryName
+                                  errors.name && touched.name
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 placeholder="Enter Category Name"
                               />
                               <ErrorMessage
-                                name="categoryName"
+                                name="name"
                                 component="div"
                                 className="error-message"
                               />
@@ -126,9 +176,11 @@ const SectionContentMasterForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) => {
-                                  setFieldValue('webImage', event.currentTarget.files[0]);
-                                }}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, false)
+                                }
+
+                                // disabled={displayLimit}
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -136,33 +188,33 @@ const SectionContentMasterForm = () => {
                                 className="error-message"
                               />
                             </div>{" "}
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2 mt-2">
                               <label>
                                 Upload Image For Phone
                                 <span className="text-danger">*</span>
                               </label>
                               <input
                                 type="file"
-                                name="phoneImage"
+                                name="mobImage"
                                 className={`form-control ${
-                                  errors.phoneImage && touched.phoneImage
+                                  errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) => {
-                                  setFieldValue('phoneImage', event.currentTarget.files[0]);
-                                }}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, true)
+                                }
+                                // disabled={displayLimit}
                               />
                               <ErrorMessage
-                                name="phoneImage"
+                                name="mobImage"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Sumbit"}
+                                text={"Submit"}
                                 icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />

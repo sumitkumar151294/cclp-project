@@ -7,19 +7,27 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDeal, onPostDeal, onPostDealReset } from "../../Store/Slices/dealSlice";
-const sectionTypeOptions = [
-  { value: 1, label: "Banner" },
-  { value: 2, label: "Offer" },
-  { value: 3, label: "Middle" },
-  { value: 4, label: "Tope" },
-  { value: 5, label: "Bottom" },
-];
+import { onPostuploadImage, onPostuploadImageReset, onPostuploadMobileImage, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
+
 
 const DealForm = () => {
-  const FILE_SIZE = 160 * 1024;
+  const [values, setValues] = useState(null);
+  const getmobImage = useSelector(
+    (state) => state.uploadReducer?.postuploadMobileImageData
+  );
+  const getwebImage = useSelector(
+    (state) => state.uploadReducer?.postuploadImageData
+  );
+  const uploadImage = useSelector((state) => state.uploadReducer);
+
+  const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
+  const dealCategoryOptions = dealCategoryData?.map(dealCategory => ({
+    value: dealCategory.id,
+    label: dealCategory.name,
+  }));
   const dispatch = useDispatch();
   // to get deal data from redux store
-  const dealData=useSelector(state=>state.dealReducer)
+  const dealData = useSelector(state => state.dealReducer)
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
@@ -33,8 +41,8 @@ const DealForm = () => {
   });
   // options form deal type
   const dealTypeOptions = [
-    { value: 1, label: "Common" },
-    { value: 2, label: "Unlock Deals" },
+    { value: "Common", label: "Common" },
+    { value: "UnlockDeals", label: "Unlock Deals" },
   ];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
@@ -64,31 +72,58 @@ const DealForm = () => {
   //   "endDate": "2024-08-02T10:51:18.769Z"
   // }
   // to handle form submit
-  const handleSubmit = (values) => {
-    if (values) {
-      const DealFormData = {
-        ...values,
-        deleted: false,
-        enabled: values.enabled ===true,
-        clientId:1,
-        category: values.category,
-        name: values.name,
-        displayOrder: values.displayOrder,
-        webImage: values.webImage,
-        mobImage:values.mobImage,
-        dealType: values.dealType,
-      };
-      dispatch(onPostDeal(DealFormData));
+
+
+
+  const handleImageChange = (setFieldValue, event, isMobile) => {
+    const file = event.currentTarget.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    if (isMobile) {
+      setFieldValue("mobImage", formData);
+    } else {
+      setFieldValue("webImage", formData);
     }
   };
-  // to handle navigation and toast notifications based on deal category status
+  const handleSubmit = (values) => {
+    if (values) {
+      dispatch(onPostuploadImage(values.webImage));
+      dispatch(onPostuploadMobileImage(values.mobImage));
+      setValues(values);
+    }
+  };
+  useEffect(() => {
+    if (
+      uploadImage?.postMobileStatusCode == "201" &&
+      uploadImage?.post_status_code == "201"
+    ) {
+      const dealData = {
+        webImage: getwebImage,
+        mobImage: getmobImage,
+        clientId: 4,
+        deleted: false,
+        displayOrder: JSON.stringify(values?.displayOrder),
+        startDate:values.startDate,
+        endDate:values.endDate,
+        name:values.name,
+        dealType:values.dealType,
+        category:values?.category
+      };
+      dispatch(onPostDeal(dealData));
+    }
+  }, [uploadImage, values]);
+
   useEffect(() => {
     if (dealData?.post_status_code === "201") {
       toast.success(dealData?.postMessage)
-      dispatch(onPostDealReset())
       dispatch(onGetDeal())
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostDealReset())
     } else if (dealData?.post_status_code) {
       toast.error(dealData.postMessage)
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealReset())
     }
   }, [dealData]);
@@ -103,9 +138,9 @@ const DealForm = () => {
                 <h4 className="card-title">Deal Form</h4>
               </div>
               <div className="card-body">
-                {false ? (
+                {dealData?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                    <Loader />
+                 <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="container-fluid">
@@ -120,14 +155,15 @@ const DealForm = () => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
                               <label>Deal Name</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="text"
                                 name="name"
-                                className={`form-control ${
-                                  errors.name && touched.name
+                                className={`form-control ${errors.name && touched.name
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 placeholder="Enter Deal Name"
                               />
                               <ErrorMessage
@@ -138,22 +174,42 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Category
+                                Deal Category
                                 <span className="text-danger">*</span>
                               </label>
 
                               <Field
                                 name="category"
                                 component={Dropdown}
-                                options={sectionTypeOptions}
-                                className={`form-select ${
-                                  errors.category && touched.category
+                                options={dealCategoryOptions}
+                                className={`form-select ${errors.category && touched.category
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                               />
                               <ErrorMessage
                                 name="category"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4 ">
+                              <label>
+                                Deal Type
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="dealType"
+                                component={Dropdown}
+                                options={dealTypeOptions}
+                                className={`form-select ${errors.dealType && touched.dealType
+                                    ? "is-invalid"
+                                    : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="dealType"
                                 component="div"
                                 className="error-message"
                               />
@@ -166,11 +222,10 @@ const DealForm = () => {
                               <Field
                                 type="number"
                                 name="displayOrder"
-                                className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder
+                                className={`form-control ${errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 placeholder="Enter Display Order"
                               />
                               <ErrorMessage
@@ -187,17 +242,15 @@ const DealForm = () => {
                               <input
                                 type="file"
                                 name="webImage"
-                                className={`form-control ${
-                                  errors.webImage && touched.webImage
+                                className={`form-control ${errors.webImage && touched.webImage
                                     ? "is-invalid"
                                     : ""
-                                }`}
-                                onChange={(event) => {
-                                  setFieldValue(
-                                    "webImage",
-                                    event.currentTarget.files[0]
-                                  );
-                                }}
+                                  }`}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, false)
+                                }
+
+
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -213,17 +266,14 @@ const DealForm = () => {
                               <input
                                 type="file"
                                 name="mobImage"
-                                className={`form-control ${
-                                  errors.mobImage && touched.mobImage
+                                className={`form-control ${errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
-                                }`}
-                                onChange={(event) => {
-                                  setFieldValue(
-                                    "mobImage",
-                                    event.currentTarget.files[0]
-                                  );
-                                }}
+                                  }`}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, true)
+                                }
+
                               />
                               <ErrorMessage
                                 name="mobImage"
@@ -231,16 +281,15 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2 mt-2">
                               <label>Start Date</label>
                               <Field
                                 type="date"
                                 name="startDate"
-                                className={`form-control ${
-                                  errors.startDate && touched.startDate
+                                className={`form-control ${errors.startDate && touched.startDate
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                               />
                               <ErrorMessage
                                 name="startDate"
@@ -248,16 +297,15 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2 mt-2">
                               <label>End Date</label>
                               <Field
                                 type="date"
                                 name="endDate"
-                                className={`form-control ${
-                                  errors.endDate && touched.endDate
+                                className={`form-control ${errors.endDate && touched.endDate
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                               />
                               <ErrorMessage
                                 name="endDate"
@@ -265,31 +313,10 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Deal Type
-                                <span className="text-danger">*</span>
-                              </label>
 
-                              <Field
-                                name="dealType"
-                                component={Dropdown}
-                                options={dealTypeOptions}
-                                className={`form-select ${
-                                  errors.dealType && touched.dealType
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="dealType"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Sumbit"}
+                                text={"Submit"}
                                 icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
@@ -7,107 +7,82 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealCategoryForm from "./DealCategoryForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetDealCategory, onUpdateDealCategory, onUpdateDealCategoryReset } from "../../Store/Slices/dealCategorySlice";
+import { toast } from "react-toastify";
 
 const DealCategoryList = () => {
-  const dealCategoryData = [
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-  ];
-  // to get module filtered data from redux
+  const [searchQuery, setSearchQuery] = useState("");
+  const [rowsPerPage] = useState(5);
+  const [page, setPage] = useState(1);
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const [dealCategory, setdealCategory] = useState("");
+  const dispatch = useDispatch();
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
-  // to handle pagination
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredData = dealCategoryData?.getDealCategoryData?.filter(
+    (data) =>
+      data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+
+  );
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  const startIndex = (page - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
+  const handleSumbit = (dealCategory, isEdit) => {
+    const dealCategoryData = {
+      id: dealCategory?.id,
+      enabled: dealCategory?.enabled,
+      deleted: true,
+      createdBy: 0,
+      updatedBy: 0,
+      clientId: 4,
+      name: dealCategory?.name,
+      displayOrder: dealCategory?.displayOrder,
+      mobImage:dealCategory?.mobImage,
+      webImage:dealCategory?.webImage,
+    };
+    if (isEdit) {
+      setdealCategory(dealCategoryData);
+    } else {
+      dispatch(onUpdateDealCategory(dealCategoryData));
+    }
+  };
+  useEffect(() => {
+    if (dealCategoryData?.update_status_code == "204") {
+      toast.success(dealCategoryData?.updateMessage);
+      dispatch(onGetDealCategory());
+      dispatch(onUpdateDealCategoryReset());
+    } else if (dealCategoryData?.update_status_code == "205") {
+      toast.success(dealCategoryData?.updateMessage);
+      dispatch(onGetDealCategory());
+      dispatch(onUpdateDealCategoryReset());
+
+    } else if (dealCategoryData?.update_status_code) {
+      toast.error(dealCategoryData?.updateMessage);
+      dispatch(onUpdateDealCategoryReset());
+    }
+  }, [dealCategoryData]);
+  useEffect(() => {
+    if (filteredData ) {
+      const totalItems = filteredData?.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
+    }
+  }, [filteredData]);
+
+  useEffect(() => {
+    dispatch(onGetDealCategory());
+  }, []);
   return (
     <>
       {getRoleAccess[0]?.addAccess && <DealCategoryForm />}
@@ -127,8 +102,8 @@ const DealCategoryList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
-                        // value={searchQuery}
-                        // onChange={handleSearch}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
@@ -138,13 +113,13 @@ const DealCategoryList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCategoryData?.isLoading ? (
+                {dealCategoryData?.isgetLoading || dealCategoryData?.isUpdateLoading? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <>
-                    {dealCategoryData.length ? (
+                    {filteredData?.length ? (
                       <div className="table-responsive scroll-Table-x ">
                         <>
                           <table className="table header-border table-responsive-sm">
@@ -152,41 +127,52 @@ const DealCategoryList = () => {
                               <tr>
                                 <th>{"Category Name"}</th>
                                 <th>{"Display Name"}</th>
-                                <th>{"Mobile Image"}</th>
                                 <th>{"Web Image "}</th>
+                                <th>{"Mobile Image"}</th>
                                 {getRoleAccess[0]?.editAccess && (
                                   <th>{"Action"}</th>
                                 )}
                               </tr>
                             </thead>
                             <tbody>
-                              {dealCategoryData
+                              {filteredData
                                 .slice(startIndex, endIndex)
                                 .map((dealCategoryData, index) => (
                                   <tr key={index}>
-                                    <td>{dealCategoryData.categoryName}</td>
+                                    <td>{dealCategoryData.name}</td>
                                     <td>{dealCategoryData.displayOrder}</td>
-                                    <td>{dealCategoryData.mobileImage}</td>
-                                    <td>{dealCategoryData.webImage}</td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealCategoryData.webImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealCategoryData.mobImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="mobImage"
+                                      />
+                                    </td>
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
                                           <Button
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             icon={"fas fa-pencil-alt"}
-                                            // onClick={() =>
-                                            //   handleEdit(
-                                            //     data,
-                                            //     clientPayData
-                                            //   )
-                                            // }
+                                            onClick={() =>
+                                              handleSumbit(dealCategoryData, {
+                                                isEdit: true,
+                                              })
+                                            }
                                           />
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"
                                             icon={"fa fa-trash"}
-                                            // onClick={() =>
-                                            //   handleDelete(data)
-                                            // }
+                                            onClick={() =>
+                                              handleSumbit(dealCategoryData)
+                                            }
                                           />
                                         </div>
                                       </td>
@@ -195,14 +181,14 @@ const DealCategoryList = () => {
                                 ))}
                             </tbody>
                           </table>
-                          {dealCategoryData.length > 5 && (
+                          {filteredData?.length > 5 && (
                             <div className="pagination-container">
                               <ReactPaginate
                                 previousLabel={"<"}
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  dealCategoryData.length / rowsPerPage
+                                  filteredData?.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}

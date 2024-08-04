@@ -23,7 +23,7 @@ function* userMaster({ payload }) {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onUserSubmitError({ data: {}, message, status_code: 400 }));
+    yield put(onUserSubmitError({ data: [], message, status_code: 400 }));
   }
 }
 function* getUser() {
@@ -48,7 +48,7 @@ function* getUser() {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onGetUserError({ data: {}, message, status_code: 400 }));
+    yield put(onGetUserError({ data: [], message, status_code: 400 }));
   }
 }
 function* UpdateUser({ payload }) {
@@ -73,7 +73,7 @@ function* UpdateUser({ payload }) {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onUserUpdateError({ data: {}, message, status_code: 400 }));
+    yield put(onUserUpdateError({ data: [], message, status_code: 400 }));
   }
 }
 export default function* userMasterSaga() {

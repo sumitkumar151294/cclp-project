@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { onPostuploadImageReset, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
 
 const SectionContentMasterList = () => {
-  const [sectionMasterData, setSectionMasterData] = useState("");
+  const [sectionContentData, setSectionContentData] = useState("");
 
   // to get column heading name from translation
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
@@ -36,134 +36,7 @@ const SectionContentMasterList = () => {
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const SectionMasterData = [
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-    {
-      sectionName: "TopOffers",
-      sectionType: "Top Offers",
-      contentSourceType: "deal",
-      segment: "zomato",
-      displayOrder: "3",
-      text: "i am offer master",
-      enabled: true,
-    },
-  ];
+
   const location = useLocation();
   const type = location?.state?.sectionId;
 
@@ -215,7 +88,7 @@ const SectionContentMasterList = () => {
       segmentId: sectionContent?.sectionContent,
     };
     if (isEdit) {
-      setSectionMasterData(sectionMasterData);
+      setSectionContentData(sectionMasterData);
     } else {
       dispatch(onUpdateSectionContentMaster(sectionMasterData));
     }
@@ -227,6 +100,7 @@ const SectionContentMasterList = () => {
       dispatch(onUpdateSectionContentMasterReset());
     } else if (getSectionContenMasterData?.update_status_code == "205") {
       toast.success(getSectionContenMasterData?.updateMessage);
+      
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset())
       dispatch(onPostuploadMobileImageReset())
@@ -239,9 +113,18 @@ const SectionContentMasterList = () => {
       dispatch(onUpdateSectionContentMasterReset());
     }
   }, [getSectionContenMasterData]);
+  useEffect(() => {
+    if (filteredData) {
+      const totalItems = filteredData.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
+    }
+  }, [filteredData]);
   return (
     <>
-      <SectionContentMasterForm  sectionMasterData={sectionMasterData}/>
+      <SectionContentMasterForm  sectionContentData={sectionContentData}/>
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -272,7 +155,7 @@ const SectionContentMasterList = () => {
               </div>
               <div className="card-body">
                 {getSectionContenMasterData?.isgetLoading ||
-                getSectionContenMasterData?.isUpdateLoading ? (
+                getSectionContenMasterData?.isUpdateLoading && getSectionContenMasterData?.update_status_code == "205"  ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -296,7 +179,13 @@ const SectionContentMasterList = () => {
                                 ?.slice(startIndex, endIndex)
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
-                                    <td>{sectionContent.mobImage}</td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.webImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
                                     <td>
                                       <img
                                         src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.mobImage}`}

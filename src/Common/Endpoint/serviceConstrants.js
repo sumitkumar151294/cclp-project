@@ -44,9 +44,9 @@ const API = {
   getdealcategory:"/deal-category",
   updatedealcategory:"/deal-category",
   //deal-coupon
-  postdealcoupon:"/deal-coupon",
-  getdealcoupon:"/deal-coupon",
-  updatedealcoupon:"/deal-coupon",
+  postdealcoupon:"/deal-coupoun",
+  getdealcoupon:"/deal-coupoun",
+  updatedealcoupon:"/deal-coupoun",
   //deal-coupon-code
   postdealcouponcode:"/deal-coupon-code",
   getdealcouponcode:"/deal-coupon-code",

@@ -32,13 +32,14 @@ const contentSourceTypeOptions = [
   { value: "Product", label: "Product" },
   { value: "Image", label: "Image" },
 ];
-const SectionContentMasterForm = ({ sectionMasterData }) => {
+const SectionContentMasterForm = ({ sectionContentData }) => {
   const location = useLocation();
-  const getmobImage = useSelector(
-    (state) => state.uploadReducer?.postuploadMobileImageData
-  );
+
   const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
+  );
+  const getmobImage = useSelector(
+    (state) => state.uploadReducer?.postuploadMobileImageData
   );
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
@@ -97,10 +98,11 @@ const SectionContentMasterForm = ({ sectionMasterData }) => {
     contentSourceType: "",
     segmentId: "",
   });
+  const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.string().required("Image is required"),
-    mobImage: Yup.string().required("Image is required"),
+    // webImage: Yup.string().required("Image is required"),
+    // mobImage: Yup.string().required("Image is required"),
     displayOrder: Yup.string().required("Display Order is required"),
   });
   const displayLimit =
@@ -108,110 +110,58 @@ const SectionContentMasterForm = ({ sectionMasterData }) => {
       (sectionContent) => sectionContent?.sectionMasterId === typeID
     )?.length === sectionLimit;
 
-  // const handleSubmit = async (values) => {
-  //   if (displayLimit) {
-  //     toast.error("Display Limit Exceeded");
-  //     return;
-  //   }
-
-  //   if (!values) return;
-
-  //   const uploadPromises = [];
-
-  //   // Add image upload promises to the array
-  //   if (values.webImage && values.webImage !== sectionMasterData.webImage) {
-  //     uploadPromises.push(dispatch(onPostuploadImage(values.webImage)));
-  //   }
-
-  //   if (values.mobImage && values.mobImage !== sectionMasterData.mobImage) {
-  //     uploadPromises.push(dispatch(onPostuploadMobileImage(values.mobImage)));
-  //   }
-
-  //   // Await all image upload promises
-  //   try {
-  //     await Promise.all(uploadPromises);
-
-  //     // Extract uploaded image URLs from the state if needed
-  //     const webImage = uploadPromises.length > 0 ? getwebImage || sectionMasterData.webImage : sectionMasterData.webImage;
-  //     const mobImage = uploadPromises.length > 0 ? getmobImage || sectionMasterData.mobImage : sectionMasterData.mobImage;
-
-  //     // Proceed only if the images are uploaded successfully
-  //     if (
-  //       uploadImage?.post_status_code === "201" &&
-  //       uploadImage?.postMobileStatusCode === "201"
-  //     ) {
-  //       const sectionContentMasteData = {
-  //         webImage,
-  //         mobImage,
-  //         clientId: 4,
-  //         deleted: false,
-  //         sectionMasterId: typeID,
-  //         displayOrder: JSON.stringify(values.displayOrder),
-  //         linkedMasterId: 10,
-  //         segmentId: 10,
-  //         contentSourceType: values.contentSourceType || "null",
-  //         cta: values.cta || "",
-  //         text: values.text || "",
-  //         ...(sectionMasterData && { id: sectionMasterData.id })
-  //       };
-
-  //       if (sectionMasterData) {
-  //         dispatch(onUpdateSectionContentMaster(sectionContentMasteData));
-  //         setInitialValue("");
-  //       } else {
-  //         dispatch(onPostSectionContentMaster(sectionContentMasteData));
-  //       }
-  //     } else {
-  //       toast.error("Failed to upload images");
-  //     }
-  //   } catch (error) {
-  //     // Handle errors for image uploads
-  //     toast.error("An error occurred during image upload");
-  //     console.error("Image upload error:", error);
-  //   }
-  // };
-
   const handleSubmit = (values) => {
-
-
-      if(values){
-dispatch(onPostuploadImage(values.webImage))
-dispatch(onPostuploadMobileImage(values.mobImage))
-      }
-      debugger
-      if (uploadImage?.postMobileStatusCode == "201" && uploadImage?.post_status_code == "201") {
+    if (values) {
+      debugger;
+      if (
+        typeof values.webImage === "object" &&
+        typeof values.mobImage === "object"
+      ) {
+        dispatch(onPostuploadImage(values.webImage));
+        dispatch(onPostuploadMobileImage(values.mobImage));
+        setValues(values);
+      } else {
         const sectionContentMasteData = {
-          webImage: getwebImage,
-          mobImage: getmobImage,
+          webImage: values.webImage,
+          mobImage: values.mobImage,
           clientId: 4,
           deleted: false,
           sectionMasterId: typeID,
           displayOrder: JSON.stringify(values?.displayOrder),
-          linkedMasterId: null,
-          segmentId: null,
+          linkedMasterId: values?.linkedMasterId || null,
+          segmentId: values?.segmentId || null,
           contentSourceType: "Deal",
-          cta: "",
-          text: "",
-
+          cta: values?.cta,
+          text: values?.text || "",
+          id: values.id,
         };
-        dispatch(onPostSectionContentMaster(sectionContentMasteData));
+        dispatch(onUpdateSectionContentMaster(sectionContentMasteData));
       }
-
+    }
   };
-  // const sectionContentMasteData = {
-  //   webImage: getwebImage,
-  //   mobImage: getmobImage,
-  //   clientId: 4,
-  //   deleted: false,
-  //   sectionMasterId: typeID,
-  //   displayOrder: JSON.stringify(values?.displayOrder),
-  //   linkedMasterId: null,
-  //   segmentId: null,
-  //   contentSourceType: "Deal",
-  //   cta: "",
-  //   text: "",
-  //   id:sectionMasterData?.id
-  // };
+  useEffect(() => {
+    if (
+      uploadImage?.postMobileStatusCode == "201" &&
+      uploadImage?.post_status_code == "201"
+    ) {
+      const sectionContentMasteData = {
+        webImage: getwebImage,
+        mobImage: getmobImage,
+        clientId: 4,
+        deleted: false,
+        sectionMasterId: typeID,
+        displayOrder: JSON.stringify(values?.displayOrder),
+        linkedMasterId: values?.linkedMasterId || null,
+        segmentId: values?.segmentId || null,
+        contentSourceType: "Deal",
+        cta: values?.cta,
+        text: values?.text || "",
+        ...(sectionContentData && { id: values.id }),
+      };
+      dispatch(onPostSectionContentMaster(sectionContentMasteData));
+      setInitialValue("");
+    }
+  }, [uploadImage, values]);
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -224,17 +174,25 @@ dispatch(onPostuploadMobileImage(values.mobImage))
   };
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
-      debugger
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
-      dispatch(onPostuploadImageReset())
-      dispatch(onPostuploadMobileImageReset())
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-      debugger
+    } else if (getSectiontContentMasterData?.update_status_code == "205") {
+      setInitialValue({
+        webImage: "",
+        mobImage: "",
+        cta: "",
+        displayOrder: "",
+        text: "",
+        contentSourceType: "",
+        segmentId: "",
+      });
     } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
-      dispatch(onPostuploadImageReset())
-      dispatch(onPostuploadMobileImageReset())
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
     }
   }, [getSectiontContentMasterData]);
@@ -243,12 +201,13 @@ dispatch(onPostuploadMobileImage(values.mobImage))
       toast.error("Maximum Display Limit Reached");
     }
   }, []);
+
   useEffect(() => {
-    if (sectionMasterData) {
+    if (sectionContentData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      setInitialValue(sectionMasterData);
+      setInitialValue(sectionContentData);
     }
-  }, [sectionMasterData]);
+  }, [sectionContentData]);
   return (
     <>
       <ScrollToTop />
@@ -260,15 +219,15 @@ dispatch(onPostuploadMobileImage(values.mobImage))
               <div className="card-header">
                 <h4 className="card-title">Section Content Master</h4>
                 <Link to="/sectionMaster">
-                  {" "}
                   <button className="back-button">
-                    {" "}
                     <i class="fa-solid fa-arrow-left"></i> Back
                   </button>
                 </Link>
               </div>
               <div className="card-body">
-                {getSectiontContentMasterData?.isPostLoading ? (
+                {getSectiontContentMasterData?.isPostLoading ||
+                (sectionContentData &&
+                  getSectiontContentMasterData?.isUpdateLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -294,11 +253,12 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                                   name="contentSourceType"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${errors.contentSourceType &&
+                                  className={`form-select ${
+                                    errors.contentSourceType &&
                                     touched.contentSourceType
-                                    ? "is-invalid"
-                                    : ""
-                                    }`}
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
                                 />
                                 <ErrorMessage
                                   name="contentSourceType"
@@ -318,10 +278,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                                   name="segmentId"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${errors.segmentId && touched.segmentId
-                                    ? "is-invalid"
-                                    : ""
-                                    }`}
+                                  className={`form-select ${
+                                    errors.segmentId && touched.segmentId
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
                                 />
                                 <ErrorMessage
                                   name="segmentId"
@@ -338,10 +299,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                               <input
                                 type="file"
                                 name="webImage"
-                                className={`form-control ${errors.webImage && touched.webImage
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.webImage && touched.webImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, false)
                                 }
@@ -361,10 +323,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                               <input
                                 type="file"
                                 name="mobImage"
-                                className={`form-control ${errors.mobImage && touched.mobImage
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.mobImage && touched.mobImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, true)
                                 }
@@ -384,10 +347,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                               <Field
                                 type="number"
                                 name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                                 placeholder="Enter Display Order"
                                 disabled={displayLimit}
                               />
@@ -402,8 +366,9 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                               <Field
                                 type="text"
                                 name="cta"
-                                className={`form-control ${errors.cta && touched.cta ? "is-invalid" : ""
-                                  }`}
+                                className={`form-control ${
+                                  errors.cta && touched.cta ? "is-invalid" : ""
+                                }`}
                                 placeholder="Enter Call To Action"
                                 disabled={displayLimit}
                               />
@@ -414,10 +379,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                                 <Field
                                   type="text"
                                   name="text"
-                                  className={`form-control ${errors.text && touched.text
-                                    ? "is-invalid"
-                                    : ""
-                                    }`}
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
                                   placeholder="Enter Text"
                                   disabled={displayLimit}
                                 />
@@ -429,8 +395,11 @@ dispatch(onPostuploadMobileImage(values.mobImage))
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
-                                  className={`form-control ${errors.text && touched.text ? "is-invalid" : ""
-                                    }`}
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
                                   placeholder="Enter Text"
                                   disabled={displayLimit}
                                 />

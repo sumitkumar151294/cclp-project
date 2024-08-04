@@ -8,27 +8,90 @@ import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealForm from "./DealForm";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetDeal } from "../../Store/Slices/dealSlice";
+import { onGetDeal, onUpdateDeal, onUpdateDealReset } from "../../Store/Slices/dealSlice";
+import { toast } from "react-toastify";
 
 const DealList = () => {
-  const dispatch=useDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const dispatch = useDispatch();
   // to fetch deal data from redux store
-  const getDealData=useSelector((state)=>state.dealReducer);
+  const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
+  const getDealData = useSelector((state) => state.dealReducer);
   // to get module filtered data from redux
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
-  useEffect(()=>{
+  const filteredData =
+  getDealData?.getDealData?.filter(
+    (data) =>
+      (data.name
+        ?.toLowerCase()
+        ?.includes(searchQuery?.toLowerCase()) ||
+        data.dealType
+          ?.toLowerCase()
+          ?.includes(searchQuery?.toLowerCase()))
+  );
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  const handleSumbit = (dealData, isEdit) => {
+    const dealDataInfo = {
+      id: dealData?.id,
+      enabled: dealData?.enabled,
+      deleted: true,
+      createdBy: 0,
+      updatedBy: 0,
+      clientId: dealData?.clientId,
+      displayOrder: dealData?.displayOrder,
+      dealType:dealData?.dealType,
+      endDate:dealData?.endDate,
+      startDate:dealData?.startDate,
+      category:dealData?.category,
+      webImage:dealData?.webImage,
+      mobImage:dealData?.mobImage,
+      name:dealData?.name
+    };
+    if (isEdit) {
+      // setdealData(sectionMasterData);
+    } else {
+      dispatch(onUpdateDeal(dealDataInfo));
+    }
+  };
+  useEffect(() => {
+    if (getDealData?.update_status_code == "204") {
+      toast.success(getDealData?.updateMessage);
+      dispatch(onGetDeal());
+      dispatch(onUpdateDealReset());
+    } else if (getDealData?.update_status_code == "205") {
+      toast.success(getDealData?.updateMessage);
+      dispatch(onGetDeal());
+      dispatch(onUpdateDealReset());
+    } else if (getDealData?.update_status_code) {
+      toast.error(getDealData?.updateMessage);
+      dispatch(onUpdateDealReset());
+    }
+  }, [getDealData]);
+  useEffect(() => {
     dispatch(onGetDeal());
-  },[]);
-  // to handle pagination
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  }, []);
+
+  useEffect(() => {
+    if (filteredData) {
+      const totalItems = filteredData?.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
+    }
+  }, [filteredData]);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  const startIndex = (page - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
+
   return (
     <>
       <ScrollToTop />
@@ -48,8 +111,8 @@ const DealList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
-                        // value={searchQuery}
-                        // onChange={handleSearch}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
@@ -59,68 +122,93 @@ const DealList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {getDealData?.isLoading ? (
+                {getDealData?.isgetLoading || getDealData?.isUpdateLoading  ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <>
-                    {getDealData?.getDealData?.length ? (
+                    {filteredData?.length ? (
                       <div className="table-responsive scroll-Table-x ">
                         <>
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Category Name"}</th>
-                                <th>{"Display Name"}</th>
-                                <th>{"Mobile Image"}</th>
+                                <th>{"Deal Name"}</th>
+                                <th>{"Deal Category"}</th>
+                                <th>{"Deal Type"}</th>
+                                <th>{"Display Order"}</th>
+                                <th>{"Start Date"}</th>
+                                <th>{"End Date"}</th>
                                 <th>{"Web Image "}</th>
+                                <th>{"Mobile Image"}</th>
                                 {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                               </tr>
                             </thead>
                             <tbody>
-                              {getDealData?.getDealData?.slice(startIndex, endIndex)
-                                .map((item, index) => (
+                              {filteredData.slice(startIndex, endIndex)
+                                .map((dealData, index) => (
                                   <tr key={index}>
-                                    <td>{item.category}</td>
-                                    <td>{item.displayOrder}</td>
-                                    <td>{item.mobImage}</td>
-                                    <td>{item.webImage}</td>
-                                    {getRoleAccess[0]?.editAccess && (
+                                    <td>{dealData.name}</td>
                                     <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          icon={"fas fa-pencil-alt"}
-                                          // onClick={() =>
-                                          //   handleEdit(
-                                          //     data,
-                                          //     clientPayData
-                                          //   )
-                                          // }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          icon={"fa fa-trash"}
-                                          // onClick={() =>
-                                          //   handleDelete(data)
-                                          // }
-                                        />
-                                      </div>
+                                      {dealCategoryData
+                                        ?.filter(dealCategory => dealCategory.id === dealData.category)
+                                        .map(dealCategory => dealCategory.name)
+                                      }
                                     </td>
+                                    <td>{dealData.dealType}</td>
+                                    <td>{dealData.displayOrder}</td>
+                                    <td>{new Date(dealData.startDate).toLocaleDateString()}</td>
+                                    <td>{new Date(dealData.endDate).toLocaleDateString()}</td>
+
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealData.webImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealData.mobImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
+                                    {getRoleAccess[0]?.editAccess && (
+                                      <td>
+                                        <div className="d-flex">
+                                          <Button
+                                            className="btn btn-primary shadow btn-xs sharp me-1"
+                                            icon={"fas fa-pencil-alt"}
+                                            onClick={() =>
+                                              handleSumbit(dealData, {
+                                                isEdit: true,
+                                              })
+                                            }
+                                          />
+                                          <Button
+                                            className="btn btn-danger shadow btn-xs sharp"
+                                            icon={"fa fa-trash"}
+                                            onClick={() =>
+                                              handleSumbit(dealData)
+                                            }
+                                          />
+                                        </div>
+                                      </td>
                                     )}
                                   </tr>
                                 ))}
                             </tbody>
                           </table>
-                          {getDealData?.getDealData?.length > 5 && (
+                          {filteredData?.length > 5 && (
                             <div className="pagination-container">
                               <ReactPaginate
                                 previousLabel={"<"}
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  getDealData?.getDealData?.length / rowsPerPage
+                                  filteredData?.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}

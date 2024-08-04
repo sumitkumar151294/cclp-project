@@ -8,6 +8,7 @@ import ReactPaginate from "react-paginate";
 import Button from "../../Components/Button/Button";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 
 const UserMasterList = () => {
   const [page, setPage] = useState(1);
@@ -23,9 +24,12 @@ const UserMasterList = () => {
   const action = GetTranslationData("UIMasterAdmin", "action_label");
   //to get user master data from redux store
   const userList = useSelector((state) => state.userMasterReducer);
-  //fetch user master data on mount
+  const roleList = useSelector((state) => state?.userRoleReducer);
+
   useEffect(() => {
     dispatch(onGetUser());
+  dispatch(onGetUserRole());
+
   }, [dispatch]);
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
@@ -50,38 +54,46 @@ const UserMasterList = () => {
               <div className="card-header">
                 <h4 className="card-title">{UserList}</h4>
               </div>
-              {userList?.isLoading && <Loader />}
+              {userList?.isLoading &&
+              <div style={{ height: "100px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>}
               <div className="card-body">
                 {userList?.getData?.length > 0 ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>{roleName}</th>
+                          <th>{username}</th>
                           <th>{email}</th>
                           <th>{mobile}</th>
-                          <th>{username}</th>
+                          <th>{roleName}</th>
                           <th>{action}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {userList?.getData
+                        {userList?.userRoleData
                           ?.slice(startIndex, endIndex)
-                          .map((item, index) => (
+                          .map((userData, index) => (
                             <tr key={index}>
+                              <td>{userData.firstName+" "+userData.lastName}</td>
+                              <td>{userData.email}</td>
+                              <td>{userData.mobile}</td>
                               <td>
                                 <span className="badge badge-success mr-10">
-                                  {item.roleName}
+
+                                      {roleList
+                                        ?.filter(roleData => roleData.id === userData.roleId)
+                                        .map(roleData => roleData.name)
+                                      }
                                 </span>
                               </td>
-                              <td>{item.email}</td>
-                              <td>{item.number}</td>
-                              <td>{item.firstName+" "+item.lastName}</td>
+
                               <td>
                                 <Button
                                   className="btn btn-primary shadow btn-xs sharp me-1"
                                   icon={"fas fa-pencil-alt"}
-                                  onClick={() => handleEdit(item)}
+                                  onClick={() => handleEdit(userData)}
                                 />
                               </td>
                             </tr>

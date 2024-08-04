@@ -7,6 +7,7 @@ export const dealCategorySlice = createSlice({
     isError: false,
     dealCategoryData: [],
     message: "",
+    isPostLoading: false,
   },
   reducers: {
     onGetDealCategory: (state) => {

@@ -1,262 +1,245 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import { onGetUser, onUserSubmit, onUserSubmitReset, onUserUpdate } from "../../Store/Slices/userMasterSlice";
-import { useDispatch, useSelector } from "react-redux";
-import InputField from "../../Components/InputField/InputField";
 import { ToastContainer, toast } from "react-toastify";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
-import { onClientMasterSubmit } from "../../Store/Slices/clientMasterSlice";
+import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
 
-const UserMasterForm = ({ prefilledValues, setPrefilledValues }) => {
-  const [isSubmit, setIsSubmit] = useState(false);
+const UserMasterForm = () => {
   const dispatch = useDispatch();
-
-  //To get the labels from API
-  const userMaster = GetTranslationData("UIMasterAdmin", "user_Master_label");
-  const email = GetTranslationData("UIMasterAdmin", "email_label");
-  const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
-  const role = GetTranslationData("UIMasterAdmin", "role_name_label");
-  const requiredLevel = GetTranslationData("UIMasterAdmin", "required_label");
-  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
-  const firstName = GetTranslationData("UIMasterAdmin", "first-name");
-  const lastName = GetTranslationData("UIMasterAdmin", "last-name");
-  const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
-  const update = GetTranslationData("UIMasterAdmin", "update_label");
-  //To get the data from redux store
-  const onSubmitData = useSelector((state) => state?.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
-
-  // user-role get api call
-  useEffect(() => {
-    dispatch(onGetUserRole());
-    dispatch(onClientMasterSubmit());
-  }, [dispatch]);
-
-  // initial values for the input fields
-  const initialValues = {
-    email: "",
-    number: "",
+  const getUserMaster = useSelector((state) => state?.userMasterReducer);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [intialValue, setInitialValue] = useState({
     firstName: "",
     lastName: "",
-    roles: [],
-  };
-
-  // to validate user master form using Yup schema
-  const validateForm = yup.object({
-    email: yup.string().email("Invalid Email").required("Email is required"),
-    number: yup.string().required("Phone number is required"),
-    firstName: yup.string().required("First name is required"),
-    lastName: yup.string().required("Last name is required"),
-    roles: yup.array().min(1, "At least one role must be selected").required(),
+    mobile: "",
+    email: "",
+    roleId: [],
+  });
+  // to validate form using Yup schema
+  const validations = Yup.object().shape({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    mobile: Yup.string()
+      .matches(/^\d{10}$/, "Mobile Number must be exactly 10 digits")
+      .required("Mobile Number is required"),
+    roleId: Yup.array().min(1, "Select at least one role"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
   });
 
-  // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit, setValues } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: validateForm,
-      onSubmit: (values, action) => {
-        setIsSubmit(true);
-        if (prefilledValues) {
-          const updateUserData = {
-            enabled: true,
-            deleted: false,
-            createdBy: 0,
-            updatedBy: 0,
-            login_attempt: 0,
-            id: 1,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            mobile: values.number,
-            clientRoleId: values.roleName,
-          };
-          dispatch(onUserUpdate(updateUserData));
-          setPrefilledValues();
-        }
-        else{
-          dispatch(onUserSubmit( values ));
-        }
-        action.resetForm();
-      },
-    });
-   // to update user master data
-   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    setValues({
-      email: prefilledValues?.email,
-      number: prefilledValues?.number ,
-      firstName: prefilledValues?.firstName,
-      lastName: prefilledValues?.lastName,
-      roles: prefilledValues?.roleName ? [prefilledValues?.roleName] :[]
-    });
-  }, [prefilledValues]);
-  // to handle user-role checkbox
-  const handleCheckboxChange = (id) => {
-    const isChecked = values.roles.includes(id);
-    const updatedRoles = isChecked
-      ? values.roles.filter((roleId) => roleId !== id)
-      : [...values.roles, id];
-    setValues({ ...values, roles: updatedRoles });
-  };
-  //to handle navigation and toast notifications based on user status
-  useEffect(() => {
-    if (isSubmit && onSubmitData?.status_code === "201") {
-      toast.success(onSubmitData?.message);
-      dispatch(onUserSubmitReset());
-      dispatch(onGetUser());
-    } else if (isSubmit && onSubmitData?.status_code) {
-      toast.error(onSubmitData?.message);
-    }
-  }, [isSubmit, onSubmitData]);
 
+  //to handle submit
+  const handleSubmit = (values) => {
+    if (values) {
+      const userMasterdata = {
+        ...values,
+        deleted: false,
+        clientId: 4,
+        mobile:JSON.stringify(values.mobile),
+        roleId:4
+      };
+      dispatch(onUserSubmit(userMasterdata));
+    }
+  };
+  useEffect(() => {
+    if (getUserMaster?.status_code === "201") {
+      debugger
+      toast.success(getUserMaster.message);
+      dispatch(onGetUser());
+      dispatch(onUserSubmitReset());
+    } else if (getUserMaster?.status_code) {
+      toast.error(getUserMaster.message);
+      dispatch(onUserSubmitReset());
+    }
+  }, [getUserMaster]);
+  useEffect(() => {
+    dispatch(onGetUserRole());
+  }, []);
   return (
     <>
+      <ToastContainer />
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{userMaster}</h4>
+                <h4 className="card-title">User Master</h4>
               </div>
               <div className="card-body">
-                {onSubmitData?.isLoading && <Loader />}
-                <div className="container-fluid">
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="name-f">
-                          {email}
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="text"
-                          name="email"
-                          className={` ${
-                            errors.email && touched.email ? "border-danger" : "form-control"
-                          }`}
-                          onChange={handleChange}
-                          placeholder={email_placeholder}
-                          value={values.email}
-                        />
-                        {errors.email && touched.email && (
-                          <p className="text-danger">{errors.email}</p>
-                        )}
-                      </div>
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="name-f">
-                          {mobile}
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="number"
-                          name="number"
-                          className={` ${
-                            errors.number && touched.number ? "border-danger" : "form-control"
-                          }`}
-                          value={values.number}
-                          onChange={handleChange}
-                          placeholder="Mobile number"
-                        />
-                        {errors.number && touched.number && (
-                          <p className="text-danger">{errors.number}</p>
-                        )}
-                      </div>
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="name-f">
-                          {firstName}
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="text"
-                          className={` ${
-                            errors.firstName && touched.firstName ? "border-danger" : "form-control"
-                          }`}
-                          name="firstName"
-                          id="name-f"
-                          placeholder="First Name"
-                          onChange={handleChange}
-                          value={values.firstName}
-                        />
-                        {errors.firstName && touched.firstName && (
-                          <p className="text-danger">{errors.firstName}</p>
-                        )}
-                      </div>
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="name-f">
-                          {lastName}
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="text"
-                          className={` ${
-                            errors.lastName && touched.lastName ? "border-danger" : "form-control"
-                          }`}
-                          name="lastName"
-                          id="name-f"
-                          placeholder="Last Name"
-                          onChange={handleChange}
-                          value={values.lastName}
-                        />
-                        {errors.lastName && touched.lastName && (
-                          <p className="text-danger">{errors.lastName}</p>
-                        )}
-                      </div>
-                      <div className="col-lg-12 br pt-2">
-                        <label htmlFor="name-f">{role}</label>
-                        <div className="row ml-4">
-                          {Array.isArray(roleList?.userRoleData) &&
-                            roleList?.userRoleData?.map((item, index) => (
-                              <div
-                                key={index}
-                                className="form-check mt-2 col-lg-3"
-                              >
-                                <InputField
-                                  id={item.id}
-                                  type="checkbox"
-                                  className="form-check-input"
-                                  name="roles"
-                                  value={item.name} // Use item.name for value
-                                  checked={values.roles.includes(item.name)}
-                                  onChange={() => handleCheckboxChange(item.name)}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={item.id}
-                                >
-                                  {item.name}
-                                </label>
+                {roleList?.getUserRoleLoading || getUserMaster?.isLoading ? (
+                  <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>
+                ) : (
+                  <div className="container-fluid">
+                    <Formik
+                      initialValues={intialValue}
+                      validationSchema={validations}
+                      onSubmit={handleSubmit}
+                      enableReinitialize={true}
+                    >
+                      {({ errors, touched, setFieldValue }) => (
+                        <Form>
+                          <div className="row">
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>First Name</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                type="text"
+                                name="firstName"
+                                className={`form-control ${
+                                  errors.firstName && touched.firstName
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Category Name"
+                              />
+                              <ErrorMessage
+                                name="firstName"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                Last Name
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                name="lastName"
+                                className={`form-control ${
+                                  errors.lastName && touched.lastName
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Display Order"
+                              />
+                              <ErrorMessage
+                                name="lastName"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                Email
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="email"
+                                name="email"
+                                className={`form-control ${
+                                  errors.email && touched.email
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Display Order"
+                              />
+                              <ErrorMessage
+                                name="email"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                Mobile Number
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="number"
+                                name="mobile"
+                                className={`form-control ${
+                                  errors.mobile && touched.mobile
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder="Enter Display Order"
+                              />
+                              <ErrorMessage
+                                name="mobile"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-lg-12 br pt-2 mt-2">
+                              <label htmlFor="name-f">{"Role"}</label>
+                              <div className="row ml-4">
+                                {Array.isArray(roleList?.userRoleData) &&
+                                  roleList?.userRoleData?.map(
+                                    (userRole, index) => (
+                                      <div
+                                        key={index}
+                                        className="form-check mt-2 col-lg-3"
+                                      >
+                                        <Field
+                                          type="checkbox"
+                                          className="form-check-input"
+                                          name="roleId"
+                                          value={userRole.id}
+                                          checked={selectedRoles.includes(
+                                            userRole.id
+                                          )}
+                                          onChange={() => {
+                                            const newSelectedRoles =
+                                              selectedRoles.includes(
+                                                userRole.id
+                                              )
+                                                ? selectedRoles.filter(
+                                                    (roleId) =>
+                                                      roleId !== userRole.id
+                                                  )
+                                                : [
+                                                    ...selectedRoles,
+                                                    userRole.id,
+                                                  ];
+                                            setSelectedRoles(newSelectedRoles);
+                                            setFieldValue(
+                                              "roleId",
+                                              newSelectedRoles
+                                            ); // Update Formik state
+                                          }}
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor={userRole.id}
+                                        >
+                                          {userRole.name}
+                                        </label>
+                                      </div>
+                                    )
+                                  )}
                               </div>
-                            ))}
-                        </div>
-                        {errors.roles && touched.roles && (
-                          <p className="text-danger">{errors.roles}</p>
-                        )}
-                        <span
-                          className="form-check-label"
-                          htmlFor="basic_checkbox_1"
-                          style={{ marginLeft: "5px", marginTop: "10px" }}
-                        >
-                          {requiredLevel}
-                        </span>
-                        <div className="col-sm-4 mt-2 mb-4">
-                          <Button
-                            text={prefilledValues ? update : submit}
-                            icon={"fa fa-arrow-right"}
-                            className="btn btn-primary btn-sm float-right p-btn mt-2"
-                          />
-                          <ToastContainer />
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+
+                              <ErrorMessage
+                                name="roleId"
+                                component="div"
+                                className="error-message"
+                              />
+                              <div className="col-sm-4 mb-4">
+                                <Button
+                                  text={"Submit"}
+                                  icon="fa fa-arrow-right"
+                                  className="btn btn-primary float-right pad-aa mt-2"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
+                  </div>
+                )}
               </div>
             </div>
           </div>
