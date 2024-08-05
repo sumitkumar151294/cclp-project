@@ -5,19 +5,35 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
 import { onGetModule } from "../../Store/Slices/moduleSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import InputField from "../../Components/InputField/InputField";
 
 const ModuleMasterList = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
+  // to get labels and placeholder from translation
+   const module_list = GetTranslationData("UIMasterAdmin", "module_list");
+   const module_name = GetTranslationData("UIMasterAdmin", "module_name");
+   const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
+   const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
   //fetch module master data on mount
   useEffect(() => {
     dispatch(onGetModule());
-  }, [dispatch]);
-   // for pagination
+  }, []);
+  // to handle search
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  // to filter selected data
+  const filteredData = getModuleData?.filter(
+    (data) => data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  );
+  // for pagination
    const startIndex = (page - 1) * rowsPerPage;
    const endIndex = startIndex + rowsPerPage;
    //to handle page changes
@@ -32,8 +48,26 @@ const ModuleMasterList = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Module List</h4>
+            <div className="container-fluid mt-2 mb-2 pt-1">
+                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                  <div className="card-header">
+                    <h4 className="card-title">{"Module List"}</h4>
+                  </div>
+                  <div className="customer-search mb-sm-0 mb-3">
+                    <div className="input-group search-area">
+                      <InputField
+                        type="text"
+                        className="form-control only-high"
+                        placeholder={"Search here..."}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                      />
+                      <span className="input-group-text">
+                        <i className="fa fa-search"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
               {getModule?.isLoading && <Loader />}
               <div className="card-body">
@@ -47,7 +81,7 @@ const ModuleMasterList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {getModuleData?.slice(startIndex, endIndex)?.map((data, index) => (
+                      {filteredData?.slice(startIndex, endIndex)?.map((data, index) => (
                         <tr>
                           <td>{data.name}</td>
                           <td>{data.routePath}</td>
@@ -56,14 +90,14 @@ const ModuleMasterList = () => {
                       ))}
                     </tbody>
                   </table>
-                  {getModuleData.length > 5 && (
+                  {filteredData?.length > 5 && (
                       <div className="pagination-container">
                         <ReactPaginate
                           previousLabel={"<"}
                           nextLabel={" >"}
                           breakLabel={"..."}
                           pageCount={Math.ceil(
-                            getModuleData.length / rowsPerPage
+                            filteredData?.length / rowsPerPage
                           )}
                           marginPagesDisplayed={2}
                           onPageChange={handlePageChange}

@@ -28,7 +28,6 @@ const LoginPage = () => {
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
-  console.log(loginDetails)
   // initial values for the input fields
   const initialValues = {
     email: "",
