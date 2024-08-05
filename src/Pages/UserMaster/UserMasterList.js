@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetUser } from "../../Store/Slices/userMasterSlice";
+import { onGetuserMaster } from "../../Store/Slices/userMasterSlice";
 import UserMasterForm from "./UserMasterForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
@@ -13,7 +13,7 @@ import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 const UserMasterList = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
-  const [prefilledValues, setPrefilledValues] = useState();
+  const [userMasterData, setuserMasterData] = useState();
   const dispatch = useDispatch();
   //To get the labels from API
   const UserList = GetTranslationData("UIMasterAdmin", "User_list_label");
@@ -27,10 +27,10 @@ const UserMasterList = () => {
   const roleList = useSelector((state) => state?.userRoleReducer);
 
   useEffect(() => {
-    dispatch(onGetUser());
+    dispatch(onGetuserMaster());
   dispatch(onGetUserRole());
+  }, []);
 
-  }, [dispatch]);
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -39,14 +39,16 @@ const UserMasterList = () => {
     setPage(selected.selected + 1);
   };
   // to handle edit function
-  const handleEdit = (data) => {
-    const prefilled = data;
-    setPrefilledValues(prefilled);
+  const handleEdit = (userMasterInfo) => {
+    setuserMasterData(userMasterInfo)
   };
+  useEffect(()=>{
+
+  },[])
   return (
     <>
       <ScrollToTop />
-      <UserMasterForm  prefilledValues={prefilledValues} setPrefilledValues={setPrefilledValues}/>
+      <UserMasterForm userMasterData={userMasterData} />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -72,7 +74,7 @@ const UserMasterList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {userList?.userRoleData
+                        {userList?.getData
                           ?.slice(startIndex, endIndex)
                           .map((userData, index) => (
                             <tr key={index}>
@@ -83,7 +85,7 @@ const UserMasterList = () => {
                                 <span className="badge badge-success mr-10">
 
                                       {roleList
-                                        ?.filter(roleData => roleData.id === userData.roleId)
+                                        ?.userRoleData.filter(roleData => roleData.id === userData.roleId)
                                         .map(roleData => roleData.name)
                                       }
                                 </span>

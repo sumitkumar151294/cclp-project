@@ -21,10 +21,11 @@ const LoginPage = () => {
   const sign = GetTranslationData("UIMasterAdmin", "sign");
   const email_label = GetTranslationData("UIMasterAdmin", "email_label");
   const email_placeholder = GetTranslationData("UIMasterAdmin", "email_placeholder");
-  const password_label = GetTranslationData("UIMasterAdmin", "password_label");
-  const password_placeholder = GetTranslationData("UIMasterAdmin", "password_label");
+  const password_label = GetTranslationData("UIMasterAdmin", "password");
+  const password_placeholder = GetTranslationData("UIMasterAdmin", "password_placeholder");
   const req_field = GetTranslationData("UIMasterAdmin", "req_field");
-  const sign_me_label = GetTranslationData("UIMasterAdmin", "sign_me_label");
+  const sign_me_label = GetTranslationData("UIMasterAdmin", "sign_me");
+  const remember = GetTranslationData("UIMasterAdmin", "remember");
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
@@ -133,12 +134,7 @@ const LoginPage = () => {
                           {loginDetails?.isLoading && <Loader />}
                           <div className="row d-flex justify-content-between mt-4 mb-2 d-nonemo">
                             <div className="mb-3">
-                              <span
-                                className="form-check-label"
-                                htmlFor="basic_checkbox_1"
-                              >
-                                {req_field}
-                              </span>
+                           
                               <div className="form-check custom-checkbox ms-1">
                                 <InputField
                                   type="checkbox"
@@ -150,7 +146,7 @@ const LoginPage = () => {
                                   className="form-check-label"
                                   htmlFor="basic_checkbox_1"
                                 >
-                                  Remember my preference
+                                  {remember}
                                 </label>
                               </div>
                             </div>

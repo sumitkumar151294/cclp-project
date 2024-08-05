@@ -29,42 +29,97 @@ import DealsList from "../Pages/DealList/DealsList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 
-
-
 function RouteConfiq() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage/>} />
-        <Route path="/dashboard" element={<Layout Component={Dashboard} />}/>
-        <Route path="/productContentList" element={<Layout Component={ProductContentList} />}/>
-        <Route path="/productSection" element={<Layout Component={ProductSection} />}/> 
-        <Route path="/addCoupon" element={<Layout Component={AddCoupon} />}/> 
-        <Route path="/addBulkCoupon" element={<Layout Component={AddBulkCoupon} />}/> 
-        <Route path="/dynamicCoupon" element={<Layout Component={DynamicCoupon} />}/> 
-        <Route path="/couponList" element={<Layout Component={CouponList} />}/> 
-        <Route path="/categoryMaster" element={<Layout Component={CategoryMaster} />}/> 
-        <Route path="/dealManagement" element={<Layout Component={DealManagement} />}/>
-        <Route path="/dealList" element={<Layout Component={DealsList} />}/>
-        <Route path="/dealToSegment" element={<Layout Component={DealToSegment} />}/>
-        <Route path="/compaignMaster" element={<Layout Component={CompaignMaster} />}/> 
-        <Route path="/allocateProduct" element={<Layout Component={AllocateProduct} />}/> 
-        <Route path="/roleMaster" element={<Layout Component={RoleMasterList} />}/>
-        <Route path="/clientMaster" element={<Layout Component={ClientMasterList} />}/>
-        <Route path="/userMaster" element={<Layout Component={UserMasterList} />}/>
+        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/clientMaster"
+          element={<Layout Component={ClientMasterList} />}
+        />
+        <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
+        <Route
+          path="/productContentList"
+          element={<Layout Component={ProductContentList} />}
+        />
+        <Route
+          path="/productSection"
+          element={<Layout Component={ProductSection} />}
+        />
+        <Route path="/addCoupon" element={<Layout Component={AddCoupon} />} />
+        <Route
+          path="/addBulkCoupon"
+          element={<Layout Component={AddBulkCoupon} />}
+        />
+        <Route
+          path="/dynamicCoupon"
+          element={<Layout Component={DynamicCoupon} />}
+        />
+        <Route path="/couponList" element={<Layout Component={CouponList} />} />
+        <Route
+          path="/categoryMaster"
+          element={<Layout Component={CategoryMaster} />}
+        />
+        <Route
+          path="/dealManagement"
+          element={<Layout Component={DealManagement} />}
+        />
+        <Route path="/dealList" element={<Layout Component={DealsList} />} />
+        <Route
+          path="/dealToSegment"
+          element={<Layout Component={DealToSegment} />}
+        />
+        <Route
+          path="/compaignMaster"
+          element={<Layout Component={CompaignMaster} />}
+        />
+        <Route
+          path="/allocateProduct"
+          element={<Layout Component={AllocateProduct} />}
+        />
 
         {/* New-UI */}
-        <Route path="/home" element={<HomePage/>}/>
-        <Route path="/topOffer" element={<TopOfferPage/>}/>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/topOffer" element={<TopOfferPage />} />
+        <Route
+          path="/roleMaster"
+          element={<Layout Component={RoleMasterList} />}
+        />
 
-        <Route path="/sectionMaster" element={<Layout Component={SectionMasterList} />}/>
-        <Route path="/sectionContentMaster" element={<Layout Component={SectionContentMasterList} />}/>
-        <Route path="/moduleMaster" element={<Layout Component={ModuleMasterList} />}/>
-        <Route path="/dealCategory" element={<Layout Component={DealCategoryList} />}/>
-        <Route path="/deal" element={<Layout Component={DealList} />}/>
-        <Route path="/dealCoupon" element={<Layout Component={DealCouponList} />}/>
-        <Route path="/dealCouponCode" element={<Layout Component={DealCouponCodeList} />}/>
-
+        <Route
+          path="/userMaster"
+          element={<Layout Component={UserMasterList} />}
+        />
+        <Route
+          path="/sectionMaster"
+          element={<Layout Component={SectionMasterList} />}
+        />
+        <Route
+          path="/sectionContentMaster"
+          element={<Layout Component={SectionContentMasterList} />}
+        />
+        <Route
+          path="/moduleMaster"
+          element={<Layout Component={ModuleMasterList} />}
+        />
+        <Route
+          path="/dealCategory"
+          element={<Layout Component={DealCategoryList} />}
+        />
+        <Route path="/deal" element={<Layout Component={DealList} />} />
+        <Route
+          path="/dealCoupon"
+          element={<Layout Component={DealCouponList} />}
+        />
+        <Route
+          path="/dealCouponCode"
+          element={<Layout Component={DealCouponCodeList} />}
+        />
+          <Route
+          path="/navConfiguration"
+          element={<Layout Component={DealCouponCodeList} />}
+        />
       </Routes>
     </Router>
   );

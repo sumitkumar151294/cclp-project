@@ -18,7 +18,7 @@ const RoleMasterList = () => {
     "UIMasterAdmin",
     "role-module-access-list"
   );
-  const roleName = GetTranslationData("UIMasterAdmin", "role-name");
+  const roleName = GetTranslationData("UIMasterAdmin", "role_name");
   const modules = GetTranslationData("UIMasterAdmin", "modules");
   const action = GetTranslationData("UIMasterAdmin", "action");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
