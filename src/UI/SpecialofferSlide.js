@@ -155,7 +155,7 @@ const SpecialofferSlide = () => {
         </div>
 
         {/* unlock_border */}
-        <div className="pt-3 pb-3">
+        <div className="pt-3 pb-3 mb-15">
             <div className="unlock_brand_tag">
               <p>Unlock a world of <span>rewards</span> with <span>IDFC FIRST Cards</span> across <span>Travel, Products, Gift Cards </span>and <span>Deals</span></p>
             </div>
