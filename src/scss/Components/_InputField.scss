@@ -14,11 +14,11 @@ $border-color_4: var(--rgba-primary-2);
 	border-radius: 1rem !important;
 }
 .rs-input-group:not(.rs-input-group-disabled):hover, .rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus, .rs-input-group:focus-within {
-    border-color: red; 
+    border-color:var(--primary-red); 
 }
 .rs-input-group.rs-input-group-inside {
 	width: 100%;
-	background-color: #fff;
+	background-color: var(--bs-white);
 	background-color: var(--rs-input-bg);
 	height: 33px;
 }

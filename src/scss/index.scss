@@ -85,6 +85,13 @@
   --rgba-primary-22: rgba(0, 0, 0, 0.03);
   --rgba-primary-23: rgba(255, 255, 255, 0.3);
   --rgba-primary-24: rgba(0, 0, 0, 0.4);
+  --rgba-primary-25: rgba(0, 123, 255, 0.25);
+  --rgba-primary-26: rgba(0, 0, 0, 0.02);
+  --rgba-primary-27:rgba(0, 0, 0, 1);
+  --rgba-primary-28:rgba(219, 219, 219, 1);
+  --rgba-primary-29:rgba(53, 53, 53, 0.25);
+  --rgba-primary-30:rgba(255, 255, 255, 1);
+  --rgba-primary-31:rgba(152, 152, 152, 1);
   --font-family: 'Inter', sans-serif;
   --title: #000;
   --header-bg: #E9E9E9;
@@ -106,8 +113,30 @@
   --bs-table-hover-bg: #797979;
   border-color: #cbe0ca;
   --bs-table-bg: #e1f9e0;
+  --bs-maroon:#dc3545;
   --bs-table-secondary-bg: #e1f9e0;
   --bs-bg: #cac6dd;
+  --bs-bg-white:#f9f9f9;
+  --bs-Gray25:#404040;
+  --bs-dark-col:#1b1b1bb2;
+  --bs-hex-color:#2f2f2f;
+  --bs-light-red:#e4e4e4;
+  --bs-ggm:#e6e6e6;
+  --bs-nero:#252525;
+  --bs-black:#000000;
+  --bs-white-1:#ffffff;
+  --bs-red-1:#ffeff1;
+  --bs-ggs: #585858;
+  --bs-blue-1:#23262f;
+  --bs-gainsboro:#dbdbdb;
+  --bs-yellow-1:#bea313;
+  --bs-red-2:#9a1b24;
+  --bs-dim-gray:#6f6e6e;
+  --bs-Gray78-color:#c7c7c7;
+  --bs-gray8:#141414;
+  --bs-aqua:#d8d8d866;
+  --bs-matterhorn:#505050;
+  --bs-spanish-gray:#989898;
   --bs-table-striped-bg-3: #d5d1ea;
   --bs-table-secondary-hover-bg: #cfcce4;
   --bs-table-striped-bg-4: #d6edd5;
@@ -147,6 +176,7 @@
   --bs-cream: #feb49f;
   --bs-gray: #6c757d;
   --bs-skin: #f5f5f5;
+  --bs-chinese-silver:#ccc;
   --bs-gray-dark: #343a40;
   --bs-orange: #ffb23f;
   --bs-primary-orange: #ffad34;
@@ -162,10 +192,13 @@
   --bs-dark-brown: #fd683e40;
   --bs-light: #c8c8c8;
   --bs-dark: #6e6e6e;
+  --bs-dark-charcoal :#333;
+  --bs-bg-white:#f8f9fa;
   --bs-light-black:#373737;
   --bs-light-white:#efefef;
   --bs-light-grey:#b4b4b41f;
   --bs-light-1-black:#222222;
+  --bs-light-blue:#e2e6ea;
 
   /* width */
   --vh100: 100vh;

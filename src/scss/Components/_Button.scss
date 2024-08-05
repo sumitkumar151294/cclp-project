@@ -1,10 +1,13 @@
 $primary-grey: var(--primary-grey);
 $primary-black: var(--primary-black);
 $primary-hover: var(--primary-hover);
+$primary-dark:var(--rgba-primary-25);
 $primary: var(--primary);
+$light-blue:var(--bs-light-blue);
 $rgba-primary-16: var(--rgba-primary-16);
 $primary-white: var(--primary-white);
 $w100: var(--w100);
+$chinese-silver:var( --bs-chinese-silver);
 
 .btn {
   display: inline-block;
@@ -148,10 +151,10 @@ background-color: var(--primary);
 }
 .back-button {
   padding: 10px 20px;
-  border: 1px solid #ccc; /* Adding a border for better visibility */
+  border: 1px solid $chinese-silver; /* Adding a border for better visibility */
   border-radius: 4px;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: var(--bs-bg-white);
+  color: var(--bs-dark-charcoal);
   cursor: pointer;
   display: inline-block; /* Ensures button has appropriate spacing */
   margin-bottom: 20px; /* Adjust based on placement */
@@ -160,11 +163,11 @@ background-color: var(--primary);
 }
 
 .back-button:hover {
-  background-color: #e2e6ea;
-  color: #000;
+  background-color:$light-blue;
+  color:$primary-black;
 }
 
 .back-button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Focus ring */
+  box-shadow: 0 0 0 2px $primary-dark; /* Focus ring */
 }

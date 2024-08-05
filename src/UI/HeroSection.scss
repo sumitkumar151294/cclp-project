@@ -7,14 +7,14 @@
   .card {
     border-radius: 8.08px;
     padding: 0px 0px 21.54px 0px;
-    background-color: #f9f9f9;
+    background-color: var(--bs-bg-white);
     margin: 16px;
     box-shadow: unset;
 
     .card-body {
       padding: 21.54px 16.16px 0px 16.16px;
       position: relative;
-      background-color:#F9F9F9;
+      background-color:var(--bs-bg-white);
 
       .offer_tag {
         position: absolute;
@@ -28,7 +28,7 @@
         font-weight: 700;
         line-height: 22.81px;
         letter-spacing: -0.02em;
-        color: #404040;
+        color: var(--bs-Gray25);
         width: 75%;
 
       }
@@ -38,7 +38,7 @@
         font-weight: 500;
         line-height: 19.55px;
         letter-spacing: -0.02em;
-        color: #1b1b1bb2;
+        color: var(--bs-dark-col);
         padding: 10px 0px 42.97px 0px;
       }
       .btn_link {
