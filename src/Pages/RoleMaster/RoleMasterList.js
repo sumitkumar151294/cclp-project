@@ -76,7 +76,10 @@ const RoleMasterList = () => {
                 <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
-                {roleAccessList?.getUserRoleLoading && <Loader />}
+                {roleAccessList?.getUserRoleLoading && (
+                  <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>)}
                 {roleAccessListData?.length > 0 ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">

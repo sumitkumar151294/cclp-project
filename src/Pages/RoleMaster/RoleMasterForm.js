@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const RoleMasterForm = ({ data, setData }) => {
   const [checkBoxError, setCheckBoxError] = useState(false);
@@ -185,14 +186,10 @@ const RoleMasterForm = ({ data, setData }) => {
       userRoleData?.status_code === "205" &&
       !userRoleData?.updateLoading
     ) {
-      console.log(getModuleAccessData, data?.id);
       let moduleAccessList = getModuleAccessData?.data?.filter(
         (item) => item.roleId === data?.id
       );
-      console.log(moduleAccessList, "moduleAccessList");
       let accessPostData = values?.modules;
-      console.log(values?.modules, "values?.modules");
-      console.log(accessPostData, "accessPostData");
       for (let i = 0; i < moduleAccessList.length; i++) {
         for (let j = 0; j < accessPostData.length; j++) {
           if (accessPostData[j].id === moduleAccessList[i].moduleId) {
@@ -202,7 +199,6 @@ const RoleMasterForm = ({ data, setData }) => {
           }
         }
       }
-      console.log(moduleAccessList, "moduleAccessList");
       dispatch(onUpdateUserRoleModuleAccess(moduleAccessList));
       dispatch(onUpdateUserRoleReset());
       setModuleAccess([]);
@@ -237,7 +233,7 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess(modulesData);
     }
   }, [data, moduleAccessData, getModuleAccessData]);
-  // Handle form submission and state updates
+  // to handle form submission and state updates
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
       toast.success(userRoleData?.message);
@@ -248,11 +244,15 @@ const RoleMasterForm = ({ data, setData }) => {
       toast.success(userRoleData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
+    } else if (isSubmit && userRoleData?.status_code) {
+      toast.error(userRoleData?.message?.data?.ErrorMessage);
+      setModuleAccess([]);
     }
   }, [userRoleData]);
 
   return (
     <>
+      <ScrollToTop />
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
@@ -261,9 +261,11 @@ const RoleMasterForm = ({ data, setData }) => {
                 <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
-                {userRoleData?.postLoading &&  <div style={{ height: "350px" }}>
+                {userRoleData?.postLoading && (
+                  <div style={{ height: "300px" }}>
                     <Loader classType={"absoluteLoader"} />
-                  </div>}
+                  </div>
+                )}
                 <div className="container-fluid">
                   <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -275,7 +277,7 @@ const RoleMasterForm = ({ data, setData }) => {
                         <InputField
                           type="text"
                           className={`form-control ${
-                            errors.name && touched.name ? "border-danger" : ""
+                            errors.name && touched.name ? "is-invalid" : ""
                           }`}
                           name="name"
                           id="name-f"
@@ -284,7 +286,7 @@ const RoleMasterForm = ({ data, setData }) => {
                           onChange={handleChange}
                         />
                         {errors.name && touched.name && (
-                          <p className="text-danger">{errors.name}</p>
+                          <p className="error-message">{errors.name}</p>
                         )}
                       </div>
                       <div className="col-sm-4 form-group mb-2">
@@ -300,8 +302,7 @@ const RoleMasterForm = ({ data, setData }) => {
                         />
                       </div>
                     </div>
-
-                    <div className="row top-top">
+                    <div className="row top-top mt-2">
                       <div className="col-lg-4">
                         <div className="form-check mb-2 padd">
                           <InputField
@@ -386,7 +387,7 @@ const RoleMasterForm = ({ data, setData }) => {
                           })}
                         {checkBoxError && (
                           <span
-                            className="form-check-label error-check text-danger"
+                            className="form-check-label error-check error-message"
                             htmlFor="basic_checkbox_1"
                           >
                             {checkBox_Error}

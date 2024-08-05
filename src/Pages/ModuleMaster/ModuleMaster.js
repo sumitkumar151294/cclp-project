@@ -8,10 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { onGetModule, onPostModule, onPostModuleReset } from "../../Store/Slices/moduleSlice";
 import Loader from "../../Components/Loader/Loader";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const ModuleMaster = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  // to get labels and placeholder from translation
+  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const module_name = GetTranslationData("UIMasterAdmin", "module_name");
+  const module_master = GetTranslationData("UIMasterAdmin", "module_master");
+  const module_name_placeholder = GetTranslationData("UIMasterAdmin", "module_name_placeholder");
+  const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
+  const route_path_placeholder = GetTranslationData("UIMasterAdmin", "route_path_placeholder");
+  const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
+  const module_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_icon_placeholder");
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   // initial values for the input fields
@@ -23,8 +33,8 @@ const ModuleMaster = () => {
   // to validate user master form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required("Module name is required"),
-    routePath: yup.string().required("Route path is required"),
-    icon: yup.string().required("Image is required"),
+    routePath: yup.string().required("Module route path is required"),
+    icon: yup.string().required("Module icon is required"),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } =
@@ -43,11 +53,11 @@ const ModuleMaster = () => {
       toast.success(moduleData?.message);
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
-    } else if (isSubmit && moduleData?.status_code) {
-      toast.error(moduleData?.message);
+    }else if (isSubmit && moduleData?.status_code) {
+      toast.error(moduleData?.message?.data?.ErrorMessage);
+      dispatch(onPostModuleReset());
     }
   }, [moduleData]);
-
   return (
     <>
     <ScrollToTop/>
@@ -59,7 +69,7 @@ const ModuleMaster = () => {
                 <h4 className="card-title">Module Master</h4>
               </div>
               <div className="card-body">
-              {moduleData?.postLoading && (<div style={{ height: "350px" }}>
+              {moduleData?.postLoading && (<div style={{ height: "100px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>)}
                 <div className="container-fluid">
@@ -79,7 +89,7 @@ const ModuleMaster = () => {
                           }`}
                           name="name"
                           id="name-f"
-                          placeholder="Module name"
+                          placeholder="Enter Module Name"
                           value={values.name}
                           onChange={handleChange}
                         />
@@ -101,7 +111,7 @@ const ModuleMaster = () => {
                           }`}
                           name="routePath"
                           id="description"
-                          placeholder="Module Route Path"
+                          placeholder="Enter Module Route Path"
                           value={values.routePath}
                           onChange={handleChange}
                         />
@@ -123,7 +133,7 @@ const ModuleMaster = () => {
                           type="text"
                           name="icon"
                           id="flexCheckDefault2"
-                          placeholder="Module Icon"
+                          placeholder="Enter Module Icon"
                           value={values.icon}
                           onChange={handleChange}
                         />

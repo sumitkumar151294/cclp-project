@@ -8,7 +8,11 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import { onGetUser, onUserSubmit, onUserSubmitReset } from "../../Store/Slices/userMasterSlice";
+import {
+  onGetUser,
+  onUserSubmit,
+  onUserSubmitReset,
+} from "../../Store/Slices/userMasterSlice";
 
 const UserMasterForm = () => {
   const dispatch = useDispatch();
@@ -34,8 +38,6 @@ const UserMasterForm = () => {
       .email("Invalid email format")
       .required("Email is required"),
   });
-
-
   //to handle submit
   const handleSubmit = (values) => {
     if (values) {
@@ -43,15 +45,14 @@ const UserMasterForm = () => {
         ...values,
         deleted: false,
         clientId: 4,
-        mobile:JSON.stringify(values.mobile),
-        roleId:4
+        mobile: JSON.stringify(values.mobile),
+        roleId: 4,
       };
       dispatch(onUserSubmit(userMasterdata));
     }
   };
   useEffect(() => {
     if (getUserMaster?.status_code === "201") {
-      debugger
       toast.success(getUserMaster.message);
       dispatch(onGetUser());
       dispatch(onUserSubmitReset());
