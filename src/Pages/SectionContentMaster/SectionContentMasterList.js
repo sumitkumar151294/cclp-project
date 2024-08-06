@@ -15,7 +15,10 @@ import {
 } from "../../Store/Slices/sectionContentMasterSlice";
 import Button from "../../Components/Button/Button";
 import { toast } from "react-toastify";
-import { onPostuploadImageReset, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
+import {
+  onPostuploadImageReset,
+  onPostuploadMobileImageReset,
+} from "../../Store/Slices/uploadSlice";
 
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
@@ -36,10 +39,8 @@ const SectionContentMasterList = () => {
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
   const [searchQuery, setSearchQuery] = useState("");
 
-
   const location = useLocation();
   const type = location?.state?.sectionId;
-
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -101,13 +102,13 @@ const SectionContentMasterList = () => {
     } else if (getSectionContenMasterData?.update_status_code == "205") {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
-      dispatch(onPostuploadImageReset())
-      dispatch(onPostuploadMobileImageReset())
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
       dispatch(onUpdateSectionContentMasterReset());
     } else if (getSectionContenMasterData?.update_status_code) {
       toast.error(getSectionContenMasterData?.updateMessage);
-      dispatch(onPostuploadImageReset())
-      dispatch(onPostuploadMobileImageReset())
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
       dispatch(onUpdateSectionContentMasterReset());
       dispatch(onUpdateSectionContentMasterReset());
     }
@@ -123,7 +124,7 @@ const SectionContentMasterList = () => {
   }, [filteredData]);
   return (
     <>
-      <SectionContentMasterForm  sectionContentData={sectionContentData}/>
+      <SectionContentMasterForm sectionContentData={sectionContentData} />
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -154,7 +155,8 @@ const SectionContentMasterList = () => {
               </div>
               <div className="card-body">
                 {getSectionContenMasterData?.isgetLoading ||
-                getSectionContenMasterData?.isUpdateLoading && getSectionContenMasterData?.update_status_code == "205"  ? (
+                (getSectionContenMasterData?.isUpdateLoading &&
+                  getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -170,6 +172,9 @@ const SectionContentMasterList = () => {
                                 <th>{"Web Image"}</th>
                                 <th>{"Display Order"}</th>
                                 <th>{"Call To Action"}</th>
+                                <th>{"Content Source Type"}</th>
+                                <th>{"Segment"}</th>
+                                <th>{"Text"}</th>
                                 <th>{"Action"}</th>
                               </tr>
                             </thead>
@@ -194,6 +199,21 @@ const SectionContentMasterList = () => {
                                     </td>
                                     <td>{sectionContent.displayOrder}</td>
                                     <td>{sectionContent.cta}</td>
+                                    <td>
+                                      {sectionContent?.contentSourceType || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.segmentId || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.text || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
                                     <td>
                                       <div className="d-flex">
                                         <Button

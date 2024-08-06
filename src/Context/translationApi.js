@@ -1,6 +1,6 @@
-import axiosInstance from '../Common/Axios/axiosInstance';
+import axiosInstanceAdmin from '../Common/Axios/axiosInstanceAdmin';
 import API from '../Common/Endpoint/serviceConstrants';
 export const translationApi = async () => {
-    const { data = {} } = await axiosInstance.get(API.translationApi);
-    return data;  
+    const { data = {} } = await axiosInstanceAdmin.get(API.translationApi);
+    return data;
 };

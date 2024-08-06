@@ -153,7 +153,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         displayOrder: JSON.stringify(values?.displayOrder),
         linkedMasterId: values?.linkedMasterId || null,
         segmentId: values?.segmentId || null,
-        contentSourceType: "Deal",
+        contentSourceType: values.contentSourceType || "",
         cta: values?.cta,
         text: values?.text || "",
         ...(sectionContentData && { id: values.id }),

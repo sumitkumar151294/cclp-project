@@ -160,6 +160,7 @@ const SectionMasterList = () => {
                             <th>{"Display Order"}</th>
                             <th>{"Display Limit"}</th>
                             <th>{"Claim Limit"}</th>
+                            <th>{"Points to Claim"}</th>
                             <th>{"Status"}</th>
                             {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                             <th>{"Section Data"}</th>
@@ -177,13 +178,19 @@ const SectionMasterList = () => {
                                 <td>{SectionMasterData?.displayOrder}</td>
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>
-                                  {SectionMasterData?.claimLimit ? (
-                                    SectionMasterData?.claimLimit
-                                  ) : (
-                                    <div> -</div>
-                                  )}
-                                </td>
+                                  {
+                                    SectionMasterData?.claimLimit ||
 
+                                    <span className="hyphen"> -</span>
+                                }
+                                </td>
+                                <td>
+                                  {
+                                    SectionMasterData?.noOfPointsToClaim ||
+
+                                    <span className="hyphen"> -</span>
+                                }
+                                </td>
                                 <td>
                                   <span
                                     className={

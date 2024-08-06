@@ -1,12 +1,13 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { onUserSubmit, onUserSubmitSuccess, onUserSubmitError, onGetUser, onGetUserSuccess, onGetUserError, onUserUpdateSuccess, onUserUpdateError, onUserUpdate } from "../Store/Slices/userMasterSlice";
+
 import { callUserMasterApi, callUserMasterGetApi, callUserMasterUpdateApi } from "../Context/userMasterApi";
+import { onGetuserMaster, onGetuserMasterError, onGetuserMasterSuccess, onPostuserMaster, onPostuserMasterError, onPostuserMasterSuccess, onUpdateuserMaster, onUpdateuserMasterError, onUpdateuserMasterSuccess } from "../Store/Slices/userMasterSlice";
 function* userMaster({ payload }) {
   try {
     const userMasterResponse = yield call(callUserMasterApi, payload);
     if (userMasterResponse.httpStatusCode === "201") {
       yield put(
-        onUserSubmitSuccess({
+        onPostuserMasterSuccess({
           data: userMasterResponse.response,
           message: userMasterResponse.errorMessage,
           status_code: userMasterResponse.httpStatusCode
@@ -14,7 +15,7 @@ function* userMaster({ payload }) {
       );
     } else {
       yield put(
-        onUserSubmitError({
+        onPostuserMasterError({
           data: userMasterResponse.response,
           message: userMasterResponse.errorMessage,
           status_code: userMasterResponse.httpStatusCode
@@ -23,7 +24,7 @@ function* userMaster({ payload }) {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onUserSubmitError({ data: [], message, status_code: 400 }));
+    yield put(onPostuserMasterError({ data: [], message, status_code: 400 }));
   }
 }
 function* getUser() {
@@ -31,7 +32,7 @@ function* getUser() {
     const userMasterResponse = yield call(callUserMasterGetApi);
     if (userMasterResponse.httpStatusCode === "200") {
       yield put(
-        onGetUserSuccess({
+        onGetuserMasterSuccess({
           data: userMasterResponse.response,
           message: userMasterResponse.errorMessage,
           status_Code:userMasterResponse.httpStatusCode
@@ -39,7 +40,7 @@ function* getUser() {
       );
     } else {
       yield put(
-        onGetUserError({
+        onGetuserMasterError({
           data: userMasterResponse.response,
           message: userMasterResponse.errorMessage,
           status_Code:userMasterResponse.httpStatusCode
@@ -48,7 +49,7 @@ function* getUser() {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onGetUserError({ data: [], message, status_code: 400 }));
+    yield put(onGetuserMasterError({ data: [], message, status_code: 400 }));
   }
 }
 function* UpdateUser({ payload }) {
@@ -56,7 +57,7 @@ function* UpdateUser({ payload }) {
     const updateUserResponse = yield call(callUserMasterUpdateApi, payload);
     if (updateUserResponse.httpStatusCode === "201") {
       yield put(
-        onUserUpdateSuccess({
+        onUpdateuserMasterSuccess({
           data: updateUserResponse.response,
           message: updateUserResponse.errorMessage,
           status_code:updateUserResponse.httpStatusCode
@@ -64,7 +65,7 @@ function* UpdateUser({ payload }) {
       );
     } else {
       yield put(
-        onUserUpdateError({
+        onUpdateuserMasterError({
           data: updateUserResponse.response,
           message: updateUserResponse.errorMessage,
           status_code:updateUserResponse.httpStatusCode
@@ -73,11 +74,11 @@ function* UpdateUser({ payload }) {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onUserUpdateError({ data: [], message, status_code: 400 }));
+    yield put(onUpdateuserMasterError({ data: [], message, status_code: 400 }));
   }
 }
 export default function* userMasterSaga() {
-  yield takeLatest(onUserSubmit.type, userMaster);
-  yield takeLatest(onGetUser.type, getUser);
-  yield takeLatest(onUserUpdate.type, UpdateUser);
+  yield takeLatest(onPostuserMaster.type, userMaster);
+  yield takeLatest(onGetuserMaster.type, getUser);
+  yield takeLatest(onUpdateuserMaster.type, UpdateUser);
 }

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+  /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -36,7 +36,7 @@ const DealCouponCodeForm = () => {
   const validations = Yup.object().shape({
     couponCode: Yup.string().required("Coupon Code is required"),
     dealCouponId: Yup.string().required("Deal Coupon is required"),
-    enabled: Yup.string().required("Satus is required"),
+    enabled: Yup.string().required("Status is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {

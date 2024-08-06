@@ -8,13 +8,9 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import {
-  onGetUser,
-  onUserSubmit,
-  onUserSubmitReset,
-} from "../../Store/Slices/userMasterSlice";
+import { onGetuserMaster, onPostuserMaster, onPostuserMasterReset } from "../../Store/Slices/userMasterSlice";
 
-const UserMasterForm = () => {
+const UserMasterForm = ({userMasterData}) => {
   const dispatch = useDispatch();
   const roleList = useSelector((state) => state?.userRoleReducer);
   const getUserMaster = useSelector((state) => state?.userMasterReducer);
@@ -24,7 +20,7 @@ const UserMasterForm = () => {
     lastName: "",
     mobile: "",
     email: "",
-    roleId: [],
+    roleId: "",
   });
   // to validate form using Yup schema
   const validations = Yup.object().shape({
@@ -33,7 +29,14 @@ const UserMasterForm = () => {
     mobile: Yup.string()
       .matches(/^\d{10}$/, "Mobile Number must be exactly 10 digits")
       .required("Mobile Number is required"),
-    roleId: Yup.array().min(1, "Select at least one role"),
+      roleId: Yup.array()
+      .min(1, "Select at least one role")
+      .max(1, "You can only select one role")
+      .test(
+        "only-one-role",
+        "You can only select one role",
+        (value) => value?.length === 1
+      ),
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
@@ -45,20 +48,30 @@ const UserMasterForm = () => {
         ...values,
         deleted: false,
         clientId: 4,
-        mobile: JSON.stringify(values.mobile),
-        roleId: 4,
+        mobile:JSON.stringify(values.mobile),
+        roleId:4,
+        // roleId:values.roleId,
+        ...(userMasterData && { id: userMasterData.id }),
+
       };
-      dispatch(onUserSubmit(userMasterdata));
+      dispatch(onPostuserMaster(userMasterdata));
     }
   };
+  useEffect(()=>{
+
+if(userMasterData){
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  setInitialValue(userMasterData)
+}
+  },[userMasterData])
   useEffect(() => {
     if (getUserMaster?.status_code === "201") {
       toast.success(getUserMaster.message);
-      dispatch(onGetUser());
-      dispatch(onUserSubmitReset());
+      dispatch(onGetuserMaster());
+      dispatch(onPostuserMasterReset());
     } else if (getUserMaster?.status_code) {
       toast.error(getUserMaster.message);
-      dispatch(onUserSubmitReset());
+      dispatch(onPostuserMasterReset());
     }
   }, [getUserMaster]);
   useEffect(() => {
@@ -208,7 +221,7 @@ const UserMasterForm = () => {
                                             setFieldValue(
                                               "roleId",
                                               newSelectedRoles
-                                            ); // Update Formik state
+                                            );
                                           }}
                                         />
                                         <label

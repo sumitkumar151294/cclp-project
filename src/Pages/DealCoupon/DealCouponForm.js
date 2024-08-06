@@ -149,7 +149,7 @@ const DealCouponForm = () => {
                                   : ""
                                   }`}
                                   onChange={(e) => {
-                                    setShowFields(e === "Static" || e==="Dynamic"|| e==="Membership");
+                                    setShowFields(e === "Static"|| e==="Membership");
                                   }}
                               />
                               <ErrorMessage

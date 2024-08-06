@@ -1,119 +1,137 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const userMasterSlice = createSlice({
-  name: "userMaster",
+  name: "user-master",
   initialState: {
     isLoading: false,
     isError: false,
-    data: [],
+    userMasterData: [],
     message: "",
+    isgetLoading: true,
   },
   reducers: {
-    onUserSubmit: (state) => {
+    onGetuserMaster: (state) => {
       return {
         ...state,
-        isLoading: true,
-        isError: false,
-        postdata: [],
-        message: "",
-        status_code:null
+        isgetLoading: true,
+        getuserMasterData: [],
+        getmessage: "",
       };
     },
 
-    onUserSubmitSuccess: (state, { payload }) => {
+    onGetuserMasterSuccess: (state, { payload }) => {
+      const { data = [], message = "", status_code = 200 } = payload;
+      return {
+        ...state,
+        isgetLoading: false,
+        getuserMasterData: data,
+        getmessage: message,
+        get_status_code: status_code,
+      };
+    },
+
+    onGetuserMasterError: (state, { payload }) => {
+      const { data = [], message = "", status_code = 400 } = payload;
+      return {
+        ...state,
+        getuserMasterData: data,
+        getmessage: message,
+        get_status_code: status_code,
+        isgetLoading: false,
+      };
+    },
+
+    onPostuserMaster: (state) => {
+      return {
+        ...state,
+        isPostLoading: true,
+        postuserMasterData: [],
+      };
+    },
+
+    onPostuserMasterSuccess: (state, { payload }) => {
       const { postData = [], message = "", status_code = "201" } = payload;
       return {
         ...state,
-        isLoading: false,
-        isError: false,
-        postdata:postData,
-        message,
-        status_code,
+        isPostLoading: false,
+        postuserMasterData: postData,
+        postMessage: message,
+        post_status_code: status_code,
       };
     },
 
-    onUserSubmitReset: (state) => {
-      return {
-        ...state,
-        status_code:null,
-      };
-    },
-
-    onUserSubmitError: (state, { payload }) => {
+    onPostuserMasterError: (state, { payload }) => {
       const { postData = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        postdata:postData,
-        message,
-        status_code,
-        isLoading: false,
-        isError: true,
+        postuserMasterData: postData,
+        postMessage: message,
+        post_status_code: status_code,
+        isPostLoading: false,
+      };
+    },
+    onPostuserMasterReset: (state) => {
+      return {
+        ...state,
+        postuserMasterData: [],
+        postMessage: "",
+        post_status_code: null,
       };
     },
 
-    onGetUser: (state) => {
-      return { ...state, isLoading: true, getData: [], getmessage: '', isError: false };
-    },
-    onGetUserSuccess: (state, { payload }) => {
-      const { data = [], message = '', status_code } = payload;
+    onUpdateuserMaster: (state) => {
       return {
         ...state,
-        isLoading: false,
-        isError: false,
-        getData:data,
-        getmessage:message,
-        status_code
-      };
-    },
-    onGetUserError: (state, { payload }) => {
-      const { data = [], message = '', status_code } = payload;
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-        getData:data,
-        getmessage:message,
-        status_code
-      };
-    },
-    onUserUpdate: (state) => {
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-        updatedUserData: [],  
-        message: "",
-        status_code:null
+        isUpdateLoading: true,
+        updateuserMasterData: [],
+        updateMessage: "",
       };
     },
 
-    onUserUpdateSuccess: (state, { payload }) => {
-      const { updateData = [], message = "", status_code = "201" } = payload;
+    onUpdateuserMasterSuccess: (state, { payload }) => {
+      const { data = [], message = "", status_code = "201" } = payload;
       return {
         ...state,
-        isLoading: false,
-        isError: false,
-        updatedUserData: updateData,  
-        message,
-        status_code,
+        isUpdateLoading: false,
+        updateuserMasterData: data,
+        updateMessage: message,
+        update_status_code: status_code,
       };
     },
 
-    onUserUpdateError: (state, { payload }) => {
-      const { updateData = [], message = "", status_code = 400 } = payload;
+    onUpdateuserMasterError: (state, { payload }) => {
+      const { data = [], message = "", status_code = 400 } = payload;
       return {
         ...state,
-        updatedUserData: updateData,  
-        message,
-        status_code,
-        isLoading: false,
-        isError: true,
+        updateuserMasterData: data,
+        updateMessage: message,
+        update_status_code: status_code,
+        isUpdateLoading: false,
       };
     },
-
+    onUpdateuserMasterReset: (state) => {
+      return {
+        ...state,
+        updateMessage: "",
+        updateuserMasterData: [],
+        update_status_code: null,
+      };
+    },
   },
 });
-export const { onUserSubmit, onUserSubmitReset, onUserSubmitError, onUserSubmitSuccess, onGetUser,   onGetUserSuccess, onGetUserError, onUserUpdate, onUserUpdateSuccess, onUserUpdateError } =
-  userMasterSlice.actions;
+
+export const {
+  onUpdateuserMaster,
+  onUpdateuserMasterError,
+  onUpdateuserMasterReset,
+  onUpdateuserMasterSuccess,
+  onPostuserMasterReset,
+  onPostuserMasterSuccess,
+  onGetuserMaster,
+  onGetuserMasterError,
+  onGetuserMasterSuccess,
+  onPostuserMaster,
+  onPostuserMasterError,
+} = userMasterSlice.actions;
 
 export default userMasterSlice.reducer;

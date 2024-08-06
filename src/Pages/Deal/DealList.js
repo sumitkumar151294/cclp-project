@@ -10,6 +10,7 @@ import DealForm from "./DealForm";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetDeal, onUpdateDeal, onUpdateDealReset } from "../../Store/Slices/dealSlice";
 import { toast } from "react-toastify";
+import { onGetDealCategory } from "../../Store/Slices/dealCategorySlice";
 
 const DealList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,6 +78,9 @@ const DealList = () => {
   }, [getDealData]);
   useEffect(() => {
     dispatch(onGetDeal());
+    dispatch(onGetDealCategory());
+    
+
   }, []);
 
   useEffect(() => {
@@ -172,7 +176,7 @@ const DealList = () => {
                                       <img
                                         src={`${process.env.REACT_APP_CLIENT_API_URL}${dealData.mobImage}`}
                                         style={{ width: "50px" }}
-                                        alt="webImage"
+                                        alt="mobImage"
                                       />
                                     </td>
                                     {getRoleAccess[0]?.editAccess && (

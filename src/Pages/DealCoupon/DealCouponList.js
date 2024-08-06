@@ -10,6 +10,7 @@ import DealCouponForm from "./DealCouponForm";
 import { useSelector } from "react-redux";
 
 const DealCouponList = () => {
+
   const dealCategoryData = [
     {
       categoryName: "TopOffers",
