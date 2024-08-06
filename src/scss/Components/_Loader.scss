@@ -13,7 +13,7 @@ $background-color_1: var(--primary-white);
 .absoluteLoader {
 	position: absolute !important;
 	border-radius: 0 0px 1.75rem 1.75rem;
-	box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+	box-shadow: 0rem 0.25rem 0.25rem var(--rgba-primary-19);
 }
 #preloader {
 	position: fixed;
