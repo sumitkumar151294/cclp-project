@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../Header/Header";
 import "../top-offer-component/TopOfferPage.scss";
 import cartBag from "../../../Assets/imgNewUI/topoffer/cartBag.png";
@@ -14,31 +14,52 @@ import image2 from '../../../Assets/imgNewUI/topoffer/Rectangle2.png';
 import image3 from '../../../Assets/imgNewUI/topoffer/Rectangle3.png';
 
 const TopOfferPage = () => {
+  const [showFilter, setShowFilter] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const openFilter = () => {
+    if (isMobile) {
+      setShowFilter(prev => !prev);
+    }
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <>
       <Header />
       <div className="container top_offer_main_wrapper_container">
-        <div className="row">
-          <div className="col-lg-4 col-md-4 col-sm-4 col-12 filtr_option_wrapper">
+        <div className="row forMob">
+          <div className={`col-lg-4 col-md-4 col-sm-4 col-12 filtr_option_wrapper`}>
             <div className="filter_switch_btn">
               <div className="switch_btn">
-                <label class="switch">
+                <label className="switch">
                   <input type="checkbox" />
-                  <span class="slider round"></span>
+                  <span className="slider round"></span>
                 </label>
               </div>
               <div className="switch_btn_label">
                 <h4>View Offers Valid for Today</h4>
               </div>
             </div>
-            <div className="filter_box_wrapper">
+            <div className={`filter_box_wrapper ${isMobile && !showFilter ? 'hide' : 'show'}`}>
               <h3>Filters</h3>
               <div className="filer_content_menu">
                 <h4>Shop by category</h4>
                 <ul>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -47,7 +68,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -56,7 +77,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -65,7 +86,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -74,7 +95,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -83,7 +104,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -92,7 +113,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -101,7 +122,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -110,7 +131,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -119,7 +140,7 @@ const TopOfferPage = () => {
                   </li>
                   <li>
                     <input
-                      class="form-check-input checkbox"
+                      className="form-check-input checkbox"
                       type="checkbox"
                       value=""
                       id="flexCheckDefault"
@@ -128,11 +149,17 @@ const TopOfferPage = () => {
                   </li>
                 </ul>
               </div>
+              <div className="filter_actions buttons_none">
+                <button className="btn cancel_btn" onClick={() => setShowFilter(false)}>Cancel</button>
+                <button className="btn apply_btn">Apply</button>
+              </div>
             </div>
           </div>
           <div className="col-lg-8 col-md-8 col-sm-8 col-12 top_offer_content_wrapper">
-            <div className="offer_title">
+            <div className="offer_title mobile_heading">
+              <h3 className="hide_desktop"><i className="fa fa-arrow-left" aria-hidden="true"></i></h3>
               <h3>Top Offers</h3>
+              <h3 className="hide_desktop" onClick={openFilter}><i className="fa fa-filter" aria-hidden="true"></i></h3>
             </div>
             <div className="top_offer_menu_tab">
               <div className="sub_menu">
