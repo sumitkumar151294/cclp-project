@@ -28,6 +28,7 @@ import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealsList from "../Pages/DealList/DealsList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
+import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList";
 
 function RouteConfiq() {
   return (
@@ -118,7 +119,7 @@ function RouteConfiq() {
         />
           <Route
           path="/navConfiguration"
-          element={<Layout Component={DealCouponCodeList} />}
+          element={<Layout Component={NavConfigurationList} />}
         />
       </Routes>
     </Router>

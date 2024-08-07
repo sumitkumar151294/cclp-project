@@ -344,7 +344,7 @@ card-header {
 }
 
 .text-success {
-	color: #68e365 !important;
+	color: var(--bs-success) !important;
 }
 
 @media (min-width: 1200px) {

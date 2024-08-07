@@ -22,7 +22,7 @@ p {
       font-weight: 700;
       line-height: 19.36px;
       letter-spacing: -0.04em;
-      color: #2f2f2f;
+      color: var( --bs-hex-color);
     }
   }
   .grid {
@@ -33,7 +33,7 @@ p {
     padding: 0px 0px 15px 0px;
   }
   .slider_card {
-    background-color: #e6e6e6;
+    background-color: var(--bs-ggm);
     border-radius: 14.9px;
     padding-right: unset;
     padding-top: 24.84px;
@@ -52,11 +52,12 @@ p {
       padding-left: 15px;
       padding-top: 52px;
       position: relative;
+      width: 50%;
 
       &:after {
         content: "";
         position: absolute;
-        background-color: #c7c7c7;
+        background-color:var(--bs-Gray78-color);
         width: 1.24px;
         height: 100%;
         right: 12px;
@@ -69,7 +70,7 @@ p {
         font-weight: 500;
         line-height: 26.9px;
         letter-spacing: -0.03em;
-        color: #252525;
+        color: var(--bs-nero);
       }
       .card-text {
         font-family: Inter;
@@ -77,7 +78,7 @@ p {
         font-weight: 700;
         line-height: 38.43px;
         letter-spacing: -0.03em;
-        color: #252525;
+        color: var(--bs-nero);
         margin: 0 !important;
       }
       .swipe_button {
@@ -86,12 +87,12 @@ p {
         .ReactSwipeButton {
           position: relative;
           .rsbContainer {
-            border: 1.24px solid rgba(0, 0, 0, 1);
-            background-color: rgba(219, 219, 219, 1);
+            border: 1.24px solid var(--rgba-primary-27);
+            background-color: var(--rgba-primary-28);
             width: 90%;
           }
           .rsbcSliderArrow {
-            border: 2px solid #000000;
+            border: 2px solid var(--bs-black);
             border-left-color: transparent;
             border-bottom-color: transparent;
           }
@@ -105,7 +106,7 @@ p {
             left: 25px;
           }
           .rsbcSliderCircle {
-            background: #fff;
+            background: var(--bs-white);
           }
         }
         .rsbContainerUnlocked {
@@ -118,10 +119,10 @@ p {
         }
         .rsbContainer.rsbContainerUnlocked {
           .rsbcSlider {
-            background-color: #dbdbdb;
+            background-color: var(--bs-gainsboro);
           }
           .rsbcText {
-            color: #6f6e6e;
+            color: var(--bs-dim-gray);
             font-size: 15.42px;
             font-weight: 500;
             letter-spacing: 0.01em;
@@ -156,7 +157,7 @@ p {
             transform: translate(-50%, -50%);
             width: 24.84px;
             height: 24.84px;
-            background-color: rgba(53, 53, 53, 0.25);
+            background-color: var(--rgba-primary-29);
             z-index: 1;
             border-radius: 50%;
             display: flex;
@@ -170,9 +171,9 @@ p {
 
   .right_card_body {
     width: 494px;
-    background: #252525;
+    background: var(--bs-nero);
     border-radius: 14.96px;
-    color: #ffffff;
+    color: var(--bs-white-1);
     .cred_card_top_sec {
       padding: 50px 25px 39px 25px;
 
@@ -194,11 +195,11 @@ p {
   }
   .cred_card_bottom_sec {
     border-radius: 9.97px 9.97px 14.96px 14.96px;
-    background: linear-gradient(#252525, #141414);
+    background: linear-gradient(var( --bs-nero), var(--bs-gray8));
     border-top: 1px solid #d8d8d866;
     padding: 40px 25px 25px 25px;
     .left_point_balance {
-      color: rgba(255, 255, 255, 1);
+      color: var(--rgba-primary-30);
       position: relative;
       flex-basis: 40%;
       p {
@@ -221,7 +222,7 @@ p {
         right: -10px;
         height: 80px;
         width: 1px;
-        background-color: #d8d8d866;
+        background-color: var(--bs-aqua);
         top: -10px;
       }
     }
@@ -229,7 +230,7 @@ p {
       flex-basis: 60%;
       .switch_loop_left {
         padding-left: 50px;
-        color: rgba(255, 255, 255, 1);
+        color: var(--rgba-primary-30);
 
         p {
           font-family: Inter;
@@ -248,7 +249,7 @@ p {
         }
       }
       .switch_loop_right {
-        color: rgba(152, 152, 152, 1);
+        color: var(--rgba-primary-31);
         font-family: Inter;
         font-size: 9.92px;
         font-weight: 500;
@@ -265,15 +266,15 @@ p {
           right: 2px;
           top: 10px;
           font-size: 12px;
-          color: #989898;
+          color: var(--bs-spanish-gray);
         }
       }
     }
   }
   .unlock_brand_tag {
-    background: linear-gradient(#505050, #141414);
+    background: linear-gradient(var(--bs-matterhorn), var(--bs-gray8));
     text-align: center;
-    color: #ffffff;
+    color: var(--bs-white-1);
     border-radius: 10.71px;
     padding: 22px 0px 23px 0px;
 

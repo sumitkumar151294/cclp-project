@@ -93,10 +93,10 @@ $rgba-primary-17: var(--rgba-primary-17);
   color: var(--bs-table-dark-bg-2);
 }
 .form-select.is-invalid, .was-validated .form-select:invalid {
-  border-color: #dc3545 !important;
+  border-color: var(--bs-maroon) !important;
 }
 .error-message{
-  color:#dc3545 ;
+  color:var(--bs-maroon) ;
   margin-left: 0.5rem;
   margin-top: 0.3rem;
 }
@@ -104,6 +104,6 @@ $rgba-primary-17: var(--rgba-primary-17);
   cursor: not-allowed !important;
 }
 .is-invalid{
-  border-color: #dc3545 !important;
+  border-color:var(--bs-maroon) !important;
 
 }

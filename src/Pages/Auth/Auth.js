@@ -26,6 +26,7 @@ const Auth = () => {
     url: "",
     buttonText: "",
   });
+  // to get data from redux store
   const translationData = useSelector((state) => state.translationReducer);
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const currentUrl = window.location.href;

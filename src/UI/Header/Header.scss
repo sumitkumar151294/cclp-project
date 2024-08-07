@@ -3,13 +3,13 @@
 ==================================*/
 .header_main_wrapper {
   padding: 13px 0px;
-  box-shadow: 0px 4px 18.6px 0px #00000008;
+  box-shadow: 0px 4px 18.6px 0px var(--bs-graye-1);
 
   .user_header {
     .label {
       height: 36px;
       width: 36px;
-      background-color: #f5f5f5;
+      background-color: var(--bs-grey-1);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -20,7 +20,7 @@
         font-weight: 600;
         line-height: 16.94px;
         text-align: center;
-        color: #3e3e3e;
+        color: var(--bs-black-olive);
       }
     }
     .label_right {
@@ -28,7 +28,7 @@
       align-items: center;
       width: 80px;
 height: 32px;
-background-color: #EDEDED;
+background-color: var(--bs-gray98);
 border-radius: 16px;
 margin-left: 10px;
 font-family: Inter;
@@ -36,7 +36,7 @@ font-size: 12px;
 font-weight: 600;
 line-height: 14.52px;
 letter-spacing: 0.001em;
-color: #0F0F0F;
+color: var(--bs-black-1);
     }
     img {
       margin: 0px 10px;
@@ -56,11 +56,11 @@ color: #0F0F0F;
 
     .sidebar-header {
       padding: 20px;
-      background: #9a1b24;
+      background: var(--bs-red-2);
     }
     .sidebar_menu_header {
-      background-color: #ffffff;
-      box-shadow: 0px -11px 38.4px 0px #5c5c5c40;
+      background-color: var(--bs-white-1);
+      box-shadow: 0px -11px 38.4px 0px var(--bs-grey-2);
       padding: 16px;
       cursor: pointer;
 
@@ -76,7 +76,7 @@ color: #0F0F0F;
       padding: 24px;
 
       ul {
-        background-color: #ffffff;
+        background-color: var(--bs-white-1);
         padding: 24px;
         border-radius: 8px;
         margin-bottom: 29px;
@@ -92,7 +92,7 @@ color: #0F0F0F;
             align-items: center;
 
             .menu_icon {
-              border: 1px solid #dadada;
+              border: 1px solid var(--bs-red-shade);
               border-radius: 4px;
               padding: 8px;
               margin-right: 10.5px;
@@ -102,7 +102,7 @@ color: #0F0F0F;
               font-size: 14px;
               font-weight: 500;
               line-height: 16.94px;
-              color: #828282;
+              color: var(--bs-Gray51);
             }
             p {
               font-family: Inter;
@@ -126,7 +126,7 @@ color: #0F0F0F;
       padding: 3.56px 11.56px 3.56px 11.56px;
       box-shadow: 0px 4.44px 3.56px 0px #eeeeee40 inset;
       &:hover {
-        color: #fff;
+        color: var(--bs-white);
         background-color: var(--primary_btn);
       }
     }

@@ -51,7 +51,10 @@ const API = {
   postdealcouponcode:"/deal-coupon-code",
   getdealcouponcode:"/deal-coupon-code",
   updatedealcouponcode:"/deal-coupon-code",
-// upload image path
-uploadImage:"/upload"
+  // upload image path
+  uploadImage:"/upload",
+  // nav-configuration
+  postnavconfiguration:"/nav-configure",
+  gettnavconfiguration:"/nav-configure"
 };
 export default API;
