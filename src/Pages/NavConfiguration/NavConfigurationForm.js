@@ -238,7 +238,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                       <div className="col-sm-4 mb-4">
                         <Button
                           text={navData ? update : submit}
-                          icon="fa fa-arrow-right"
+                          end_icon="fa fa-arrow-right"
                           className="btn btn-primary btn-sm float-right p-btn mt-2"
                         />
                       </div>
