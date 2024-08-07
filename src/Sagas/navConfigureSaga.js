@@ -54,7 +54,7 @@ function* PostNavConfigure({ payload }) {
 function* UpdateNavConfigure({ payload }) {
   try {
     const updateNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (updateNavConfigureResponse.httpStatusCode === "201") {
+    if (updateNavConfigureResponse.httpStatusCode === "205") {
       yield put(
         onUpdateNavConfigureSuccess({
           status_code: updateNavConfigureResponse.httpStatusCode,

@@ -5,7 +5,11 @@ import Button from "../../Components/Button/Button";
 import { toast, ToastContainer } from "react-toastify";
 import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetModule, onPostModule, onPostModuleReset } from "../../Store/Slices/moduleSlice";
+import {
+  onGetModule,
+  onPostModule,
+  onPostModuleReset,
+} from "../../Store/Slices/moduleSlice";
 import Loader from "../../Components/Loader/Loader";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
@@ -37,30 +41,29 @@ const ModuleMaster = () => {
     end_icon: yup.string().required("Module end_icon is required"),
   });
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: validateForm,
-      onSubmit: (values, action) => {
-        setIsSubmit(true);
-        dispatch(onPostModule(values));
-        action.resetForm();
-      },
-    });
+  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validateForm,
+    onSubmit: (values, action) => {
+      setIsSubmit(true);
+      dispatch(onPostModule(values));
+      action.resetForm();
+    },
+  });
   //to handle navigation and toast notifications based on module status
   useEffect(() => {
     if (isSubmit && moduleData?.status_code === "201") {
       toast.success(moduleData?.message);
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
-    }else if (isSubmit && moduleData?.status_code) {
+    } else if (isSubmit && moduleData?.status_code) {
       toast.error(moduleData?.message?.data?.ErrorMessage);
       dispatch(onPostModuleReset());
     }
   }, [moduleData]);
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
@@ -69,89 +72,87 @@ const ModuleMaster = () => {
                 <h4 className="card-title">Module Master</h4>
               </div>
               <div className="card-body">
-              {moduleData?.postLoading && (<div style={{ height: "100px" }}>
+                {moduleData?.postLoading ? (
+                  <div style={{ height: "100px" }}>
                     <Loader classType={"absoluteLoader"} />
-                  </div>)}
-                <div className="container-fluid">
-                  <form onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="name-f">
-                          Module Name
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="text"
-                          className={`form-control ${
-                            errors.name && touched.name
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          name="name"
-                          id="name-f"
-                          placeholder="Enter Module Name"
-                          value={values.name}
-                          onChange={handleChange}
-                        />
-                        {errors.name && touched.name && (
-                          <p className="error-message">{errors.name}</p>
-                        )}
+                  </div>
+                ) : (
+                  <div className="container-fluid">
+                    <form onSubmit={handleSubmit}>
+                      <div className="row">
+                        <div className="col-sm-4 form-group mb-2">
+                          <label htmlFor="name-f">
+                            Module Name
+                            <span className="text-danger">*</span>
+                          </label>
+                          <InputField
+                            type="text"
+                            className={`form-control ${
+                              errors.name && touched.name ? "is-invalid" : ""
+                            }`}
+                            name="name"
+                            id="name-f"
+                            placeholder="Enter Module Name"
+                            value={values.name}
+                            onChange={handleChange}
+                          />
+                          {errors.name && touched.name && (
+                            <p className="error-message">{errors.name}</p>
+                          )}
+                        </div>
+                        <div className="col-sm-4 form-group mb-2">
+                          <label htmlFor="description">
+                            Module Route Path
+                            <span className="text-danger">*</span>
+                          </label>
+                          <InputField
+                            type="text"
+                            className={`form-control ${
+                              errors.routePath && touched.routePath
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="routePath"
+                            id="description"
+                            placeholder="Enter Module Route Path"
+                            value={values.routePath}
+                            onChange={handleChange}
+                          />
+                          {errors.routePath && touched.routePath && (
+                            <p className="error-message">{errors.routePath}</p>
+                          )}
+                        </div>
+                        <div className="col-sm-4 form-group mb-2">
+                          <label htmlFor="description">
+                            Module Icon<span className="text-danger">*</span>
+                          </label>
+                          <InputField
+                            className={`form-control ${
+                              errors.icon && touched.icon ? "is-invalid" : ""
+                            }`}
+                            type="text"
+                            name="icon"
+                            id="flexCheckDefault2"
+                            placeholder="Enter Module Icon"
+                            value={values.icon}
+                            onChange={handleChange}
+                          />
+                          {errors.icon && touched.icon && (
+                            <p className="error-message">{errors.icon}</p>
+                          )}
+                        </div>
                       </div>
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="description">
-                          Module Route Path
-                          <span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          type="text"
-                          className={`form-control ${
-                            errors.routePath && touched.routePath
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          name="routePath"
-                          id="description"
-                          placeholder="Enter Module Route Path"
-                          value={values.routePath}
-                          onChange={handleChange}
+                      <div className="col-sm-4 mb-4">
+                        <Button
+                          text="Submit"
+                          icon="fa fa-arrow-right"
+                          className="btn btn-primary btn-sm float-right p-btn mt-2"
                         />
-                        {errors.routePath && touched.routePath && (
-                          <p className="error-message">{errors.routePath}</p>
-                        )}
+                        <ToastContainer />
                       </div>
-
-                      <div className="col-sm-4 form-group mb-2">
-                        <label htmlFor="description">
-                          Module end_icon<span className="text-danger">*</span>
-                        </label>
-                        <InputField
-                          className={`form-control ${
-                            errors.end_icon && touched.end_icon
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          type="text"
-                          name="end_icon"
-                          id="flexCheckDefault2"
-                          placeholder="Enter Module end_icon"
-                          value={values.end_icon}
-                          onChange={handleChange}
-                        />
-                        {errors.end_icon && touched.end_icon && (
-                          <p className="error-message">{errors.end_icon}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-sm-4 mb-4">
-                      <Button
-                        text="Submit"
-                        end_icon="fa fa-arrow-right"
-                        className="btn btn-primary btn-sm float-right p-btn mt-2"
-                      />
-                      <ToastContainer />
-                    </div>
-                  </form>
-                </div>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           </div>
