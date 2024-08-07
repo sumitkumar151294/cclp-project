@@ -94,8 +94,8 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
     mobile: Yup.string()
       .matches(/^\d{10}$/, mobil_10_digit_required)
       .required(mobile_number_required),
-
     email: Yup.string().email(email_invalid_format).required(email_required),
+    roleId: Yup.string().required("Please select one role."),
   });
   //to handle submit
   const handleSubmit = (values) => {

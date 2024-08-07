@@ -102,10 +102,10 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.lazy(value =>
-      type==="Banner" ? Yup.string().required("Web Image is required") : Yup.string()
+      type==="Banner" ||   type==="CustomerBenefits" ? Yup.string().required("Web Image is required") : Yup.string()
     ),
     mobImage: Yup.lazy(value =>
-      type==="Banner" ? Yup.string().required("Mobile Image is required") : Yup.string()
+      type==="Banner" || type==="CustomerBenefits" ? Yup.string().required("Mobile Image is required") : Yup.string()
     ),
     displayOrder: Yup.string().required("Display Order is required"),
   });
@@ -307,7 +307,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                               </div>
                             )}
 
-{type === "Banner" && <div className="col-sm-4 form-group mb-4">
+{type === "Banner" || type==="CustomerBenefits" && <div className="col-sm-4 form-group mb-4">
                               <label>
                                 Upload Image For Web
                                 <span className="text-danger">*</span>
@@ -331,7 +331,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 className="error-message"
                               />
                             </div>}
-                            {type === "Banner" &&  <div className="col-sm-4 form-group mb-2">
+                            {type === "Banner" || type==="CustomerBenefits"&&  <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Upload Image For Phone
                                 <span className="text-danger">*</span>
@@ -405,7 +405,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 />
                               </div>
                             )}
-                            {type === "UnlockStaticCard" && (
+                            {type === "UnlockStaticCard" || type === "CustomerBenefits"&& (
                               <div className="col-sm-9 mt-2">
                                 <label>Text</label>
                                 <Field

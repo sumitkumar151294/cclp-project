@@ -52,7 +52,7 @@ const SideBar = () => {
     if (!getModuleData?.data?.length) {
       dispatch(onGetModule());
       dispatch(onGetUserRoleModuleAccess());
-      dispatch(resetAllowModules());
+      // dispatch(resetAllowModules());
     }
   }, []);
   // function to handle logout and navigate to the home page
@@ -135,9 +135,9 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        {getModule?.isLoading &&
+        {false &&
         <div >
-        <Loader classType={"z-index"} />
+        <Loader />
       </div>}
         <ul className="metismenu mm-show" id="menu">
           {sideBarModules &&

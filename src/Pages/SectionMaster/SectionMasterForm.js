@@ -200,7 +200,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     : ""
                                   }`}
                                 onChange={(e) => {
-                                  setShowFields(e === "SupportingBanner");
+                                  setShowFields(e === "SpecialSection");
                                 }}
                               />
                               <ErrorMessage

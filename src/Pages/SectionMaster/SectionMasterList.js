@@ -175,7 +175,7 @@ const SectionMasterList = () => {
 
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
-                                <td>{SectionMasterData?.sectionType==="UnlockStaticCard" && SectionMasterData?.sectionType.replace(/([a-z])([A-Z])/g, '$1 $2') }</td>
+                                <td>{SectionMasterData?.sectionType==="UnlockStaticCard" || SectionMasterData?.sectionType==="CustomerBenefits" || SectionMasterData?.sectionType==="SpecialSection"? SectionMasterData?.sectionType.replace(/([a-z])([A-Z])/g, '$1 $2') : SectionMasterData?.sectionType}</td>
                                 <td>{SectionMasterData?.displayOrder}</td>
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>
