@@ -87,8 +87,8 @@ const DealCouponForm = () => {
         terms:values?.terms,
         startDate:values?.startDate,
         endDate:values?.endDate,
-        coupounCode:values.coupounCode,
-        description:JSON.stringify(values.description)
+        coupounCode:values?.coupounCode,
+        description:JSON.stringify(values?.description)
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
@@ -290,7 +290,7 @@ const DealCouponForm = () => {
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="description"
                                 className={`form-control ${errors.description && touched.description
                                   ? "is-invalid"
