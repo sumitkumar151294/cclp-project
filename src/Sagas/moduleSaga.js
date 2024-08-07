@@ -9,7 +9,7 @@ function* Module() {
       yield put(
         onGetModuleSuccess({
           data: moduleResponse.response,
-          //message: moduleResponse.response.errorMessage,
+          message: moduleResponse.response.errorMessage,
 
         })
       );
@@ -23,7 +23,7 @@ function* Module() {
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onGetModuleError({ data: {}, message, status_code: 400 }));
+    yield put(onGetModuleError({ data: [], message, status_code: 400 }));
   }
 }
 function* PostModule({ payload }) {

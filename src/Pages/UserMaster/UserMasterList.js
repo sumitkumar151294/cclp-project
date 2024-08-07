@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetuserMaster } from "../../Store/Slices/userMasterSlice";
+import {
+  onGetuserMaster,
+  onUpdateuserMaster,
+  onUpdateuserMasterReset,
+} from "../../Store/Slices/userMasterSlice";
 import UserMasterForm from "./UserMasterForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import Loader from "../../Components/Loader/Loader";
@@ -9,28 +13,32 @@ import Button from "../../Components/Button/Button";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
+import InputField from "../../Components/InputField/InputField";
+import { toast } from "react-toastify";
 
 const UserMasterList = () => {
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage] = useState(5);
   const [userMasterData, setuserMasterData] = useState();
   const dispatch = useDispatch();
   //To get the labels from API
-  const UserList = GetTranslationData("UIMasterAdmin", "User_list_label");
-  const roleName = GetTranslationData("UIMasterAdmin", "role_name_label");
-  const email = GetTranslationData("UIMasterAdmin", "email_label");
+  const user_list_label = GetTranslationData("UIMasterAdmin", "user_list_label");
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const user_name_label = GetTranslationData("UIMasterAdmin", "user_name_label");
+  const email_label = GetTranslationData("UIMasterAdmin", "email_label");
   const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
-  const username = GetTranslationData("UIMasterAdmin", "usernamee_label");
-  const action = GetTranslationData("UIMasterAdmin", "action_label");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const non_active_label = GetTranslationData("UIMasterAdmin", "non_active_label");
   //to get user master data from redux store
   const userList = useSelector((state) => state.userMasterReducer);
   const roleList = useSelector((state) => state?.userRoleReducer);
-
   useEffect(() => {
     dispatch(onGetuserMaster());
-  dispatch(onGetUserRole());
+    dispatch(onGetUserRole());
   }, []);
-
+  console.log(userList);
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -38,87 +46,190 @@ const UserMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  // to handle edit function
-  const handleEdit = (userMasterInfo) => {
-    setuserMasterData(userMasterInfo)
-  };
-  useEffect(()=>{
 
-  },[])
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  const filteredData = userList?.getuserMasterData?.filter(
+    (data) =>
+      data?.firstName?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+      data.email?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  );
+  const handleSumbit = (userMasterInfo, isEdit) => {
+    const userData = {
+      id: userMasterInfo?.id,
+      enabled: true,
+      deleted: true,
+      createdBy: 0,
+      updatedBy: 0,
+      firstName: userMasterInfo.firstName,
+      lastName: userMasterInfo.lastName,
+      email: userMasterInfo.email,
+      mobile: userMasterInfo.mobile,
+      roleId: userMasterInfo.roleId,
+      clientId: userMasterInfo.clientId,
+    };
+    if (isEdit) {
+      setuserMasterData(userData);
+    } else {
+      dispatch(onUpdateuserMaster(userData));
+    }
+  };
+  useEffect(() => {
+    if (userList) {
+      const totalItems = filteredData?.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
+    }
+  }, [userList]);
+
+  useEffect(() => {
+    dispatch(onGetuserMaster());
+    dispatch(onGetUserRole());
+  }, []);
+
+  useEffect(() => {
+    if (userList?.update_status_code == "204") {
+      toast.success(userList?.updateMessage);
+      dispatch(onGetuserMaster());
+      dispatch(onUpdateuserMasterReset());
+    } else if (userList?.update_status_code == "205") {
+
+      toast.success(userList?.updateMessage);
+      setuserMasterData(null)
+      dispatch(onGetuserMaster());
+      dispatch(onUpdateuserMasterReset());
+    } else if (userList?.update_status_code) {
+      toast.error(userList?.updateMessage);
+      dispatch(onUpdateuserMasterReset());
+    }
+  }, [userList]);
+
   return (
     <>
       <ScrollToTop />
-      <UserMasterForm userMasterData={userMasterData} />
+
+      <UserMasterForm userMasterData={userMasterData} setuserMasterData={setuserMasterData}/>
+
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">{UserList}</h4>
+              <div className="container-fluid mt-2 mb-2 pt-1">
+                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                  <div className="card-header">
+                    <h4 className="card-title">{user_list_label}</h4>
+                  </div>
+                  <div className="customer-search mb-sm-0 mb-3">
+                    <div className="input-group search-area">
+                      <InputField
+                        type="text"
+                        className="form-control only-high"
+                        placeholder={search_here_label}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                      />
+                      <span className="input-group-text">
+                        <i className="fa fa-search"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              {userList?.isLoading &&
-              <div style={{ height: "100px" }}>
-                    <Loader classType={"absoluteLoader"} />
-                  </div>}
               <div className="card-body">
-                {userList?.getData?.length > 0 ? (
-                  <div className="table-responsive">
-                    <table className="table header-border table-responsive-sm">
-                      <thead>
-                        <tr>
-                          <th>{username}</th>
-                          <th>{email}</th>
-                          <th>{mobile}</th>
-                          <th>{roleName}</th>
-                          <th>{action}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {userList?.getData
-                          ?.slice(startIndex, endIndex)
-                          .map((userData, index) => (
-                            <tr key={index}>
-                              <td>{userData.firstName+" "+userData.lastName}</td>
-                              <td>{userData.email}</td>
-                              <td>{userData.mobile}</td>
-                              <td>
-                                <span className="badge badge-success mr-10">
+                {userList?.isgetLoading || userList?.isUpdateLoading ||
+                (userList?.update_status_code === "205" &&
+                  userList?.isPostLoading)  ? (
+                  <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>
+                ) : filteredData?.length ? (
+                  <div className="table-responsive scroll-Table-x">
+                    <>
+                      <table className="table header-border table-responsive-sm">
+                        <thead>
+                          <tr>
+                            <th>{user_name_label}</th>
+                            <th>{email_label}</th>
+                            <th>{mobile}</th>
 
-                                      {roleList
-                                        ?.userRoleData.filter(roleData => roleData.id === userData.roleId)
-                                        .map(roleData => roleData.name)
+                            <th>{status_label}</th>
+                            <th>{action_label}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredData
+                            .slice(startIndex, endIndex)
+                            .map((userMasterData, index) => (
+                              <tr key={index}>
+                                <td>
+                                  {userMasterData?.firstName +
+                                    userMasterData?.lastName}
+                                </td>
+
+                                <td>{userMasterData?.email}</td>
+                                <td>{userMasterData?.mobile}</td>
+
+                                <td>
+                                  <span
+                                    className={
+                                      userMasterData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {userMasterData.enabled
+                                      ? action_label
+                                      : non_active_label}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div className="d-flex">
+                                    <Button
+                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                      icon={"fas fa-pencil-alt"}
+                                      onClick={() =>
+                                        handleSumbit(userMasterData, {
+                                          isEdit: true,
+                                        })
                                       }
-                                </span>
-                              </td>
-
-                              <td>
-                                <Button
-                                  className="btn btn-primary shadow btn-xs sharp me-1"
-                                  icon={"fas fa-pencil-alt"}
-                                  onClick={() => handleEdit(userData)}
-                                />
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                    {userList?.getData?.length > 5 && (
-                      <div className="pagination-container">
-                        <ReactPaginate
-                          previousLabel={"<"}
-                          nextLabel={" >"}
-                          breakLabel={"..."}
-                          pageCount={Math.ceil(
-                            userList?.getData?.length / rowsPerPage
-                          )}
-                          marginPagesDisplayed={2}
-                          onPageChange={handlePageChange}
-                          containerClassName={"pagination"}
-                          activeClassName={"active"}
-                          initialPage={page - 1} // Use initialPage instead of forcePage
-                        />
-                      </div>
-                    )}
+                                    />
+                                    <Button
+                                      className="btn btn-danger shadow btn-xs sharp"
+                                      icon={"fa fa-trash"}
+                                      onClick={() =>
+                                        handleSumbit(userMasterData)
+                                      }
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                      {filteredData?.length > 5 && (
+                        <div className="pagination-container">
+                          <ReactPaginate
+                            previousLabel={"<"}
+                            nextLabel={">"}
+                            breakLabel={"..."}
+                            pageCount={Math.ceil(
+                              filteredData?.length / rowsPerPage
+                            )}
+                            marginPagesDisplayed={2}
+                            onPageChange={handlePageChange}
+                            containerClassName={"pagination"}
+                            activeClassName={page === 1 && "active"}
+                            initialPage={page - 1}
+                            previousClassName={
+                              page === 1 ? "disabled_Text" : ""
+                            }
+                          />
+                        </div>
+                      )}
+                    </>
                   </div>
                 ) : (
                   <NoRecord />

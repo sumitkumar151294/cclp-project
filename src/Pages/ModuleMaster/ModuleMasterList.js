@@ -31,7 +31,7 @@ const ModuleMasterList = () => {
     setSearchQuery(event.target.value);
   };
   // to filter selected data
-  const filteredData = getModuleData?.filter(
+  const filteredData =Array.isArray(getModuleData) && getModuleData?.filter(
     (data) => data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   // for pagination
@@ -70,7 +70,9 @@ const ModuleMasterList = () => {
                   </div>
                 </div>
               </div>
-              {getModule?.isLoading && <Loader />}
+              {getModule?.isLoading && <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>}
               <div className="card-body">
                 {filteredData?.length ? (<div className="table-responsive">
                   <table className="table header-border table-responsive-sm">
