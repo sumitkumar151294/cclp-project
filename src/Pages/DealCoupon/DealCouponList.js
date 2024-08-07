@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
@@ -7,10 +7,11 @@ import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealCouponForm from "./DealCouponForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetDeal } from "../../Store/Slices/dealSlice";
 
 const DealCouponList = () => {
-
+  const dispatch = useDispatch();
   const dealCategoryData = [
     {
       categoryName: "TopOffers",
@@ -109,6 +110,9 @@ const DealCouponList = () => {
   };
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  useEffect(() => {
+    dispatch(onGetDeal());
+  }, []);
   return (
     <>
     <ScrollToTop />

@@ -33,8 +33,8 @@ const RoleMasterForm = ({ data, setData }) => {
   const roleName = GetTranslationData("UIMasterAdmin", "role_name");
   const selectall = GetTranslationData("UIMasterAdmin", "selectall");
   const module_access = GetTranslationData("UIMasterAdmin", "module-access");
-  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
-  const update = GetTranslationData("UIMasterAdmin", "update_label");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
   const checkBox_Error = GetTranslationData("UIMasterAdmin", "checkbox_error");
   const view = GetTranslationData("UIMasterAdmin", "view");
   const add = GetTranslationData("UIMasterAdmin", "add");
@@ -44,9 +44,9 @@ const RoleMasterForm = ({ data, setData }) => {
     "UIMasterAdmin",
     "role_Req_Label"
   );
-  const description_place = GetTranslationData(
+  const description_placeholder = GetTranslationData(
     "UIMasterAdmin",
-    "description_place"
+    "description_placeholder"
   );
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
@@ -297,7 +297,7 @@ const RoleMasterForm = ({ data, setData }) => {
                           className="form-control"
                           name="description"
                           id="description"
-                          placeholder={description_place}
+                          placeholder={description_placeholder}
                           value={values.description}
                           onChange={handleChange}
                         />
@@ -323,7 +323,7 @@ const RoleMasterForm = ({ data, setData }) => {
                         </div>
                       </div>
                       <div className="col-lg-12 br pt-2">
-                        <label htmlFor="name-f">{module_access}</label>
+                        <label >{module_access}</label>
                         {Array.isArray(moduleAccessData) &&
                           moduleAccessData.map((data, index) => {
                             const module =

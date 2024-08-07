@@ -93,6 +93,7 @@ const SectionMasterList = () => {
       dispatch(onUpdatesectionMasterReset());
     } else if (SectionMaster?.update_status_code == "205") {
       toast.success(SectionMaster?.updateMessage);
+      setSectionData(null)
       dispatch(onGetsectionMaster());
       dispatch(onUpdatesectionMasterReset());
     } else if (SectionMaster?.update_status_code) {
@@ -116,7 +117,7 @@ const SectionMasterList = () => {
     <>
       <ScrollToTop />
       {getRoleAccess[0]?.addAccess && (
-        <SectionMasterForm sectionData={sectionData} />
+        <SectionMasterForm sectionData={sectionData}  />
       )}
       <div className="container-fluid pt-0">
         <div className="row">
@@ -174,7 +175,7 @@ const SectionMasterList = () => {
 
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
-                                <td>{SectionMasterData?.sectionType}</td>
+                                <td>{SectionMasterData?.sectionType==="UnlockStaticCard" && SectionMasterData?.sectionType.replace(/([a-z])([A-Z])/g, '$1 $2') }</td>
                                 <td>{SectionMasterData?.displayOrder}</td>
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>

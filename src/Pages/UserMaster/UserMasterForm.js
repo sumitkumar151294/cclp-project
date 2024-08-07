@@ -8,13 +8,19 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
-import { onGetuserMaster, onPostuserMaster, onPostuserMasterReset } from "../../Store/Slices/userMasterSlice";
+import {
+  onGetuserMaster,
+  onPostuserMaster,
+  onPostuserMasterReset,
+  onUpdateuserMasterReset,
+} from "../../Store/Slices/userMasterSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const UserMasterForm = ({userMasterData}) => {
+const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   const dispatch = useDispatch();
   const roleList = useSelector((state) => state?.userRoleReducer);
   const getUserMaster = useSelector((state) => state?.userMasterReducer);
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState("");
   const [intialValue, setInitialValue] = useState({
     firstName: "",
     lastName: "",
@@ -22,58 +28,126 @@ const UserMasterForm = ({userMasterData}) => {
     email: "",
     roleId: "",
   });
+
+  const user_master_label = GetTranslationData(
+    "UIMasterAdmin",
+    "user_master_label"
+  );
+  const first_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "first_name_required"
+  );
+  const last_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "last_name_required"
+  );
+  const mobil_10_digit_required = GetTranslationData(
+    "UIMasterAdmin",
+    "mobil_10_digit_required"
+  );
+  const mobile_number_required = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_number_required"
+  );
+  const email_invalid_format = GetTranslationData(
+    "UIMasterAdmin",
+    "email_invalid_format"
+  );
+  const email_required = GetTranslationData("UIMasterAdmin", "email_required");
+  const first_name_label = GetTranslationData(
+    "UIMasterAdmin",
+    "first_name_label"
+  );
+  const last_name_label = GetTranslationData(
+    "UIMasterAdmin",
+    "last_name_label"
+  );
+  const first_name_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "first_name_placeholder"
+  );
+  const last_name_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "last_name_placeholder"
+  );
+  const email_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "email_placeholder"
+  );
+  const mobile_number_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_number_placeholder"
+  );
+  const email_label = GetTranslationData("UIMasterAdmin", "email_label");
+  const mobile_number_label = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_number_label"
+  );
+  const role_name = GetTranslationData("UIMasterAdmin", "role_name");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    firstName: Yup.string().required("First Name is required"),
-    lastName: Yup.string().required("Last Name is required"),
+    firstName: Yup.string().required(first_name_required),
+    lastName: Yup.string().required(last_name_required),
     mobile: Yup.string()
-      .matches(/^\d{10}$/, "Mobile Number must be exactly 10 digits")
-      .required("Mobile Number is required"),
-      roleId: Yup.array()
-      .min(1, "Select at least one role")
-      .max(1, "You can only select one role")
-      .test(
-        "only-one-role",
-        "You can only select one role",
-        (value) => value?.length === 1
-      ),
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
+      .matches(/^\d{10}$/, mobil_10_digit_required)
+      .required(mobile_number_required),
+
+    email: Yup.string().email(email_invalid_format).required(email_required),
   });
   //to handle submit
   const handleSubmit = (values) => {
     if (values) {
+      debugger;
       const userMasterdata = {
         ...values,
+        enabled: true,
         deleted: false,
         clientId: 4,
-        mobile:JSON.stringify(values.mobile),
-        roleId:4,
-        // roleId:values.roleId,
+        mobile:typeof values?.mobile === "string"
+        ? values.mobile
+        : JSON.stringify(values?.mobile),
+        roleId: values.roleId,
         ...(userMasterData && { id: userMasterData.id }),
-
       };
       dispatch(onPostuserMaster(userMasterdata));
+      setInitialValue({
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        email: "",
+        roleId: "",
+      })
+      setSelectedRole("")
+
     }
   };
-  useEffect(()=>{
-
-if(userMasterData){
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  setInitialValue(userMasterData)
-}
-  },[userMasterData])
   useEffect(() => {
-    if (getUserMaster?.status_code === "201") {
-      toast.success(getUserMaster.message);
+    if (userMasterData) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(userMasterData);
+      setSelectedRole(userMasterData.roleId)
+    }
+  }, [userMasterData]);
+  useEffect(() => {
+    if (getUserMaster?.post_status_code === "201") {
+      toast.success(getUserMaster.postMessage);
       dispatch(onGetuserMaster());
       dispatch(onPostuserMasterReset());
-    } else if (getUserMaster?.status_code) {
-      toast.error(getUserMaster.message);
+    } else if (getUserMaster?.post_status_code==="205") {
+      setuserMasterData(null)
+      toast.success(getUserMaster.postMessage);
+      dispatch(onGetuserMaster())
+      dispatch(onUpdateuserMasterReset())
       dispatch(onPostuserMasterReset());
+    }else if (getUserMaster?.post_status_code) {
+      toast.error(getUserMaster.postMessage);
+      dispatch(onPostuserMasterReset())
     }
   }, [getUserMaster]);
+
   useEffect(() => {
     dispatch(onGetUserRole());
   }, []);
@@ -85,10 +159,11 @@ if(userMasterData){
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">User Master</h4>
+                <h4 className="card-title">{user_master_label}</h4>
               </div>
               <div className="card-body">
-                {roleList?.getUserRoleLoading || getUserMaster?.isLoading ? (
+
+                {roleList?.getUserRoleLoading ||  getUserMaster?.isUpdateLoading || getUserMaster?.isPostLoading? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -104,7 +179,7 @@ if(userMasterData){
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
-                              <label>First Name</label>
+                              <label>{first_name_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -115,7 +190,7 @@ if(userMasterData){
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Category Name"
+                                placeholder={first_name_placeholder}
                               />
                               <ErrorMessage
                                 name="firstName"
@@ -125,7 +200,7 @@ if(userMasterData){
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Last Name
+                                {last_name_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -136,7 +211,7 @@ if(userMasterData){
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder={last_name_placeholder}
                               />
                               <ErrorMessage
                                 name="lastName"
@@ -146,7 +221,7 @@ if(userMasterData){
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Email
+                                {email_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -157,7 +232,7 @@ if(userMasterData){
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder={email_placeholder}
                               />
                               <ErrorMessage
                                 name="email"
@@ -167,7 +242,7 @@ if(userMasterData){
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Mobile Number
+                                {mobile_number_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -178,7 +253,7 @@ if(userMasterData){
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder={mobile_number_placeholder}
                               />
                               <ErrorMessage
                                 name="mobile"
@@ -187,7 +262,7 @@ if(userMasterData){
                               />
                             </div>
                             <div className="col-lg-12 br pt-2 mt-2">
-                              <label htmlFor="name-f">{"Role"}</label>
+                              <label htmlFor="name-f">{role_name}</label>
                               <div className="row ml-4">
                                 {Array.isArray(roleList?.userRoleData) &&
                                   roleList?.userRoleData?.map(
@@ -201,26 +276,16 @@ if(userMasterData){
                                           className="form-check-input"
                                           name="roleId"
                                           value={userRole.id}
-                                          checked={selectedRoles.includes(
-                                            userRole.id
-                                          )}
+                                          checked={selectedRole === userRole.id}
                                           onChange={() => {
-                                            const newSelectedRoles =
-                                              selectedRoles.includes(
-                                                userRole.id
-                                              )
-                                                ? selectedRoles.filter(
-                                                    (roleId) =>
-                                                      roleId !== userRole.id
-                                                  )
-                                                : [
-                                                    ...selectedRoles,
-                                                    userRole.id,
-                                                  ];
-                                            setSelectedRoles(newSelectedRoles);
+                                            const newSelectedRole =
+                                              selectedRole === userRole.id
+                                                ? ""
+                                                : userRole.id;
+                                            setSelectedRole(newSelectedRole);
                                             setFieldValue(
                                               "roleId",
-                                              newSelectedRoles
+                                              newSelectedRole
                                             );
                                           }}
                                         />
@@ -242,7 +307,7 @@ if(userMasterData){
                               />
                               <div className="col-sm-4 mb-4">
                                 <Button
-                                  text={"Submit"}
+                                  text={userMasterData ? update : submit}
                                   icon="fa fa-arrow-right"
                                   className="btn btn-primary float-right pad-aa mt-2"
                                 />
