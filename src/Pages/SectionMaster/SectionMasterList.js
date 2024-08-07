@@ -214,7 +214,7 @@ const SectionMasterList = () => {
                                     <div className="d-flex">
                                       <Button
                                         className="btn btn-primary shadow btn-xs sharp me-1"
-                                        icon={"fas fa-pencil-alt"}
+                                        end_icon={"fas fa-pencil-alt"}
                                         onClick={() =>
                                           handleSumbit(SectionMasterData, {
                                             isEdit: true,
@@ -223,7 +223,7 @@ const SectionMasterList = () => {
                                       />
                                       <Button
                                         className="btn btn-danger shadow btn-xs sharp"
-                                        icon={"fa fa-trash"}
+                                        end_icon={"fa fa-trash"}
                                         onClick={() =>
                                           handleSumbit(SectionMasterData)
                                         }
@@ -244,7 +244,7 @@ const SectionMasterList = () => {
                                     <Button
                                       disabled={!SectionMasterData?.enabled}
                                       text={"Update"}
-                                      icon={"fa fa-eye"}
+                                      end_icon={"fa fa-eye"}
                                       className="btn btn-primary btn-sm float-right client_Btn"
                                     />
                                   </Link>

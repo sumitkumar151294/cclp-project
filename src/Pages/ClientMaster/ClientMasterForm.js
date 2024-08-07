@@ -406,7 +406,7 @@ const ClientMaster = ({ data, setdata }) => {
                       <div className="col-sm-12 form-group mb-0 mt-2">
                         <Button
                           text={data ? update : submit}
-                          icon={"fa fa-arrow-right"}
+                          end_icon={"fa fa-arrow-right"}
                           className="btn btn-primary btn-sm float-right p-btn mb-5 mt-2"
                         />
                         <ToastContainer />

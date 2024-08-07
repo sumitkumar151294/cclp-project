@@ -66,7 +66,7 @@ const AllocateProduct = () => {
                       <Button
                         className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
                         text="Export"
-                        icons={"fa fa-file-excel"}
+                        start_icon={"fa fa-file-excel"}
                       />
                     </div>
                   </div>

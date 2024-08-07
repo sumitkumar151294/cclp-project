@@ -183,7 +183,7 @@ console.log(navConfigureData)
                     <div className="col-sm-4 mb-4">
                       <Button
                         text="Submit"
-                        icon="fa fa-arrow-right"
+                        end_icon="fa fa-arrow-right"
                         className="btn btn-primary btn-sm float-right p-btn mt-2"
                       />
                     </div>

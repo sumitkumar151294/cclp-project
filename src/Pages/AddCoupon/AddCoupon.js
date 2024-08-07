@@ -211,7 +211,7 @@ const AddCoupon = () => {
                           <Button
                             className="btn btn-primary float-right pad-aa"
                             text={submit}
-                            icon="fa fa-arrow-right"
+                            end_icon="fa fa-arrow-right"
                           />
                         </div>
                       </div>

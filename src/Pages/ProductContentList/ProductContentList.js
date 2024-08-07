@@ -218,7 +218,7 @@ const ProductContentList = () => {
                                 <Button
                                   className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
                                   text={exportLabel}
-                                  icons={"fa fa-file-excel"}
+                                  start_icon={"fa fa-file-excel"}
                                 />
                               )}
                             </CSVLink>

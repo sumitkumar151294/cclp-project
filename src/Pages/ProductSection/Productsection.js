@@ -189,7 +189,7 @@ const ProductSection = () => {
                         <Button
                           text="Submit"
                           className="btn btn-primary float-right pad-aa"
-                          icon="fa fa-arrow-right"
+                          end_icon="fa fa-arrow-right"
                         />
                       </div>
                     </div>
@@ -280,11 +280,11 @@ const ProductSection = () => {
                                           <div className="d-flex">
                                             <Button
                                               className="btn btn-primary shadow btn-xs sharp me-1"
-                                              icon="fas fa-pencil-alt"
+                                              end_icon="fas fa-pencil-alt"
                                             />
                                             <Button
                                               className="btn btn-danger shadow btn-xs sharp"
-                                              icon="fa fa-trash"
+                                              end_icon="fa fa-trash"
                                             />
                                           </div>
                                         </td>

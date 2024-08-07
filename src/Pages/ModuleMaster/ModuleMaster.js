@@ -20,21 +20,21 @@ const ModuleMaster = () => {
   const module_name_placeholder = GetTranslationData("UIMasterAdmin", "module_name_placeholder");
   const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
   const route_path_placeholder = GetTranslationData("UIMasterAdmin", "route_path_placeholder");
-  const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
-  const module_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_icon_placeholder");
+  const module_end_icon = GetTranslationData("UIMasterAdmin", "module_end_icon");
+  const module_end_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_end_icon_placeholder");
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   // initial values for the input fields
   const initialValues = {
     name: "",
     routePath: "",
-    icon: "",
+    end_icon: "",
   };
   // to validate user master form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required("Module name is required"),
     routePath: yup.string().required("Module route path is required"),
-    icon: yup.string().required("Module icon is required"),
+    end_icon: yup.string().required("Module end_icon is required"),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } =
@@ -122,30 +122,30 @@ const ModuleMaster = () => {
 
                       <div className="col-sm-4 form-group mb-2">
                         <label htmlFor="description">
-                          Module Icon<span className="text-danger">*</span>
+                          Module end_icon<span className="text-danger">*</span>
                         </label>
                         <InputField
                           className={`form-control ${
-                            errors.icon && touched.icon
+                            errors.end_icon && touched.end_icon
                               ? "is-invalid"
                               : ""
                           }`}
                           type="text"
-                          name="icon"
+                          name="end_icon"
                           id="flexCheckDefault2"
-                          placeholder="Enter Module Icon"
-                          value={values.icon}
+                          placeholder="Enter Module end_icon"
+                          value={values.end_icon}
                           onChange={handleChange}
                         />
-                        {errors.icon && touched.icon && (
-                          <p className="error-message">{errors.icon}</p>
+                        {errors.end_icon && touched.end_icon && (
+                          <p className="error-message">{errors.end_icon}</p>
                         )}
                       </div>
                     </div>
                     <div className="col-sm-4 mb-4">
                       <Button
                         text="Submit"
-                        icon="fa fa-arrow-right"
+                        end_icon="fa fa-arrow-right"
                         className="btn btn-primary btn-sm float-right p-btn mt-2"
                       />
                       <ToastContainer />

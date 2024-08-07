@@ -119,7 +119,7 @@ const ClientMasterList = () => {
                       <Button
                         className="btn btn-primary btn-sm btn-rounded me-3 mb-2"
                         text={exportLabel}
-                        icons={"fa fa-file-excel me-2"}
+                        start_icon={"fa fa-file-excel me-2"}
                       />
                     </CSVLink>
                   </div>
@@ -166,12 +166,12 @@ const ClientMasterList = () => {
                                 <div className="d-flex">
                                   <Button
                                     className="btn btn-primary shadow btn-xs sharp me-1"
-                                    icon={"fas fa-pencil-alt"}
+                                    end_icon={"fas fa-pencil-alt"}
                                     onClick={() => handleEdit(data)}
                                   />
                                   <Button
                                     className="btn btn-danger shadow btn-xs sharp"
-                                    icon={"fa fa-trash"}
+                                    end_icon={"fa fa-trash"}
                                   />
                                 </div>
                               </td>
