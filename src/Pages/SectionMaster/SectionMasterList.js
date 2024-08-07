@@ -117,7 +117,7 @@ const SectionMasterList = () => {
     <>
       <ScrollToTop />
       {getRoleAccess[0]?.addAccess && (
-        <SectionMasterForm sectionData={sectionData}  />
+        <SectionMasterForm sectionData={sectionData} />
       )}
       <div className="container-fluid pt-0">
         <div className="row">
@@ -175,7 +175,11 @@ const SectionMasterList = () => {
 
                               <tr key={index}>
                                 <td>{SectionMasterData?.sectionName}</td>
-                                <td>{SectionMasterData?.sectionType==="UnlockStaticCard" || SectionMasterData?.sectionType==="CustomerBenefits" || SectionMasterData?.sectionType==="SpecialSection"? SectionMasterData?.sectionType.replace(/([a-z])([A-Z])/g, '$1 $2') : SectionMasterData?.sectionType}</td>
+                                <td>
+                                  {["UnlockStaticCard", "CustomerBenefits", "SpecialSection", "SupportingBanner"].includes(SectionMasterData?.sectionType)
+                                    ? SectionMasterData?.sectionType.replace(/([a-z])([A-Z])/g, '$1 $2')
+                                    : SectionMasterData?.sectionType}
+                                </td>
                                 <td>{SectionMasterData?.displayOrder}</td>
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>
@@ -183,14 +187,14 @@ const SectionMasterList = () => {
                                     SectionMasterData?.claimLimit ||
 
                                     <span className="hyphen"> -</span>
-                                }
+                                  }
                                 </td>
                                 <td>
                                   {
                                     SectionMasterData?.noOfPointsToClaim ||
 
                                     <span className="hyphen"> -</span>
-                                }
+                                  }
                                 </td>
                                 <td>
                                   <span
@@ -206,26 +210,26 @@ const SectionMasterList = () => {
                                   </span>
                                 </td>
                                 {getRoleAccess[0]?.editAccess && (
-                                <td>
-                                  <div className="d-flex">
-                                    <Button
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                      icon={"fas fa-pencil-alt"}
-                                      onClick={() =>
-                                        handleSumbit(SectionMasterData, {
-                                          isEdit: true,
-                                        })
-                                      }
-                                    />
-                                    <Button
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                      icon={"fa fa-trash"}
-                                      onClick={() =>
-                                        handleSumbit(SectionMasterData)
-                                      }
-                                    />
-                                  </div>
-                                </td>
+                                  <td>
+                                    <div className="d-flex">
+                                      <Button
+                                        className="btn btn-primary shadow btn-xs sharp me-1"
+                                        icon={"fas fa-pencil-alt"}
+                                        onClick={() =>
+                                          handleSumbit(SectionMasterData, {
+                                            isEdit: true,
+                                          })
+                                        }
+                                      />
+                                      <Button
+                                        className="btn btn-danger shadow btn-xs sharp"
+                                        icon={"fa fa-trash"}
+                                        onClick={() =>
+                                          handleSumbit(SectionMasterData)
+                                        }
+                                      />
+                                    </div>
+                                  </td>
                                 )}
                                 <td>
                                   <Link
@@ -233,8 +237,8 @@ const SectionMasterList = () => {
                                     state={{
                                       sectionType:
                                         SectionMasterData.sectionType,
-                                        sectionId: SectionMasterData.id,
-                                        sectionLimit:SectionMasterData.displayLimit,
+                                      sectionId: SectionMasterData.id,
+                                      sectionLimit: SectionMasterData.displayLimit,
                                     }}
                                   >
                                     <Button

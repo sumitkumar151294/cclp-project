@@ -29,8 +29,7 @@ import {
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
-  { value: "Product", label: "Product" },
-  { value: "Image", label: "Image" },
+  { value: "Product", label: "Product" }
 ];
 const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) => {
   const location = useLocation();
@@ -102,7 +101,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.lazy(value =>
-     ( type==="Banner" ||   type==="CustomerBenefits" )? Yup.string().required("Web Image is required") : Yup.string()
+     ( type==="Banner" ||   type==="SupportingBanner" ||   type==="CustomerBenefits" )? Yup.string().required("Web Image is required") : Yup.string()
     ),
     mobImage: Yup.lazy(value =>
      ( type==="Banner" || type==="CustomerBenefits" )? Yup.string().required("Mobile Image is required") : Yup.string()
@@ -257,7 +256,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            {(!type === "Banner" )&& (
+                            {(type === "SpecialSection" )&& (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   Content Source Type
@@ -282,7 +281,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 />
                               </div>
                             )}
-                            {(!type === "Banner") && (
+                            {(type === "SpecialSection") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   Segment
@@ -307,7 +306,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                               </div>
                             )}
 
-{(type === "Banner" || type==="CustomerBenefits") && <div className="col-sm-4 form-group mb-4">
+{(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner") && <div className="col-sm-4 form-group mb-4">
                               <label>
                                 Upload Image For Web
                                 <span className="text-danger">*</span>
@@ -331,7 +330,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 className="error-message"
                               />
                             </div>}
-                            {(type === "Banner" || type==="CustomerBenefits")&&  <div className="col-sm-4 form-group mb-2">
+                            {(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner")&&  <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Upload Image For Phone
                                 <span className="text-danger">*</span>
@@ -389,7 +388,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 disabled={displayLimit}
                               />
                             </div>
-                            {!type === "Banner" && (
+                            {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>Text</label>
                                 <Field
@@ -405,7 +404,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 />
                               </div>
                             )}
-                            {(type === "UnlockStaticCard" || type === "CustomerBenefits")&& (
+                            {(type === "UnlockStaticCard" || type === "CustomerBenefits" ||   type==="SupportingBanner")&& (
                               <div className="col-sm-9 mt-2">
                                 <label>Text</label>
                                 <Field
