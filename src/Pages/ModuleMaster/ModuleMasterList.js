@@ -34,8 +34,8 @@ const ModuleMasterList = () => {
     setSearchQuery(event.target.value);
   };
   // to filter selected data
-  const filteredData = getModuleData?.filter((data) =>
-    data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  const filteredData =Array.isArray(getModuleData) && getModuleData?.filter(
+    (data) => data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;

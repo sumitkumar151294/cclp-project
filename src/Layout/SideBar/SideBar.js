@@ -56,7 +56,7 @@ const SideBar = () => {
     if (!getModuleData?.data?.length) {
       dispatch(onGetModule());
       dispatch(onGetUserRoleModuleAccess());
-      dispatch(resetAllowModules());
+      // dispatch(resetAllowModules());
     }
   }, []);
   // to reset the redux store (logout the user)
@@ -152,8 +152,7 @@ const SideBar = () => {
                   className={`nav-icn ${
                     sideBar.routePath === currentUrl.pathname ? "mm-active" : ""
                   }`}
-                  onClick={(e) => hanleClick(e, sideBar.id)}
-                >
+                  onClick={(e) => hanleClick(e, sideBar.id)}>
                   <Link
                     className="ai-icon"
                     to={sideBar.routePath}

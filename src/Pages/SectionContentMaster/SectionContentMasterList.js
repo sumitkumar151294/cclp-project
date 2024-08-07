@@ -124,7 +124,7 @@ const SectionContentMasterList = () => {
   }, [filteredData]);
   return (
     <>
-      <SectionContentMasterForm sectionContentData={sectionContentData} />
+      <SectionContentMasterForm sectionContentData={sectionContentData} setSectionContentData={setSectionContentData}/>
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -154,7 +154,7 @@ const SectionContentMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getSectionContenMasterData?.isgetLoading ||
+                {getSectionContenMasterData?.isgetLoading || getSectionContenMasterData?.isUpdateLoading ||
                 (getSectionContenMasterData?.isUpdateLoading &&
                   getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
@@ -184,18 +184,24 @@ const SectionContentMasterList = () => {
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
                                     <td>
-                                      <img
+                                      {sectionContent.webImage ?   <img
                                         src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.webImage}`}
                                         style={{ width: "50px" }}
                                         alt="webImage"
-                                      />
+                                      /> : (
+                                        <span className="hyphen"> -</span>
+                                      )}
+
                                     </td>
                                     <td>
-                                      <img
+                                      {sectionContent.mobImage ?   <img
                                         src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.mobImage}`}
                                         style={{ width: "50px" }}
                                         alt="webImage"
-                                      />
+                                      /> : (
+                                        <span className="hyphen"> -</span>
+                                      )}
+
                                     </td>
                                     <td>{sectionContent.displayOrder}</td>
                                     <td>{sectionContent.cta}</td>
@@ -218,7 +224,7 @@ const SectionContentMasterList = () => {
                                       <div className="d-flex">
                                         <Button
                                           className="btn btn-primary shadow btn-xs sharp me-1"
-                                          icon={"fas fa-pencil-alt"}
+                                          end_icon={"fas fa-pencil-alt"}
                                           onClick={() =>
                                             handleSumbit(sectionContent, {
                                               isEdit: true,
@@ -227,7 +233,7 @@ const SectionContentMasterList = () => {
                                         />
                                         <Button
                                           className="btn btn-danger shadow btn-xs sharp"
-                                          icon={"fa fa-trash"}
+                                          end_icon={"fa fa-trash"}
                                           onClick={() =>
                                             handleSumbit(sectionContent)
                                           }

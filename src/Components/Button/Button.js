@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ text, onClick, icon, icons, className, btn_css, value, disabled }) => {
+const Button = ({ text, onClick, end_icon, start_icon, className, btn_css, value, disabled }) => {
   return (
     <button
       type="submit"
@@ -8,9 +8,9 @@ const Button = ({ text, onClick, icon, icons, className, btn_css, value, disable
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
     >
-      {icons && <i className={icons}></i>}
+      {start_icon && <i className={start_icon}></i>}
       {" "}{text}{" "}
-      {icon && <i className={icon}></i>}
+      {end_icon && <i className={end_icon}></i>}
       {value && <span className={btn_css}>{value}</span>}
     </button>
   );

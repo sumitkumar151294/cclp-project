@@ -29,10 +29,9 @@ import {
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
-  { value: "Product", label: "Product" },
-  { value: "Image", label: "Image" },
+  { value: "Product", label: "Product" }
 ];
-const SectionContentMasterForm = ({ sectionContentData }) => {
+const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) => {
   const location = useLocation();
 
   const getSectiontContentMasterData = useSelector(
@@ -101,10 +100,15 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    // webImage: Yup.string().required("Image is required"),
-    // mobImage: Yup.string().required("Image is required"),
+    webImage: Yup.lazy(value =>
+     ( type==="Banner" ||   type==="SupportingBanner" ||   type==="CustomerBenefits" )? Yup.string().required("Web Image is required") : Yup.string()
+    ),
+    mobImage: Yup.lazy(value =>
+     ( type==="Banner" || type==="CustomerBenefits" )? Yup.string().required("Mobile Image is required") : Yup.string()
+    ),
     displayOrder: Yup.string().required("Display Order is required"),
   });
+
   const displayLimit =
     getSectiontContentMasterData?.getSectionContentMasterData?.filter(
       (sectionContent) => sectionContent?.sectionMasterId === typeID
@@ -112,7 +116,6 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
 
   const handleSubmit = (values) => {
     if (values) {
-      debugger;
       if (
         typeof values.webImage === "object" &&
         typeof values.mobImage === "object"
@@ -120,6 +123,21 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         dispatch(onPostuploadImage(values.webImage));
         dispatch(onPostuploadMobileImage(values.mobImage));
         setValues(values);
+      }else if(!values.webImage && !values.mobImage){
+        const sectionContentMasteData = {
+          webImage: values.webImage,
+          mobImage: values.mobImage,
+          clientId: 4,
+          deleted: false,
+          sectionMasterId: typeID,
+          displayOrder: JSON.stringify(values?.displayOrder),
+          linkedMasterId: values?.linkedMasterId || null,
+          segmentId: values?.segmentId || null,
+          contentSourceType: "",
+          cta: values?.cta,
+          text: values?.text || "",
+        };
+        dispatch(onPostSectionContentMaster(sectionContentMasteData))
       } else {
         const sectionContentMasteData = {
           webImage: values.webImage,
@@ -130,7 +148,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
           displayOrder: JSON.stringify(values?.displayOrder),
           linkedMasterId: values?.linkedMasterId || null,
           segmentId: values?.segmentId || null,
-          contentSourceType: "Deal",
+          contentSourceType: "",
           cta: values?.cta,
           text: values?.text || "",
           id: values.id,
@@ -174,23 +192,18 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   };
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
+      debugger
       toast.success(getSectiontContentMasterData?.postMessage);
+      setSectionContentData("")
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
     } else if (getSectiontContentMasterData?.update_status_code == "205") {
-      setInitialValue({
-        webImage: "",
-        mobImage: "",
-        cta: "",
-        displayOrder: "",
-        text: "",
-        contentSourceType: "",
-        segmentId: "",
-      });
+      setSectionContentData("")
     } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
+      setSectionContentData("")
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
@@ -203,6 +216,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   }, []);
 
   useEffect(() => {
+    debugger
     if (sectionContentData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(sectionContentData);
@@ -242,7 +256,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            {!type === "Banner" && (
+                            {(type === "SpecialSection" )&& (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   Content Source Type
@@ -267,7 +281,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {!type === "Banner" && (
+                            {(type === "SpecialSection") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   Segment
@@ -291,7 +305,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            <div className="col-sm-4 form-group mb-2">
+
+{(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner") && <div className="col-sm-4 form-group mb-4">
                               <label>
                                 Upload Image For Web
                                 <span className="text-danger">*</span>
@@ -314,8 +329,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 component="div"
                                 className="error-message"
                               />
-                            </div>{" "}
-                            <div className="col-sm-4 form-group mb-2">
+                            </div>}
+                            {(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner")&&  <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Upload Image For Phone
                                 <span className="text-danger">*</span>
@@ -338,7 +353,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 component="div"
                                 className="error-message"
                               />
-                            </div>
+                            </div>}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 Display Order
@@ -361,7 +376,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 mt-2">
+                            <div className="col-sm-4 form-group mb-2 ">
                               <label>Call To Action</label>
                               <Field
                                 type="text"
@@ -373,7 +388,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 disabled={displayLimit}
                               />
                             </div>
-                            {!type === "Banner" && (
+                            {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>Text</label>
                                 <Field
@@ -389,7 +404,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {type === "UnlockStaticCard" && (
+                            {(type === "UnlockStaticCard" || type === "CustomerBenefits" ||   type==="SupportingBanner")&& (
                               <div className="col-sm-9 mt-2">
                                 <label>Text</label>
                                 <Field
@@ -408,7 +423,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Sumbit"}
-                                icon="fa fa-arrow-right"
+                                end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
                             </div>

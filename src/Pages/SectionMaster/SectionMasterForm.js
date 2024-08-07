@@ -44,6 +44,7 @@ const SectionMasterForm = ({ sectionData }) => {
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
 
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
+  const points_to_claim_label = GetTranslationData("UIMasterAdmin", "points_to_claim_label");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
@@ -55,22 +56,21 @@ const SectionMasterForm = ({ sectionData }) => {
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const sectionNamePlaceholder = GetTranslationData("UIMasterAdmin", "sectionMasterPlaceholder");
-  const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin", "displayOrderPlaceholder");
-  const displayLimitPlaceholder = GetTranslationData("UIMasterAdmin", "displayLimitPlaceholder");
-  const claimLimitPlaceholder = GetTranslationData("UIMasterAdmin", "claimLimitPlaceholder");
-  const text_placeholder = GetTranslationData("UIMasterAdmin", "text_placeholder");
-  const PointsToClaimPlaceholder = GetTranslationData("UIMasterAdmin", "PointsToClaimPlaceholder");
+  const section_name_required = GetTranslationData("UIMasterAdmin", "section_name_required");
+  const section_type_required = GetTranslationData("UIMasterAdmin", "section_type_required");
+  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
   const sectionTypeOptions = [
     { value: "Banner", label: "Banner" },
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
     { value: "CustomerBenefits", label: "Customer Benefits" },
     { value: "SupportingBanner", label: "Supporting Banner" },
+    { value: "SpecialSection", label: "Special Section" },
   ];
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    sectionName: Yup.string().required("Section Name is required"),
-    sectionType: Yup.string().required("Section Type is required"),
-    enabled: Yup.string().required("Status is required"),
+    sectionName: Yup.string().required(section_name_required),
+    sectionType: Yup.string().required(section_type_required),
+    enabled: Yup.string().required(status_required),
     displayOrder: Yup.string().required("Display Order is required"),
     displayLimit: Yup.string().required("Display Limit is required"),
   });
@@ -147,11 +147,11 @@ const SectionMasterForm = ({ sectionData }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Section Master</h4>
+                <h4 className="card-title">{section_master}</h4>
               </div>
               <div className="card-body">
                 {(sectionMasterData?.isPostLoading || (sectionData && sectionMasterData?.isUpdateLoading)) ? (
-                  <div style={{ height: "350px" }}>
+                  <div style={{ height: "250px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
@@ -167,7 +167,7 @@ const SectionMasterForm = ({ sectionData }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Section Name
+                            {section_name}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -177,7 +177,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder="Enter Section Name"
+                                placeholder={sectionNamePlaceholder}
                               />
                               <ErrorMessage
                                 name="sectionName"
@@ -187,7 +187,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Section Type
+                            {section_type}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -200,7 +200,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     : ""
                                   }`}
                                 onChange={(e) => {
-                                  setShowFields(e === "SupportingBanner");
+                                  setShowFields(e === "SpecialSection");
                                 }}
                               />
                               <ErrorMessage
@@ -212,7 +212,8 @@ const SectionMasterForm = ({ sectionData }) => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Display Order
+
+                             {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -233,7 +234,7 @@ const SectionMasterForm = ({ sectionData }) => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Display Limit
+                             {display_limit}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -253,7 +254,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             </div>
                             {showFields && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
-                                <label>Claim Limit</label>
+                                <label>{claim_limit}</label>
                                 <Field
                                   type="number"
                                   name="claimLimit"
@@ -272,7 +273,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             )}
                             {showFields && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
-                                <label>Text</label>
+                                <label>{text_label}</label>
                                 <Field
                                   type="text"
                                   name="text"
@@ -293,14 +294,14 @@ const SectionMasterForm = ({ sectionData }) => {
                                     name="pointToClaim"
                                   />
                                   <label className="px-1">
-                                    Points To Claim
+                           {points_to_claim_label}
                                   </label>
                                 </div>
                               </div>
                             )}
                             {values.pointToClaim && showFields && (
                               <div className="col-sm-4 form-group mb-1">
-                                <label>No Of Points To Claim</label>
+                                <label>{no_Of_Points_To_Claim}</label>
                                 <Field
                                   type="number"
                                   name="noOfpointToClaim"
@@ -320,7 +321,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             )}
                             {showFields && (
                               <div className="col-sm-4 form-group mb-2 ">
-                                <label>Segment</label>
+                                <label>{segment_label}</label>
 
                                 <Field
                                   name="segmentId"
@@ -339,7 +340,7 @@ const SectionMasterForm = ({ sectionData }) => {
                               </div>
                             )}
                             <div className="col-sm-4 form-group mb-2 ">
-                              <label>Status</label>
+                              <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -359,8 +360,8 @@ const SectionMasterForm = ({ sectionData }) => {
                             </div>
                             <div className="col-sm-12 form-group mb-0">
                               <Button
-                                text={"Submit"}
-                                icon="fa fa-arrow-right"
+                                text={sectionData ? update : submit}
+                                end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
                             </div>

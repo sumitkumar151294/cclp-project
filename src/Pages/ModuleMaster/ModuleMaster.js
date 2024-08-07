@@ -21,36 +21,24 @@ const ModuleMaster = () => {
   const submit = GetTranslationData("UIMasterAdmin", "submit_label");
   const module_name = GetTranslationData("UIMasterAdmin", "module_name");
   const module_master = GetTranslationData("UIMasterAdmin", "module_master");
-  const module_name_placeholder = GetTranslationData(
-    "UIMasterAdmin",
-    "module_name_placeholder"
-  );
-  const module_route_path = GetTranslationData(
-    "UIMasterAdmin",
-    "module_route_path"
-  );
-  const route_path_placeholder = GetTranslationData(
-    "UIMasterAdmin",
-    "route_path_placeholder"
-  );
-  const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
-  const module_icon_placeholder = GetTranslationData(
-    "UIMasterAdmin",
-    "module_icon_placeholder"
-  );
+  const module_name_placeholder = GetTranslationData("UIMasterAdmin", "module_name_placeholder");
+  const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
+  const route_path_placeholder = GetTranslationData("UIMasterAdmin", "route_path_placeholder");
+  const module_end_icon = GetTranslationData("UIMasterAdmin", "module_end_icon");
+  const module_end_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_end_icon_placeholder");
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   // initial values for the input fields
   const initialValues = {
     name: "",
     routePath: "",
-    icon: "",
+    end_icon: "",
   };
   // to validate user master form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required("Module name is required"),
     routePath: yup.string().required("Module route path is required"),
-    icon: yup.string().required("Module icon is required"),
+    end_icon: yup.string().required("Module end_icon is required"),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
@@ -134,7 +122,6 @@ const ModuleMaster = () => {
                             <p className="error-message">{errors.routePath}</p>
                           )}
                         </div>
-
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
                             Module Icon<span className="text-danger">*</span>

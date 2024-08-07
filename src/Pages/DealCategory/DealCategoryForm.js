@@ -215,7 +215,7 @@ const SectionContentMasterForm = () => {
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={"Submit"}
-                                icon="fa fa-arrow-right"
+                                end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
                             </div>

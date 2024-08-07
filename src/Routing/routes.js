@@ -2,20 +2,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "../Pages/Login/LoginPage";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Layout from "../Layout/Layout";
-import ProductContentList from "../Pages/ProductContentList/ProductContentList";
-import AddCoupon from "../Pages/AddCoupon/AddCoupon";
-import AddBulkCoupon from "../Pages/AddBulkCoupon/AddBulkCoupon";
-import DynamicCoupon from "../Pages/DynamicCoupon/DynamicCoupon";
-import CouponList from "../Pages/CouponList/CouponList";
-import CategoryMaster from "../Pages/CategoryMaster/CategoryMaster";
-import DealManagement from "../Pages/DealManagement/DealManagement";
 import DealList from "../Pages/Deal/DealList";
-import DealToSegment from "../Pages/DealToSegment/DealToSegment";
-import CompaignMaster from "../Pages/CompaignMaster/CompaignMaster";
-import AllocateProduct from "../Pages/ProductSection/AllocateProduct";
-import ProductSection from "../Pages/ProductSection/Productsection";
 import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
-import ClientMasterList from "../Pages/ClientMaster/ClientMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
 
 import HomePage from "../UI/HomePage";
@@ -25,7 +13,6 @@ import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
 import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
 import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
-import DealsList from "../Pages/DealList/DealsList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList";
@@ -35,50 +22,13 @@ function RouteConfiq() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route
-          path="/clientMaster"
-          element={<Layout Component={ClientMasterList} />}
-        />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
-        <Route
-          path="/productContentList"
-          element={<Layout Component={ProductContentList} />}
-        />
-        <Route
-          path="/productSection"
-          element={<Layout Component={ProductSection} />}
-        />
-        <Route path="/addCoupon" element={<Layout Component={AddCoupon} />} />
-        <Route
-          path="/addBulkCoupon"
-          element={<Layout Component={AddBulkCoupon} />}
-        />
-        <Route
-          path="/dynamicCoupon"
-          element={<Layout Component={DynamicCoupon} />}
-        />
-        <Route path="/couponList" element={<Layout Component={CouponList} />} />
-        <Route
-          path="/categoryMaster"
-          element={<Layout Component={CategoryMaster} />}
-        />
-        <Route
-          path="/dealManagement"
-          element={<Layout Component={DealManagement} />}
-        />
-        <Route path="/dealList" element={<Layout Component={DealsList} />} />
-        <Route
-          path="/dealToSegment"
-          element={<Layout Component={DealToSegment} />}
-        />
-        <Route
-          path="/compaignMaster"
-          element={<Layout Component={CompaignMaster} />}
-        />
-        <Route
-          path="/allocateProduct"
-          element={<Layout Component={AllocateProduct} />}
-        />
+
+
+       
+
+
+
 
         {/* New-UI */}
         <Route path="/home" element={<HomePage />} />
