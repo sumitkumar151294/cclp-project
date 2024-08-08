@@ -260,7 +260,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-lg-12 br pt-2 mt-2">
+                            <div className="col-lg-12 br pt-2 pb-2 mt-2">
                               <label htmlFor="name-f">{role_name}</label>
                               <div className="row ml-4">
                                 {Array.isArray(roleList?.userRoleData) &&
@@ -304,14 +304,15 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                                 component="div"
                                 className="error-message"
                               />
-                              <div className="col-sm-4 mb-4">
+
+                            </div>
+                            <div className="col-sm-4 mb-4">
                                 <Button
                                   text={userMasterData ? update : submit}
                                   icon="fa fa-arrow-right"
                                   className="btn btn-primary float-right pad-aa mt-2"
                                 />
                               </div>
-                            </div>
                           </div>
                         </Form>
                       )}

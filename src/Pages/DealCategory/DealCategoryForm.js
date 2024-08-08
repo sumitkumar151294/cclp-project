@@ -139,7 +139,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                 <h4 className="card-title">Deal Category</h4>
               </div>
               <div className="card-body">
-                       {dealCategoryData?.isPostLoading ? (
+                       {dealCategoryData?.isPostLoading || dealCategoryData?.isUpdateLoading  ? (
                   <div style={{ height: "200px" }}>
                    <Loader classType={"absoluteLoader"} />
                   </div>

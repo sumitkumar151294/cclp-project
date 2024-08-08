@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
 import Button from "../../Components/Button/Button";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";

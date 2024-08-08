@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import ModuleMaster from "./ModuleMaster";
+import ModuleMasterForm from "./ModuleMasterForm";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
@@ -47,7 +47,7 @@ const ModuleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <ModuleMaster />
+      <ModuleMasterForm />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

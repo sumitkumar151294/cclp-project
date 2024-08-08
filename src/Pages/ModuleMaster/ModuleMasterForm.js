@@ -14,7 +14,7 @@ import Loader from "../../Components/Loader/Loader";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const ModuleMaster = () => {
+const ModuleMasterForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get labels and placeholder from translation
@@ -32,13 +32,13 @@ const ModuleMaster = () => {
   const initialValues = {
     name: "",
     routePath: "",
-    end_icon: "",
+    icon: "",
   };
   // to validate user master form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required("Module name is required"),
     routePath: yup.string().required("Module route path is required"),
-    end_icon: yup.string().required("Module end_icon is required"),
+    icon: yup.string().required("Module Icon is required"),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
@@ -145,7 +145,7 @@ const ModuleMaster = () => {
                       <div className="col-sm-4 mb-4">
                         <Button
                           text="Submit"
-                          icon="fa fa-arrow-right"
+                          end_icon="fa fa-arrow-right"
                           className="btn btn-primary btn-sm float-right p-btn mt-2"
                         />
                         <ToastContainer />
@@ -162,4 +162,4 @@ const ModuleMaster = () => {
   );
 };
 
-export default ModuleMaster;
+export default ModuleMasterForm;
