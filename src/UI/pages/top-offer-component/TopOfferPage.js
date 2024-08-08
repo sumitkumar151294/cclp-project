@@ -13,10 +13,10 @@ import health from "../../../Assets/imgNewUI/topoffer/health.png";
 import kid from "../../../Assets/imgNewUI/topoffer/kids.png";
 import shopping from "../../../Assets/imgNewUI/topoffer/shopping.png";
 import beauty from "../../../Assets/imgNewUI/topoffer/beauty.png";
-import cardarrow from '../../../Assets/imgNewUI/card-arrow.png';
+// import cardarrow from '../../../Assets/imgNewUI/card-arrow.png';
 import upArrow from '../../../Assets/imgNewUI/Arrow 21.png';
 import downArrow from '../../../Assets/imgNewUI/Arrow 22.png';
-import image1 from '../../../Assets/imgNewUI/topoffer/Rectangle.png';
+// import image1 from '../../../Assets/imgNewUI/topoffer/Rectangle.png';
 import image2 from '../../../Assets/imgNewUI/topoffer/Rectangle2.png';
 import image3 from '../../../Assets/imgNewUI/topoffer/Rectangle3.png';
 
@@ -167,14 +167,14 @@ const TopOfferPage = () => {
             </div>
             <div className="top_offer_menu_tab">
 
-//               {getDealCategories?.getDealCategoryData?.map((category) => (
+{/* //               {getDealCategories?.getDealCategoryData?.map((category) => (
 //                 <div className="sub_menu" key={category?.id}>
 //                   <span>
 //                     <img src={cartBag} alt="icon" />
 //                   </span>
 //                   <p>{category?.name}</p>
 //                 </div>
-//               ))}
+//               ))} */}
 
               {itemsToShow.map((item, index) => (
                 <div key={index} className="sub_menu">

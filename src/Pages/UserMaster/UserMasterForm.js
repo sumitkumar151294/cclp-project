@@ -100,7 +100,6 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   //to handle submit
   const handleSubmit = (values) => {
     if (values) {
-      debugger;
       const userMasterdata = {
         ...values,
         enabled: true,

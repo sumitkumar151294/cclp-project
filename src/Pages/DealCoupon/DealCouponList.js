@@ -9,96 +9,12 @@ import InputField from "../../Components/InputField/InputField";
 import DealCouponForm from "./DealCouponForm";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetDeal } from "../../Store/Slices/dealSlice";
+import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
 
 const DealCouponList = () => {
   const dispatch = useDispatch();
-  const dealCategoryData = [
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-    {
-      categoryName: "TopOffers",
-      mobileImage: "mobileImage",
-      webImage: "webImage",
-
-      displayOrder: "3",
-    },
-  ];
-  // to get module filtered data from redux
+  const [searchQuery, setSearchQuery] = useState("");
+  const dealCouponData = useSelector((state) => state.dealCouponReducer);
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
@@ -108,10 +24,29 @@ const DealCouponList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
+  const filteredData = dealCouponData?.getDealCouponData?.filter(
+    (data) =>
+      data.coupounCode?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+      data.dealId?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+
+  );
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  useEffect(() => {
+    if (filteredData) {
+      const totalItems = filteredData?.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
+    }
+  }, [filteredData]);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   useEffect(() => {
     dispatch(onGetDeal());
+    dispatch(onGetDealCoupon())
   }, []);
   return (
     <>
@@ -132,8 +67,8 @@ const DealCouponList = () => {
                         type="text"
                         className="form-control only-high"
                         placeholder={"Search here..."}
-                        // value={searchQuery}
-                        // onChange={handleSearch}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
                       />
                       <span className="input-group-text">
                         <i className="fa fa-search"></i>
@@ -143,39 +78,46 @@ const DealCouponList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCategoryData?.isLoading ? (
+                {dealCouponData?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <>
-                    {dealCategoryData.length ? (
+                    {filteredData.length ? (
                       <div className="table-responsive scroll-Table-x ">
                         <>
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Category Name"}</th>
-                                <th>{"Display Name"}</th>
-                                <th>{"Mobile Image"}</th>
-                                <th>{"Web Image "}</th>
+                                <th>{"Coupoun Type"}</th>
+                                <th>{"Deal"}</th>
+                                <th>{"Call To Action"}</th>
+                                <th>{"Image "}</th>
+                                <th>{"Title "}</th>
+                                <th>{"Terms and Condtions "}</th>
+                                <th>{"Description "}</th>
                                 {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                               </tr>
                             </thead>
                             <tbody>
-                              {dealCategoryData
+                              {filteredData
                                 .slice(startIndex, endIndex)
-                                .map((dealCategoryData, index) => (
+                                .map((dealcoupoun, index) => (
                                   <tr key={index}>
-                                    <td>{dealCategoryData.categoryName}</td>
-                                    <td>{dealCategoryData.displayOrder}</td>
-                                    <td>{dealCategoryData.mobileImage}</td>
-                                    <td>{dealCategoryData.webImage}</td>
+                                    <td>{dealcoupoun.typeOfCoupoun}</td>
+                                    <td>{dealcoupoun.dealId}</td>
+                                    <td>{dealcoupoun.cta}</td>
+                                    <td>{dealcoupoun.image}</td>
+                                    <td>{dealcoupoun.title}</td>
+                                    <td>{dealcoupoun.terms}</td>
+                                    <td>{dealcoupoun.description}</td>
                                     {getRoleAccess[0]?.editAccess && (
                                     <td>
                                       <div className="d-flex">
                                         <Button
                                           className="btn btn-primary shadow btn-xs sharp me-1"
+
                                           end_icon={"fas fa-pencil-alt"}
                                           // onClick={() =>
                                           //   handleEdit(
@@ -198,14 +140,14 @@ const DealCouponList = () => {
                                 ))}
                             </tbody>
                           </table>
-                          {dealCategoryData.length > 5 && (
+                          {filteredData?.length > 5 && (
                             <div className="pagination-container">
                               <ReactPaginate
                                 previousLabel={"<"}
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  dealCategoryData.length / rowsPerPage
+                                  filteredData.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}

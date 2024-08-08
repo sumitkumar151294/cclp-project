@@ -166,7 +166,6 @@ const RoleMasterForm = ({ data, setData }) => {
   };
   // to update module access data on changes
   useEffect(() => {
-    debugger
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData.map((data) => {
         const existingModule = moduleAccess.find(

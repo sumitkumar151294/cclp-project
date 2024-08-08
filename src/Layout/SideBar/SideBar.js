@@ -139,7 +139,7 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        {getModule?.isLoading ? (
+        {!sideBarModules && getModule?.isLoading ? (
           <div style={{ height: "400px" }}>
             <Loader classType={"absoluteLoader"} />
           </div>

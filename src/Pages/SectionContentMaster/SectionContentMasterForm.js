@@ -123,21 +123,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
         dispatch(onPostuploadImage(values.webImage));
         dispatch(onPostuploadMobileImage(values.mobImage));
         setValues(values);
-      }else if(!values.webImage && !values.mobImage){
-        const sectionContentMasteData = {
-          webImage: values.webImage,
-          mobImage: values.mobImage,
-          clientId: 4,
-          deleted: false,
-          sectionMasterId: typeID,
-          displayOrder: JSON.stringify(values?.displayOrder),
-          linkedMasterId: values?.linkedMasterId || null,
-          segmentId: values?.segmentId || null,
-          contentSourceType: "",
-          cta: values?.cta,
-          text: values?.text || "",
-        };
-        dispatch(onPostSectionContentMaster(sectionContentMasteData))
+
       } else {
         const sectionContentMasteData = {
           webImage: values.webImage,
@@ -192,7 +178,6 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   };
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
-      debugger
       toast.success(getSectiontContentMasterData?.postMessage);
       setSectionContentData("")
       dispatch(onGetSectionContentMaster());
@@ -216,7 +201,6 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   }, []);
 
   useEffect(() => {
-    debugger
     if (sectionContentData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(sectionContentData);

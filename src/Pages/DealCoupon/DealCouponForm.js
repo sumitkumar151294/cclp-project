@@ -17,6 +17,7 @@ import {
 } from "../../Store/Slices/uploadSlice";
 import HtmlEditor from "../../Components/HtmlEditor/HtmlEditor";
 import Select from "react-select";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 
 const typeOfCoupoun = [
   { value: "Static", label: "Static" },
@@ -30,10 +31,8 @@ const DealCouponForm = () => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const dealCouponData = useSelector((state) => state.dealCouponReducer);
-  const getmobImage = useSelector(
-    (state) => state.uploadReducer?.postuploadMobileImageData
-  );
-  const getwebImage = useSelector(
+
+  const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
   const uploadImage = useSelector((state) => state.uploadReducer);
@@ -51,9 +50,6 @@ const DealCouponForm = () => {
     cta: "",
     titie: "",
   });
-  const dealCategoryData = useSelector(
-    (state) => state.dealCategoryReducer?.getDealCategoryData
-  );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   const dealOptions = getDealData?.map((dealCategory) => ({
     value: dealCategory.id,
@@ -98,7 +94,7 @@ const DealCouponForm = () => {
   useEffect(() => {
     if (uploadImage?.post_status_code == "201") {
       const dealCouponData = {
-        image: getwebImage,
+        image: getImage,
         clientId: 4,
         deleted: false,
         displayOrder: JSON.stringify(values?.displayOrder),
@@ -108,8 +104,8 @@ const DealCouponForm = () => {
         dealid: values?.dealId,
         title: values?.title,
         terms: values?.terms,
-        month: values?.month,
-        week: values?.week,
+        months: values?.months.map((item) => item.value),
+        weekDays: values?.weekDays.map((item) => item.value),
         coupounCode: values?.coupounCode,
         description: JSON.stringify(values?.description),
       };
@@ -131,6 +127,7 @@ const DealCouponForm = () => {
 
   return (
     <>
+    <ScrollToTop/>
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">

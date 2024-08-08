@@ -11,6 +11,7 @@ import {
   onGetDealCategory,
   onPostDealCategory,
   onPostDealCategoryReset,
+  onUpdateDealCategory,
 } from "../../Store/Slices/dealCategorySlice";
 import {
   onPostuploadImage,
@@ -19,7 +20,7 @@ import {
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
 
-const SectionContentMasterForm = () => {
+const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   const [values, setValues] = useState(null);
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
@@ -49,13 +50,36 @@ const SectionContentMasterForm = () => {
   //to handle submit
   const handleSubmit = (values) => {
     if (values) {
-
+      if (
+        typeof values.webImage === "object" &&
+        typeof values.mobImage === "object"
+      ) {
         dispatch(onPostuploadImage(values.webImage));
         dispatch(onPostuploadMobileImage(values.mobImage));
         setValues(values);
+      } else {
+        const dealCategoryData = {
+          webImage: values.webImage,
+          mobImage: values.mobImage,
+          clientId: 4,
+          deleted: false,
+          name:values?.name,
+          displayOrder: JSON.stringify(values?.displayOrder),
+          id: values.id,
+        };
+        dispatch(onUpdateDealCategory(dealCategoryData));
 
-    }
+      }
+      setInitialValue({
+        webImage: "",
+        mobImage: "",
+        displayOrder: "",
+        name: "",
+      })
+      setdealCategory("")
+      }
   };
+
   // to handle image changes
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
@@ -79,8 +103,10 @@ const SectionContentMasterForm = () => {
         deleted: false,
         name: values?.name,
         displayOrder: JSON.stringify(values?.displayOrder),
+        ...(dealCategory && { id: values.id }),
       };
       dispatch(onPostDealCategory(dealCategoryData));
+      setdealCategory("")
     }
   }, [uploadImage, values]);
   // to handle navigation and toast notifications based on deal category status
@@ -96,6 +122,12 @@ const SectionContentMasterForm = () => {
       dispatch(onPostDealCategoryReset());
     }
   }, [dealCategoryData]);
+  useEffect(() => {
+    if (dealCategory) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(dealCategory);
+    }
+  }, [dealCategory]);
   return (
     <>
       <ToastContainer />
@@ -234,5 +266,5 @@ const SectionContentMasterForm = () => {
   );
 };
 
-export default SectionContentMasterForm;
+export default DealCategoryForm;
 /* eslint-enable react-hooks/exhaustive-deps */

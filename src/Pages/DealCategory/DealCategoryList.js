@@ -8,7 +8,11 @@ import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealCategoryForm from "./DealCategoryForm";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetDealCategory, onUpdateDealCategory, onUpdateDealCategoryReset } from "../../Store/Slices/dealCategorySlice";
+import {
+  onGetDealCategory,
+  onUpdateDealCategory,
+  onUpdateDealCategoryReset,
+} from "../../Store/Slices/dealCategorySlice";
 import { toast } from "react-toastify";
 
 const DealCategoryList = () => {
@@ -28,10 +32,8 @@ const DealCategoryList = () => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredData = dealCategoryData?.getDealCategoryData?.filter(
-    (data) =>
-      data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-
+  const filteredData = dealCategoryData?.getDealCategoryData?.filter((data) =>
+    data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
@@ -46,8 +48,8 @@ const DealCategoryList = () => {
       clientId: 4,
       name: dealCategory?.name,
       displayOrder: dealCategory?.displayOrder,
-      mobImage:dealCategory?.mobImage,
-      webImage:dealCategory?.webImage,
+      mobImage: dealCategory?.mobImage,
+      webImage: dealCategory?.webImage,
     };
     if (isEdit) {
       setdealCategory(dealCategoryData);
@@ -61,17 +63,17 @@ const DealCategoryList = () => {
       dispatch(onGetDealCategory());
       dispatch(onUpdateDealCategoryReset());
     } else if (dealCategoryData?.update_status_code == "205") {
+      setdealCategory("")
       toast.success(dealCategoryData?.updateMessage);
       dispatch(onGetDealCategory());
       dispatch(onUpdateDealCategoryReset());
-
     } else if (dealCategoryData?.update_status_code) {
       toast.error(dealCategoryData?.updateMessage);
       dispatch(onUpdateDealCategoryReset());
     }
   }, [dealCategoryData]);
   useEffect(() => {
-    if (filteredData ) {
+    if (filteredData) {
       const totalItems = filteredData?.length;
       const totalPages = Math.ceil(totalItems / rowsPerPage);
       if (page > totalPages && page > 1) {
@@ -85,7 +87,12 @@ const DealCategoryList = () => {
   }, []);
   return (
     <>
-      {getRoleAccess[0]?.addAccess && <DealCategoryForm />}
+      {getRoleAccess[0]?.addAccess && (
+        <DealCategoryForm
+          setdealCategory={setdealCategory}
+          dealCategory={dealCategory}
+        />
+      )}
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -113,7 +120,8 @@ const DealCategoryList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCategoryData?.isgetLoading || dealCategoryData?.isUpdateLoading? (
+                {dealCategoryData?.isgetLoading ||
+                dealCategoryData?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -125,8 +133,8 @@ const DealCategoryList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Category Name"}</th>
-                                <th>{"Display Name"}</th>
+                                <th>{" Name"}</th>
+                                <th>{"Display Order"}</th>
                                 <th>{"Web Image "}</th>
                                 <th>{"Mobile Image"}</th>
                                 {getRoleAccess[0]?.editAccess && (
