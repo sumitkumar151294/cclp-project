@@ -108,10 +108,10 @@ const DealCouponForm = () => {
         dealid: values?.dealId,
         title: values?.title,
         terms: values?.terms,
-        months: values.months.map((item) => item.value),
-        weekDays: values.weekDays.map((item) => item.value),
-        coupounCode: values.coupounCode,
-        description: JSON.stringify(values.description),
+        month: values?.month,
+        week: values?.week,
+        coupounCode: values?.coupounCode,
+        description: JSON.stringify(values?.description),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }

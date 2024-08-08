@@ -9,8 +9,17 @@ import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDeal, onPostDeal, onPostDealReset } from "../../Store/Slices/dealSlice";
 import { onPostuploadImage, onPostuploadImageReset, onPostuploadMobileImage, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
 
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 
 const DealForm = () => {
+  const todayDate = getTodayDate();
   const [values, setValues] = useState(null);
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
@@ -286,6 +295,7 @@ const DealForm = () => {
                               <Field
                                 type="date"
                                 name="startDate"
+                                min={todayDate}
                                 className={`form-control ${errors.startDate && touched.startDate
                                     ? "is-invalid"
                                     : ""
@@ -302,6 +312,7 @@ const DealForm = () => {
                               <Field
                                 type="date"
                                 name="endDate"
+                                min={todayDate}
                                 className={`form-control ${errors.endDate && touched.endDate
                                     ? "is-invalid"
                                     : ""
