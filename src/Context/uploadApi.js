@@ -15,7 +15,6 @@ export const calluploadApi = async (payload) => {
     );
     return data;
   } catch (error) {
-    console.error("Error uploading image:", error);
     throw error;
   }
 };

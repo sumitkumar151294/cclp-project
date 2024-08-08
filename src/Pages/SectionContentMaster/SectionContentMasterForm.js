@@ -396,7 +396,7 @@ const SectionContentMasterForm = ({
                                 disabled={displayLimit}
                               />
                             </div>
-                            {type === "SpecialSection" && (
+                            {type === "CustomerBenefits"  && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>Text</label>
                                 <Field
@@ -412,9 +412,13 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
+
                             {(type === "UnlockStaticCard" ||
                               type === "CustomerBenefits" ||
                               type === "SupportingBanner") && (
+
+//                             {( type === "UnlockStaticCard" ||   type==="SupportingBanner" || type==="SpecialSection" )&& (
+
                               <div className="col-sm-9 mt-2">
                                 <label>{text_label}</label>
                                 <Field
