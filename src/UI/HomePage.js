@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../UI/HomePage.scss";
 import "../UI/responsive.scss";
 import Header from "./Header/Header";
@@ -12,23 +12,32 @@ import GiftCard from "./giftCard-Component/GiftCard";
 import PointBanner from "./pointBanner/PointBanner";
 import SummerSpecial from "./summer/SummerSpecial";
 import BestSellergift from "./bestSeller/BestSellergift";
+import { useDispatch } from "react-redux";
+import { onGetsectionMaster } from "../Store/Slices/sectionMasterSlice";
+import { onGetSectionContentMaster } from "../Store/Slices/sectionContentMasterSlice";
 
 const HomePage = () => {
- 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(onGetsectionMaster());
+    dispatch(onGetSectionContentMaster());
+  }, []);
+
   return (
     <>
-      <Header/>
+      <Header />
       <div className="container">
-      <HeroSection/>
-      <SpecialofferSlide/>
-      <TabBar/>
-      <SmartReward/>
-      <BestSeller/>
-      <TopOffer/>
-      <BestSellergift/>
-      <GiftCard/>
-      <PointBanner/>
-      <SummerSpecial/>
+        <HeroSection />
+        <SpecialofferSlide />
+        <TabBar />
+        <SmartReward />
+        <BestSeller />
+        <TopOffer />
+        <BestSellergift />
+        <GiftCard />
+        <PointBanner />
+        <SummerSpecial />
       </div>
     </>
   );

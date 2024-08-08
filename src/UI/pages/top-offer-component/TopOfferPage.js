@@ -14,12 +14,10 @@ import kid from "../../../Assets/imgNewUI/topoffer/kids.png";
 import shopping from "../../../Assets/imgNewUI/topoffer/shopping.png";
 import beauty from "../../../Assets/imgNewUI/topoffer/beauty.png";
 // import cardarrow from '../../../Assets/imgNewUI/card-arrow.png';
-import upArrow from '../../../Assets/imgNewUI/Arrow 21.png';
-import downArrow from '../../../Assets/imgNewUI/Arrow 22.png';
+import upArrow from "../../../Assets/imgNewUI/Arrow 21.png";
+import downArrow from "../../../Assets/imgNewUI/Arrow 22.png";
 // import image1 from '../../../Assets/imgNewUI/topoffer/Rectangle.png';
-import image2 from '../../../Assets/imgNewUI/topoffer/Rectangle2.png';
-import image3 from '../../../Assets/imgNewUI/topoffer/Rectangle3.png';
-
+import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
 
 const TopOfferPage = () => {
   const dispatch = useDispatch();
@@ -74,20 +72,20 @@ const TopOfferPage = () => {
     };
   }, []);
   const items = [
-    { src: cartBag, text: 'Shopping' },
-    { src: bag, text: 'Travel' },
-    { src: food, text: 'Dining' },
-    { src: health, text: 'Wellness' },
-    { src: kid, text: 'Kids' },
-    { src: bag, text: 'Travel' },
-    { src: shopping, text: 'Fashion' },
-    { src: beauty, text: 'Beauty' },
+    { src: cartBag, text: "Shopping" },
+    { src: bag, text: "Travel" },
+    { src: food, text: "Dining" },
+    { src: health, text: "Wellness" },
+    { src: kid, text: "Kids" },
+    { src: bag, text: "Travel" },
+    { src: shopping, text: "Fashion" },
+    { src: beauty, text: "Beauty" },
   ];
 
   const itemsToShow = isMobile ? (showAll ? items : items.slice(0, 4)) : items;
 
   const handleToggle = () => {
-    setShowAll(prev => !prev);
+    setShowAll((prev) => !prev);
   };
 
   useEffect(() => {
@@ -95,15 +93,16 @@ const TopOfferPage = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <>
+      <ScrollToTop />
       <Header />
       <div className="container top_offer_main_wrapper_container">
         <div className="row forMob">
@@ -166,39 +165,46 @@ const TopOfferPage = () => {
               </h3>
             </div>
             <div className="top_offer_menu_tab">
+              {getDealCategories?.getDealCategoryData?.map((category) => (
+                <div className="sub_menu" key={category?.id}>
+                  <span>
+                    <img src={cartBag} alt="icon" />
+                  </span>
+                  <p>{category?.name}</p>
+                </div>
+              ))}
 
-           {getDealCategories?.getDealCategoryData?.map((category) => (
-               <div className="sub_menu" key={category?.id}>
-               <span>
-                 <img src={cartBag} alt="icon" />
-                </span>
-                <p>{category?.name}</p>
-            </div>
-             ))}
-             
               {/* Conditionally render button based on screen size */}
               {isMobile && (
                 <button onClick={handleToggle} className="toggle-button">
-                  {showAll ?  <div className="sub_menu">
-                  <span>
-                 <img src={upArrow} alt="less" />
-                  </span>
-                  <p className="less">Less</p>
-                </div> :  <div className="sub_menu">
-                  <span>
-                    <img src={downArrow} alt="more" />
-                    <i class="fa-solid fa-angle-up"></i>
-                  </span>
-                  <p className="more">More</p>
-                </div>}
+                  {showAll ? (
+                    <div className="sub_menu">
+                      <span>
+                        <img src={upArrow} alt="less" />
+                      </span>
+                      <p className="less">Less</p>
+                    </div>
+                  ) : (
+                    <div className="sub_menu">
+                      <span>
+                        <img src={downArrow} alt="more" />
+                        <i class="fa-solid fa-angle-up"></i>
+                      </span>
+                      <p className="more">More</p>
+                    </div>
+                  )}
                 </button>
               )}
-
             </div>
             <div className="top_offer_card_container">
               {filteredDeals?.map((deal) => (
                 <div className="offer_card" key={deal?.id}>
                   <img className="top_image" src={image1} alt="image1" />
+                  {/* <picture>
+                <source media="(max-width: 768px)" srcSet={deal?.mobImage} />
+                <source media="(min-width: 769px)" srcSet={deal?.webImage} />
+                <img src={deal?.webImage} alt="web-image" />
+              </picture> */}
                   <div className="card_title">
                     <h4>{deal?.name}</h4>
                   </div>
