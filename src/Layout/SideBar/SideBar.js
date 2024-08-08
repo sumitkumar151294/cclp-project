@@ -69,8 +69,8 @@ const SideBar = () => {
   const iconDynamic = (icon) => {
     try {
       return require(`../../Assets/icon/${icon}.png`);
-    } catch (err) {
-      console.error(`Cannot find module './${icon}.png'`);
+    } catch (error) {
+      throw error;
     }
   };
   // to add an active class to the clicked navigation item

@@ -212,11 +212,9 @@ const RoleMasterForm = ({ data, setData }) => {
         name: data?.name,
         description: data?.description,
       });
-      console.log(data);
       const moduleAccessList = getModuleAccessData?.data?.filter(
         (item) => item.roleId === data.id
       );
-      console.log(moduleAccessList, "moduleAccessList");
       const modulesData = moduleAccessData.map((module) => {
         const moduleAccessItem = moduleAccessList.find(
           (mod) => mod.moduleId === module.id
@@ -229,7 +227,6 @@ const RoleMasterForm = ({ data, setData }) => {
           edit: moduleAccessItem?.editAccess || false,
         };
       });
-      console.log(modulesData, "modulesData");
       setModuleAccess(modulesData);
     }
   }, [data, moduleAccessData, getModuleAccessData]);
