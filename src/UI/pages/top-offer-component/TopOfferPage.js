@@ -167,23 +167,15 @@ const TopOfferPage = () => {
             </div>
             <div className="top_offer_menu_tab">
 
-{/* //               {getDealCategories?.getDealCategoryData?.map((category) => (
-//                 <div className="sub_menu" key={category?.id}>
-//                   <span>
-//                     <img src={cartBag} alt="icon" />
-//                   </span>
-//                   <p>{category?.name}</p>
-//                 </div>
-//               ))} */}
-
-              {itemsToShow.map((item, index) => (
-                <div key={index} className="sub_menu">
-                  <span>
-                    <img src={item.src} alt={item.text} />
-                  </span>
-                  <p>{item.text}</p>
-                </div>
-              ))}
+           {getDealCategories?.getDealCategoryData?.map((category) => (
+               <div className="sub_menu" key={category?.id}>
+               <span>
+                 <img src={cartBag} alt="icon" />
+                </span>
+                <p>{category?.name}</p>
+            </div>
+             ))}
+             
               {/* Conditionally render button based on screen size */}
               {isMobile && (
                 <button onClick={handleToggle} className="toggle-button">
