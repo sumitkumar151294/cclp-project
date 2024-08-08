@@ -397,7 +397,7 @@ const RoleMasterForm = ({ data, setData }) => {
                         <div className="col-sm-4 mt-4 mb-4">
                           <Button
                             text={data ? update : submit}
-                            icon="fa fa-arrow-right"
+                            end_icon="fa fa-arrow-right"
                             className="btn btn-primary btn-sm float-right p-btn mt-2"
                           />
                           <ToastContainer />

@@ -37,6 +37,10 @@ const SideBar = () => {
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
+  // to get user-role-loader  from the Redux store
+  const roleAccessListLoading = useSelector(
+    (state) => state?.userRoleReducer?.getUserRoleLoading
+  );
   // fetch module and user role module access data when the component mounts
   useEffect(() => {
     axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
@@ -52,10 +56,10 @@ const SideBar = () => {
     if (!getModuleData?.data?.length) {
       dispatch(onGetModule());
       dispatch(onGetUserRoleModuleAccess());
-      dispatch(resetAllowModules());
+      // dispatch(resetAllowModules());
     }
   }, []);
-  // function to handle logout and navigate to the home page
+  // to reset the redux store (logout the user)
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(onLogout());
@@ -79,7 +83,7 @@ const SideBar = () => {
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
-    if (!getModule?.isLoading && userRoleModuleAccess?.length) {
+    if (!getModule?.isLoading && userRoleModuleAccess?.length > 0) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
       const filterData = userRoleModuleAccess?.filter((item) => {
         return (
@@ -98,7 +102,7 @@ const SideBar = () => {
       }
       setIsSideBarModules(filterModules);
     }
-  }, [getModuleData, userRoleModuleAccess]);
+  }, [getModule, userRoleModuleAccess]);
   // to filter module access data
   const getModuleDataAccess = userRoleModuleAccess.filter((item) => {
     return (
@@ -106,12 +110,12 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
-  
+
   useEffect(() => {
     if (
       getModuleDataAccess &&
       selectedModuleId !== null &&
-      !getModuleData?.filteredData?.length
+      !getModule?.filteredData?.length
     ) {
       const roleAcessValues = getModuleDataAccess.filter(
         (item) => item.moduleId === selectedModuleId
@@ -120,7 +124,7 @@ const SideBar = () => {
     } else if (
       getModuleDataAccess &&
       selectedModuleId === null &&
-      !getModuleData?.filteredData?.length
+      !getModule?.filteredData?.length
     ) {
       const data = sideBarModules.find(
         (item) =>
@@ -135,45 +139,46 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        {getModule?.isLoading &&
-        <div >
-        <Loader classType={"z-index"} />
-      </div>}
-        <ul className="metismenu mm-show" id="menu">
-          {sideBarModules &&
-            sideBarModules?.map((sideBar, index) => (
-              <li
-                key={index}
-                className={`nav-icn ${
-                  sideBar.routePath === currentUrl.pathname ? "mm-active" : ""
-                }`}
-                onClick={(e) => hanleClick(e, sideBar.id)}
+        {getModule?.isLoading ? (
+          <div style={{ height: "400px" }}>
+            <Loader classType={"absoluteLoader"} />
+          </div>
+        ) : (
+          <ul className="metismenu mm-show" id="menu">
+            {sideBarModules &&
+              sideBarModules?.map((sideBar, index) => (
+                <li
+                  key={index}
+                  className={`nav-icn ${
+                    sideBar.routePath === currentUrl.pathname ? "mm-active" : ""
+                  }`}
+                  onClick={(e) => hanleClick(e, sideBar.id)}>
+                  <Link
+                    className="ai-icon"
+                    to={sideBar.routePath}
+                    aria-expanded="false"
+                  >
+                    <img
+                      className="w-20px"
+                      src={iconDynamic(sideBar.icon)}
+                      alt={sideBar.icon}
+                    />
+                    <span className="nav-text ps-1">{sideBar.name}</span>
+                  </Link>
+                </li>
+              ))}
+            <li className="p-b-3">
+              <Link
+                className="ai-icon"
+                onClick={handleLogout}
+                aria-expanded="false"
               >
-                <Link
-                  className="ai-icon"
-                  to={sideBar.routePath}
-                  aria-expanded="false"
-                >
-                  <img
-                    className="w-20px"
-                    src={iconDynamic(sideBar.icon)}
-                    alt={sideBar.icon}
-                  />
-                  <span className="nav-text ps-1">{sideBar.name}</span>
-                </Link>
-              </li>
-            ))}
-          <li className="p-b-3">
-            <Link
-              className="ai-icon"
-              onClick={handleLogout}
-              aria-expanded="false"
-            >
-              <img className="w-20px" src={Logout} alt="file not exist" />
-              <span className="nav-text ps-1 "> {logout}</span>
-            </Link>
-          </li>
-        </ul>
+                <img className="w-20px" src={Logout} alt="file not exist" />
+                <span className="nav-text ps-1 "> {logout}</span>
+              </Link>
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   );

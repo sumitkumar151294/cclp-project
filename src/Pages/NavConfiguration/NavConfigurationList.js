@@ -6,16 +6,37 @@ import ReactPaginate from "react-paginate";
 import InputField from "../../Components/InputField/InputField";
 import NavConfigurationForm from "./NavConfigurationForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
-import { onGetNavConfigure } from "../../Store/Slices/NavConfigurationSlice";
+import {
+  onGetNavConfigure,
+  onUpdateNavConfigure,
+  onUpdateNavConfigureReset,
+} from "../../Store/Slices/NavConfigurationSlice";
+import Button from "../../Components/Button/Button";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { toast, ToastContainer } from "react-toastify";
 
 const NavConfigurationList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [navData, setNavData] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
+  // to get column heading name from translation
+  const nav_configuration_list = GetTranslationData(
+    "UIMasterAdmin",
+    "nav_configuration_list"
+  );
+  const menu_name = GetTranslationData("UIMasterAdmin", "menu_name");
+  const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   // to get module data from the Redux store
   const navConfigure = useSelector((state) => state?.navConfigurationReducer);
   const navConfigureData = navConfigure?.getNavConfigureData;
+  // to get module filtered data from redux
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
   //fetch module master data on mount
   useEffect(() => {
     dispatch(onGetNavConfigure());
@@ -25,10 +46,42 @@ const NavConfigurationList = () => {
     setSearchQuery(event.target.value);
   };
   // to filter selected data
-  const filteredData = navConfigureData?.filter((data) =>
-    data.cta?.toLowerCase()?.includes(searchQuery?.toLowerCase()) || 
-    data.navigationMenuName?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  const filteredData = navConfigureData?.filter(
+    (data) =>
+      data.cta?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+      data.navigationMenuName
+        ?.toLowerCase()
+        ?.includes(searchQuery?.toLowerCase())
   );
+  // to handle edit functionality
+  const handleEdit = (data) => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const prefilled = data;
+    setNavData(prefilled);
+  };
+  //to handle delete
+  const handleDelete = (data) => {
+    const deletedData = {
+      id: data?.id,
+      deleted: true,
+      enabled: false,
+      createdBy: 0,
+      updatedBy: 0,
+      clientId: 4,
+      cta: data?.cta,
+      navigationMenuName: data?.navigationMenuName,
+      displayOrder: data?.displayOrder,
+      loginRequired: data?.loginRequired,
+    };
+    dispatch(onUpdateNavConfigure(deletedData));
+  };
+  useEffect(() => {
+    if (navConfigure?.update_status_code == "204") {
+      toast.success(navConfigure?.updateMessage);
+      dispatch(onGetNavConfigure());
+      dispatch(onUpdateNavConfigureReset());
+    }
+  }, [navConfigure]);
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -39,7 +92,9 @@ const NavConfigurationList = () => {
   return (
     <>
       <ScrollToTop />
-      <NavConfigurationForm />
+      {getRoleAccess[0]?.addAccess && (
+        <NavConfigurationForm navData={navData} setNavData={setNavData}/>
+      )}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -65,9 +120,12 @@ const NavConfigurationList = () => {
                   </div>
                 </div>
               </div>
-              {navConfigure?.isgetLoading && <Loader />}
               <div className="card-body">
-                {filteredData?.length ? (
+                {navConfigure?.isgetLoading || (navConfigure?.isUpdateLoading) ? (
+                  <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>
+                ) : filteredData?.length ? (
                   <div className="table-responsive">
                     <table className="table header-border table-responsive-sm">
                       <thead>
@@ -75,16 +133,33 @@ const NavConfigurationList = () => {
                           <th>Menu Name</th>
                           <th>Call To Action</th>
                           <th>Display Order</th>
+                          {getRoleAccess[0]?.editAccess && <th>Action</th>}
                         </tr>
                       </thead>
                       <tbody>
                         {filteredData
                           ?.slice(startIndex, endIndex)
                           ?.map((data, index) => (
-                            <tr>
+                            <tr key={index}>
                               <td>{data.cta}</td>
                               <td>{data.navigationMenuName}</td>
                               <td>{data.displayOrder}</td>
+                              {getRoleAccess[0]?.editAccess && (
+                                <td>
+                                  <div className="d-flex">
+                                    <Button
+                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                      end_icon={"fas fa-pencil-alt"}
+                                      onClick={() => handleEdit(data)}
+                                    />
+                                    <Button
+                                      className="btn btn-danger shadow btn-xs sharp"
+                                      end_icon={"fa fa-trash"}
+                                      onClick={() => handleDelete(data)}
+                                    />
+                                  </div>
+                                </td>
+                              )}
                             </tr>
                           ))}
                       </tbody>

@@ -61,7 +61,6 @@ const RoleMasterList = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     const prefilled = data;
     setData(prefilled);
-    console.log(prefilled,"hghj");
   };
 
   return (
@@ -123,7 +122,7 @@ const RoleMasterList = () => {
                                 <td>
                                   <Button
                                     className="btn btn-primary shadow btn-xs sharp me-1"
-                                    icon={"fas fa-pencil-alt"}
+                                    end_icon={"fas fa-pencil-alt"}
                                     onClick={() => handleEdit(data)}
                                   />
                                 </td>

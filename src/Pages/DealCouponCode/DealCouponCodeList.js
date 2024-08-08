@@ -172,7 +172,7 @@ const DealCouponCodeList = () => {
                                       <div className="d-flex">
                                         <Button
                                           className="btn btn-primary shadow btn-xs sharp me-1"
-                                          icon={"fas fa-pencil-alt"}
+                                          end_icon={"fas fa-pencil-alt"}
                                           // onClick={() =>
                                           //   handleEdit(
                                           //     data,
@@ -182,7 +182,7 @@ const DealCouponCodeList = () => {
                                         />
                                         <Button
                                           className="btn btn-danger shadow btn-xs sharp"
-                                          icon={"fa fa-trash"}
+                                          end_icon={"fa fa-trash"}
                                           // onClick={() =>
                                           //   handleDelete(data)
                                           // }

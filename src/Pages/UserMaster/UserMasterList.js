@@ -189,7 +189,7 @@ const UserMasterList = () => {
                                   <div className="d-flex">
                                     <Button
                                       className="btn btn-primary shadow btn-xs sharp me-1"
-                                      icon={"fas fa-pencil-alt"}
+                                      end_icon={"fas fa-pencil-alt"}
                                       onClick={() =>
                                         handleSumbit(userMasterData, {
                                           isEdit: true,
@@ -198,7 +198,7 @@ const UserMasterList = () => {
                                     />
                                     <Button
                                       className="btn btn-danger shadow btn-xs sharp"
-                                      icon={"fa fa-trash"}
+                                      end_icon={"fa fa-trash"}
                                       onClick={() =>
                                         handleSumbit(userMasterData)
                                       }

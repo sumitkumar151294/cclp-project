@@ -45,8 +45,8 @@ const DealCouponForm = () => {
     image: "",
     description: "",
     terms: "",
-    month: [],
-    week: [],
+    months: [],
+    weekDays: [],
     segmentId: "",
     cta: "",
     titie: "",
@@ -62,16 +62,19 @@ const DealCouponForm = () => {
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     dealId: Yup.string().required("Deal is required"),
-    month: Yup.string().required("Start Data is required"),
-    week: Yup.string().required("End Date is required"),
+    months: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one month is required"),
+    weekDays: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one week is required"),
     segmentId: Yup.string().required("Segment is required"),
     typeOfCoupoun: Yup.string().required("Coupon Type is required"),
-    image: Yup.string().required("Image Type is required"),
+    image: Yup.string().required("Image is required"),
+    description: Yup.string().required("Description is required"),
+    cta: Yup.string().required("Call To Action is required"),
+    title: Yup.string().required("Title is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {
-    if (values) {
-      debugger;
+    if (typeof values.image==="object") {
+
       dispatch(onPostuploadImage(values.image));
       setValues(values);
     }
@@ -82,16 +85,15 @@ const DealCouponForm = () => {
     formData.append("file", file);
     setFieldValue("image", formData);
   };
-  const monthNames = Array.from({ length: 12 }, (_, index) => {
-    const date = new Date(0, index);
-    const month = date.toLocaleString("default", { month: "long" });
-    return { value: month, label: month };
-  });
-  const weekDayNames = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(0, 0, index + 1); // Start at Sunday
-    const day = date.toLocaleString('default', { weekday: 'long' });
-    return { value: day, label: day };
-  });
+  const monthNames = Array.from({ length: 12 }, (_, index) => ({
+    value: index + 1,
+    label: new Date(0, index).toLocaleString("default", { month: "long" }),
+  }));
+  
+  const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
+    value: index + 1,
+    label: new Date(0, 0, index + 1).toLocaleString("default", { weekday: "long" }),
+  }));
 
   useEffect(() => {
     if (uploadImage?.post_status_code == "201") {
@@ -289,7 +291,7 @@ const DealCouponForm = () => {
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-4">
+                            <div className="col-sm-4 form-group ">
                               <label>
                                 Description
                                 <span className="text-danger">*</span>
@@ -338,15 +340,18 @@ const DealCouponForm = () => {
                                 isMulti
                                 name="months"
                                 options={monthNames}
-                                className={` form-select ${
-                                  errors.month && touched.month
+                                className={`form-select ${
+                                  errors.months && touched.months
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 classNamePrefix="react-select"
+                                onChange={(selectedOptions) =>
+                                  setFieldValue("months", selectedOptions)
+                                }
                               />
                               <ErrorMessage
-                                name="month"
+                                name="months"
                                 component="div"
                                 className="error-message"
                               />
@@ -355,17 +360,20 @@ const DealCouponForm = () => {
                               <label>Select Week Days</label>
                               <Select
                                 isMulti
-                                name="months"
+                                name="weekDays"
                                 options={weekDayNames}
-                                className={` form-select ${
-                                  errors.month && touched.month
+                                className={`form-select ${
+                                  errors.weekDays && touched.weekDays
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 classNamePrefix="react-select"
+                                onChange={(selectedOptions) =>
+                                  setFieldValue("weekDays", selectedOptions)
+                                }
                               />
                               <ErrorMessage
-                                name="month"
+                                name="weekDays"
                                 component="div"
                                 className="error-message"
                               />
@@ -375,7 +383,7 @@ const DealCouponForm = () => {
                               <label>Terms and Condition</label>
                               <Field
                                 component={HtmlEditor}
-                                name="text"
+                                name="terms"
                                 className={`form-control ${
                                   errors.terms && touched.terms
                                     ? "is-invalid"
@@ -392,7 +400,7 @@ const DealCouponForm = () => {
                             <div className="col-sm-12 form-group mb-4">
                               <Button
                                 text={"Sumbit"}
-                                icon="fa fa-arrow-right"
+                                end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
                             </div>
