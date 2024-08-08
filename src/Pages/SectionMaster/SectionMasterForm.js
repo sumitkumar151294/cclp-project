@@ -42,7 +42,6 @@ const SectionMasterForm = ({ sectionData }) => {
   });
   // Translation labels
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
-
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
   const points_to_claim_label = GetTranslationData("UIMasterAdmin", "points_to_claim_label");
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
@@ -59,6 +58,11 @@ const SectionMasterForm = ({ sectionData }) => {
   const section_name_required = GetTranslationData("UIMasterAdmin", "section_name_required");
   const section_type_required = GetTranslationData("UIMasterAdmin", "section_type_required");
   const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
+  const display_limit_required = GetTranslationData("UIMasterAdmin", "display_limit_required");
   const sectionTypeOptions = [
     { value: "Banner", label: "Banner" },
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
@@ -71,8 +75,8 @@ const SectionMasterForm = ({ sectionData }) => {
     sectionName: Yup.string().required(section_name_required),
     sectionType: Yup.string().required(section_type_required),
     enabled: Yup.string().required(status_required),
-    displayOrder: Yup.string().required("Display Order is required"),
-    displayLimit: Yup.string().required("Display Limit is required"),
+    displayOrder: Yup.string().required(display_order_required),
+    displayLimit: Yup.string().required(display_limit_required),
   });
 
   const handleSubmit = (values) => {

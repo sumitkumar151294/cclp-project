@@ -20,7 +20,7 @@ const RoleMasterList = () => {
   );
   const roleName = GetTranslationData("UIMasterAdmin", "role_name");
   const modules = GetTranslationData("UIMasterAdmin", "modules");
-  const action = GetTranslationData("UIMasterAdmin", "action");
+  const action = GetTranslationData("UIMasterAdmin", "action_label");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   const dispatch = useDispatch();
   // to get the user-role-data from redux
@@ -43,8 +43,6 @@ const RoleMasterList = () => {
       let moduleName = moduleList?.filter((item) => item.id === id);
       if (moduleName?.length > 0) {
         return moduleName[0].name;
-      } else {
-        return "";
       }
     }
   };

@@ -134,7 +134,7 @@ const SectionContentMasterList = () => {
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
                     <h4 className="card-title">
-                      {"Section Content Master List"}
+                      {section_content_master_list}
                     </h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
