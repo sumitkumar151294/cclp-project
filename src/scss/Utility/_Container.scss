@@ -14,6 +14,24 @@ $h100: var(--h100);
   
 
 }
+@media only screen and (min-width: 998px)  {
+  .container{
+    padding: 0 3rem !important;
+  }
+}
+
+@media only screen and (min-width: 1200px)  {
+  .container{
+    padding: 0 4.5rem !important;
+  }
+}
+
+@media only screen and (min-width: 1400px)  {
+  .container{
+    padding: 0 6rem !important;
+  }
+}
+
 @media only screen and (min-width: 1400px)  {
   
   .mt-client-list{

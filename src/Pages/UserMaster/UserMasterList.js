@@ -38,7 +38,6 @@ const UserMasterList = () => {
     dispatch(onGetuserMaster());
     dispatch(onGetUserRole());
   }, []);
-  console.log(userList);
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;

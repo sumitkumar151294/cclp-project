@@ -8,7 +8,7 @@ const DynamicImage = ({ imageName }) => {
         const module = await import(`../../Assets/img/${imageName}.png`);
         setImageSrc(module.default);
       } catch (error) {
-        console.error("Error loading image:", error.message);
+        throw error
       }
     };  
     useEffect(() => {

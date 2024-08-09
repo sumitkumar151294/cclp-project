@@ -30,12 +30,7 @@ const TopOfferPage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showAll, setShowAll] = useState(false);
 
-  console.log(
-    getDealCategories?.getDealCategoryData,
-    "getDeal",
-    getDeal?.getDealData,
-    "getDealCategories"
-  );
+ 
 
   useEffect(() => {
     dispatch(onGetDealCategory());
