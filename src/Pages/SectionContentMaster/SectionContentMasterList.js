@@ -24,10 +24,13 @@ const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
 
   // to get column heading name from translation
-  const section_name = GetTranslationData("UIMasterAdmin", "section_name");
-  const section_type = GetTranslationData("UIMasterAdmin", "section_type");
+  const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const mobile_image = GetTranslationData("UIMasterAdmin", "mobile_image");
+  const web_image = GetTranslationData("UIMasterAdmin", "web_image");
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
   const content_source_type = GetTranslationData(
     "UIMasterAdmin",
     "content_source_type"
@@ -134,7 +137,7 @@ const SectionContentMasterList = () => {
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
                     <h4 className="card-title">
-                      {"Section Content Master List"}
+                      {section_content_master_list}
                     </h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
@@ -142,7 +145,7 @@ const SectionContentMasterList = () => {
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -168,14 +171,14 @@ const SectionContentMasterList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Mobile Image"}</th>
-                                <th>{"Web Image"}</th>
-                                <th>{"Display Order"}</th>
-                                <th>{"Call To Action"}</th>
-                                <th>{"Content Source Type"}</th>
-                                <th>{"Segment"}</th>
-                                <th>{"Text"}</th>
-                                <th>{"Action"}</th>
+                                <th>{mobile_image}</th>
+                                <th>{web_image}</th>
+                                <th>{display_order}</th>
+                                <th>{call_to_action}</th>
+                                <th>{content_source_type}</th>
+                                <th>{segment_label}</th>
+                                <th>{text_label}</th>
+                                <th>{action_label}</th>
                               </tr>
                             </thead>
                             <tbody>

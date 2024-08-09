@@ -13,14 +13,14 @@ import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAcce
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState();
-  // To get the Translation label
+  // To get data from translation
   const roleModuleAccessList = GetTranslationData(
     "UIMasterAdmin",
     "role-module-access-list"
   );
   const roleName = GetTranslationData("UIMasterAdmin", "role_name");
   const modules = GetTranslationData("UIMasterAdmin", "modules");
-  const action = GetTranslationData("UIMasterAdmin", "action");
+  const action = GetTranslationData("UIMasterAdmin", "action_label");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   const dispatch = useDispatch();
   // to get the user-role-data from redux
@@ -28,7 +28,7 @@ const RoleMasterList = () => {
   const roleAccessListData = roleAccessList?.userRoleData;
   // to get the user-role-module-access data from redux
   const userRoleAccessListData = useSelector(
-    (state) => state.userRoleModuleAccessReducer.data
+    (state) => state.userRoleModuleAccessReducer?.data
   );
   // to get the module data from redux
   const moduleList = useSelector((state) => state.moduleReducer?.data);
@@ -43,8 +43,6 @@ const RoleMasterList = () => {
       let moduleName = moduleList?.filter((item) => item.id === id);
       if (moduleName?.length > 0) {
         return moduleName[0].name;
-      } else {
-        return "";
       }
     }
   };

@@ -14,6 +14,7 @@ import {
   onUpdateDealCategoryReset,
 } from "../../Store/Slices/dealCategorySlice";
 import { toast } from "react-toastify";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const DealCategoryList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +24,14 @@ const DealCategoryList = () => {
   const endIndex = startIndex + rowsPerPage;
   const [dealCategory, setdealCategory] = useState("");
   const dispatch = useDispatch();
+  // to get data from translation
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label"); 
+  const deal_category_list = GetTranslationData("UIMasterAdmin", "deal_category_list");
+  const name_label = GetTranslationData("UIMasterAdmin", "name_label");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const mobile_image = GetTranslationData("UIMasterAdmin", "mobile_image");
+  const web_image = GetTranslationData("UIMasterAdmin", "web_image");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
@@ -101,14 +110,14 @@ const DealCategoryList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Category List"}</h4>
+                    <h4 className="card-title">{deal_category_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -133,12 +142,12 @@ const DealCategoryList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{" Name"}</th>
-                                <th>{"Display Order"}</th>
-                                <th>{"Web Image "}</th>
-                                <th>{"Mobile Image"}</th>
+                                <th>{name_label}</th>
+                                <th>{display_order}</th>
+                                <th>{web_image}</th>
+                                <th>{mobile_image}</th>
                                 {getRoleAccess[0]?.editAccess && (
-                                  <th>{"Action"}</th>
+                                  <th>{action_label}</th>
                                 )}
                               </tr>
                             </thead>

@@ -29,9 +29,12 @@ import {
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
-  { value: "Product", label: "Product" }
+  { value: "Product", label: "Product" },
 ];
-const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) => {
+const SectionContentMasterForm = ({
+  sectionContentData,
+  setSectionContentData,
+}) => {
   const location = useLocation();
 
   const getSectiontContentMasterData = useSelector(
@@ -44,15 +47,18 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
     (state) => state.uploadReducer?.postuploadImageData
   );
   const uploadImage = useSelector((state) => state.uploadReducer);
-
   const type = location?.state?.sectionType;
   const typeID = location?.state?.sectionId;
   const sectionLimit = location?.state?.sectionLimit;
 
-  // get labels and placeholder from translation
+  // get labels and placeholder from translation 
   const section_content_master = GetTranslationData(
     "UIMasterAdmin",
     "section_content_master"
+  );
+  const back_label = GetTranslationData(
+    "UIMasterAdmin",
+    "back_label"
   );
   const content_source_type = GetTranslationData(
     "UIMasterAdmin",
@@ -70,11 +76,11 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   );
   const call_to_action = GetTranslationData(
     "UIMasterAdmin",
-    "content_source_type"
+    "call_to_action"
   );
   const call_to_action_placeholder = GetTranslationData(
     "UIMasterAdmin",
-    "upload_image_for_web"
+    "call_to_action_placeholder"
   );
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
@@ -87,7 +93,15 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
     "UIMasterAdmin",
     "text_placeholder"
   );
-
+  const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
+  const displayLimitPlaceholder = GetTranslationData("UIMasterAdmin", "displayLimitPlaceholder");
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
+  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
+  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
+  const max_display_limit_reached = GetTranslationData("UIMasterAdmin", "max_display_limit_reached");
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     mobImage: "",
@@ -100,13 +114,19 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.lazy(value =>
-     ( type==="Banner" ||   type==="SupportingBanner" ||   type==="CustomerBenefits" )? Yup.string().required("Web Image is required") : Yup.string()
+    webImage: Yup.lazy((value) =>
+      type === "Banner" ||
+      type === "SupportingBanner" ||
+      type === "CustomerBenefits"
+        ? Yup.string().required(web_image_required)
+        : Yup.string()
     ),
-    mobImage: Yup.lazy(value =>
-     ( type==="Banner" || type==="CustomerBenefits" )? Yup.string().required("Mobile Image is required") : Yup.string()
+    mobImage: Yup.lazy((value) =>
+      type === "Banner" || type === "CustomerBenefits"
+        ? Yup.string().required(mobile_image_required)
+        : Yup.string()
     ),
-    displayOrder: Yup.string().required("Display Order is required"),
+    displayOrder: Yup.string().required(display_order_required),
   });
 
   const displayLimit =
@@ -123,7 +143,6 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
         dispatch(onPostuploadImage(values.webImage));
         dispatch(onPostuploadMobileImage(values.mobImage));
         setValues(values);
-
       } else {
         const sectionContentMasteData = {
           webImage: values.webImage,
@@ -145,8 +164,8 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   };
   useEffect(() => {
     if (
-      uploadImage?.postMobileStatusCode == "201" &&
-      uploadImage?.post_status_code == "201"
+      uploadImage?.postMobileStatusCode === "201" &&
+      uploadImage?.post_status_code === "201"
     ) {
       const sectionContentMasteData = {
         webImage: getwebImage,
@@ -179,16 +198,16 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
       toast.success(getSectiontContentMasterData?.postMessage);
-      setSectionContentData("")
+      setSectionContentData("");
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-    } else if (getSectiontContentMasterData?.update_status_code == "205") {
-      setSectionContentData("")
+    } else if (getSectiontContentMasterData?.update_status_code === "205") {
+      setSectionContentData("");
     } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
-      setSectionContentData("")
+      setSectionContentData("");
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
@@ -196,7 +215,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
   }, [getSectiontContentMasterData]);
   useEffect(() => {
     if (displayLimit) {
-      toast.error("Maximum Display Limit Reached");
+      toast.error(max_display_limit_reached);
     }
   }, []);
 
@@ -215,10 +234,10 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Section Content Master</h4>
+                <h4 className="card-title">{section_content_master}</h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
-                    <i class="fa-solid fa-arrow-left"></i> Back
+                    <i class="fa-solid fa-arrow-left"></i> {back_label}
                   </button>
                 </Link>
               </div>
@@ -240,10 +259,10 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            {(type === "SpecialSection" )&& (
+                            {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
-                                  Content Source Type
+                                  {content_source_type}
                                   <span className="text-danger">*</span>
                                 </label>
 
@@ -265,10 +284,10 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                 />
                               </div>
                             )}
-                            {(type === "SpecialSection") && (
+                            {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
-                                  Segment
+                                  {segment_label}
                                   <span className="text-danger">*</span>
                                 </label>
 
@@ -290,57 +309,73 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                               </div>
                             )}
 
-{(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner") && <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                Upload Image For Web
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="webImage"
-                                className={`form-control ${
-                                  errors.webImage && touched.webImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event, false)
-                                }
-                                disabled={displayLimit}
-                              />
-                              <ErrorMessage
-                                name="webImage"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>}
-                            {(type === "Banner" || type==="CustomerBenefits" ||   type==="SupportingBanner")&&  <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                Upload Image For Phone
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="mobImage"
-                                className={`form-control ${
-                                  errors.mobImage && touched.mobImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event, true)
-                                }
-                                disabled={displayLimit}
-                              />
-                              <ErrorMessage
-                                name="mobImage"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>}
+                            {(type === "Banner" ||
+                              type === "CustomerBenefits" ||
+                              type === "SupportingBanner") && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  {upload_image_for_web}
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <input
+                                  type="file"
+                                  name="webImage"
+                                  className={`form-control ${
+                                    errors.webImage && touched.webImage
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(event) =>
+                                    handleImageChange(
+                                      setFieldValue,
+                                      event,
+                                      false
+                                    )
+                                  }
+                                  disabled={displayLimit}
+                                />
+                                <ErrorMessage
+                                  name="webImage"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                            {(type === "Banner" ||
+                              type === "CustomerBenefits" ||
+                              type === "SupportingBanner") && (
+                              <div className="col-sm-4 form-group mb-2">
+                                <label>
+                                  {upload_image_for_phone}
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <input
+                                  type="file"
+                                  name="mobImage"
+                                  className={`form-control ${
+                                    errors.mobImage && touched.mobImage
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(event) =>
+                                    handleImageChange(
+                                      setFieldValue,
+                                      event,
+                                      true
+                                    )
+                                  }
+                                  disabled={displayLimit}
+                                />
+                                <ErrorMessage
+                                  name="mobImage"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Display Order
+                                {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -351,7 +386,7 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder={displayOrderPlaceholder}
                                 disabled={displayLimit}
                               />
                               <ErrorMessage
@@ -361,20 +396,20 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2 ">
-                              <label>Call To Action</label>
+                              <label>{call_to_action}</label>
                               <Field
                                 type="text"
                                 name="cta"
                                 className={`form-control ${
                                   errors.cta && touched.cta ? "is-invalid" : ""
                                 }`}
-                                placeholder="Enter Call To Action"
+                                placeholder={call_to_action_placeholder}
                                 disabled={displayLimit}
                               />
                             </div>
                             {type === "CustomerBenefits"  && (
                               <div className="col-sm-4 form-group mb-2">
-                                <label>Text</label>
+                                <label>{text_label}</label>
                                 <Field
                                   type="text"
                                   name="text"
@@ -383,14 +418,20 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                  placeholder="Enter Text"
+                                  placeholder={text_placeholder}
                                   disabled={displayLimit}
                                 />
                               </div>
                             )}
-                            {( type === "UnlockStaticCard" ||   type==="SupportingBanner" || type==="SpecialSection" )&& (
+
+                            {(type === "UnlockStaticCard" ||
+                              type === "CustomerBenefits" ||
+                              type === "SupportingBanner") && (
+
+//                             {( type === "UnlockStaticCard" ||   type==="SupportingBanner" || type==="SpecialSection" )&& (
+
                               <div className="col-sm-9 mt-2">
-                                <label>Text</label>
+                                <label>{display_limit}</label>
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
@@ -399,14 +440,14 @@ const SectionContentMasterForm = ({ sectionContentData,setSectionContentData }) 
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                  placeholder="Enter Text"
+                                  placeholder={displayLimitPlaceholder}
                                   disabled={displayLimit}
                                 />
                               </div>
                             )}
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Sumbit"}
+                                text={sectionContentData ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />

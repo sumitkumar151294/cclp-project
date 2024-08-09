@@ -18,14 +18,14 @@ const ModuleMasterForm = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get labels and placeholder from translation
-  const submit = GetTranslationData("UIMasterAdmin", "submit_label");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
   const module_name = GetTranslationData("UIMasterAdmin", "module_name");
   const module_master = GetTranslationData("UIMasterAdmin", "module_master");
   const module_name_placeholder = GetTranslationData("UIMasterAdmin", "module_name_placeholder");
   const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
   const route_path_placeholder = GetTranslationData("UIMasterAdmin", "route_path_placeholder");
-  const module_end_icon = GetTranslationData("UIMasterAdmin", "module_end_icon");
-  const module_end_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_end_icon_placeholder");
+  const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
+  const module_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_icon_placeholder");
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   // initial values for the input fields
@@ -54,10 +54,10 @@ const ModuleMasterForm = () => {
   useEffect(() => {
     if (isSubmit && moduleData?.status_code === "201") {
       toast.success(moduleData?.message);
-      dispatch(onPostModuleReset());
       dispatch(onGetModule());
+      dispatch(onPostModuleReset());
     } else if (isSubmit && moduleData?.status_code) {
-      toast.error(moduleData?.message?.data?.ErrorMessage);
+      toast.error(moduleData?.message);
       dispatch(onPostModuleReset());
     }
   }, [moduleData]);
@@ -69,11 +69,11 @@ const ModuleMasterForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Module Master</h4>
+                <h4 className="card-title">{module_master}</h4>
               </div>
               <div className="card-body">
                 {moduleData?.postLoading ? (
-                  <div style={{ height: "100px" }}>
+                  <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
@@ -82,7 +82,7 @@ const ModuleMasterForm = () => {
                       <div className="row">
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="name-f">
-                            Module Name
+                            {module_name}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -92,7 +92,7 @@ const ModuleMasterForm = () => {
                             }`}
                             name="name"
                             id="name-f"
-                            placeholder="Enter Module Name"
+                            placeholder={module_name_placeholder}
                             value={values.name}
                             onChange={handleChange}
                           />
@@ -102,7 +102,7 @@ const ModuleMasterForm = () => {
                         </div>
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
-                            Module Route Path
+                            {module_route_path}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -114,7 +114,7 @@ const ModuleMasterForm = () => {
                             }`}
                             name="routePath"
                             id="description"
-                            placeholder="Enter Module Route Path"
+                            placeholder={route_path_placeholder}
                             value={values.routePath}
                             onChange={handleChange}
                           />
@@ -124,7 +124,7 @@ const ModuleMasterForm = () => {
                         </div>
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
-                            Module Icon<span className="text-danger">*</span>
+                            {module_icon}<span className="text-danger">*</span>
                           </label>
                           <InputField
                             className={`form-control ${
@@ -133,7 +133,7 @@ const ModuleMasterForm = () => {
                             type="text"
                             name="icon"
                             id="flexCheckDefault2"
-                            placeholder="Enter Module Icon"
+                            placeholder={module_icon_placeholder}
                             value={values.icon}
                             onChange={handleChange}
                           />
@@ -144,9 +144,9 @@ const ModuleMasterForm = () => {
                       </div>
                       <div className="col-sm-4 mb-4">
                         <Button
-                          text="Submit"
+                          text={submit}
                           end_icon="fa fa-arrow-right"
-                          className="btn btn-primary btn-sm float-right p-btn mt-2"
+                          className="btn btn-primary float-right pad-aa mt-2"
                         />
                         <ToastContainer />
                       </div>

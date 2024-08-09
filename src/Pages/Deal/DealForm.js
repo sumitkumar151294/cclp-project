@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDeal, onPostDeal, onPostDealReset } from "../../Store/Slices/dealSlice";
 import { onPostuploadImage, onPostuploadImageReset, onPostuploadMobileImage, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const getTodayDate = () => {
   const today = new Date();
@@ -17,10 +18,38 @@ const getTodayDate = () => {
   return `${year}-${month}-${day}`;
 };
 
-
 const DealForm = () => {
   const todayDate = getTodayDate();
   const [values, setValues] = useState(null);
+  // to get labels and placeholders from translation  
+  const deal_form = GetTranslationData("UIMasterAdmin","deal_form");
+  const deal_name = GetTranslationData("UIMasterAdmin","deal_form");
+  const deal_name_placeholder = GetTranslationData("UIMasterAdmin","deal_name_placeholder");
+  const deal_category = GetTranslationData("UIMasterAdmin", "deal_category");
+  const deal_type = GetTranslationData("UIMasterAdmin", "deal_type");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const display_order_required = GetTranslationData("UIMasterAdmin","display_order_required");
+  const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin","displayOrderPlaceholder");
+  const category_name_required = GetTranslationData("UIMasterAdmin","category_name_required");
+  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
+  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
+  const deal_name_required = GetTranslationData("UIMasterAdmin","deal_name_required");
+  const deal_type_required = GetTranslationData("UIMasterAdmin","deal_type_required");
+  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required"); 
+  const end_date_required = GetTranslationData("UIMasterAdmin", "end_date_required");
+  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
+  const upload_image_for_web = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_web"
+  );
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const upload_image_for_phone = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_phone"
+  );
+  // to get data from redux store 
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
@@ -28,7 +57,6 @@ const DealForm = () => {
     (state) => state.uploadReducer?.postuploadImageData
   );
   const uploadImage = useSelector((state) => state.uploadReducer);
-
   const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
   const dealCategoryOptions = dealCategoryData?.map(dealCategory => ({
     value: dealCategory.id,
@@ -55,35 +83,16 @@ const DealForm = () => {
   ];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    webImage: Yup.string().required("Image is required"),
-    mobImage: Yup.string().required("Image is required"),
-    displayOrder: Yup.string().required("Display Order is required"),
-    category: Yup.string().required("Category is required"),
-    name: Yup.string().required("Deal Name is required"),
-    dealType: Yup.string().required("Deal Type is required"),
-    startDate: Yup.string().required("Start Date is required"),
-    endDate: Yup.string().required("End Date is required"),
+    webImage: Yup.string().required(mobile_image_required),
+    mobImage: Yup.string().required(web_image_required),
+    displayOrder: Yup.string().required(display_order_required),
+    category: Yup.string().required(category_name_required),
+    name: Yup.string().required(deal_name_required),
+    dealType: Yup.string().required(deal_type_required),
+    startDate: Yup.string().required(start_date_required),
+    endDate: Yup.string().required(end_date_required),
   });
-  // {
-  //   "id": 0,
-  //   "enabled": true,
-  //   "deleted": true,
-  //   "createdBy": 0,
-  //   "updatedBy": 0,
-  //   "clientId": 0,
-  //   "webImage": "string",
-  //   "mobImage": "string",
-  //   "dealType": "string",
-  //   "name": "string",
-  //   "category": 0,
-  //   "displayOrder": 0,
-  //   "startDate": "2024-08-02T10:51:18.769Z",
-  //   "endDate": "2024-08-02T10:51:18.769Z"
-  // }
-  // to handle form submit
-
-
-
+ 
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -144,7 +153,7 @@ const DealForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Form</h4>
+                <h4 className="card-title">{deal_form}</h4>
               </div>
               <div className="card-body">
                 {dealData?.isPostLoading ? (
@@ -163,7 +172,7 @@ const DealForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Deal Name</label>
+                              <label>{deal_name}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -173,7 +182,7 @@ const DealForm = () => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder="Enter Deal Name"
+                                placeholder={deal_name_placeholder}
                               />
                               <ErrorMessage
                                 name="name"
@@ -183,7 +192,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Deal Category
+                                {deal_category}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -204,7 +213,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4 ">
                               <label>
-                                Deal Type
+                                {deal_type}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -225,7 +234,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Display Order
+                                {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -235,7 +244,7 @@ const DealForm = () => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder="Enter Display Order"
+                                placeholder={displayOrderPlaceholder}
                               />
                               <ErrorMessage
                                 name="displayOrder"
@@ -245,7 +254,7 @@ const DealForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Upload Image For Web
+                                {upload_image_for_web}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -269,7 +278,7 @@ const DealForm = () => {
                             </div>{" "}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Upload Image For Phone
+                                {upload_image_for_phone}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -291,7 +300,7 @@ const DealForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2 mt-2">
-                              <label>Start Date</label>
+                              <label>{start_date_label}</label>
                               <Field
                                 type="date"
                                 name="startDate"
@@ -308,7 +317,7 @@ const DealForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2 mt-2">
-                              <label>End Date</label>
+                              <label>{end_date_label}</label>
                               <Field
                                 type="date"
                                 name="endDate"
@@ -327,7 +336,7 @@ const DealForm = () => {
 
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Submit"}
+                                text={submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
