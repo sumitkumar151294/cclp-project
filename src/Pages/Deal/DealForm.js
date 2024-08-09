@@ -23,7 +23,7 @@ const DealForm = () => {
   const [values, setValues] = useState(null);
   // to get labels and placeholders from translation  
   const deal_form = GetTranslationData("UIMasterAdmin","deal_form");
-  const deal_name = GetTranslationData("UIMasterAdmin","deal_form");
+  const deal_name = GetTranslationData("UIMasterAdmin","deal_name");
   const deal_name_placeholder = GetTranslationData("UIMasterAdmin","deal_name_placeholder");
   const deal_category = GetTranslationData("UIMasterAdmin", "deal_category");
   const deal_type = GetTranslationData("UIMasterAdmin", "deal_type");

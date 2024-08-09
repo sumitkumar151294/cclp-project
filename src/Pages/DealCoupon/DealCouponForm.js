@@ -18,6 +18,7 @@ import {
 import HtmlEditor from "../../Components/HtmlEditor/HtmlEditor";
 import Select from "react-select";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const typeOfCoupoun = [
   { value: "Static", label: "Static" },
@@ -30,8 +31,37 @@ const DealCouponForm = () => {
   const [showFields, setShowFields] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
+  // to get labels and placeholders from translation  
+  const deal_coupoun = GetTranslationData("UIMasterAdmin","deal_coupoun");
+  const type_of_coupoun = GetTranslationData("UIMasterAdmin","type_of_coupoun");
+  const coupoun_code = GetTranslationData("UIMasterAdmin","coupoun_code");
+  const coupoun_code_placeholder = GetTranslationData("UIMasterAdmin", "coupoun_code_placeholder");
+  const deal_label = GetTranslationData("UIMasterAdmin", "deal_label");
+  const title_placeholder = GetTranslationData("UIMasterAdmin","title_placeholder");
+  const title_label = GetTranslationData("UIMasterAdmin","title_label");
+  const select_months = GetTranslationData("UIMasterAdmin", "select_months");
+  const select_week_days = GetTranslationData("UIMasterAdmin", "select_week_days");
+  const terms_and_condition = GetTranslationData("UIMasterAdmin", "select_months");
+  const terms_placeholder = GetTranslationData("UIMasterAdmin", "terms_placeholder");
+  const call_to_action = GetTranslationData(
+    "UIMasterAdmin",
+    "call_to_action"
+  );
+  const call_to_action_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "call_to_action_placeholder"
+  );
+  const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const description = GetTranslationData("UIMasterAdmin", "description");
+  const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const upload_image_for_phone = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_phone"
+  );
+  // to get data from redux store
   const dealCouponData = useSelector((state) => state.dealCouponReducer);
-
   const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
@@ -134,7 +164,7 @@ const DealCouponForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Coupoun</h4>
+                <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -154,7 +184,7 @@ const DealCouponForm = () => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Type Of Coupoun
+                                {type_of_coupoun}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -181,7 +211,7 @@ const DealCouponForm = () => {
                             </div>
                             {showFields && (
                               <div className="col-sm-4 form-group mb-4">
-                                <label> Coupoun Code</label>
+                                <label> {coupoun_code}</label>
                                 <Field
                                   type="text"
                                   name="coupounCode"
@@ -190,7 +220,7 @@ const DealCouponForm = () => {
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                  placeholder="Enter Coupoun Code"
+                                  placeholder={coupoun_code_placeholder}
                                 />
                                 <ErrorMessage
                                   name="coupounCode"
@@ -202,7 +232,7 @@ const DealCouponForm = () => {
 
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Deal
+                                {deal_label}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -225,7 +255,7 @@ const DealCouponForm = () => {
 
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>
-                                Call To Action
+                                {call_to_action}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -234,7 +264,7 @@ const DealCouponForm = () => {
                                 className={`form-control ${
                                   errors.cta && touched.cta ? "is-invalid" : ""
                                 }`}
-                                placeholder="Enter Call To Action"
+                                placeholder={call_to_action_placeholder}
                               />
                               <ErrorMessage
                                 name="cta"
@@ -245,7 +275,7 @@ const DealCouponForm = () => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Upload Image For Phone
+                                {upload_image_for_phone}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -268,7 +298,7 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Title
+                                {title_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -279,7 +309,7 @@ const DealCouponForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Title"
+                                placeholder={title_placeholder}
                               />
                               <ErrorMessage
                                 name="title"
@@ -290,7 +320,7 @@ const DealCouponForm = () => {
 
                             <div className="col-sm-4 form-group ">
                               <label>
-                                Description
+                                {description}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -301,7 +331,7 @@ const DealCouponForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Description"
+                                placeholder={description_placeholder}
                               />
                               <ErrorMessage
                                 name="description"
@@ -311,7 +341,7 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                Segment
+                                {segment_label}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -332,7 +362,7 @@ const DealCouponForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>Select Months</label>
+                              <label>{select_months}</label>
                               <Select
                                 isMulti
                                 name="months"
@@ -354,7 +384,7 @@ const DealCouponForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>Select Week Days</label>
+                              <label>{select_week_days}</label>
                               <Select
                                 isMulti
                                 name="weekDays"
@@ -377,7 +407,7 @@ const DealCouponForm = () => {
                             </div>
 
                             <div className="col-sm-12 form-group mb-4">
-                              <label>Terms and Condition</label>
+                              <label>{terms_and_condition}</label>
                               <Field
                                 component={HtmlEditor}
                                 name="terms"
@@ -386,7 +416,7 @@ const DealCouponForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Terms and Conditions"
+                                placeholder={terms_placeholder}
                               />
                               <ErrorMessage
                                 name="terms"
@@ -396,7 +426,7 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-12 form-group mb-4">
                               <Button
-                                text={"Sumbit"}
+                                text={submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
