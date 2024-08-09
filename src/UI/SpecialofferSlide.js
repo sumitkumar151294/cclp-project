@@ -175,7 +175,7 @@ const SpecialofferSlide = () => {
         )}
         {/* unlock_border */}
         <div className="pt-3 pb-3 mb-15">
-          {specialOfferContent.slice(0, 1)?.map((content) => (
+          {specialOfferContent?.slice(0, 1)?.map((content) => (
             <div className="unlock_brand_tag" key={content?.id}>
               <p dangerouslySetInnerHTML={{ __html: content?.text }}></p>
             </div>
