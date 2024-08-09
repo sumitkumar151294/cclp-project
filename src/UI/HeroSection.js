@@ -3,16 +3,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../UI/HeroSection.scss";
-import slide1 from '../Assets/imgNewUI/Frame 1707479114.png';
-import slide2 from '../Assets/imgNewUI/Frame 1707479114.png';
-import slide3 from '../Assets/imgNewUI/Frame 1707479114.png';
-// import slide2 from '../Assets/imgNewUI/slide-offer2.png';
-// import slide3 from '../Assets/imgNewUI/slide-offer3.png';
-import tag1 from '../Assets/imgNewUI/tag1.png';
-import tag2 from '../Assets/imgNewUI/tag2.png';
-import tag3 from '../Assets/imgNewUI/tag3.png';
-import cardarrow from '../Assets/imgNewUI/card-arrow.png';
-
+import slide1 from "../Assets/imgNewUI/Frame 1707479114.png";
+import slide2 from "../Assets/imgNewUI/Frame 1707479114.png";
+import slide3 from "../Assets/imgNewUI/Frame 1707479114.png";
 
 const HeroSection = () => {
   const settings = {
@@ -22,7 +15,7 @@ const HeroSection = () => {
     slidesToShow: 3,
     slidesToScroll: 3,
     autoplay: true,
-    arrows:false,
+    arrows: false,
     responsive: [
       {
         breakpoint: 1024,
@@ -30,8 +23,8 @@ const HeroSection = () => {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: false,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
@@ -40,9 +33,8 @@ const HeroSection = () => {
           slidesToScroll: 1,
           variableWidth: true,
           className: "slider variable-width",
-          adaptiveHeight: true
-
-        }
+          adaptiveHeight: true,
+        },
       },
       {
         breakpoint: 480,
@@ -51,13 +43,10 @@ const HeroSection = () => {
           slidesToScroll: 1,
           variableWidth: true,
           className: "slider variable-width",
-          adaptiveHeight: true
-
-
-
-        }
-      }
-    ]
+          adaptiveHeight: true,
+        },
+      },
+    ],
   };
   return (
     <>
@@ -204,7 +193,6 @@ const HeroSection = () => {
               </div> */}
             </div>
           </div>
-         
         </Slider>
       </div>
     </>
