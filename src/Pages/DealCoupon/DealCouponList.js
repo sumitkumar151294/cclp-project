@@ -84,7 +84,7 @@ const DealCouponList = () => {
                   </div>
                 ) : (
                   <>
-                    {filteredData.length ? (
+                    {filteredData?.length ? (
                       <div className="table-responsive scroll-Table-x ">
                         <>
                           <table className="table header-border table-responsive-sm">
@@ -147,7 +147,7 @@ const DealCouponList = () => {
                                 nextLabel={">"}
                                 breakLabel={"..."}
                                 pageCount={Math.ceil(
-                                  filteredData.length / rowsPerPage
+                                  filteredData?.length / rowsPerPage
                                 )}
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange}
