@@ -30,6 +30,7 @@ const NavConfigurationList = () => {
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label")
   // to get module data from the Redux store
   const navConfigure = useSelector((state) => state?.navConfigurationReducer);
   const navConfigureData = navConfigure?.getNavConfigureData;
@@ -102,14 +103,14 @@ const NavConfigurationList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Nav Configuration List"}</h4>
+                    <h4 className="card-title">{nav_configuration_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -130,10 +131,10 @@ const NavConfigurationList = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>Menu Name</th>
-                          <th>Call To Action</th>
-                          <th>Display Order</th>
-                          {getRoleAccess[0]?.editAccess && <th>Action</th>}
+                          <th>{menu_name}</th>
+                          <th>{call_to_action}</th>
+                          <th>{display_order}</th>
+                          {getRoleAccess[0]?.editAccess && <th>{action_label}</th>}
                         </tr>
                       </thead>
                       <tbody>

@@ -53,6 +53,10 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
     "UIMasterAdmin",
     "call_to_action_required"
   );
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
   // to get nav-configure data from the Redux store
   const navConfigureData = useSelector(
     (state) => state?.navConfigurationReducer
@@ -66,9 +70,9 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
   };
   // to validate nav configure form using Yup schema
   const validateForm = yup.object({
-    cta: yup.string().required("Menu Name is required"),
-    navigationMenuName: yup.string().required("Call To Action is required"),
-    displayOrder: yup.string().required("Display Order is required"),
+    cta: yup.string().required(menu_name_required),
+    navigationMenuName: yup.string().required(call_to_action_required),
+    displayOrder: yup.string().required(display_order_required),
   });
   // Custom handler for checkbox change
   const handleCheckboxChange = (e) => {
@@ -141,7 +145,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Nav Configuration Form</h4>
+                <h4 className="card-title">{nav_configuration_form}</h4>
               </div>
               <div className="card-body">
                 {navConfigureData?.isPostLoading ||
@@ -155,7 +159,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                       <div className="row">
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="name-f">
-                            Menu Name
+                           {menu_name}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -164,7 +168,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                               errors.cta && touched.cta ? "is-invalid" : ""
                             }`}
                             name="cta"
-                            placeholder="Enter Menu Name"
+                            placeholder={menu_name_placeholder}
                             value={values.cta}
                             onChange={handleChange}
                           />
@@ -174,7 +178,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                         </div>
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
-                            Call To Action
+                            {call_to_action}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -186,7 +190,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                                 : ""
                             }`}
                             name="navigationMenuName"
-                            placeholder="Enter Call To Action"
+                            placeholder={call_to_action_placeholder}
                             value={values.navigationMenuName}
                             onChange={handleChange}
                           />
@@ -200,7 +204,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
 
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
-                            Display Order
+                            {display_order}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -211,7 +215,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                                 ? "is-invalid"
                                 : ""
                             }`}
-                            placeholder="Enter Display Order"
+                            placeholder={displayOrderPlaceholder}
                             value={values.displayOrder}
                             onChange={handleChange}
                           />
@@ -231,7 +235,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                               checked={values.loginRequired}
                               onChange={handleCheckboxChange}
                             />
-                            <label className="px-1">Is Login Required</label>
+                            <label className="px-1">{is_login_required}</label>
                           </div>
                         </div>
                       </div>
@@ -239,7 +243,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                         <Button
                           text={navData ? update : submit}
                           end_icon="fa fa-arrow-right"
-                          className="btn btn-primary btn-sm float-right p-btn mt-2"
+                          className="btn btn-primary float-right pad-aa mt-2"
                         />
                       </div>
                     </form>

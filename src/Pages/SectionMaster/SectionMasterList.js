@@ -26,9 +26,12 @@ const SectionMasterList = () => {
     "UIMasterAdmin",
     "section_master_list"
   );
-  const text_label = GetTranslationData("UIMasterAdmin", "text_label");
+  const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
+  const claim_limit = GetTranslationData("UIMasterAdmin", "claim_limit");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const points_to_claim_label = GetTranslationData("UIMasterAdmin", "points_to_claim_label");
   // to get module filtered data from redux
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
@@ -126,14 +129,14 @@ const SectionMasterList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Section Master List"}</h4>
+                    <h4 className="card-title">{section_master_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -156,15 +159,15 @@ const SectionMasterList = () => {
                       <table className="table header-border table-responsive-sm">
                         <thead>
                           <tr>
-                            <th>{"Section Name"}</th>
-                            <th>{"Section Type"}</th>
-                            <th>{"Display Order"}</th>
-                            <th>{"Display Limit"}</th>
-                            <th>{"Claim Limit"}</th>
-                            <th>{"Points to Claim"}</th>
-                            <th>{"Status"}</th>
-                            {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
-                            <th>{"Section Data"}</th>
+                            <th>{section_name}</th>
+                            <th>{section_type}</th>
+                            <th>{display_order}</th>
+                            <th>{display_limit}</th>
+                            <th>{claim_limit}</th>
+                            <th>{points_to_claim_label}</th>
+                            <th>{status_label}</th>
+                            {getRoleAccess[0]?.editAccess && (<th>{action_label}</th>)}
+                            <th>{section_data}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -192,7 +195,6 @@ const SectionMasterList = () => {
                                 <td>
                                   {
                                     SectionMasterData?.noOfPointsToClaim ||
-
                                     <span className="hyphen"> -</span>
                                   }
                                 </td>

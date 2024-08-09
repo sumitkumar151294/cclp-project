@@ -22,6 +22,7 @@ const ModuleMasterList = () => {
     "module_route_path"
   );
   const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
@@ -55,14 +56,14 @@ const ModuleMasterList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Module List"}</h4>
+                    <h4 className="card-title">{module_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -83,9 +84,9 @@ const ModuleMasterList = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>Module Name</th>
-                          <th>Module Route Path</th>
-                          <th>Icon</th>
+                          <th>{module_name}</th>
+                          <th>{module_route_path}</th>
+                          <th>{module_icon}</th>
                         </tr>
                       </thead>
                       <tbody>

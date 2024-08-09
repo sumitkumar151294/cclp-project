@@ -29,10 +29,10 @@ const RoleMasterForm = ({ data, setData }) => {
   const [selectAll, setSelectAll] = useState(false);
   const dispatch = useDispatch();
   // to get labels and placeholder from translation
-  const roleMasterLabel = GetTranslationData("UIMasterAdmin", "Role_master");
+  const roleMasterLabel = GetTranslationData("UIMasterAdmin", "role_master");
   const roleName = GetTranslationData("UIMasterAdmin", "role_name");
   const selectall = GetTranslationData("UIMasterAdmin", "selectall");
-  const module_access = GetTranslationData("UIMasterAdmin", "module-access");
+  const module_access = GetTranslationData("UIMasterAdmin", "module_access");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
   const checkBox_Error = GetTranslationData("UIMasterAdmin", "checkbox_error");
@@ -40,22 +40,17 @@ const RoleMasterForm = ({ data, setData }) => {
   const add = GetTranslationData("UIMasterAdmin", "add");
   const edit = GetTranslationData("UIMasterAdmin", "edit");
   const description = GetTranslationData("UIMasterAdmin", "description");
-  const mandatory_Req_Label = GetTranslationData(
-    "UIMasterAdmin",
-    "role_Req_Label"
-  );
-  const description_placeholder = GetTranslationData(
-    "UIMasterAdmin",
-    "description_placeholder"
-  );
+  const role_master_placeholder = GetTranslationData("UIMasterAdmin", "role_master_placeholder");
+  const mandatory_Req_Label = GetTranslationData("UIMasterAdmin", "role_Req_Label");
+  const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
+
   // to get role master data from redux store
   const userRoleData = useSelector((state) => state?.userRoleReducer);
   // to get module data from redux store
-  const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
+  const moduleData = useSelector((state) => state?.moduleReducer);
+  const moduleAccessData = moduleData?.data;
   // to get user-role-access data from redux store
-  const getModuleAccessData = useSelector(
-    (state) => state.userRoleModuleAccessReducer
-  );
+  const getModuleAccessData = useSelector((state) => state.userRoleModuleAccessReducer);
 
   // initial values for the input fields
   const initialValues = {
@@ -63,75 +58,69 @@ const RoleMasterForm = ({ data, setData }) => {
     description: "",
     modules: [],
   };
+
   // to validate form using Yup schema
   const validateForm = yup.object({
     name: yup.string().required(mandatory_Req_Label),
   });
+
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit, setValues } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: validateForm,
-      onSubmit: (values, action) => {
-        values.modules = [...moduleAccess];
-        const postData = {
-          createdBy: 0,
-          description: values?.description,
-          enabled: true,
-          name: values?.name,
-          updatedBy: 0,
-        };
-        if (moduleAccess.length === 0) {
-          setCheckBoxError(true);
-          return;
-        }
-        if (data) {
-          postData.id = data.id;
-          dispatch(onUpdateUserRole(postData));
-          //setData();
-        } else {
-          dispatch(onPostUserRole(postData));
-        }
-        setIsSubmit(true);
-        setSelectAll(false);
-        action.resetForm();
-      },
-    });
+  const { values, errors, touched, handleChange, handleSubmit, setValues } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validateForm,
+    onSubmit: (values, action) => {
+      values.modules = [...moduleAccess];
+      const postData = {
+        enabled: true,
+        deleted: false,
+        createdBy: 0,
+        updatedBy: 0,
+        name: values?.name,
+        description: values?.description,
+      };
+      if (moduleAccess.length === 0) {
+        setCheckBoxError(true);
+        return;
+      }
+      if (data) {
+        postData.id = data.id;
+        dispatch(onUpdateUserRole(postData));
+      } else {
+        dispatch(onPostUserRole(postData));
+      }
+      setIsSubmit(true);
+      setSelectAll(false);
+      action.resetForm();
+    },
+  });
   // to handle checkbox changes
   const handleCheckboxChange = (moduleName, accessType) => {
     const newModuleAccess = [...moduleAccess];
-    const moduleIndex = newModuleAccess.findIndex(
-      (mod) => mod.name === moduleName
-    );
+    const moduleIndex = newModuleAccess.findIndex((mod) => mod.name === moduleName);
 
     if (moduleIndex >= 0) {
-      const updatedModule = { ...newModuleAccess[moduleIndex] };
-
+      // update the existing module access
       if (accessType === "view") {
-        updatedModule.view = !updatedModule.view;
+        newModuleAccess[moduleIndex].view = !newModuleAccess[moduleIndex].view;
       } else if (accessType === "add") {
-        updatedModule.add = !updatedModule.add;
-        if (updatedModule.add && !updatedModule.view) {
-          updatedModule.view = true;
+        newModuleAccess[moduleIndex].add = !newModuleAccess[moduleIndex].add;
+        // Ensure view is checked if add is checked
+        if (!newModuleAccess[moduleIndex].view && newModuleAccess[moduleIndex].add) {
+          newModuleAccess[moduleIndex].view = true;
         }
       } else if (accessType === "edit") {
-        updatedModule.edit = !updatedModule.edit;
-        if (updatedModule.edit && !updatedModule.view) {
-          updatedModule.view = true;
+        newModuleAccess[moduleIndex].edit = !newModuleAccess[moduleIndex].edit;
+        // Ensure view and add are checked if edit is checked
+        if (!newModuleAccess[moduleIndex].view && newModuleAccess[moduleIndex].edit) {
+          newModuleAccess[moduleIndex].view = true;
         }
-        if (updatedModule.edit && !updatedModule.add) {
-          updatedModule.add = true;
+        if (!newModuleAccess[moduleIndex].add && newModuleAccess[moduleIndex].edit) {
+          newModuleAccess[moduleIndex].add = true;
         }
       }
-      newModuleAccess[moduleIndex] = updatedModule;
     } else {
-      const newAccess = {
-        name: moduleName,
-        view:
-          accessType === "view" ||
-          accessType === "add" ||
-          accessType === "edit",
-      };
+      // Add new module access
+      const newAccess = { name: moduleName, view: true };
       if (accessType === "add") {
         newAccess.add = true;
       }
@@ -144,15 +133,14 @@ const RoleMasterForm = ({ data, setData }) => {
     setModuleAccess(newModuleAccess);
     setCheckBoxError(false);
   };
+
   // to handle select all module
   const handleSelectAll = () => {
     if (selectAll) {
-      setModuleAccess([]);
+      setModuleAccess(moduleAccess.map(mod => ({ ...mod, view: false })));
     } else {
       const allModules = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find(
-          (mod) => mod.name === data.name
-        );
+        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
         return {
           name: data.name,
           view: true,
@@ -164,13 +152,13 @@ const RoleMasterForm = ({ data, setData }) => {
     }
     setSelectAll(!selectAll);
   };
+
   // to update module access data on changes
   useEffect(() => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData.map((data) => {
-        const existingModule = moduleAccess.find(
-          (mod) => mod.name === data.name
-        );
+        const existingModule = moduleAccess.find((mod) => mod.name === data.name);
+        console.log(existingModule,"existingModule")
         return {
           roleId: userRoleData?.postRoleData?.[0]?.roleId,
           moduleId: data.id,
@@ -179,16 +167,12 @@ const RoleMasterForm = ({ data, setData }) => {
           editAccess: existingModule?.edit || false,
         };
       });
+      console.log(accessPostData,"accessPostData");
       dispatch(onPostUserRoleModuleAccess(accessPostData));
       dispatch(onPostUserRoleReset());
       setModuleAccess([]);
-    } else if (
-      userRoleData?.status_code === "205" &&
-      !userRoleData?.updateLoading
-    ) {
-      let moduleAccessList = getModuleAccessData?.data?.filter(
-        (item) => item.roleId === data?.id
-      );
+    } else if (userRoleData?.status_code === "205" && !userRoleData?.updateLoading) {
+      let moduleAccessList = getModuleAccessData?.data?.filter((item) => item.roleId === data?.id);
       let accessPostData = values?.modules;
       for (let i = 0; i < moduleAccessList.length; i++) {
         for (let j = 0; j < accessPostData.length; j++) {
@@ -204,6 +188,7 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess([]);
     }
   }, [userRoleData, moduleAccessData, moduleAccess]);
+
   // fetch module data and update form data on mount and when module data changes
   useEffect(() => {
     if (data) {
@@ -212,13 +197,9 @@ const RoleMasterForm = ({ data, setData }) => {
         name: data?.name,
         description: data?.description,
       });
-      const moduleAccessList = getModuleAccessData?.data?.filter(
-        (item) => item.roleId === data.id
-      );
+      const moduleAccessList = getModuleAccessData?.data?.filter((item) => item.roleId === data.id);
       const modulesData = moduleAccessData.map((module) => {
-        const moduleAccessItem = moduleAccessList.find(
-          (mod) => mod.moduleId === module.id
-        );
+        const moduleAccessItem = moduleAccessList.find((mod) => mod.moduleId === module.id);
         return {
           id: module?.id,
           name: module?.name,
@@ -230,6 +211,7 @@ const RoleMasterForm = ({ data, setData }) => {
       setModuleAccess(modulesData);
     }
   }, [data, moduleAccessData, getModuleAccessData]);
+
   // to handle form submission and state updates
   useEffect(() => {
     if (isSubmit && userRoleData?.status_code === "201") {
@@ -241,6 +223,7 @@ const RoleMasterForm = ({ data, setData }) => {
       toast.success(userRoleData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
+      //setData();
     } else if (isSubmit && userRoleData?.status_code) {
       toast.error(userRoleData?.message?.data?.ErrorMessage);
       setModuleAccess([]);
@@ -273,12 +256,10 @@ const RoleMasterForm = ({ data, setData }) => {
                         </label>
                         <InputField
                           type="text"
-                          className={`form-control ${
-                            errors.name && touched.name ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${errors.name && touched.name ? "is-invalid" : ""}`}
                           name="name"
                           id="name-f"
-                          placeholder={roleName}
+                          placeholder={role_master_placeholder}
                           value={values.name}
                           onChange={handleChange}
                         />
@@ -299,106 +280,103 @@ const RoleMasterForm = ({ data, setData }) => {
                         />
                       </div>
                     </div>
-                    <div className="row top-top mt-2">
-                      <div className="col-lg-4">
-                        <div className="form-check mb-2 padd">
-                          <InputField
-                            className="form-check-input"
-                            type="checkbox"
-                            name="selectAll"
-                            id="flexCheckDefault2"
-                            checked={selectAll}
-                            onChange={handleSelectAll}
-                          />
-                          <label
-                            className="form-check-label fnt-17"
-                            htmlFor="flexCheckDefault2"
-                          >
-                            {selectall}
-                          </label>
-                        </div>
+                    {moduleData.isLoading ? (
+                      <div style={{ height: "350px" }}>
+                        <Loader classType={"absoluteLoader"} />
                       </div>
-                      <div className="col-lg-12 br pt-2">
-                        <label >{module_access}</label>
-                        {Array.isArray(moduleAccessData) &&
-                          moduleAccessData.map((data, index) => {
-                            const module =
-                              moduleAccess.find(
-                                (mod) => mod.name === data.name
-                              ) || {};
-                            return (
-                              <div className="row mb-3 mt-3" key={index}>
-                                <h4 className="col-lg-3">{data.name}</h4>
-                                <div className="col-lg-9 d-flex justify-content-end">
-                                  <div className="form-check form-check-inline">
-                                    <label className="form-check-label">
-                                      <InputField
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        name="view"
-                                        checked={module.view || false}
-                                        onChange={() =>
-                                          handleCheckboxChange(
-                                            data.name,
-                                            "view"
-                                          )
-                                        }
-                                      />
-                                      {view}
-                                    </label>
-                                  </div>
-                                  <div className="form-check form-check-inline">
-                                    <label className="form-check-label">
-                                      <InputField
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        name="add"
-                                        checked={module.add || false}
-                                        onChange={() =>
-                                          handleCheckboxChange(data.name, "add")
-                                        }
-                                      />
-                                      {add}
-                                    </label>
-                                  </div>
-                                  <div className="form-check form-check-inline">
-                                    <label className="form-check-label">
-                                      <InputField
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        name="edit"
-                                        checked={module.edit || false}
-                                        onChange={() =>
-                                          handleCheckboxChange(
-                                            data.name,
-                                            "edit"
-                                          )
-                                        }
-                                      />
-                                      {edit}
-                                    </label>
+                    ) : (
+                      <div className="row top-top mt-2">
+                        <div className="col-lg-4">
+                          <div className="form-check mb-2 padd">
+                            <InputField
+                              className="form-check-input"
+                              type="checkbox"
+                              name="selectAll"
+                              id="flexCheckDefault2"
+                              checked={selectAll}
+                              onChange={handleSelectAll}
+                            />
+                            <label
+                              className="form-check-label fnt-17"
+                              htmlFor="flexCheckDefault2"
+                            >
+                              {selectall}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-lg-12 br pt-2">
+                          <label>{module_access}</label>
+                          {Array.isArray(moduleAccessData) &&
+                            moduleAccessData.map((data, index) => {
+                              const module = moduleAccess.find((mod) => mod.name === data.name) || {};
+                              return (
+                                <div className="row mb-3 mt-3" key={index}>
+                                  <h4 className="col-lg-3">{data.name}</h4>
+                                  <div className="col-lg-9 d-flex justify-content-end">
+                                    <div className="form-check form-check-inline">
+                                      <label className="form-check-label">
+                                        <InputField
+                                          type="checkbox"
+                                          className="form-check-input"
+                                          name="view"
+                                          checked={module.view || false}
+                                          onChange={() =>
+                                            handleCheckboxChange(data.name, "view")
+                                          }
+                                        />
+                                        {view}
+                                      </label>
+                                    </div>
+                                    <div className="form-check form-check-inline">
+                                      <label className="form-check-label">
+                                        <InputField
+                                          type="checkbox"
+                                          className="form-check-input"
+                                          name="add"
+                                          checked={module.add || false}
+                                          onChange={() =>
+                                            handleCheckboxChange(data.name, "add")
+                                          }
+                                        />
+                                        {add}
+                                      </label>
+                                    </div>
+                                    <div className="form-check form-check-inline">
+                                      <label className="form-check-label">
+                                        <InputField
+                                          type="checkbox"
+                                          className="form-check-input"
+                                          name="edit"
+                                          checked={module.edit || false}
+                                          onChange={() =>
+                                            handleCheckboxChange(data.name, "edit")
+                                          }
+                                        />
+                                        {edit}
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
-                        {checkBoxError && (
-                          <span
-                            className="form-check-label error-check error-message"
-                            htmlFor="basic_checkbox_1"
-                          >
-                            {checkBox_Error}
-                          </span>
-                        )}
-                        <div className="col-sm-4 mt-4 mb-4">
-                          <Button
-                            text={data ? update : submit}
-                            end_icon="fa fa-arrow-right"
-                            className="btn btn-primary btn-sm float-right p-btn mt-2"
-                          />
-                          <ToastContainer />
+                              );
+                            })}
+                          {checkBoxError && (
+                            <span
+                              className="form-check-label error-check error-message"
+                              htmlFor="basic_checkbox_1"
+                            >
+                              {checkBox_Error}
+                            </span>
+                          )}
                         </div>
                       </div>
+                    )}
+                    <div className="col-sm-4 mt-4 mb-4">
+                      <Button
+                        text={data ? update : submit}
+                        end_icon="fa fa-arrow-right"
+                        className="btn btn-primary float-right pad-aa"
+                      />
+                      <ToastContainer />
                     </div>
                   </form>
                 </div>
