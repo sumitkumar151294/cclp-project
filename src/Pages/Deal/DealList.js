@@ -166,14 +166,14 @@ const DealList = () => {
 
                                     <td>
                                       <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealData.webImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealData.webImage}`}
                                         style={{ width: "50px" }}
                                         alt="webImage"
                                       />
                                     </td>
                                     <td>
                                       <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealData.mobImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealData.mobImage}`}
                                         style={{ width: "50px" }}
                                         alt="mobImage"
                                       />

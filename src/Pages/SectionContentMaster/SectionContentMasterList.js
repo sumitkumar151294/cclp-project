@@ -102,13 +102,7 @@ const SectionContentMasterList = () => {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onUpdateSectionContentMasterReset());
-    } else if (getSectionContenMasterData?.update_status_code == "205") {
-      toast.success(getSectionContenMasterData?.updateMessage);
-      dispatch(onGetSectionContentMaster());
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostuploadMobileImageReset());
-      dispatch(onUpdateSectionContentMasterReset());
-    } else if (getSectionContenMasterData?.update_status_code) {
+    }  else if (getSectionContenMasterData?.update_status_code) {
       toast.error(getSectionContenMasterData?.updateMessage);
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
@@ -188,7 +182,7 @@ const SectionContentMasterList = () => {
                                   <tr key={index}>
                                     <td>
                                       {sectionContent.webImage ?   <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.webImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
                                         style={{ width: "50px" }}
                                         alt="webImage"
                                       /> : (
@@ -198,16 +192,16 @@ const SectionContentMasterList = () => {
                                     </td>
                                     <td>
                                       {sectionContent.mobImage ?   <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${sectionContent.mobImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
                                         style={{ width: "50px" }}
-                                        alt="webImage"
+                                        alt="mobImage"
                                       /> : (
                                         <span className="hyphen"> -</span>
                                       )}
 
                                     </td>
                                     <td>{sectionContent.displayOrder}</td>
-                                    <td>{sectionContent.cta}</td>
+                                    <td>{sectionContent.cta.substring(0, 18) + "..."}</td>
                                     <td>
                                       {sectionContent?.contentSourceType || (
                                         <span className="hyphen"> -</span>
@@ -219,7 +213,7 @@ const SectionContentMasterList = () => {
                                       )}
                                     </td>
                                     <td>
-                                      {sectionContent?.text || (
+                                      {sectionContent?.text.substring(0, 5) + "..." || (
                                         <span className="hyphen"> -</span>
                                       )}
                                     </td>

@@ -232,7 +232,6 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, false)
                                 }
-                                // disabled={displayLimit}
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -256,7 +255,6 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, true)
                                 }
-                                // disabled={displayLimit}
                               />
                               <ErrorMessage
                                 name="mobImage"

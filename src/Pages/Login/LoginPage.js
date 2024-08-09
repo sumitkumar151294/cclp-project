@@ -168,7 +168,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <Footer />
+      <Footer isLogin={true}/>
     </>
   );
 };

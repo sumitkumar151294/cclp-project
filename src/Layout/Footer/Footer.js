@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({isLogin}) => {
   return (
-    <div className="footer">
+    <div className={`footer ${!isLogin && "pl15"}`}>
       <div className="copyright">
         <p>
           Copyright © LC Reward Dev &amp; Developed by

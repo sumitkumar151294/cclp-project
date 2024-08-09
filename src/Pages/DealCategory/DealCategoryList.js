@@ -160,14 +160,14 @@ const DealCategoryList = () => {
                                     <td>{dealCategoryData.displayOrder}</td>
                                     <td>
                                       <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealCategoryData.webImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.webImage}`}
                                         style={{ width: "50px" }}
                                         alt="webImage"
                                       />
                                     </td>
                                     <td>
                                       <img
-                                        src={`${process.env.REACT_APP_CLIENT_API_URL}${dealCategoryData.mobImage}`}
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.mobImage}`}
                                         style={{ width: "50px" }}
                                         alt="mobImage"
                                       />

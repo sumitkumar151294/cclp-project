@@ -2,7 +2,7 @@ import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill's styles
 
-const HtmlEditor = ({ field, form }) => {
+const HtmlEditor = ({ field, form,displayLimit }) => {
   return (
     <div>
       <ReactQuill
@@ -12,6 +12,7 @@ const HtmlEditor = ({ field, form }) => {
         modules={HtmlEditor.modules}
         formats={HtmlEditor.formats}
         placeholder="Write something..."
+        readOnly={displayLimit}
       />
     </div>
   );
