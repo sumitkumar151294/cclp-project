@@ -58,7 +58,7 @@ const UserMasterList = () => {
   const handleSumbit = (userMasterInfo, isEdit) => {
     const userData = {
       id: userMasterInfo?.id,
-      enabled: true,
+      enabled: userMasterInfo?.enabled,
       deleted: true,
       createdBy: 0,
       updatedBy: 0,
@@ -110,9 +110,7 @@ const UserMasterList = () => {
   return (
     <>
       <ScrollToTop />
-
       <UserMasterForm userMasterData={userMasterData} setuserMasterData={setuserMasterData}/>
-
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -154,7 +152,6 @@ const UserMasterList = () => {
                             <th>{user_name_label}</th>
                             <th>{email_label}</th>
                             <th>{mobile}</th>
-
                             <th>{status_label}</th>
                             <th>{action_label}</th>
                           </tr>
@@ -166,12 +163,10 @@ const UserMasterList = () => {
                               <tr key={index}>
                                 <td>
                                   {userMasterData?.firstName +
-                                    userMasterData?.lastName}
+                                    ' ' + userMasterData?.lastName}
                                 </td>
-
                                 <td>{userMasterData?.email}</td>
                                 <td>{userMasterData?.mobile}</td>
-
                                 <td>
                                   <span
                                     className={

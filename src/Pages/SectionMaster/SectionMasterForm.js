@@ -62,6 +62,10 @@ const SectionMasterForm = ({ sectionData }) => {
     "UIMasterAdmin",
     "display_order_required"
   );
+  const displayOrderPlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "displayOrderPlaceholder"
+  );
   const display_limit_required = GetTranslationData("UIMasterAdmin", "display_limit_required");
   const sectionTypeOptions = [
     { value: "Banner", label: "Banner" },
@@ -227,7 +231,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder="Enter Display Order"
+                                placeholder={displayOrderPlaceholder}
                               />
                               <ErrorMessage
                                 name="displayOrder"

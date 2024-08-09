@@ -15,6 +15,7 @@ import {
   onUpdateuserMasterReset,
 } from "../../Store/Slices/userMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
 const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   const dispatch = useDispatch();
@@ -27,8 +28,9 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
     mobile: "",
     email: "",
     roleId: "",
+    enabled:""
   });
-
+  // to get labels and placeholders from translation 
   const user_master_label = GetTranslationData(
     "UIMasterAdmin",
     "user_master_label"
@@ -86,7 +88,14 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   const role_name = GetTranslationData("UIMasterAdmin", "role_name");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-
+  const please_select_one_role = GetTranslationData("UIMasterAdmin", "please_select_one_role");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  // options for status
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     firstName: Yup.string().required(first_name_required),
@@ -95,14 +104,15 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
       .matches(/^\d{10}$/, mobil_10_digit_required)
       .required(mobile_number_required),
     email: Yup.string().email(email_invalid_format).required(email_required),
-    roleId: Yup.string().required("Please select one role."),
+    roleId: Yup.string().required(please_select_one_role),
+    enabled: Yup.string().required(status_required),
   });
-  //to handle submit
+  //to handle form submit
   const handleSubmit = (values) => {
     if (values) {
       const userMasterdata = {
         ...values,
-        enabled: true,
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         deleted: false,
         clientId: 4,
         mobile:typeof values?.mobile === "string"
@@ -118,9 +128,9 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
         mobile: "",
         email: "",
         roleId: "",
+        enabled: "",
       })
       setSelectedRole("")
-
     }
   };
   useEffect(() => {
@@ -260,6 +270,25 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{status_label}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-lg-12 br pt-2 pb-2 mt-2">
                               <label htmlFor="name-f">{role_name}</label>
                               <div className="row ml-4">
@@ -309,7 +338,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                             <div className="col-sm-4 mb-4">
                                 <Button
                                   text={userMasterData ? update : submit}
-                                  icon="fa fa-arrow-right"
+                                  end_icon="fa fa-arrow-right"
                                   className="btn btn-primary float-right pad-aa mt-2"
                                 />
                               </div>

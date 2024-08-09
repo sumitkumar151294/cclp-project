@@ -47,15 +47,18 @@ const SectionContentMasterForm = ({
     (state) => state.uploadReducer?.postuploadImageData
   );
   const uploadImage = useSelector((state) => state.uploadReducer);
-
   const type = location?.state?.sectionType;
   const typeID = location?.state?.sectionId;
   const sectionLimit = location?.state?.sectionLimit;
 
-  // get labels and placeholder from translation
+  // get labels and placeholder from translation 
   const section_content_master = GetTranslationData(
     "UIMasterAdmin",
     "section_content_master"
+  );
+  const back_label = GetTranslationData(
+    "UIMasterAdmin",
+    "back_label"
   );
   const content_source_type = GetTranslationData(
     "UIMasterAdmin",
@@ -73,11 +76,11 @@ const SectionContentMasterForm = ({
   );
   const call_to_action = GetTranslationData(
     "UIMasterAdmin",
-    "content_source_type"
+    "call_to_action"
   );
   const call_to_action_placeholder = GetTranslationData(
     "UIMasterAdmin",
-    "upload_image_for_web"
+    "call_to_action_placeholder"
   );
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
@@ -90,7 +93,15 @@ const SectionContentMasterForm = ({
     "UIMasterAdmin",
     "text_placeholder"
   );
-
+  const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
+  const displayLimitPlaceholder = GetTranslationData("UIMasterAdmin", "displayLimitPlaceholder");
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
+  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
+  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
+  const max_display_limit_reached = GetTranslationData("UIMasterAdmin", "max_display_limit_reached");
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     mobImage: "",
@@ -107,15 +118,15 @@ const SectionContentMasterForm = ({
       type === "Banner" ||
       type === "SupportingBanner" ||
       type === "CustomerBenefits"
-        ? Yup.string().required("Web Image is required")
+        ? Yup.string().required(web_image_required)
         : Yup.string()
     ),
     mobImage: Yup.lazy((value) =>
       type === "Banner" || type === "CustomerBenefits"
-        ? Yup.string().required("Mobile Image is required")
+        ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
-    displayOrder: Yup.string().required("Display Order is required"),
+    displayOrder: Yup.string().required(display_order_required),
   });
 
   const displayLimit =
@@ -153,8 +164,8 @@ const SectionContentMasterForm = ({
   };
   useEffect(() => {
     if (
-      uploadImage?.postMobileStatusCode == "201" &&
-      uploadImage?.post_status_code == "201"
+      uploadImage?.postMobileStatusCode === "201" &&
+      uploadImage?.post_status_code === "201"
     ) {
       const sectionContentMasteData = {
         webImage: getwebImage,
@@ -192,7 +203,7 @@ const SectionContentMasterForm = ({
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-    } else if (getSectiontContentMasterData?.update_status_code == "205") {
+    } else if (getSectiontContentMasterData?.update_status_code === "205") {
       setSectionContentData("");
     } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
@@ -204,7 +215,7 @@ const SectionContentMasterForm = ({
   }, [getSectiontContentMasterData]);
   useEffect(() => {
     if (displayLimit) {
-      toast.error("Maximum Display Limit Reached");
+      toast.error(max_display_limit_reached);
     }
   }, []);
 
@@ -226,7 +237,7 @@ const SectionContentMasterForm = ({
                 <h4 className="card-title">{section_content_master}</h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
-                    <i class="fa-solid fa-arrow-left"></i> Back
+                    <i class="fa-solid fa-arrow-left"></i> {back_label}
                   </button>
                 </Link>
               </div>
@@ -398,7 +409,7 @@ const SectionContentMasterForm = ({
                             </div>
                             {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-2">
-                                <label>Text</label>
+                                <label>{text_label}</label>
                                 <Field
                                   type="text"
                                   name="text"
@@ -407,7 +418,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                  placeholder="Enter Text"
+                                  placeholder={text_placeholder}
                                   disabled={displayLimit}
                                 />
                               </div>
@@ -416,7 +427,7 @@ const SectionContentMasterForm = ({
                               type === "CustomerBenefits" ||
                               type === "SupportingBanner") && (
                               <div className="col-sm-9 mt-2">
-                                <label>{text_label}</label>
+                                <label>{display_limit}</label>
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
@@ -425,7 +436,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                  placeholder={text_placeholder}
+                                  placeholder={displayLimitPlaceholder}
                                   disabled={displayLimit}
                                 />
                               </div>

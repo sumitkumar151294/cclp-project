@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -19,20 +17,43 @@ import {
   onPostuploadMobileImage,
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   const [values, setValues] = useState(null);
+  const dispatch = useDispatch();
+  // to get lables and placeholder from translation
+  const deal_category = GetTranslationData("UIMasterAdmin", "deal_category"); 
+  const deal_category_name = GetTranslationData("UIMasterAdmin", "deal_category_name");
+  const category_name_placeholder = GetTranslationData("UIMasterAdmin", "category_name_placeholder");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const displayOrderPlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "displayOrderPlaceholder"
+  );
+  const upload_image_for_web = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_web"
+  );
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
+  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
+  const upload_image_for_phone = GetTranslationData(
+    "UIMasterAdmin",
+    "upload_image_for_phone"
+  );
+  const display_order_required = GetTranslationData("UIMasterAdmin","display_order_required");
+  const category_name_required = GetTranslationData("UIMasterAdmin","category_name_required");
+  // to get deal category data from redux store
+  const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
-
   const uploadImage = useSelector((state) => state.uploadReducer);
-  const dispatch = useDispatch();
-  // to get deal category data from redux store
-  const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
     webImage: "",
@@ -42,10 +63,10 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   });
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    webImage: Yup.string().required("Image is required"),
-    mobImage: Yup.string().required("Image is required"),
-    displayOrder: Yup.string().required("Display Order is required"),
-    name: Yup.string().required("Category Name is required"),
+    webImage: Yup.string().required(web_image_required),
+    mobImage: Yup.string().required(mobile_image_required),
+    displayOrder: Yup.string().required(display_order_required),
+    name: Yup.string().required(category_name_required),
   });
   //to handle submit
   const handleSubmit = (values) => {
@@ -136,7 +157,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Category</h4>
+                <h4 className="card-title">{deal_category}</h4>
               </div>
               <div className="card-body">
                        {dealCategoryData?.isPostLoading || dealCategoryData?.isUpdateLoading  ? (
@@ -155,7 +176,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label> Name</label>
+                              <label> {deal_category_name}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -166,7 +187,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Category Name"
+                                placeholder={category_name_placeholder}
                               />
                               <ErrorMessage
                                 name="name"
@@ -176,7 +197,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Display Order
+                                {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -187,7 +208,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Display Order"
+                                placeholder={displayOrderPlaceholder}
                               />
                               <ErrorMessage
                                 name="displayOrder"
@@ -197,7 +218,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                Upload Image For Web
+                                {upload_image_for_web}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -211,7 +232,6 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, false)
                                 }
-
                                 // disabled={displayLimit}
                               />
                               <ErrorMessage
@@ -222,7 +242,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                             </div>{" "}
                             <div className="col-sm-4 form-group mb-2 mt-2">
                               <label>
-                                Upload Image For Phone
+                                {upload_image_for_phone}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -246,7 +266,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                             </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Submit"}
+                                text={dealCategory ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
@@ -267,4 +287,3 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
 };
 
 export default DealCategoryForm;
-/* eslint-enable react-hooks/exhaustive-deps */
