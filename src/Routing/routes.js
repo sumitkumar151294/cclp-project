@@ -24,21 +24,11 @@ function RouteConfiq() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
 
-
-       
-
-
-
-
-        {/* New-UI */}
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/topOffer" element={<TopOfferPage />} />
         <Route
           path="/roleMaster"
           element={<Layout Component={RoleMasterList} />}
         />
-
-        <Route
+         <Route
           path="/userMaster"
           element={<Layout Component={UserMasterList} />}
         />
@@ -53,23 +43,6 @@ function RouteConfiq() {
         <Route
           path="/moduleMaster"
           element={<Layout Component={ModuleMasterList} />}
-        />
-        <Route
-          path="/dealCategory"
-          element={<Layout Component={DealCategoryList} />}
-        />
-        <Route path="/deal" element={<Layout Component={DealList} />} />
-        <Route
-          path="/dealCoupon"
-          element={<Layout Component={DealCouponList} />}
-        />
-        <Route
-          path="/dealCouponCode"
-          element={<Layout Component={DealCouponCodeList} />}
-        />
-          <Route
-          path="/navConfiguration"
-          element={<Layout Component={NavConfigurationList} />}
         />
       </Routes>
     </Router>
