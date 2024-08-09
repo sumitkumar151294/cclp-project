@@ -8,10 +8,6 @@ import loginAuthReducer from "./Slices/loginAuthSlice";
 import userRoleModuleAccessReducer from "./Slices/userRoleModuleAccessSlice";
 import  sectionMasterReducer  from './Slices/sectionMasterSlice';
 import sectionContentMasterReducer from './Slices/sectionContentMasterSlice';
-import dealCategoryReducer from './Slices/dealCategorySlice';
-import dealReducer from './Slices/dealSlice';
-import dealCouponReducer from './Slices/dealCouponSlice';
-import dealCouponCodeReducer from './Slices/dealCouponCodeSlice';
 import uploadReducer from './Slices/uploadSlice';
 import navConfigurationReducer from './Slices/NavConfigurationSlice';
 
@@ -25,10 +21,6 @@ const reducers = combineReducers({
     userRoleModuleAccessReducer: userRoleModuleAccessReducer,
     sectionMasterReducer:sectionMasterReducer,
     sectionContentMasterReducer:sectionContentMasterReducer,
-    dealCategoryReducer:dealCategoryReducer,
-    dealReducer:dealReducer,
-    dealCouponReducer:dealCouponReducer,
-    dealCouponCodeReducer:dealCouponCodeReducer,
     uploadReducer:uploadReducer,
     navConfigurationReducer:navConfigurationReducer,
 });
