@@ -73,6 +73,9 @@ const SectionMasterForm = ({ sectionData }) => {
     { value: "CustomerBenefits", label: "Customer Benefits" },
     { value: "SupportingBanner", label: "Supporting Banner" },
     { value: "SpecialSection", label: "Special Section" },
+    { value: "SpecialBannerOne", label: "Special Banner One" },
+    { value: "SpecialBannerTwo", label: "Special Banner Two" },
+    { value: "SupportingBannerBottom", label: "Supporting Banner Bottom" },
   ];
   const dispatch = useDispatch();
   const validations = Yup.object().shape({

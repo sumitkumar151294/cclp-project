@@ -32,13 +32,13 @@ const Header = ({ setSideBar, sidebar }) => {
     body.setAttribute("direction", "ltr");
   }
   // For transition of sidebar - End
-
+  const initials = `${"J"}${"G"}`;
   return (
     <>
       <div className="nav-header">
-        <Link className="brand-logo">
+        <div className="brand-logo">
           <img className="w-100" src={image} alt={image} />
-        </Link>
+        </div>
         <div className="nav-control d-flex">
           <div
             className={`hamburger ${hamburgerClass ? "is-active" : ""}`}
@@ -58,9 +58,14 @@ const Header = ({ setSideBar, sidebar }) => {
               <div className="header-left"></div>
               <ul className="navbar-nav header-right ">
                 <li className="nav-item dropdown  header-profile">
-                  <Link className="nav-link" data-bs-toggle="dropdown">
-                    <img src={user} width="56" alt="" />
-                  </Link>
+                  <div className="nav-link" data-bs-toggle="dropdown">
+                  <div className="user-profile">
+      {/* Display the initials */}
+      <div className="user-initials">
+        {initials.toUpperCase()}
+      </div>
+    </div>
+                  </div>
                 </li>
               </ul>
             </div>

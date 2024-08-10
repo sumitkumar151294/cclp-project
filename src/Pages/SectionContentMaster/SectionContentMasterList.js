@@ -30,7 +30,10 @@ const SectionContentMasterList = () => {
   const mobile_image = GetTranslationData("UIMasterAdmin", "mobile_image");
   const web_image = GetTranslationData("UIMasterAdmin", "web_image");
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
   const content_source_type = GetTranslationData(
     "UIMasterAdmin",
     "content_source_type"
@@ -102,12 +105,16 @@ const SectionContentMasterList = () => {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onUpdateSectionContentMasterReset());
-    }  else if (getSectionContenMasterData?.update_status_code) {
-      toast.error(getSectionContenMasterData?.updateMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostuploadMobileImageReset());
-      dispatch(onUpdateSectionContentMasterReset());
-      dispatch(onUpdateSectionContentMasterReset());
+    }else if (getSectionContenMasterData?.post_status_code == "205") {
+      setSectionContentData({
+        webImage: "",
+        mobImage: "",
+        cta: "",
+        displayOrder: "",
+        text: "",
+        contentSourceType: "",
+        segmentId: "",
+      })
     }
   }, [getSectionContenMasterData]);
   useEffect(() => {
@@ -121,7 +128,10 @@ const SectionContentMasterList = () => {
   }, [filteredData]);
   return (
     <>
-      <SectionContentMasterForm sectionContentData={sectionContentData} setSectionContentData={setSectionContentData}/>
+      <SectionContentMasterForm
+        sectionContentData={sectionContentData}
+        setSectionContentData={setSectionContentData}
+      />
       <ScrollToTop />
       <div className="container-fluid pt-0">
         <div className="row">
@@ -151,7 +161,8 @@ const SectionContentMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getSectionContenMasterData?.isgetLoading || getSectionContenMasterData?.isUpdateLoading ||
+                {getSectionContenMasterData?.isgetLoading ||
+                getSectionContenMasterData?.isUpdateLoading ||
                 (getSectionContenMasterData?.isUpdateLoading &&
                   getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
@@ -181,27 +192,32 @@ const SectionContentMasterList = () => {
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
                                     <td>
-                                      {sectionContent.webImage ?   <img
-                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
-                                        style={{ width: "50px" }}
-                                        alt="webImage"
-                                      /> : (
+                                      {sectionContent.webImage ? (
+                                        <img
+                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
+                                          style={{ width: "50px" }}
+                                          alt="webImage"
+                                        />
+                                      ) : (
                                         <span className="hyphen"> -</span>
                                       )}
-
                                     </td>
                                     <td>
-                                      {sectionContent.mobImage ?   <img
-                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
-                                        style={{ width: "50px" }}
-                                        alt="mobImage"
-                                      /> : (
+                                      {sectionContent.mobImage ? (
+                                        <img
+                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
+                                          style={{ width: "50px" }}
+                                          alt="mobImage"
+                                        />
+                                      ) : (
                                         <span className="hyphen"> -</span>
                                       )}
-
                                     </td>
                                     <td>{sectionContent.displayOrder}</td>
-                                    <td>{sectionContent.cta.substring(0, 18) + "..."}</td>
+                                    <td>
+                                      {sectionContent.cta.substring(0, 18) +
+                                        "..."}
+                                    </td>
                                     <td>
                                       {sectionContent?.contentSourceType || (
                                         <span className="hyphen"> -</span>
@@ -213,8 +229,9 @@ const SectionContentMasterList = () => {
                                       )}
                                     </td>
                                     <td>
-                                      {sectionContent?.text.substring(0, 5) + "..." || (
-                                        <span className="hyphen"> -</span>
+                                      {sectionContent?.text ? sectionContent?.text.substring(0, 5) +
+                                        "..." : (
+                                        <span className="hyphen">-</span>
                                       )}
                                     </td>
                                     <td>

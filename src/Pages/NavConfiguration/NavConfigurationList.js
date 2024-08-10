@@ -134,6 +134,7 @@ const NavConfigurationList = () => {
                           <th>{menu_name}</th>
                           <th>{call_to_action}</th>
                           <th>{display_order}</th>
+                          <th>{"Login Required"}</th>
                           {getRoleAccess[0]?.editAccess && <th>{action_label}</th>}
                         </tr>
                       </thead>
@@ -145,6 +146,7 @@ const NavConfigurationList = () => {
                               <td>{data.cta}</td>
                               <td>{data.navigationMenuName}</td>
                               <td>{data.displayOrder}</td>
+                              <td>{data.loginRequired ? "Yes" : "No"}</td>
                               {getRoleAccess[0]?.editAccess && (
                                 <td>
                                   <div className="d-flex">

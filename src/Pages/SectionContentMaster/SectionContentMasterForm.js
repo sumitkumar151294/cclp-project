@@ -27,6 +27,7 @@ import {
   onPostuploadMobileImage,
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
+import { onUpdatesectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
@@ -36,14 +37,13 @@ const SectionContentMasterForm = ({
   sectionContentData,
   setSectionContentData,
 }) => {
+  const[mobile ,setMobile]=useState(false)
+  const[web ,setWeb]=useState(false)
   const section_content_master = GetTranslationData(
     "UIMasterAdmin",
     "section_content_master"
   );
-  const back_label = GetTranslationData(
-    "UIMasterAdmin",
-    "back_label"
-  );
+  const back_label = GetTranslationData("UIMasterAdmin", "back_label");
   const content_source_type = GetTranslationData(
     "UIMasterAdmin",
     "content_source_type"
@@ -58,10 +58,7 @@ const SectionContentMasterForm = ({
     "UIMasterAdmin",
     "upload_image_for_phone"
   );
-  const call_to_action = GetTranslationData(
-    "UIMasterAdmin",
-    "call_to_action"
-  );
+  const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const call_to_action_placeholder = GetTranslationData(
     "UIMasterAdmin",
     "call_to_action_placeholder"
@@ -78,14 +75,26 @@ const SectionContentMasterForm = ({
     "text_placeholder"
   );
   const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
-  const displayLimitPlaceholder = GetTranslationData("UIMasterAdmin", "displayLimitPlaceholder");
+  const displayLimitPlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "displayLimitPlaceholder"
+  );
   const display_order_required = GetTranslationData(
     "UIMasterAdmin",
     "display_order_required"
   );
-  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
-  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
-  const max_display_limit_reached = GetTranslationData("UIMasterAdmin", "max_display_limit_reached");
+  const mobile_image_required = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_image_required"
+  );
+  const web_image_required = GetTranslationData(
+    "UIMasterAdmin",
+    "web_image_required"
+  );
+  const max_display_limit_reached = GetTranslationData(
+    "UIMasterAdmin",
+    "max_display_limit_reached"
+  );
   const location = useLocation();
 
   const getSectiontContentMasterData = useSelector(
@@ -128,71 +137,93 @@ const SectionContentMasterForm = ({
         ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
-    displayOrder: Yup.string().required(display_order_required),
+    displayOrder: Yup.string()
+      .required(display_order_required)
+      .matches(/^[0-9]+$/, "Display Order must be a number"),
   });
 
-  const displayLimit =
-    getSectiontContentMasterData?.getSectionContentMasterData?.filter(
+  const displayLimit =getSectiontContentMasterData?.getSectionContentMasterData?.filter(
       (sectionContent) => sectionContent?.sectionMasterId === typeID
     )?.length === sectionLimit;
-  // const handleSubmit = (values) => {
-  //   if (values) {
-  //     if (
-  //       typeof values.webImage === "object" &&
-  //       typeof values.mobImage === "object"
-  //     ) {
-  //       dispatch(onPostuploadImage(values.webImage));
-  //       dispatch(onPostuploadMobileImage(values.mobImage));
-  //       setValues(values);
-  //     } else {
-  //       const sectionContentMasteData = {
-  //         webImage: values.webImage,
-  //         mobImage: values.mobImage,
-  //         clientId: 4,
-  //         deleted: false,
-  //         sectionMasterId: typeID,
-  //         displayOrder: JSON.stringify(values?.displayOrder),
-  //         linkedMasterId: values?.linkedMasterId || null,
-  //         segmentId: values?.segmentId || null,
-  //         contentSourceType: "",
-  //         cta: values?.cta,
-  //         text: values?.text || "",
-  //         id: values.id,
-  //       };
-  //       dispatch(onUpdateSectionContentMaster(sectionContentMasteData));
-  //     }
-  //   }
-  // };
-  const handleSubmit = (values) => {
-    if (values) {
-      dispatch(onPostuploadImage(values.webImage));
-      dispatch(onPostuploadMobileImage(values.mobImage));
+    const handleSubmit = (values) => {
+      if (!values) return;
+      const { webImage, mobImage } = values;
+      if (typeof webImage === "object" || typeof mobImage === "object") {
+        if (typeof webImage === "object") {
+          dispatch(onPostuploadImage(webImage));
+          if (typeof mobImage !== "object") setWeb(true);
+        }
+    
+        if (typeof mobImage === "object") {
+          dispatch(onPostuploadMobileImage(mobImage));
+          if (typeof webImage !== "object") setMobile(true);
+        }
+      } else {
+        const sectionContentMasteData = {
+          webImage: webImage || "",
+          mobImage: mobImage || "",
+          clientId: 4,
+          deleted: false,
+          sectionMasterId: typeID,
+          displayOrder: JSON.stringify(values?.displayOrder),
+          linkedMasterId: values?.linkedMasterId || null,
+          segmentId: values?.segmentId || null,
+          contentSourceType: values.contentSourceType || "",
+          cta: values?.cta,
+          text: values?.text || "",
+          ...(sectionContentData && { id: values.id }),
+        };
+    
+        dispatch(onPostSectionContentMaster(sectionContentMasteData));
+      }
+    
       setValues(values);
-    }
-  };
+    };
+
   useEffect(() => {
-    if (
-      uploadImage?.postMobileStatusCode === "201" &&
-      uploadImage?.post_status_code === "201"
-    ) {
+    debugger;
+    if (uploadImage) {
       const sectionContentMasteData = {
-        webImage: getwebImage,
-        mobImage: getmobImage,
+        webImage: sectionContentData?.webImage,
+        mobImage: sectionContentData?.mobImage,
         clientId: 4,
         deleted: false,
         sectionMasterId: typeID,
-        displayOrder: JSON.stringify(values?.displayOrder),
+        displayOrder: JSON?.stringify(values?.displayOrder),
         linkedMasterId: values?.linkedMasterId || null,
         segmentId: values?.segmentId || null,
-        contentSourceType: values.contentSourceType || "",
+        contentSourceType: values?.contentSourceType || "",
         cta: values?.cta,
         text: values?.text || "",
-        ...(sectionContentData && { id: values.id }),
+        ...(sectionContentData && { id: values?.id }),
       };
-      dispatch(onPostSectionContentMaster(sectionContentMasteData));
-      setInitialValue("");
+      let shouldDispatch = false;
+      if (uploadImage.postMobileStatusCode === "201" && uploadImage.post_status_code === "201") {
+        // Both images uploaded successfully
+        sectionContentMasteData.webImage = getwebImage;
+        sectionContentMasteData.mobImage = getmobImage;
+        shouldDispatch = true;
+      } else if (uploadImage.post_status_code === "201" && web) {
+        // Only web image uploaded
+        sectionContentMasteData.webImage = getwebImage;
+        shouldDispatch = true;
+        setWeb(false);
+      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+        // Only mobile image uploaded
+        sectionContentMasteData.mobImage = getmobImage;
+        shouldDispatch = true;
+        setMobile(false);
+      }
+      if (shouldDispatch) {
+        dispatch(onPostSectionContentMaster(sectionContentMasteData));
+      }
     }
-  }, [uploadImage, values]);
+  }, [uploadImage, values, web, mobile]);
+
+
+
+
+
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -210,17 +241,12 @@ const SectionContentMasterForm = ({
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-    }else if (getSectiontContentMasterData?.update_status_code == "205") {
-      setSectionContentData(null)
-      toast.success(getSectiontContentMasterData?.updateMessage);
+    }else if(getSectiontContentMasterData?.post_status_code === "205") {
+      toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
-      dispatch(onUpdateSectionContentMasterReset());
-    } else if (getSectiontContentMasterData?.post_status_code) {
-      toast.error(getSectiontContentMasterData?.postMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostuploadMobileImageReset());
+      dispatch(onUpdatesectionMasterReset());
       dispatch(onPostSectionContentMasterReset());
     }
   }, [getSectiontContentMasterData]);
@@ -245,7 +271,9 @@ const SectionContentMasterForm = ({
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{section_content_master}</h4>
+                <h4 className="card-title">
+                  {section_content_master} {type && `(${type})`}
+                </h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
                     <i class="fa-solid fa-arrow-left"></i> {back_label}
@@ -255,7 +283,8 @@ const SectionContentMasterForm = ({
               <div className="card-body">
                 {getSectiontContentMasterData?.isPostLoading ||
                 (sectionContentData &&
-                  getSectiontContentMasterData?.isUpdateLoading) ? (
+                  getSectiontContentMasterData?.isUpdateLoading) ||
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -288,12 +317,12 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                 />
-                                      {!displayLimit &&
+
                                 <ErrorMessage
                                   name="contentSourceType"
                                   component="div"
                                   className="error-message"
-                                />}
+                                />
                               </div>
                             )}
                             {type === "SpecialSection" && (
@@ -302,7 +331,6 @@ const SectionContentMasterForm = ({
                                   {segment_label}
                                   <span className="text-danger">*</span>
                                 </label>
-
                                 <Field
                                   name="segmentId"
                                   component={Dropdown}
@@ -312,28 +340,28 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
-                                />      {!displayLimit &&
+                                />
+
                                 <ErrorMessage
                                   name="segmentId"
                                   component="div"
                                   className="error-message"
-                                />}
+                                />
                               </div>
                             )}
-
                             {(type === "Banner" ||
                               type === "CustomerBenefits" ||
                               type === "SupportingBanner") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
-                                  Upload Image For Web
+                                  {upload_image_for_web}
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
                                   type="file"
                                   name="webImage"
                                   className={`form-control ${
-                                    errors.webImage && touched.webImage && !displayLimit
+                                    errors.webImage && touched.webImage
                                       ? "is-invalid"
                                       : ""
                                   }`}
@@ -344,15 +372,12 @@ const SectionContentMasterForm = ({
                                       false
                                     )
                                   }
-                                  disabled={displayLimit}
                                 />
-                                {!displayLimit && (
-                                  <ErrorMessage
-                                    name="webImage"
-                                    component="div"
-                                    className="error-message"
-                                  />
-                                )}
+                                <ErrorMessage
+                                  name="webImage"
+                                  component="div"
+                                  className="error-message"
+                                />
                               </div>
                             )}
                             {(type === "Banner" ||
@@ -378,7 +403,6 @@ const SectionContentMasterForm = ({
                                       true
                                     )
                                   }
-                                  disabled={displayLimit}
                                 />
                                 <ErrorMessage
                                   name="mobImage"
@@ -388,70 +412,6 @@ const SectionContentMasterForm = ({
                               </div>
                             )}
 
-                            {(type === "Banner" ||
-                              type === "CustomerBenefits" ||
-                              type === "SupportingBanner") && (
-                              <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {upload_image_for_web}
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <input
-                                  type="file"
-                                  name="webImage"
-                                  className={`form-control ${
-                                    errors.webImage && touched.webImage
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  onChange={(event) =>
-                                    handleImageChange(
-                                      setFieldValue,
-                                      event,
-                                      false
-                                    )
-                                  }
-                                  disabled={displayLimit}
-                                />
-                                <ErrorMessage
-                                  name="webImage"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
-                            {(type === "Banner" ||
-                              type === "CustomerBenefits" ||
-                              type === "SupportingBanner") && (
-                              <div className="col-sm-4 form-group mb-2">
-                                <label>
-                                  {upload_image_for_phone}
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <input
-                                  type="file"
-                                  name="mobImage"
-                                  className={`form-control ${
-                                    errors.mobImage && touched.mobImage
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  onChange={(event) =>
-                                    handleImageChange(
-                                      setFieldValue,
-                                      event,
-                                      true
-                                    )
-                                  }
-                                  disabled={displayLimit}
-                                />
-                                <ErrorMessage
-                                  name="mobImage"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 {display_order}
@@ -461,19 +421,18 @@ const SectionContentMasterForm = ({
                                 type="number"
                                 name="displayOrder"
                                 className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder && !displayLimit
+                                  errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 placeholder={displayOrderPlaceholder}
-                                disabled={displayLimit}
                               />
-                                    {!displayLimit &&
+
                               <ErrorMessage
                                 name="displayOrder"
                                 component="div"
                                 className="error-message"
-                              />}
+                              />
                             </div>
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>{call_to_action}</label>
@@ -484,7 +443,6 @@ const SectionContentMasterForm = ({
                                   errors.cta && touched.cta ? "is-invalid" : ""
                                 }`}
                                 placeholder={call_to_action_placeholder}
-                                disabled={displayLimit}
                               />
                             </div>
                             {type === "CustomerBenefits" && (
@@ -499,7 +457,6 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   placeholder={text_placeholder}
-                                  disabled={displayLimit}
                                 />
                               </div>
                             )}
@@ -507,7 +464,7 @@ const SectionContentMasterForm = ({
                               type === "SupportingBanner" ||
                               type === "SpecialSection") && (
                               <div className="col-sm-9 mt-2">
-                                <label>{display_limit}</label>
+                                <label>{"Text"}</label>
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
@@ -517,7 +474,6 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   placeholder={displayLimitPlaceholder}
-                                  disabled={displayLimit}
                                 />
                               </div>
                             )}

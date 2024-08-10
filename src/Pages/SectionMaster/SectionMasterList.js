@@ -187,8 +187,7 @@ const SectionMasterList = () => {
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>
                                   {
-                                    SectionMasterData?.claimLimit ||
-
+                                    SectionMasterData?.claimLimit |
                                     <span className="hyphen"> -</span>
                                   }
                                 </td>
@@ -238,7 +237,7 @@ const SectionMasterList = () => {
                                     to="/sectionContentMaster"
                                     state={{
                                       sectionType:
-                                        SectionMasterData.sectionType,
+                                      SectionMasterData.sectionType,
                                       sectionId: SectionMasterData.id,
                                       sectionLimit: SectionMasterData.displayLimit,
                                     }}

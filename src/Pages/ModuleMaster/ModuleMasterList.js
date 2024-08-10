@@ -28,7 +28,8 @@ const ModuleMasterList = () => {
   const getModuleData = getModule?.data;
   //fetch module master data on mount
   useEffect(() => {
-    dispatch(onGetModule());
+    if(!getModule){
+    dispatch(onGetModule())};
   }, []);
   // to handle search
   const handleSearchChange = (event) => {
