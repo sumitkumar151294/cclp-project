@@ -35,10 +35,10 @@ const contentSourceTypeOptions = [
 ];
 const SectionContentMasterForm = ({
   sectionContentData,
-  setSectionContentData,
+
 }) => {
-  const[mobile ,setMobile]=useState(false)
-  const[web ,setWeb]=useState(false)
+  const [mobile, setMobile] = useState(false);
+  const [web, setWeb] = useState(false);
   const section_content_master = GetTranslationData(
     "UIMasterAdmin",
     "section_content_master"
@@ -96,7 +96,11 @@ const SectionContentMasterForm = ({
     "max_display_limit_reached"
   );
   const location = useLocation();
-
+  const getDealData = useSelector((state) => state.dealReducer?.getDealData);
+  const dealOptions = getDealData?.map((dealCategory) => ({
+    value: dealCategory.id,
+    label: dealCategory.name,
+  }));
   const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
@@ -111,7 +115,6 @@ const SectionContentMasterForm = ({
   const type = location?.state?.sectionType;
   const typeID = location?.state?.sectionId;
   const sectionLimit = location?.state?.sectionLimit;
-
   // get labels and placeholder from translation
   const [intialValue, setInitialValue] = useState({
     webImage: "",
@@ -122,66 +125,77 @@ const SectionContentMasterForm = ({
     contentSourceType: "",
     segmentId: "",
   });
+  const [showFeild,setShowFields]=useState("")
+  console.log(showFeild)
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.lazy((value) =>
-      type === "Banner" ||
-      type === "SupportingBanner" ||
-      type === "CustomerBenefits"
+    webImage: Yup.lazy(() =>
+      ["Banner", "SupportingBanner", "CustomerBenefits","SpecialSection"].includes(type)
         ? Yup.string().required(web_image_required)
         : Yup.string()
     ),
-    mobImage: Yup.lazy((value) =>
-      type === "Banner" || type === "CustomerBenefits"
+    mobImage: Yup.lazy(() =>
+      ["Banner", "CustomerBenefits","SupportingBanner","SpecialSection"].includes(type)
         ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
     displayOrder: Yup.string()
       .required(display_order_required)
       .matches(/^[0-9]+$/, "Display Order must be a number"),
+    text: Yup.lazy(() =>
+      type === "UnlockStaticCard"
+        ? Yup.string()
+            .required("Text is Required")
+            .test(
+              "no-empty-html",
+              "Text is Required",
+              (value) => value !== "<p><br></p>"
+            )
+        : Yup.string().nullable()
+    ),
   });
 
-  const displayLimit =getSectiontContentMasterData?.getSectionContentMasterData?.filter(
+
+  const displayLimit =
+    getSectiontContentMasterData?.getSectionContentMasterData?.filter(
       (sectionContent) => sectionContent?.sectionMasterId === typeID
     )?.length === sectionLimit;
-    const handleSubmit = (values) => {
-      if (!values) return;
-      const { webImage, mobImage } = values;
-      if (typeof webImage === "object" || typeof mobImage === "object") {
-        if (typeof webImage === "object") {
-          dispatch(onPostuploadImage(webImage));
-          if (typeof mobImage !== "object") setWeb(true);
-        }
-    
-        if (typeof mobImage === "object") {
-          dispatch(onPostuploadMobileImage(mobImage));
-          if (typeof webImage !== "object") setMobile(true);
-        }
-      } else {
-        const sectionContentMasteData = {
-          webImage: webImage || "",
-          mobImage: mobImage || "",
-          clientId: 4,
-          deleted: false,
-          sectionMasterId: typeID,
-          displayOrder: JSON.stringify(values?.displayOrder),
-          linkedMasterId: values?.linkedMasterId || null,
-          segmentId: values?.segmentId || null,
-          contentSourceType: values.contentSourceType || "",
-          cta: values?.cta,
-          text: values?.text || "",
-          ...(sectionContentData && { id: values.id }),
-        };
-    
-        dispatch(onPostSectionContentMaster(sectionContentMasteData));
+  const handleSubmit = (values) => {
+    if (!values) return;
+    const { webImage, mobImage } = values;
+    if (typeof webImage === "object" || typeof mobImage === "object") {
+      if (typeof webImage === "object") {
+        dispatch(onPostuploadImage(webImage));
+        if (typeof mobImage !== "object") setWeb(true);
       }
-    
-      setValues(values);
-    };
+      if (typeof mobImage === "object") {
+        dispatch(onPostuploadMobileImage(mobImage));
+        if (typeof webImage !== "object") setMobile(true);
+      }
+    } else {
+      const sectionContentMasteData = {
+        webImage: webImage || "",
+        mobImage: mobImage || "",
+        clientId: 4,
+        deleted: false,
+        sectionMasterId: typeID,
+        displayOrder: values?.displayOrder,
+        linkedMasterId: values?.linkedMasterId || null,
+        segmentId: values?.segmentId || null,
+        contentSourceType: values.contentSourceType || "",
+        cta: values?.cta,
+        text: values?.text || "",
+        ...(sectionContentData && { id: values.id }),
+      };
+
+      dispatch(onPostSectionContentMaster(sectionContentMasteData));
+    }
+
+    setValues(values);
+  };
 
   useEffect(() => {
-    debugger;
     if (uploadImage) {
       const sectionContentMasteData = {
         webImage: sectionContentData?.webImage,
@@ -189,7 +203,7 @@ const SectionContentMasterForm = ({
         clientId: 4,
         deleted: false,
         sectionMasterId: typeID,
-        displayOrder: JSON?.stringify(values?.displayOrder),
+        displayOrder: values?.displayOrder,
         linkedMasterId: values?.linkedMasterId || null,
         segmentId: values?.segmentId || null,
         contentSourceType: values?.contentSourceType || "",
@@ -198,18 +212,18 @@ const SectionContentMasterForm = ({
         ...(sectionContentData && { id: values?.id }),
       };
       let shouldDispatch = false;
-      if (uploadImage.postMobileStatusCode === "201" && uploadImage.post_status_code === "201") {
-        // Both images uploaded successfully
+      if (
+        uploadImage.postMobileStatusCode === "201" &&
+        uploadImage.post_status_code === "201"
+      ) {
         sectionContentMasteData.webImage = getwebImage;
         sectionContentMasteData.mobImage = getmobImage;
         shouldDispatch = true;
       } else if (uploadImage.post_status_code === "201" && web) {
-        // Only web image uploaded
         sectionContentMasteData.webImage = getwebImage;
         shouldDispatch = true;
         setWeb(false);
       } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
-        // Only mobile image uploaded
         sectionContentMasteData.mobImage = getmobImage;
         shouldDispatch = true;
         setMobile(false);
@@ -219,10 +233,6 @@ const SectionContentMasterForm = ({
       }
     }
   }, [uploadImage, values, web, mobile]);
-
-
-
-
 
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
@@ -241,7 +251,7 @@ const SectionContentMasterForm = ({
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-    }else if(getSectiontContentMasterData?.post_status_code === "205") {
+    } else if (getSectiontContentMasterData?.post_status_code === "205") {
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
@@ -299,59 +309,14 @@ const SectionContentMasterForm = ({
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            {type === "SpecialSection" && (
-                              <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {content_source_type}
-                                  <span className="text-danger">*</span>
-                                </label>
 
-                                <Field
-                                  name="contentSourceType"
-                                  component={Dropdown}
-                                  options={contentSourceTypeOptions}
-                                  className={`form-select ${
-                                    errors.contentSourceType &&
-                                    touched.contentSourceType
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                />
 
-                                <ErrorMessage
-                                  name="contentSourceType"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
-                            {type === "SpecialSection" && (
-                              <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {segment_label}
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <Field
-                                  name="segmentId"
-                                  component={Dropdown}
-                                  options={contentSourceTypeOptions}
-                                  className={`form-select ${
-                                    errors.segmentId && touched.segmentId
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                />
 
-                                <ErrorMessage
-                                  name="segmentId"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
+
+
                             {(type === "Banner" ||
                               type === "CustomerBenefits" ||
-                              type === "SupportingBanner") && (
+                              type === "SupportingBanner" || type === "SpecialSection") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   {upload_image_for_web}
@@ -382,7 +347,7 @@ const SectionContentMasterForm = ({
                             )}
                             {(type === "Banner" ||
                               type === "CustomerBenefits" ||
-                              type === "SupportingBanner") && (
+                              type === "SupportingBanner" ||  type === "SpecialSection" ) && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Phone
@@ -411,14 +376,112 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
+                             {type === "SpecialSection" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  {content_source_type}
+                                </label>
 
+                                <Field
+                                  name="contentSourceType"
+                                  component={Dropdown}
+                                  options={contentSourceTypeOptions}
+                                  className={`form-select ${
+                                    errors.contentSourceType &&
+                                    touched.contentSourceType
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(e) => {
+                                    debugger
+                                    setShowFields(e);
+                                  }}
+                                />
+
+                                <ErrorMessage
+                                  name="contentSourceType"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                               {(showFeild==="Deal" || showFeild==="Product" )&&   <div className="col-sm-4 form-group mb-4">
+                              <label>
+                           {showFeild==="Deal" ? "Deal" : "Product"}
+                              </label>
+                              <Field
+                                name="linkedMasterId"
+                                component={Dropdown}
+                                options={dealOptions}
+                                className={`form-select ${
+                                  errors.linkedMasterId && touched.linkedMasterId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+
+                              />
+                              <ErrorMessage
+                                name="sectionType"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>}
+                            {type === "SpecialSection" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  {segment_label}
+                                </label>
+                                <Field
+                                  name="segmentId"
+                                  component={Dropdown}
+                                  options={contentSourceTypeOptions}
+                                  className={`form-select ${
+                                    errors.segmentId && touched.segmentId
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(e) => {
+                                    debugger
+                                    setShowFields(e);
+                                  }}
+                                />
+
+                                <ErrorMessage
+                                  name="segmentId"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                            {(type === "UnlockStaticCard" ||
+                              type === "SupportingBanner" ||
+                              type === "SpecialSection") && (
+                              <div className="col-sm-9 mb-4">
+                                <label>{"Text"}</label>
+                                <Field
+                                  component={HtmlEditor}
+                                  name="text"
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  placeholder={displayLimitPlaceholder}
+                                />
+                                <ErrorMessage
+                                  name="text"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="displayOrder"
                                 className={`form-control ${
                                   errors.displayOrder && touched.displayOrder
@@ -460,23 +523,7 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
-                            {(type === "UnlockStaticCard" ||
-                              type === "SupportingBanner" ||
-                              type === "SpecialSection") && (
-                              <div className="col-sm-9 mt-2">
-                                <label>{"Text"}</label>
-                                <Field
-                                  component={HtmlEditor}
-                                  name="text"
-                                  className={`form-control ${
-                                    errors.text && touched.text
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  placeholder={displayLimitPlaceholder}
-                                />
-                              </div>
-                            )}
+
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={sectionContentData ? update : submit}

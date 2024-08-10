@@ -158,7 +158,6 @@ const RoleMasterForm = ({ data, setData }) => {
     if (userRoleData?.postRoleData?.length > 0 && moduleAccessData) {
       const accessPostData = moduleAccessData.map((data) => {
         const existingModule = moduleAccess.find((mod) => mod.name === data.name);
-        console.log(existingModule,"existingModule")
         return {
           roleId: userRoleData?.postRoleData?.[0]?.roleId,
           moduleId: data.id,
@@ -167,7 +166,6 @@ const RoleMasterForm = ({ data, setData }) => {
           editAccess: existingModule?.edit || false,
         };
       });
-      console.log(accessPostData,"accessPostData");
       dispatch(onPostUserRoleModuleAccess(accessPostData));
       dispatch(onPostUserRoleReset());
       setModuleAccess([]);

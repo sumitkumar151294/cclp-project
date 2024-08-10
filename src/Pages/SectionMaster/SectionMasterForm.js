@@ -43,7 +43,10 @@ const SectionMasterForm = ({ sectionData }) => {
   // Translation labels
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
   const section_name = GetTranslationData("UIMasterAdmin", "section_name");
-  const points_to_claim_label = GetTranslationData("UIMasterAdmin", "points_to_claim_label");
+  const points_to_claim_label = GetTranslationData(
+    "UIMasterAdmin",
+    "points_to_claim_label"
+  );
   const section_type = GetTranslationData("UIMasterAdmin", "section_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
@@ -51,13 +54,28 @@ const SectionMasterForm = ({ sectionData }) => {
   const display_limit = GetTranslationData("UIMasterAdmin", "display_limit");
   const claim_limit = GetTranslationData("UIMasterAdmin", "claim_limit");
   const text_label = GetTranslationData("UIMasterAdmin", "text_label");
-  const no_Of_Points_To_Claim = GetTranslationData("UIMasterAdmin", "no_Of_Points_To_Claim");
+  const no_Of_Points_To_Claim = GetTranslationData(
+    "UIMasterAdmin",
+    "no_Of_Points_To_Claim"
+  );
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
-  const sectionNamePlaceholder = GetTranslationData("UIMasterAdmin", "sectionMasterPlaceholder");
-  const section_name_required = GetTranslationData("UIMasterAdmin", "section_name_required");
-  const section_type_required = GetTranslationData("UIMasterAdmin", "section_type_required");
-  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const sectionNamePlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "sectionMasterPlaceholder"
+  );
+  const section_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "section_name_required"
+  );
+  const section_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "section_type_required"
+  );
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   const display_order_required = GetTranslationData(
     "UIMasterAdmin",
     "display_order_required"
@@ -66,7 +84,10 @@ const SectionMasterForm = ({ sectionData }) => {
     "UIMasterAdmin",
     "displayOrderPlaceholder"
   );
-  const display_limit_required = GetTranslationData("UIMasterAdmin", "display_limit_required");
+  const display_limit_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_limit_required"
+  );
   const sectionTypeOptions = [
     { value: "Banner", label: "Banner" },
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
@@ -82,8 +103,16 @@ const SectionMasterForm = ({ sectionData }) => {
     sectionName: Yup.string().required(section_name_required),
     sectionType: Yup.string().required(section_type_required),
     enabled: Yup.string().required(status_required),
-    displayOrder: Yup.string().required(display_order_required),
-    displayLimit: Yup.string().required(display_limit_required),
+    displayOrder: Yup.string()
+      .required(display_order_required)
+      .matches(/^[0-9]+$/, "Display Order must be a number"),
+    displayLimit: Yup.string()
+      .required(display_limit_required)
+      .matches(/^[0-9]+$/, "Display Limit must be a number"),
+    claimLimit: Yup.string().matches(
+      /^[0-9]+$/,
+      "Display Limit must be a number"
+    ),
   });
 
   const handleSubmit = (values) => {
@@ -91,7 +120,10 @@ const SectionMasterForm = ({ sectionData }) => {
       const SectionformData = {
         ...values,
         deleted: false,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         clientId: 4,
         displayOrder:
           typeof values?.displayOrder === "string"
@@ -146,7 +178,6 @@ const SectionMasterForm = ({ sectionData }) => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(sectionData);
     }
-
   }, [sectionData]);
 
   return (
@@ -161,7 +192,8 @@ const SectionMasterForm = ({ sectionData }) => {
                 <h4 className="card-title">{section_master}</h4>
               </div>
               <div className="card-body">
-                {(sectionMasterData?.isPostLoading || (sectionData && sectionMasterData?.isUpdateLoading)) ? (
+                {sectionMasterData?.isPostLoading ||
+                (sectionData && sectionMasterData?.isUpdateLoading) ? (
                   <div style={{ height: "250px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -178,16 +210,17 @@ const SectionMasterForm = ({ sectionData }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                            {section_name}
+                                {section_name}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="text"
                                 name="sectionName"
-                                className={`form-control ${errors.sectionName && touched.sectionName
+                                className={`form-control ${
+                                  errors.sectionName && touched.sectionName
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder={sectionNamePlaceholder}
                               />
                               <ErrorMessage
@@ -198,7 +231,7 @@ const SectionMasterForm = ({ sectionData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                            {section_type}
+                                {section_type}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -206,10 +239,11 @@ const SectionMasterForm = ({ sectionData }) => {
                                 name="sectionType"
                                 component={Dropdown}
                                 options={sectionTypeOptions}
-                                className={`form-select ${errors.sectionType && touched.sectionType
+                                className={`form-select ${
+                                  errors.sectionType && touched.sectionType
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 onChange={(e) => {
                                   setShowFields(e === "SpecialSection");
                                 }}
@@ -223,17 +257,17 @@ const SectionMasterForm = ({ sectionData }) => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-
-                             {display_order}
+                                {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder={displayOrderPlaceholder}
                               />
                               <ErrorMessage
@@ -245,16 +279,17 @@ const SectionMasterForm = ({ sectionData }) => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                             {display_limit}
+                                {display_limit}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="displayLimit"
-                                className={`form-control ${errors.displayLimit && touched.displayLimit
+                                className={`form-control ${
+                                  errors.displayLimit && touched.displayLimit
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder="Enter Display Limit"
                               />
                               <ErrorMessage
@@ -263,36 +298,39 @@ const SectionMasterForm = ({ sectionData }) => {
                                 className="error-message"
                               />
                             </div>
-                            {showFields && (
-                              <div className="col-sm-4 form-group mb-2 mt-1">
-                                <label>{claim_limit}</label>
-                                <Field
-                                  type="number"
-                                  name="claimLimit"
-                                  className={`form-control ${errors.claimLimit && touched.claimLimit
-                                      ? "is-invalid"
-                                      : ""
-                                    }`}
-                                  placeholder="Enter Claim Limit"
-                                />
-                                <ErrorMessage
-                                  name="claimLimit"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
+
                             {showFields && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{text_label}</label>
                                 <Field
                                   type="text"
                                   name="text"
-                                  className={`form-control ${errors.text && touched.text
+                                  className={`form-control ${
+                                    errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   placeholder="Enter Text "
+                                />
+                              </div>
+                            )}
+                            {showFields && (
+                              <div className="col-sm-4 form-group mb-2 mt-1">
+                                <label>{claim_limit}</label>
+                                <Field
+                                  type="text"
+                                  name="claimLimit"
+                                  className={`form-control ${
+                                    errors.claimLimit && touched.claimLimit
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  placeholder="Enter Claim Limit"
+                                />
+                                <ErrorMessage
+                                  name="claimLimit"
+                                  component="div"
+                                  className="error-message"
                                 />
                               </div>
                             )}
@@ -305,7 +343,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     name="pointToClaim"
                                   />
                                   <label className="px-1">
-                           {points_to_claim_label}
+                                    {points_to_claim_label}
                                   </label>
                                 </div>
                               </div>
@@ -316,11 +354,12 @@ const SectionMasterForm = ({ sectionData }) => {
                                 <Field
                                   type="number"
                                   name="noOfpointToClaim"
-                                  className={`form-control ${errors.noOfpointToClaim &&
-                                      touched.noOfpointToClaim
+                                  className={`form-control ${
+                                    errors.noOfpointToClaim &&
+                                    touched.noOfpointToClaim
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   placeholder="Enter No Of Points To Claim"
                                 />
                                 <ErrorMessage
@@ -338,10 +377,11 @@ const SectionMasterForm = ({ sectionData }) => {
                                   name="segmentId"
                                   component={Dropdown}
                                   options={segmentOptions}
-                                  className={`form-select ${errors.segmentId && touched.segmentId
+                                  className={`form-select ${
+                                    errors.segmentId && touched.segmentId
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                 />
                                 <ErrorMessage
                                   name="segmentId"
@@ -358,10 +398,11 @@ const SectionMasterForm = ({ sectionData }) => {
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"

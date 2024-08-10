@@ -176,8 +176,8 @@ const SectionContentMasterList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{mobile_image}</th>
                                 <th>{web_image}</th>
+                                <th>{mobile_image}</th>
                                 <th>{display_order}</th>
                                 <th>{call_to_action}</th>
                                 <th>{content_source_type}</th>

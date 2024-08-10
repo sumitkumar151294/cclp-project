@@ -187,7 +187,7 @@ const SectionMasterList = () => {
                                 <td>{SectionMasterData?.displayLimit}</td>
                                 <td>
                                   {
-                                    SectionMasterData?.claimLimit |
+                                    SectionMasterData?.claimLimit ||
                                     <span className="hyphen"> -</span>
                                   }
                                 </td>
