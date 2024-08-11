@@ -13,6 +13,9 @@ import health from "../../../Assets/imgNewUI/topoffer/health.png";
 import kid from "../../../Assets/imgNewUI/topoffer/kids.png";
 import shopping from "../../../Assets/imgNewUI/topoffer/shopping.png";
 import beauty from "../../../Assets/imgNewUI/topoffer/beauty.png";
+import coupon_icon from "../../../Assets/imgNewUI/topoffer/coupon_icon.png";
+import arrowTra from "../../../Assets/imgNewUI/topoffer/Arrow 5.png";
+import copy_icon from "../../../Assets/imgNewUI/topoffer/copy_icon.png";
 // import cardarrow from '../../../Assets/imgNewUI/card-arrow.png';
 import upArrow from "../../../Assets/imgNewUI/Arrow 21.png";
 import downArrow from "../../../Assets/imgNewUI/Arrow 22.png";
@@ -27,8 +30,6 @@ const TopOfferPage = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showAll, setShowAll] = useState(false);
-
- 
 
   useEffect(() => {
     dispatch(onGetDealCategory());
@@ -150,6 +151,55 @@ const TopOfferPage = () => {
           </div>
 
           <div className="col-lg-8 col-md-8 col-sm-8 col-12 top_offer_content_wrapper">
+            {/* modal */}
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Coupon Modal
+            </button>
+
+            <div
+              className="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="coupon_card_wrapper">
+                <div className="coupon_badge">
+                  <div className="coupon_icon">
+                  <img src={coupon_icon} alt="coupon_icon"/>
+                  </div>
+                </div>
+                <div className="coupon_body">
+                  <div className="coupon_title">
+                    <h3>Flat Rs 75 OFF on a minmum Order of Rs 499</h3>
+                  </div>
+                  <div className="coupon_badge_label">
+                    <span className="text">ZOMATO</span>
+                    <span className="copy_icon"><img src={copy_icon} alt="copy_icon"/></span>
+                  </div>
+                  <div className="coupon_validity">
+                    <h5>Valid till : 30th June</h5>
+                  </div>
+                  <div className="coupon_redeem">
+                    <btn className="btn btn_redeem">
+                      Redeem <span><img src={arrowTra} alt="iconarrow"/></span>
+                    </btn>
+                  </div>
+                </div>
+                <div className="coupon_footer">
+                  <p>
+                    Please refer to <span>Terms and Conditions</span> on how to redeem this
+                    offer
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* modal-close */}
             <div className="offer_title mobile_heading">
               <h3 className="hide_desktop">
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
@@ -183,7 +233,7 @@ const TopOfferPage = () => {
                     <div className="sub_menu">
                       <span>
                         <img src={downArrow} alt="more" />
-                        <i class="fa-solid fa-angle-up"></i>
+                        <i className="fa-solid fa-angle-up"></i>
                       </span>
                       <p className="more">More</p>
                     </div>

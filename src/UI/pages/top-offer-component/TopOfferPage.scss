@@ -312,6 +312,119 @@
   }
 }
 
+/*=========coupon=modal==========*/
+  .coupon_card_wrapper{
+    background-color: #ffffff;
+    border-radius: 17.11px;
+    width: 380px;
+    margin: 100px auto;
+    .coupon_badge{
+      background-color: #CD1C2C;
+      border-radius: 17.11px 17.11px 0px 0px;
+      text-align: center;
+      position: relative;
+      padding: 40px 0px;
+
+
+      .coupon_icon{
+        position: absolute;
+        left: 40%;
+        bottom: -30px;
+      }
+
+    }
+    .coupon_body{
+      text-align: center;
+      .coupon_title{
+        padding: 31px 51px 31px 51px;
+        
+        h3{
+          font-family: Inter;
+          font-size: 19.01px;
+          font-weight: 700;
+          line-height: 23.01px;
+          letter-spacing: -0.01em;
+          color: #353535;
+
+        }
+
+      }
+      .coupon_badge_label{
+background-color: #F5F5F5;
+border-radius: 4.75px;
+border: 1.9px solid #C0C0C0;
+border-style: dashed;
+width: 174.94px;
+text-align: center;
+margin: auto;
+padding: 16px;
+.text{
+  font-family: Inter;
+font-size: 15.21px;
+font-weight: 700;
+line-height: 18.41px;
+letter-spacing: 0.21em;
+color: #4B4B4B;
+}
+.copy_icon{
+  margin-left: 26px;
+}
+
+
+      }
+      .coupon_validity{
+        padding: 13px 0px;
+        text-align: center;
+        h5{
+          font-family: Inter;
+font-size: 13.31px;
+font-weight: 500;
+line-height: 16.11px;
+color:#686868;
+        }
+      }
+      .coupon_redeem{
+        padding: 10px 20px;
+        .btn_redeem{
+          border: 1.9px solid #505050;
+          // border-image-source: linear-gradient(216.95deg, #505050 -98.96%, #141414 68.59%);
+          padding: 14px 50px;
+          font-family: Inter;
+font-size: 15.21px;
+font-weight: 600;
+line-height: 18.41px;
+letter-spacing: -0.01em;
+text-align: center;
+color: #505050;
+border-radius: 30px;
+width: 100%;
+span{
+  margin-left: 10px;
+}
+
+
+
+        }
+      }
+    }
+    .coupon_footer{
+      padding: 51px  40px 20px 20px;
+      p{
+        font-family: Inter;
+        font-size: 11.41px;
+        font-weight: 500;
+        line-height: 13.81px;
+        letter-spacing: -0.01em;
+  color: #949494; 
+  
+  span{
+    text-decoration: underline;
+  }
+      }
+    }
+  }
+/*=========coupon=modal=END=========*/
+
 @media (min-width: 320px) and (max-width: 768px) {
   .forMob{
     display: grid !important;
