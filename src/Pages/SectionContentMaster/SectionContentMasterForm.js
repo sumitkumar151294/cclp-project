@@ -121,8 +121,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     segmentId: "",
   });
   const [showFeild, setShowFields] = useState("");
-  console.log(showFeild);
-  const [values, setValues] = useState(null);
+    const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.lazy(() =>

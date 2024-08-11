@@ -29,7 +29,6 @@ const DealCouponList = () => {
       data.coupounCode?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
       data.dealId?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
-  console.log(filteredData)
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };

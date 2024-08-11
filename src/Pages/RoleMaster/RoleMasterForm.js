@@ -12,6 +12,7 @@ import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
+  onUpdateUserRoleReset,
 } from "../../Store/Slices/userRoleSlice";
 import {
   onGetUserRoleModuleAccess,
@@ -19,7 +20,9 @@ import {
   onPostUserRoleModuleAccessReset,
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 
-const RoleMasterForm = ({ userMasterData, setuserMasterData }) => {
+const RoleMasterForm = ({ roleMasterData }) => {
+  console.log(roleMasterData)
+
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
   const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
@@ -27,6 +30,9 @@ const RoleMasterForm = ({ userMasterData, setuserMasterData }) => {
   const getUserModalAccessData = useSelector(
     (state) => state?.userRoleModuleAccessReducer
   );
+  const editModules = roleMasterData
+  ? getUserModalAccessData.data.filter(item => item.roleId === roleMasterData.id)
+  : [];
   const [value, setValues] = useState([]);
   const [intialValue, setInitialValue] = useState({
     name: "",
@@ -61,34 +67,35 @@ const RoleMasterForm = ({ userMasterData, setuserMasterData }) => {
   });
 
   const roleId = useSelector(
-    (state) => state?.userRoleReducer?.postRoleData[0]?.roleId
+    (state) => state?.userRoleReducer?.postRoleData?.[0]?.roleId
   );
   const getUserRoleData = useSelector((state) => state?.userRoleReducer);
 
   //to handle form submit
 
   const handleSubmit = (values) => {
-    debugger;
+
     if (!values) return;
-    const roleMasterData = {
+    const roleMasterDataInfo = {
       deleted: false,
       name: values?.name,
       description: values?.description || "",
       clientId: 4,
+      ...(roleMasterData && { id: roleMasterData.id }),
     };
     setValues(values.modules);
     setSelectAll(false);
-    dispatch(onPostUserRole(roleMasterData));
+    dispatch(onPostUserRole(roleMasterDataInfo));
   };
 
   useEffect(() => {
-    if (getUserRoleData?.status_code === "201") {
+    if (getUserRoleData?.status_code === "201" || getUserRoleData?.status_code === "205") {
       const modulesData = Object.keys(value).map((moduleId) => {
         const { view, add, edit } = value[moduleId];
         return {
           id: 0,
           deleted: false,
-          roleId: roleId,
+          roleId: roleMasterData?.id || roleId,
           moduleId: parseInt(moduleId, 10),
           viewAccess: view,
           addAccess: add,
@@ -106,6 +113,27 @@ const RoleMasterForm = ({ userMasterData, setuserMasterData }) => {
       dispatch(onPostUserRoleModuleAccessReset());
     }
   }, [getUserRoleData, getUserModalAccessData]);
+  useEffect(() => {
+    if (roleMasterData) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      const prefilledModules = moduleAccessData.reduce((acc, module) => {
+        const moduleAccess = editModules.find((access) => access.moduleId === module.id);
+        acc[module.id] = {
+          moduleID: module.id,
+          view: moduleAccess ? moduleAccess.viewAccess : false,
+          add: moduleAccess ? moduleAccess.addAccess : false,
+          edit: moduleAccess ? moduleAccess.editAccess : false,
+        };
+        return acc;
+      }, {});
+  
+      setInitialValue({
+        ...roleMasterData,
+        modules: prefilledModules
+      });
+    }
+  }, [roleMasterData]);
+
   return (
     <>
       <ToastContainer />
@@ -284,7 +312,7 @@ const RoleMasterForm = ({ userMasterData, setuserMasterData }) => {
                           </div>
                           <div className="col-sm-4 mb-4">
                             <Button
-                              text={userMasterData ? "update" : "submit"}
+                              text={roleMasterData ? "update" : "submit"}
                               end_icon="fa fa-arrow-right"
                               className="btn btn-primary float-right pad-aa mt-2"
                             />
