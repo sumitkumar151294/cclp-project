@@ -5,10 +5,8 @@ import Layout from "../Layout/Layout";
 import DealList from "../Pages/Deal/DealList";
 import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
-
 import HomePage from "../UI/HomePage";
 import TopOfferPage from "../UI/pages/top-offer-component/TopOfferPage";
-
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
 import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";

@@ -28,8 +28,8 @@ const DealCouponList = () => {
     (data) =>
       data.coupounCode?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
       data.dealId?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-
   );
+  console.log(filteredData)
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -91,12 +91,15 @@ const DealCouponList = () => {
                             <thead>
                               <tr>
                                 <th>{"Coupoun Type"}</th>
+                                <th>{"Coupoun Code"}</th>
                                 <th>{"Deal"}</th>
                                 <th>{"Call To Action"}</th>
-                                <th>{"Image "}</th>
+
                                 <th>{"Title "}</th>
                                 <th>{"Terms and Condtions "}</th>
                                 <th>{"Description "}</th>
+                                <th>{"Segment "}</th>
+                                <th>{"Image "}</th>
                                 {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
                               </tr>
                             </thead>
@@ -106,12 +109,35 @@ const DealCouponList = () => {
                                 .map((dealcoupoun, index) => (
                                   <tr key={index}>
                                     <td>{dealcoupoun.typeOfCoupoun}</td>
-                                    <td>{dealcoupoun.dealId}</td>
+                                    <td>{dealcoupoun.coupounCode || (
+                                        <span className="hyphen"> -</span>
+                                      )}</td>
+                                    <td>{dealcoupoun.dealId || (
+                                        <span className="hyphen"> -</span>
+                                      )}</td>
                                     <td>{dealcoupoun.cta}</td>
-                                    <td>{dealcoupoun.image}</td>
-                                    <td>{dealcoupoun.title}</td>
+
+                                    <td>{dealcoupoun.title || (
+                                        <span className="hyphen"> -</span>
+                                      )}</td>
                                     <td>{dealcoupoun.terms}</td>
-                                    <td>{dealcoupoun.description}</td>
+                                    <td>{dealcoupoun.description || (
+                                        <span className="hyphen"> -</span>
+                                      )}</td>
+                                       <td>{dealcoupoun.segmentId || (
+                                        <span className="hyphen"> -</span>
+                                      )}</td>
+                                            <td>
+                                      {dealcoupoun.image ? (
+                                        <img
+                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealcoupoun.image}`}
+                                          style={{ width: "50px" }}
+                                          alt="Image"
+                                        />
+                                      ) : (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
                                     {getRoleAccess[0]?.editAccess && (
                                     <td>
                                       <div className="d-flex">

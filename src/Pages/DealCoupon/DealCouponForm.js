@@ -87,15 +87,11 @@ const DealCouponForm = () => {
   }));
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    dealId: Yup.string().required("Deal is required"),
     months: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one month is required"),
     weekDays: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one week is required"),
-    segmentId: Yup.string().required("Segment is required"),
     typeOfCoupoun: Yup.string().required("Coupon Type is required"),
     image: Yup.string().required("Image is required"),
-    description: Yup.string().required("Description is required"),
     cta: Yup.string().required("Call To Action is required"),
-    title: Yup.string().required("Title is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -230,28 +226,7 @@ const DealCouponForm = () => {
                               </div>
                             )}
 
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                {deal_label}
-                                <span className="text-danger">*</span>
-                              </label>
 
-                              <Field
-                                name="dealId"
-                                options={dealOptions}
-                                component={Dropdown}
-                                className={`form-select ${
-                                  errors.dealId && touched.dealId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="dealId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
 
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>
@@ -299,7 +274,6 @@ const DealCouponForm = () => {
                             <div className="col-sm-4 form-group mb-4">
                               <label>
                                 {title_label}
-                                <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="text"
@@ -321,7 +295,6 @@ const DealCouponForm = () => {
                             <div className="col-sm-4 form-group ">
                               <label>
                                 {description}
-                                <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="text"
@@ -341,8 +314,28 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
+                                {deal_label}
+                              </label>
+
+                              <Field
+                                name="dealId"
+                                options={dealOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.dealId && touched.dealId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="dealId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
                                 {segment_label}
-                                <span className="text-danger">*</span>
                               </label>
 
                               <Field
@@ -407,7 +400,7 @@ const DealCouponForm = () => {
                             </div>
 
                             <div className="col-sm-12 form-group mb-4">
-                              <label>{terms_and_condition}</label>
+                              <label>{"Terms And Conditons"}</label>
                               <Field
                                 component={HtmlEditor}
                                 name="terms"
