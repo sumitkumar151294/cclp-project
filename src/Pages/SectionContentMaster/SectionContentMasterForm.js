@@ -18,8 +18,6 @@ import {
   onGetSectionContentMaster,
   onPostSectionContentMaster,
   onPostSectionContentMasterReset,
-  onUpdateSectionContentMaster,
-  onUpdateSectionContentMasterReset,
 } from "../../Store/Slices/sectionContentMasterSlice";
 import {
   onPostuploadImage,
@@ -33,10 +31,7 @@ const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
   { value: "Product", label: "Product" },
 ];
-const SectionContentMasterForm = ({
-  sectionContentData,
-
-}) => {
+const SectionContentMasterForm = ({ sectionContentData }) => {
   const [mobile, setMobile] = useState(false);
   const [web, setWeb] = useState(false);
   const section_content_master = GetTranslationData(
@@ -125,18 +120,34 @@ const SectionContentMasterForm = ({
     contentSourceType: "",
     segmentId: "",
   });
-  const [showFeild,setShowFields]=useState("")
-  console.log(showFeild)
+  const [showFeild, setShowFields] = useState("");
+  console.log(showFeild);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     webImage: Yup.lazy(() =>
-      ["Banner", "SupportingBanner", "CustomerBenefits","SpecialSection"].includes(type)
+      [
+        "Banner",
+        "SupportingBanner",
+        "CustomerBenefits",
+        "SpecialSection",
+        "SpecialBannerOne",
+        "SpecialBannerTwo",
+        "SupportingBannerBottom",
+      ].includes(type)
         ? Yup.string().required(web_image_required)
         : Yup.string()
     ),
     mobImage: Yup.lazy(() =>
-      ["Banner", "CustomerBenefits","SupportingBanner","SpecialSection"].includes(type)
+      [
+        "Banner",
+        "CustomerBenefits",
+        "SupportingBanner",
+        "SpecialSection",
+        "SpecialBannerOne",
+        "SpecialBannerTwo",
+        "SupportingBannerBottom",
+      ].includes(type)
         ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
@@ -144,7 +155,7 @@ const SectionContentMasterForm = ({
       .required(display_order_required)
       .matches(/^[0-9]+$/, "Display Order must be a number"),
     text: Yup.lazy(() =>
-      type === "UnlockStaticCard"
+     ( type === "UnlockStaticCard" || type === "SpecialBannerOne" || type==="SupportingBannerBottom")
         ? Yup.string()
             .required("Text is Required")
             .test(
@@ -155,7 +166,6 @@ const SectionContentMasterForm = ({
         : Yup.string().nullable()
     ),
   });
-
 
   const displayLimit =
     getSectiontContentMasterData?.getSectionContentMasterData?.filter(
@@ -258,6 +268,11 @@ const SectionContentMasterForm = ({
       dispatch(onPostuploadMobileImageReset());
       dispatch(onUpdatesectionMasterReset());
       dispatch(onPostSectionContentMasterReset());
+    }else if(getSectiontContentMasterData?.post_status_code){
+      toast.error(getSectiontContentMasterData?.postMessage);
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostSectionContentMasterReset());
     }
   }, [getSectiontContentMasterData]);
   useEffect(() => {
@@ -309,14 +324,13 @@ const SectionContentMasterForm = ({
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-
-
-
-
-
                             {(type === "Banner" ||
                               type === "CustomerBenefits" ||
-                              type === "SupportingBanner" || type === "SpecialSection") && (
+                              type === "SupportingBanner" ||
+                              type === "SpecialSection" ||
+                              type === "SpecialBannerOne" ||
+                              type === "SpecialBannerTwo" ||
+                              type === "SupportingBannerBottom") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   {upload_image_for_web}
@@ -347,7 +361,11 @@ const SectionContentMasterForm = ({
                             )}
                             {(type === "Banner" ||
                               type === "CustomerBenefits" ||
-                              type === "SupportingBanner" ||  type === "SpecialSection" ) && (
+                              type === "SupportingBanner" ||
+                              type === "SpecialSection" ||
+                              type === "SpecialBannerOne" ||
+                              type === "SpecialBannerTwo" ||
+                              type === "SupportingBannerBottom") && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Phone
@@ -376,11 +394,9 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
-                             {type === "SpecialSection" && (
+                            {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {content_source_type}
-                                </label>
+                                <label>{content_source_type}</label>
 
                                 <Field
                                   name="contentSourceType"
@@ -393,7 +409,7 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   onChange={(e) => {
-                                    debugger
+                                    debugger;
                                     setShowFields(e);
                                   }}
                                 />
@@ -405,32 +421,33 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
-                               {(showFeild==="Deal" || showFeild==="Product" )&&   <div className="col-sm-4 form-group mb-4">
-                              <label>
-                           {showFeild==="Deal" ? "Deal" : "Product"}
-                              </label>
-                              <Field
-                                name="linkedMasterId"
-                                component={Dropdown}
-                                options={dealOptions}
-                                className={`form-select ${
-                                  errors.linkedMasterId && touched.linkedMasterId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-
-                              />
-                              <ErrorMessage
-                                name="sectionType"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>}
-                            {type === "SpecialSection" && (
+                            {(showFeild === "Deal" ||
+                              showFeild === "Product") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
-                                  {segment_label}
+                                  {showFeild === "Deal" ? "Deal" : "Product"}
                                 </label>
+                                <Field
+                                  name="linkedMasterId"
+                                  component={Dropdown}
+                                  options={dealOptions}
+                                  className={`form-select ${
+                                    errors.linkedMasterId &&
+                                    touched.linkedMasterId
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
+                                <ErrorMessage
+                                  name="sectionType"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                            {type === "SpecialSection" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>{segment_label}</label>
                                 <Field
                                   name="segmentId"
                                   component={Dropdown}
@@ -441,7 +458,7 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   onChange={(e) => {
-                                    debugger
+                                    debugger;
                                     setShowFields(e);
                                   }}
                                 />
@@ -455,7 +472,9 @@ const SectionContentMasterForm = ({
                             )}
                             {(type === "UnlockStaticCard" ||
                               type === "SupportingBanner" ||
-                              type === "SpecialSection") && (
+                              type === "SpecialSection" ||
+                              type === "SpecialBannerOne" ||
+                              type === "SupportingBannerBottom") && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
                                 <Field

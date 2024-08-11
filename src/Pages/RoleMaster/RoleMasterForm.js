@@ -362,7 +362,7 @@ const RoleMasterForm = ({ data, setData }) => {
                               className="form-check-label error-check error-message"
                               htmlFor="basic_checkbox_1"
                             >
-                              {checkBox_Error}
+                              { }
                             </span>
                           )}
                         </div>
