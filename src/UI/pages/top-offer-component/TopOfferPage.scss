@@ -166,11 +166,12 @@
     .top_offer_menu_tab {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      // justify-content: space-between;
       padding-top: 47px;
 
       .sub_menu {
         text-align: center;
+        margin: 0 10px 0 0;
 
         span {
           background-color: var(--bs-white-1);
@@ -196,9 +197,9 @@
 
     .top_offer_card_container {
         padding-top: 55px;
-        display: grid;
+        display: flex;
         grid-template-columns: auto auto auto;
-        gap:60px 12px;
+        gap:60px 20px;
     
         .offer_card {
           width: 161.45px;
@@ -233,6 +234,7 @@
               line-height: 13.31px;
               letter-spacing: -0.02em;
               color: var(--bs-red-2);
+              text-align: left;
             }
           }
           .card_footer{
@@ -313,6 +315,12 @@
 }
 
 @media (min-width: 320px) and (max-width: 768px) {
+  .fa-arrow-left{
+    color: black;
+  }
+  .sub_menu {
+    text-align: center;
+    margin: 0px !important;}
   .forMob{
     display: grid !important;
     width: auto;
