@@ -29,7 +29,7 @@ const SideBar = () => {
   // to get the current user's role ID from the Redux store
   const userRoleID = useSelector(
     (state) => state.loginReducer?.data?.[0]?.clientRoleId
-  );
+  ); console.log(userRoleID,"userRoleID")
   //to get loginAuthData from redux store
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   //to get login Data from redux store
@@ -37,10 +37,6 @@ const SideBar = () => {
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
-  // to get user-role-loader  from the Redux store
-  const roleAccessListLoading = useSelector(
-    (state) => state?.userRoleReducer?.getUserRoleLoading
-  );
   // fetch module and user role module access data when the component mounts
   useEffect(() => {
     axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
@@ -56,13 +52,14 @@ const SideBar = () => {
     if (!getModuleData?.data?.length) {
       dispatch(onGetModule());
       dispatch(onGetUserRoleModuleAccess());
-      // dispatch(resetAllowModules());
+      dispatch(resetAllowModules());
     }
   }, []);
   // to reset the redux store (logout the user)
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(onLogout());
+    sessionStorage.clear();
     navigate("/");
   };
   // function to dynamically import icons based on the icon name
@@ -80,6 +77,7 @@ const SideBar = () => {
     });
     e.target.closest(".nav-icn").classList.add("mm-active");
     setSelectedModuleId(moduleId);
+    dispatch(resetAllowModules());
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {

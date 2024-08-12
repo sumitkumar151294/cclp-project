@@ -7,12 +7,13 @@ export const userRoleSlice = createSlice({
     isError: false,
     userRoleData: [], 
     message: "",
+    isgetLoading: true,
   },
   reducers: {
     onGetUserRole: (state) => {
       return {
         ...state,
-        getUserRoleLoading: true,
+        isgetLoading: true,
         isError: false,
         userRoleData: [], 
         message: "",
@@ -23,7 +24,7 @@ export const userRoleSlice = createSlice({
       const { data = [], message = "", status_code = "200" } = payload;
       return {
         ...state,
-        getUserRoleLoading: false,
+        isgetLoading: false,
         isError: false,
         userRoleData: data,  
         message,
@@ -38,7 +39,7 @@ export const userRoleSlice = createSlice({
         userRoleData: data,  
         message,
         status_code,
-        getUserRoleLoading: false,
+        isgetLoading: false,
         isError: true,
       };
     },
@@ -46,7 +47,7 @@ export const userRoleSlice = createSlice({
     onPostUserRole: (state) => {
       return {
         ...state,
-        postLoading: true,
+        isPostLoading: true,
         isError: false,
         postRoleData: [], 
       };
@@ -56,7 +57,7 @@ export const userRoleSlice = createSlice({
       const { postData = [], message = "", status_code="201" } = payload;
       return {
         ...state,
-        postLoading: false,
+        isPostLoading: false,
         isError: false,
         postRoleData: postData,
         message,
@@ -71,7 +72,7 @@ export const userRoleSlice = createSlice({
         postRoleData: postData, 
         message,
         status_code,
-        postLoading: false,
+        isPostLoading: false,
         isError: true,
       };
     },
@@ -81,7 +82,7 @@ export const userRoleSlice = createSlice({
         postRoleData: [], 
         message:"",
         status_code:null,
-        postLoading: false,
+        isPostLoading: false,
         isError: false,
       };
     },
@@ -89,7 +90,7 @@ export const userRoleSlice = createSlice({
     onUpdateUserRole: (state) => {
       return {
         ...state,
-        updateLoading: true,
+        isUpdateLoading: true,
         isError: false,
         updatedUserRoleData: [], 
         message: "",
@@ -100,7 +101,7 @@ export const userRoleSlice = createSlice({
       const { message = "", status_code = "205" } = payload;
       return {
         ...state,
-        updateLoading: false,
+        isUpdateLoading: false,
         isError: false,
         message,
         status_code,
@@ -113,7 +114,7 @@ export const userRoleSlice = createSlice({
         ...state,
         message,
         status_code,
-        updateLoading: false,
+        isUpdateLoading: false,
         isError: true,
       };
     },
@@ -122,7 +123,7 @@ export const userRoleSlice = createSlice({
         ...state,
         message:"",
         status_code:null,
-        updateLoading: false,
+        isUpdateLoading: false,
         isError: false,
       };
     },
