@@ -58,6 +58,30 @@
     }
   }
 }
+.slider-container {
+  .slick-track {
+    display: flex;
+    align-items: center; /* Center items vertically */
+  }
+
+  .slick-slide {
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+    width: 100% !important; /* Ensure the slide takes full width */
+  }
+
+  .card {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+  }
+
+  .card-img-top {
+    max-width: 100%; /* Ensure the image scales correctly */
+    height: auto; /* Maintain aspect ratio */
+  }
+}
+
 
 /*================================
             HERO-CAROUSEL-END

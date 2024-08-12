@@ -20,8 +20,8 @@ const HeroSection = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 2,
+          slidesToScroll: 2,
           infinite: false,
           dots: true,
         },
@@ -54,145 +54,10 @@ const HeroSection = () => {
         <Slider {...settings}>
           <div>
             <div className="card">
-              <img src={slide1} className="card-img-top" alt="slide_image1" />
-              {/* <div className="card-body">
-                <img src={tag1} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Bonus Offers on Travel</h5>
-                <p className="card-text">
-                20 Bonus Points For Every ₹100 Spent on Hotels. Zero Convenience fee on flights
-                </p>
-                <a href="#" className="btn_link">
-                  Book Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
+              <img src={slide1} className="card-img-top" alt="slide_image1" />   
             </div>
           </div>
-          <div>
-            <div className="card">
-              <img src={slide2} className="card-img-top" alt="slide_image2" />
-              {/* <div className="card-body">
-                <img src={tag2} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">A Shopping Spree With Points.</h5>
-                <p className="card-text">
-                Earn Points, Pay with Points​
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide3} className="card-img-top" alt="slide_image3" />
-              {/* <div className="card-body">
-                <img src={tag3} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Best Deals on Top brands</h5>
-                <p className="card-text">
-                with Your IDFC First Bank Credit Card
-                with Your IDFC First Bank Credit Card
-
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide1} className="card-img-top" alt="slide_image1" />
-              {/* <div className="card-body">
-                <img src={tag1} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Bonus Offers on Travel</h5>
-                <p className="card-text">
-                20 Bonus Points For Every ₹100 Spent on Hotels. Zero Convenience fee on flights
-                </p>
-                <a href="#" className="btn_link">
-                  Book Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide2} className="card-img-top" alt="slide_image2" />
-              {/* <div className="card-body">
-                <img src={tag2} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">A Shopping Spree With Points.</h5>
-                <p className="card-text">
-                Earn Points, Pay with Points​
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide3} className="card-img-top" alt="slide_image3" />
-              {/* <div className="card-body">
-                <img src={tag3} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Best Deals on Top brands</h5>
-                <p className="card-text">
-                with Your IDFC First Bank Credit Card
-                with Your IDFC First Bank Credit Card
-
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide1} className="card-img-top" alt="slide_image1" />
-              {/* <div className="card-body">
-                <img src={tag1} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Bonus Offers on Travel</h5>
-                <p className="card-text">
-                20 Bonus Points For Every ₹100 Spent on Hotels. Zero Convenience fee on flights
-                </p>
-                <a href="#" className="btn_link">
-                  Book Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide2} className="card-img-top" alt="slide_image2" />
-              {/* <div className="card-body">
-                <img src={tag2} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">A Shopping Spree With Points.</h5>
-                <p className="card-text">
-                Earn Points, Pay with Points​
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          <div>
-            <div className="card">
-              <img src={slide3} className="card-img-top" alt="slide_image3" />
-              {/* <div className="card-body">
-                <img src={tag3} className="offer_tag" alt="offer_tag"/>
-                <h5 className="card-title">Best Deals on Top brands</h5>
-                <p className="card-text">
-                with Your IDFC First Bank Credit Card
-                with Your IDFC First Bank Credit Card
-
-                </p>
-                <a href="#" className="btn_link">
-                  Shop Now <span> <img src={cardarrow} alt="btn arrow icon"/></span>
-                </a>
-              </div> */}
-            </div>
-          </div>
+ 
         </Slider>
       </div>
     </>
