@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -50,7 +48,6 @@ const RoleMasterForm = ({ roleMasterData }) => {
       {}
     ),
   });
-  // to get labels and placeholders from translation
 
   // to validate form using Yup schema
   const validations = Yup.object().shape({
@@ -72,9 +69,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const getUserRoleData = useSelector((state) => state?.userRoleReducer);
 
   //to handle form submit
-
   const handleSubmit = (values) => {
-
     if (!values) return;
     const roleMasterDataInfo = {
       deleted: false,
@@ -145,7 +140,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                 <h4 className="card-title">{"Role Name"}</h4>
               </div>
               <div className="card-body">
-                {getUserRoleData?.postLoading ||
+                {getUserRoleData?.isPostLoading ||
                 getmoduleLoading?.isLoading ||
                 getUserModalAccessData?.isLoading ? (
                   <div style={{ height: "200px" }}>
@@ -332,4 +327,3 @@ const RoleMasterForm = ({ roleMasterData }) => {
 };
 
 export default RoleMasterForm;
-/* eslint-enable react-hooks/exhaustive-deps */

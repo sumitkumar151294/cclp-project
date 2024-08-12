@@ -54,9 +54,9 @@ const LoginPage = () => {
     if (isLogin && loginDetails?.status_code === "201") {
       navigate("/dashboard");
       sessionStorage.setItem("login",true);
-    } else if (isLogin && loginDetails?.status_code) {
-      toast.error(loginDetails?.message);
-      dispatch(onLoginReset())
+    } else if (loginDetails?.status_code) {
+      toast.error(isLogin && loginDetails?.message);
+      dispatch(onLoginReset());
     }
   }, [loginDetails]);
   // to handle checkbox

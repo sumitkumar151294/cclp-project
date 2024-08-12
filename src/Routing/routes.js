@@ -14,6 +14,7 @@ import DealCategoryList from "../Pages/DealCategory/DealCategoryList";
 import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList";
+import PageError from "../Components/PageError/PageError";
 
 function RouteConfiq() {
   return (
@@ -21,13 +22,6 @@ function RouteConfiq() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
-
-
-       
-
-
-
-
         {/* New-UI */}
         <Route path="/home" element={<HomePage />} />
         <Route path="/topOffer" element={<TopOfferPage />} />
@@ -68,6 +62,20 @@ function RouteConfiq() {
           <Route
           path="/navConfiguration"
           element={<Layout Component={NavConfigurationList} />}
+        />
+        <Route
+          path="*"
+          element={
+            <PageError
+              pageError={{
+                StatusCode: "404",
+                ErrorName: "Route not found",
+                ErrorDesription: "The page you were looking for is not found!",
+                url: "/",
+                buttonText: "Back to home",
+              }}
+            />
+          }
         />
       </Routes>
     </Router>

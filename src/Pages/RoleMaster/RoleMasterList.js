@@ -99,7 +99,7 @@ useEffect(() => {
                 <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
-                {(roleAccessList?.getUserRoleLoading || roleAccessList?.postLoading || getuserRoleAccess?.isLoading) && (
+                {(roleAccessList?.isgetLoading || roleAccessList?.isUpdateLoading || getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>)}
