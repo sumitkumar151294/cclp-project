@@ -16,8 +16,8 @@ const PointBanner = () => {
             <h3>Bonus Points, No Hidden Charges</h3>
         </div>
         <div className='banner_grid'>
-            <img src={banner1} alt='banner' className='d_none_sm'/>
-            <img src={banner2} alt='banner' className='d_none_sm'/>
+            <img src={banner1} alt='banner' className='d_none_sm desktopImg'/>
+            <img src={banner2} alt='banner' className='d_none_sm desktopImg'/>
             <img src={banner4} alt='banner' className='d_none_lg'/>
             <img src={banner5} alt='banner' className='d_none_lg'/>
         </div>

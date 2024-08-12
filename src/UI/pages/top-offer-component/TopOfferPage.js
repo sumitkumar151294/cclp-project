@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "../../Header/Header";
 import "../top-offer-component/TopOfferPage.scss";
 import cartBag from "../../../Assets/imgNewUI/topoffer/cartBag.png";
@@ -13,11 +13,13 @@ import health from "../../../Assets/imgNewUI/topoffer/health.png";
 import kid from "../../../Assets/imgNewUI/topoffer/kids.png";
 import shopping from "../../../Assets/imgNewUI/topoffer/shopping.png";
 import beauty from "../../../Assets/imgNewUI/topoffer/beauty.png";
+import filter from "../../../Assets/imgNewUI/filter.png";
 // import cardarrow from '../../../Assets/imgNewUI/card-arrow.png';
 import upArrow from "../../../Assets/imgNewUI/Arrow 21.png";
 import downArrow from "../../../Assets/imgNewUI/Arrow 22.png";
 // import image1 from '../../../Assets/imgNewUI/topoffer/Rectangle.png';
 import ScrollToTop from "../../../Components/ScrollToTop/ScrollToTop";
+import { Link } from "react-router-dom";
 
 const TopOfferPage = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const TopOfferPage = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showAll, setShowAll] = useState(false);
-
+  const filterRef = useRef(null);
  
 
   useEffect(() => {
@@ -49,11 +51,28 @@ const TopOfferPage = () => {
       )
     : getDeal?.getDealData;
 
-  const openFilter = () => {
+  const openFilter = () => { 
     if (isMobile) {
       setShowFilter((prev) => !prev);
     }
   };
+  const handleClickOutside = (event) => {
+    if (filterRef.current && !filterRef.current.contains(event.target)) {
+      setShowFilter(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showFilter) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showFilter]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,18 +85,8 @@ const TopOfferPage = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const items = [
-    { src: cartBag, text: "Shopping" },
-    { src: bag, text: "Travel" },
-    { src: food, text: "Dining" },
-    { src: health, text: "Wellness" },
-    { src: kid, text: "Kids" },
-    { src: bag, text: "Travel" },
-    { src: shopping, text: "Fashion" },
-    { src: beauty, text: "Beauty" },
-  ];
 
-  const itemsToShow = isMobile ? (showAll ? items : items.slice(0, 4)) : items;
+  const itemsToShow = isMobile ? (showAll ? getDealCategories?.getDealCategoryData : getDealCategories?.getDealCategoryData.slice(0, 4)) : getDealCategories?.getDealCategoryData;
 
   const handleToggle = () => {
     setShowAll((prev) => !prev);
@@ -103,6 +112,8 @@ const TopOfferPage = () => {
         <div className="row forMob">
           <div
             className={`col-lg-4 col-md-4 col-sm-4 col-12 filtr_option_wrapper`}
+            ref={filterRef}
+
           >
             <div className="filter_switch_btn">
               <div className="switch_btn">
@@ -152,15 +163,16 @@ const TopOfferPage = () => {
           <div className="col-lg-8 col-md-8 col-sm-8 col-12 top_offer_content_wrapper">
             <div className="offer_title mobile_heading">
               <h3 className="hide_desktop">
-                <i className="fa fa-arrow-left" aria-hidden="true"></i>
+               <Link to="/home"> <i className="fa fa-arrow-left" aria-hidden="true"></i></Link>
               </h3>
               <h3>Top Offers</h3>
-              <h3 className="hide_desktop" onClick={openFilter}>
+              <img className="hide_desktop" src={filter} alt="filterImg" onClick={openFilter} width={"18px"} height={"18px"}/>
+              {/* <h3 className="hide_desktop" onClick={openFilter}>
                 <i className="fa fa-filter" aria-hidden="true"></i>
-              </h3>
+              </h3> */}
             </div>
             <div className="top_offer_menu_tab">
-              {getDealCategories?.getDealCategoryData?.map((category) => (
+              {itemsToShow?.map((category) => (
                 <div className="sub_menu" key={category?.id}>
                   <span>
                     <img src={cartBag} alt="icon" />
