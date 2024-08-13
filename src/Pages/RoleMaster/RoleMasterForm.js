@@ -85,7 +85,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   };
 
   useEffect(() => {
-    if (getUserRoleData?.status_code === "201" ) {
+    if (getUserRoleData?.status_code === "201" || getUserRoleData?.status_code === "205") {
       const modulesData = Object.keys(value).map((moduleId) => {
         const { id,view, add, edit } = value[moduleId];
         return {

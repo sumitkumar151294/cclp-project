@@ -111,7 +111,7 @@ const SectionMasterForm = ({ sectionData }) => {
       .matches(/^[0-9]+$/, "Display Limit must be a number"),
     claimLimit: Yup.string()
       .nullable()  // Allows the value to be null
-      .matches(/^[0-9]*$/, "Claim Limit must be a number or empty")
+      .matches(/^[0-9]*$/, "Claim Limit must be a number")
   });
 
   const handleSubmit = (values) => {
