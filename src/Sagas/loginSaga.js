@@ -10,13 +10,17 @@ function* Login({ payload }) {
   try {
     const loginResponse = yield call(callLoginApi, payload);
     if (loginResponse) {
+
       yield put(
+
         onLoginSubmitSuccess({
+
           status_code: loginResponse?.httpStatusCode,
           message: loginResponse?.errorMessage,
           data: loginResponse?.response,
         })
       );
+      console.log(loginResponse)
     } else {
       yield put(
         onLoginSubmitError({

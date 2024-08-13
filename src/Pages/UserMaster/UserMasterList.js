@@ -23,17 +23,31 @@ const UserMasterList = () => {
   const [userMasterData, setuserMasterData] = useState();
   const dispatch = useDispatch();
   //To get the labels from API
-  const user_list_label = GetTranslationData("UIMasterAdmin", "user_list_label");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
-  const user_name_label = GetTranslationData("UIMasterAdmin", "user_name_label");
+  const user_list_label = GetTranslationData(
+    "UIMasterAdmin",
+    "user_list_label"
+  );
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
+  const user_name_label = GetTranslationData(
+    "UIMasterAdmin",
+    "user_name_label"
+  );
   const email_label = GetTranslationData("UIMasterAdmin", "email_label");
   const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
-  const non_active_label = GetTranslationData("UIMasterAdmin", "non_active_label");
+  const non_active_label = GetTranslationData(
+    "UIMasterAdmin",
+    "non_active_label"
+  );
   //to get user master data from redux store
   const userList = useSelector((state) => state.userMasterReducer);
-  const roleList = useSelector((state) => state?.userRoleReducer);
+  const roleAccessListData = useSelector(
+    (state) => state?.userRoleReducer?.userRoleData
+  );
   useEffect(() => {
     dispatch(onGetuserMaster());
     dispatch(onGetUserRole());
@@ -95,9 +109,8 @@ const UserMasterList = () => {
       dispatch(onGetuserMaster());
       dispatch(onUpdateuserMasterReset());
     } else if (userList?.update_status_code == "205") {
-
       toast.success(userList?.updateMessage);
-      setuserMasterData(null)
+      setuserMasterData(null);
       dispatch(onGetuserMaster());
       dispatch(onUpdateuserMasterReset());
     } else if (userList?.update_status_code) {
@@ -109,7 +122,10 @@ const UserMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <UserMasterForm userMasterData={userMasterData} setuserMasterData={setuserMasterData}/>
+      <UserMasterForm
+        userMasterData={userMasterData}
+        setuserMasterData={setuserMasterData}
+      />
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -136,9 +152,10 @@ const UserMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {userList?.isgetLoading || userList?.isUpdateLoading ||
+                {userList?.isgetLoading ||
+                userList?.isUpdateLoading ||
                 (userList?.update_status_code === "205" &&
-                  userList?.isPostLoading)  ? (
+                  userList?.isPostLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -151,6 +168,7 @@ const UserMasterList = () => {
                             <th>{user_name_label}</th>
                             <th>{email_label}</th>
                             <th>{mobile}</th>
+                            <th>{"Role Access"}</th>
                             <th>{status_label}</th>
                             <th>{action_label}</th>
                           </tr>
@@ -162,10 +180,24 @@ const UserMasterList = () => {
                               <tr key={index}>
                                 <td>
                                   {userMasterData?.firstName +
-                                    ' ' + userMasterData?.lastName}
+                                    " " +
+                                    userMasterData?.lastName}
                                 </td>
                                 <td>{userMasterData?.email}</td>
                                 <td>{userMasterData?.mobile}</td>
+                                <td>
+                                  {roleAccessListData
+                                    ?.filter(
+                                      (roleAccessData) =>
+                                        roleAccessData?.id ===
+                                        userMasterData?.roleId
+                                    )
+                                    .map((filteredData) => (
+                                      <span key={filteredData.id}>
+                                        {filteredData.name}
+                                      </span> // Adjust as needed
+                                    ))}
+                                </td>
                                 <td>
                                   <span
                                     className={

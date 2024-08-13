@@ -39,6 +39,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
       (acc, module) => ({
         ...acc,
         [module.id]: {
+          id:0,
           moduleID: module.id,
           view: false,
           add: false,
@@ -84,11 +85,11 @@ const RoleMasterForm = ({ roleMasterData }) => {
   };
 
   useEffect(() => {
-    if (getUserRoleData?.status_code === "201" || getUserRoleData?.status_code === "205") {
+    if (getUserRoleData?.status_code === "201" ) {
       const modulesData = Object.keys(value).map((moduleId) => {
-        const { view, add, edit } = value[moduleId];
+        const { id,view, add, edit } = value[moduleId];
         return {
-          id: 0,
+          id: id,
           deleted: false,
           roleId: roleMasterData?.id || roleId,
           moduleId: parseInt(moduleId, 10),
@@ -110,24 +111,30 @@ const RoleMasterForm = ({ roleMasterData }) => {
   }, [getUserRoleData, getUserModalAccessData]);
   useEffect(() => {
     if (roleMasterData) {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      const prefilledModules = moduleAccessData.reduce((acc, module) => {
-        const moduleAccess = editModules.find((access) => access.moduleId === module.id);
-        acc[module.id] = {
-          moduleID: module.id,
-          view: moduleAccess ? moduleAccess.viewAccess : false,
-          add: moduleAccess ? moduleAccess.addAccess : false,
-          edit: moduleAccess ? moduleAccess.editAccess : false,
+      const initialModules = moduleAccessData.reduce((acc, module) => {
+        const moduleAccess = editModules.find(item => item.moduleId === module.id) || {};
+        return {
+          ...acc,
+          [module.id]: {
+            id: moduleAccess.id || 0,
+            moduleID: module.id,
+            view: moduleAccess.viewAccess || false,
+            add: moduleAccess.addAccess || false,
+            edit: moduleAccess.editAccess || false,
+          },
         };
-        return acc;
       }, {});
   
       setInitialValue({
-        ...roleMasterData,
-        modules: prefilledModules
+        name: roleMasterData.name || "",
+        description: roleMasterData.description || "",
+        modules: initialModules,
       });
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
   }, [roleMasterData]);
+
+
 
   return (
     <>

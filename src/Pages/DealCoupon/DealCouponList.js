@@ -17,6 +17,8 @@ const DealCouponList = () => {
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
+  const getDealData = useSelector((state) => state.dealReducer?.getDealData);
+
   // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -44,12 +46,12 @@ const DealCouponList = () => {
   const endIndex = startIndex + rowsPerPage;
   useEffect(() => {
     dispatch(onGetDeal());
-    dispatch(onGetDealCoupon())
+    dispatch(onGetDealCoupon());
   }, []);
   return (
     <>
-    <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (<DealCouponForm />)}
+      <ScrollToTop />
+      {getRoleAccess[0]?.addAccess && <DealCouponForm />}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -98,7 +100,9 @@ const DealCouponList = () => {
                                 <th>{"Description "}</th>
                                 <th>{"Segment "}</th>
                                 <th>{"Image "}</th>
-                                {getRoleAccess[0]?.editAccess && (<th>{"Action"}</th>)}
+                                {getRoleAccess[0]?.editAccess && (
+                                  <th>{"Action"}</th>
+                                )}
                               </tr>
                             </thead>
                             <tbody>
@@ -107,25 +111,46 @@ const DealCouponList = () => {
                                 .map((dealcoupoun, index) => (
                                   <tr key={index}>
                                     <td>{dealcoupoun.typeOfCoupoun}</td>
-                                    <td>{dealcoupoun.coupounCode || (
+                                    <td>
+                                      {dealcoupoun.coupounCode || (
                                         <span className="hyphen"> -</span>
-                                      )}</td>
-                                    <td>{dealcoupoun.dealId || (
-                                        <span className="hyphen"> -</span>
-                                      )}</td>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {dealcoupoun.dealId ? (
+                                        getDealData
+                                          .filter(
+                                            (deal) =>
+                                              deal.id === parseInt(dealcoupoun.dealId)
+                                          )
+                                          .map((filteredDeal) => (
+                                            <span key={filteredDeal.id}>
+                                              {filteredDeal.name}
+                                            </span>   ))
+                                      ) : (
+                                        <span className="hyphen"> - </span>
+                                      )}
+                                    </td>
+
                                     <td>{dealcoupoun.cta}</td>
 
-                                    <td>{dealcoupoun.title || (
+                                    <td>
+                                      {dealcoupoun.title || (
                                         <span className="hyphen"> -</span>
-                                      )}</td>
+                                      )}
+                                    </td>
                                     <td>{dealcoupoun.terms}</td>
-                                    <td>{dealcoupoun.description || (
+                                    <td>
+                                      {dealcoupoun.description || (
                                         <span className="hyphen"> -</span>
-                                      )}</td>
-                                       <td>{dealcoupoun.segmentId || (
+                                      )}
+                                    </td>
+                                    <td>
+                                      {dealcoupoun.segmentId || (
                                         <span className="hyphen"> -</span>
-                                      )}</td>
-                                            <td>
+                                      )}
+                                    </td>
+                                    <td>
                                       {dealcoupoun.image ? (
                                         <img
                                           src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealcoupoun.image}`}
@@ -137,28 +162,27 @@ const DealCouponList = () => {
                                       )}
                                     </td>
                                     {getRoleAccess[0]?.editAccess && (
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-
-                                          end_icon={"fas fa-pencil-alt"}
-                                          // onClick={() =>
-                                          //   handleEdit(
-                                          //     data,
-                                          //     clientPayData
-                                          //   )
-                                          // }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          // onClick={() =>
-                                          //   handleDelete(data)
-                                          // }
-                                        />
-                                      </div>
-                                    </td>
+                                      <td>
+                                        <div className="d-flex">
+                                          <Button
+                                            className="btn btn-primary shadow btn-xs sharp me-1"
+                                            end_icon={"fas fa-pencil-alt"}
+                                            // onClick={() =>
+                                            //   handleEdit(
+                                            //     data,
+                                            //     clientPayData
+                                            //   )
+                                            // }
+                                          />
+                                          <Button
+                                            className="btn btn-danger shadow btn-xs sharp"
+                                            end_icon={"fa fa-trash"}
+                                            // onClick={() =>
+                                            //   handleDelete(data)
+                                            // }
+                                          />
+                                        </div>
+                                      </td>
                                     )}
                                   </tr>
                                 ))}

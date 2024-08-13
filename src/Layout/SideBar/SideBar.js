@@ -101,6 +101,7 @@ const SideBar = () => {
       setIsSideBarModules(filterModules);
     }
   }, [getModule, userRoleModuleAccess]);
+
   // to filter module access data
   const getModuleDataAccess = userRoleModuleAccess.filter((item) => {
     return (
@@ -108,7 +109,7 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
-
+  console.log(userRoleModuleAccess)
   useEffect(() => {
     if (
       getModuleDataAccess &&

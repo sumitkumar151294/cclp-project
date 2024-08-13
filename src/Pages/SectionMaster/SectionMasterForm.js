@@ -109,13 +109,13 @@ const SectionMasterForm = ({ sectionData }) => {
     displayLimit: Yup.string()
       .required(display_limit_required)
       .matches(/^[0-9]+$/, "Display Limit must be a number"),
-    claimLimit: Yup.string().matches(
-      /^[0-9]+$/,
-      "Display Limit must be a number"
-    ),
+    claimLimit: Yup.string()
+      .nullable()  // Allows the value to be null
+      .matches(/^[0-9]*$/, "Claim Limit must be a number or empty")
   });
 
   const handleSubmit = (values) => {
+    debugger
     if (values) {
       const SectionformData = {
         ...values,
@@ -201,11 +201,13 @@ const SectionMasterForm = ({ sectionData }) => {
                   <div className="container-fluid">
                     <Formik
                       initialValues={intialValue}
+
                       validationSchema={validations}
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
                       {({ errors, touched, values }) => (
+
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
