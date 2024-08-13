@@ -13,10 +13,12 @@ import {
 } from "../../Store/Slices/NavConfigurationSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 const NavConfigurationList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteddata, setDeleteData] = useState("");
   const [navData, setNavData] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -60,22 +62,33 @@ const NavConfigurationList = () => {
     const prefilled = data;
     setNavData(prefilled);
   };
+  // modal for delete warning
+  const showAlert = (data) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to delete this row.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {      
+      if (result?.value) {        
+        handleDelete(data)
+      }
+    });
+  };
   //to handle delete
   const handleDelete = (data) => {
     const deletedData = {
-      id: data?.id,
-      deleted: true,
-      enabled: false,
-      createdBy: 0,
-      updatedBy: 0,
-      clientId: 4,
-      cta: data?.cta,
-      navigationMenuName: data?.navigationMenuName,
-      displayOrder: data?.displayOrder,
-      loginRequired: data?.loginRequired,
+    ...data,
+    deleted:true  
     };
     dispatch(onUpdateNavConfigure(deletedData));
-  };
+
+  }
+ // to show the snackbar and call get api
   useEffect(() => {
     if (navConfigure?.update_status_code == "204") {
       toast.success(navConfigure?.updateMessage);
@@ -158,7 +171,7 @@ const NavConfigurationList = () => {
                                     <Button
                                       className="btn btn-danger shadow btn-xs sharp"
                                       end_icon={"fa fa-trash"}
-                                      onClick={() => handleDelete(data)}
+                                      onClick={() => showAlert(data)}
                                     />
                                   </div>
                                 </td>
