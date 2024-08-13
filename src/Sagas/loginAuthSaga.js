@@ -5,7 +5,7 @@ import { onLoginAuthError, onLoginAuthSubmit, onLoginAuthSuccess } from "../Stor
 function* LoginAuth({payload}){
   try{
     const loginAuthResponse=yield call(loginAuthApi,payload);
-    if(loginAuthResponse.httpStatusCode===200){
+    if(loginAuthResponse.httpStatusCode==="200"){
       yield put(
         onLoginAuthSuccess({
             data:loginAuthResponse?.response,

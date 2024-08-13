@@ -16,6 +16,7 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
 import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 const RoleMasterList = () => {
   const [page, setPage] = useState(1);
@@ -64,7 +65,24 @@ const RoleMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  // to handle edit functionality
+   // modal for delete warning
+   const showAlert = (data) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to delete this row.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {      
+      if (result?.value) {        
+        handleSubmit(data)
+      }
+    });
+  };
+  //to handle edit and delete 
   const handleSubmit = (roleMaster, edit) => {
     if (edit) {
       setRoleMasterData(roleMaster);
@@ -78,7 +96,6 @@ const RoleMasterList = () => {
   };
   useEffect(() => {
     if (roleAccessList?.status_code === "204") {
-      debugger;
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleReset());
@@ -106,7 +123,9 @@ const RoleMasterList = () => {
                 <h4 className="card-title">{roleModuleAccessList}</h4>
               </div>
               <div className="card-body position-relative">
-                {(roleAccessList?.isgetLoading || roleAccessList?.isUpdateLoading || getuserRoleAccess?.isLoading) && (
+                {(roleAccessList?.isgetLoading ||
+                  roleAccessList?.isUpdateLoading ||
+                  getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -158,7 +177,6 @@ const RoleMasterList = () => {
                                     <span className="hyphen"> -</span>
                                   )}
                                 </td>
-
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -173,8 +191,7 @@ const RoleMasterList = () => {
                                     <Button
                                       className="btn btn-danger shadow btn-xs sharp"
                                       end_icon={"fa fa-trash"}
-                                      onClick={() =>
-                                        handleSubmit(roleMasterData)
+                                      onClick={() =>showAlert(roleMasterData)
                                       }
                                     />
                                   </div>

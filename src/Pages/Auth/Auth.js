@@ -14,6 +14,7 @@ import { config } from "../../Common/Client/ClientConfig";
 import Loader from "../../Components/Loader/Loader";
 import { onPartnerKeyLoginSubmit } from "../../Store/Slices/loginSlice";
 import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
+import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
 
 const Auth = () => {
   const [showLoader, setShowLoader] = useState(false);
@@ -29,6 +30,7 @@ const Auth = () => {
   // to get data from redux store
   const translationData = useSelector((state) => state.translationReducer);
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
+  const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
   useEffect(() => {
     setShowLoader(true);
@@ -38,7 +40,7 @@ const Auth = () => {
     );
     if (matchingConfig.length > 1) {
       matchingConfig = matchingConfig.find(
-        (item) => item.PARTNER_KEY === "UIAdmin"
+        (item) => item.PARTNER_KEY === "UIMasterAdmin"
       );
     } else if (matchingConfig.length === 1) {
       matchingConfig = matchingConfig[0];
@@ -46,16 +48,20 @@ const Auth = () => {
     // get data from present url
     if (matchingConfig) {
       const { ACCESS_KEY, SECRET_KEY, PARTNER_KEY } = matchingConfig;
-      // var APICalled = false;
-      // if (PARTNER_KEY !== loginDetails.partner_Key) {
-      //   APICalled = true;
-      // }
+      var APICalled = false;
+      if (PARTNER_KEY !== loginDetails.partner_Key) {
+        APICalled = true;
+      }
       dispatch(onPartnerKeyLoginSubmit(PARTNER_KEY));
       axiosInstanceAdmin.defaults.headers["partner-code"] = PARTNER_KEY;
+      axiosInstanceClient.defaults.headers["partner-code"] = PARTNER_KEY;
       axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
-      if (!loginAuthData?.data.length) {
+      axiosInstanceClient.defaults.headers["client-code"] =
+        loginAuthData?.data?.[0]?.clientId;
+      if (!loginAuthData?.data.length || APICalled) {
         dispatch(onTranslationReset());
         dispatch(
           onLoginAuthSubmit({
@@ -81,11 +87,14 @@ const Auth = () => {
       });
     }
   }, [currentUrl]);
-
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
+      sessionStorage.setItem("clientCode", loginAuthData?.data?.[0]?.clientId);
       axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceAdmin.defaults.headers["client-code"] =
+        loginAuthData?.data?.[0]?.clientId;
+        axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
       dispatch(onTranslationSubmit());
       dispatch(onLoginAuthReset());

@@ -15,6 +15,7 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import InputField from "../../Components/InputField/InputField";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const UserMasterList = () => {
   const [page, setPage] = useState(1);
@@ -68,19 +69,28 @@ const UserMasterList = () => {
       data?.firstName?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
       data.email?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
-  const handleSumbit = (userMasterInfo, isEdit) => {
+  // modal for delete warning
+  const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSubmit(data);
+      }
+    });
+  };
+  //to handle edit and delete
+  const handleSubmit = (userMasterInfo, isEdit) => {
     const userData = {
-      id: userMasterInfo?.id,
-      enabled: userMasterInfo?.enabled,
+      ...userMasterInfo,
       deleted: true,
-      createdBy: 0,
-      updatedBy: 0,
-      firstName: userMasterInfo.firstName,
-      lastName: userMasterInfo.lastName,
-      email: userMasterInfo.email,
-      mobile: userMasterInfo.mobile,
-      roleId: userMasterInfo.roleId,
-      clientId: userMasterInfo.clientId,
     };
     if (isEdit) {
       setuserMasterData(userData);
@@ -217,7 +227,7 @@ const UserMasterList = () => {
                                       className="btn btn-primary shadow btn-xs sharp me-1"
                                       end_icon={"fas fa-pencil-alt"}
                                       onClick={() =>
-                                        handleSumbit(userMasterData, {
+                                        handleSubmit(userMasterData, {
                                           isEdit: true,
                                         })
                                       }
@@ -226,7 +236,7 @@ const UserMasterList = () => {
                                       className="btn btn-danger shadow btn-xs sharp"
                                       end_icon={"fa fa-trash"}
                                       onClick={() =>
-                                        handleSumbit(userMasterData)
+                                        showAlert(userMasterData)
                                       }
                                     />
                                   </div>

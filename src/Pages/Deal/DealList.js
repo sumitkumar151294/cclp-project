@@ -11,6 +11,7 @@ import { onGetDeal, onUpdateDeal, onUpdateDealReset } from "../../Store/Slices/d
 import { toast } from "react-toastify";
 import { onGetDealCategory } from "../../Store/Slices/dealCategorySlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Swal from "sweetalert2";
 
 const DealList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,22 +52,28 @@ const DealList = () => {
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-  const handleSumbit = (dealData, isEdit) => {
+   // modal for delete warning
+   const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSubmit(data);
+      }
+    });
+  };
+  //to handle edit and delete
+  const handleSubmit = (dealData, isEdit) => {
     const dealDataInfo = {
-      id: dealData?.id,
-      enabled: dealData?.enabled,
-      deleted: true,
-      createdBy: 0,
-      updatedBy: 0,
-      clientId: dealData?.clientId,
-      displayOrder: dealData?.displayOrder,
-      dealType:dealData?.dealType,
-      endDate:dealData?.endDate,
-      startDate:dealData?.startDate,
-      category:dealData?.category,
-      webImage:dealData?.webImage,
-      mobImage:dealData?.mobImage,
-      name:dealData?.name
+     ...dealData,
+      deleted: true
     };
     if (isEdit) {
       // setdealData(sectionMasterData);
@@ -198,7 +205,7 @@ const DealList = () => {
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             end_icon={"fas fa-pencil-alt"}
                                             onClick={() =>
-                                              handleSumbit(dealData, {
+                                              handleSubmit(dealData, {
                                                 isEdit: true,
                                               })
                                             }
@@ -207,7 +214,7 @@ const DealList = () => {
                                             className="btn btn-danger shadow btn-xs sharp"
                                             end_icon={"fa fa-trash"}
                                             onClick={() =>
-                                              handleSumbit(dealData)
+                                              showAlert(dealData)
                                             }
                                           />
                                         </div>

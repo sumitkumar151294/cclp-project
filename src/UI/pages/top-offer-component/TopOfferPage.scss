@@ -242,7 +242,7 @@
             font-size: 11.71px;
             font-weight: 500;
             line-height: 14.17px;
-            color: #414141;
+            color: var(--bs-charcoal);
           }
         }
 
@@ -280,7 +280,7 @@
           text-align: right;
 
           a {
-            color: #646464;
+            color: var(--bs-dove-gray);
 
           }
 
@@ -396,7 +396,7 @@
   }
   button.btn.cancel_btn {
     font-size: 12px !important;
-    border: 1px solid black;
+    border: 1px solid var( --primary-black);
     border-radius: 50px;
     padding: 8px 50px;
   }
@@ -404,10 +404,10 @@
   button.btn.apply_btn {
       font-size: 12px !important;
       border-radius: 50px;
-      border: 1px solid black;
+      border: 1px solid var( --primary-black);
       padding: 8px 50px;
-      background: black;
-      color: grey;
+      background: var( --primary-black);
+      color: var(--primary-greyish);
   }
 }
 
@@ -419,7 +419,7 @@
 // for reset and apply button 
 button.btn.cancel_btn {
   font-size: 20px;
-  border: 1px solid black;
+  border: 1px solid var( --primary-black);
   border-radius: 50px;
   padding: 8px 50px;
 }
@@ -427,10 +427,10 @@ button.btn.cancel_btn {
 button.btn.apply_btn {
     font-size: 20px;
     border-radius: 50px;
-    border: 1px solid black;
+    border: 1px solid var( --primary-black);
     padding: 8px 50px;
-    background: black;
-    color: grey;
+    background: var( --primary-black);
+    color: var(--primary-greyish);
 }
 
 .filter_actions.buttons_none {
@@ -441,7 +441,7 @@ button.btn.apply_btn {
 .toggle-button {
   border: none;
   background-color: transparent;
-  color: white;
+  color: var(--bs-white);
   cursor: pointer;
   border-radius: 4px;
 }
