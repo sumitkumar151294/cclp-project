@@ -109,7 +109,6 @@ const SideBar = () => {
       (item.addAccess || item.editAccess || item.viewAccess)
     );
   });
-  console.log(userRoleModuleAccess)
   useEffect(() => {
     if (
       getModuleDataAccess &&

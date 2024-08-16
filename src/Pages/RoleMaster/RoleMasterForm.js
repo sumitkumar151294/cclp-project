@@ -19,10 +19,25 @@ import {
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 
 const RoleMasterForm = ({ roleMasterData }) => {
-  console.log(roleMasterData)
-
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
+  const [value, setValues] = useState([]);
+  // to get labels and placeholder from translation
+  const roleMasterLabel = GetTranslationData("UIMasterAdmin", "role_master");
+  const roleName = GetTranslationData("UIMasterAdmin", "role_name");
+  const selectall = GetTranslationData("UIMasterAdmin", "selectall");
+  const module_access = GetTranslationData("UIMasterAdmin", "module_access");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const checkBox_Error = GetTranslationData("UIMasterAdmin", "checkbox_error");
+  const view = GetTranslationData("UIMasterAdmin", "view");
+  const add = GetTranslationData("UIMasterAdmin", "add");
+  const edit = GetTranslationData("UIMasterAdmin", "edit");
+  const description = GetTranslationData("UIMasterAdmin", "description");
+  const role_master_placeholder = GetTranslationData("UIMasterAdmin", "role_master_placeholder");
+  const mandatory_Req_Label = GetTranslationData("UIMasterAdmin", "role_Req_Label");
+  const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
+  // to get data from redux store
   const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
   const getmoduleLoading = useSelector((state) => state?.moduleReducer);
   const getUserModalAccessData = useSelector(
@@ -31,7 +46,6 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const editModules = roleMasterData
   ? getUserModalAccessData.data.filter(item => item.roleId === roleMasterData.id)
   : [];
-  const [value, setValues] = useState([]);
   const [intialValue, setInitialValue] = useState({
     name: "",
     description: "",
@@ -52,10 +66,8 @@ const RoleMasterForm = ({ roleMasterData }) => {
 
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    name: Yup.string().required("Role Name is Required"),
-    modules: Yup.object().test(
-      "at-least-one-module",
-      "You must select at least one module with at least one access right (view, add, edit).",
+    name: Yup.string().required(mandatory_Req_Label),
+    modules: Yup.object().test(checkBox_Error,
       (modules) => {
         return Object.values(modules).some(
           (module) => module.view || module.add || module.edit
@@ -134,8 +146,6 @@ const RoleMasterForm = ({ roleMasterData }) => {
     }
   }, [roleMasterData]);
 
-
-
   return (
     <>
       <ToastContainer />
@@ -144,7 +154,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{"Role Name"}</h4>
+                <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
                 {getUserRoleData?.isPostLoading ||
@@ -165,7 +175,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Role Name"}</label>
+                              <label>{roleName}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -176,7 +186,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={"Enter Role Name"}
+                                placeholder={role_master_placeholder}
                               />
                               <ErrorMessage
                                 name="name"
@@ -185,7 +195,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{"Description"}</label>
+                              <label>{description}</label>
                               <Field
                                 type="text"
                                 name="description"
@@ -194,7 +204,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={"Enter Description"}
+                                placeholder={description_placeholder}
                               />
                             </div>
 
@@ -221,12 +231,12 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                     className="form-check-label fnt-17"
                                     htmlFor="flexCheckDefault2"
                                   >
-                                    {"selectall"}
+                                    {selectall}
                                   </label>
                                 </div>
                               </div>
                               <div className="col-lg-12 br pt-2">
-                                <label>{"module_access"}</label>
+                                <label>{module_access}</label>
                                 {Array.isArray(moduleAccessData) &&
                                   moduleAccessData.map((moduleData, index) => {
                                     return (
@@ -245,7 +255,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                                 className="form-check-input"
                                                 name={`modules.${moduleData.id}.view`}
                                               />
-                                              {"view"}
+                                              {view}
                                             </label>
                                           </div>
                                           <div className="form-check form-check-inline">
@@ -269,7 +279,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                                   }
                                                 }}
                                               />
-                                              {"add"}
+                                              {add}
                                             </label>
                                           </div>
                                           <div className="form-check form-check-inline">
@@ -297,7 +307,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                                   }
                                                 }}
                                               />
-                                              {"edit"}
+                                              {edit}
                                             </label>
                                           </div>
                                         </div>
@@ -314,7 +324,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                           </div>
                           <div className="col-sm-4 mb-4">
                             <Button
-                              text={roleMasterData ? "update" : "submit"}
+                              text={roleMasterData ? update : submit}
                               end_icon="fa fa-arrow-right"
                               className="btn btn-primary float-right pad-aa mt-2"
                             />

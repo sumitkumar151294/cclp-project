@@ -8,16 +8,53 @@ import InputField from "../../Components/InputField/InputField";
 import DealCouponForm from "./DealCouponForm";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetDeal } from "../../Store/Slices/dealSlice";
-import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
+import { onGetDealCoupon, onUpdateDealCoupon, onUpdateDealCouponReset } from "../../Store/Slices/dealCouponSlice";
+import Swal from "sweetalert2";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { toast } from "react-toastify";
 
 const DealCouponList = () => {
   const dispatch = useDispatch();
+  const [dealCouponDatas, setDealCouponDatas] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const dealCouponData = useSelector((state) => state.dealCouponReducer);
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
+  const getDealCoupon = useSelector((state) => state.dealCouponReducer);
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
+   // modal for delete warning
+  const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSubmit(data);
+      }
+    });
+  };
+  //to handle edit and delete
+  const handleSubmit = (dealCouponDatas, isEdit) => {
+    const dealCouponData = {
+      ...dealCouponDatas,
+      deleted: true,
+    };
+    if (isEdit) {
+      setDealCouponDatas(dealCouponData);
+    } else {
+      dispatch(onUpdateDealCoupon(dealCouponData));
+    }
+  };
 
   // to handle pagination
   const [page, setPage] = useState(1);
@@ -25,11 +62,12 @@ const DealCouponList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  const filteredData = dealCouponData?.getDealCouponData?.filter(
-    (data) =>
-      data.coupounCode?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-      data.dealId?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-  );
+  // to filter getDealCoupon
+  const filteredData = getDealCoupon?.getDealCouponData?.filter((data) => {
+    const couponCodeLower = data.coupounCode?.toLowerCase() || '';
+    const dealIdLower = data.dealId?.toLowerCase() || '';  
+    return couponCodeLower.includes(searchQuery?.toLowerCase()) || dealIdLower.includes(searchQuery?.toLowerCase());
+  });
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -48,6 +86,13 @@ const DealCouponList = () => {
     dispatch(onGetDeal());
     dispatch(onGetDealCoupon());
   }, []);
+  useEffect(() => {
+    if (getDealCoupon?.update_status_code == "204") {
+      toast.success(getDealCoupon?.updateMessage);
+      dispatch(onGetDealCoupon());
+      dispatch(onUpdateDealCouponReset());
+    }
+  }, [getDealCoupon]);
   return (
     <>
       <ScrollToTop />
@@ -66,7 +111,7 @@ const DealCouponList = () => {
                       <InputField
                         type="text"
                         className="form-control only-high"
-                        placeholder={"Search here..."}
+                        placeholder={search_here_label}
                         value={searchQuery}
                         onChange={handleSearchChange}
                       />
@@ -78,7 +123,7 @@ const DealCouponList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCouponData?.isgetLoading ? (
+                {getDealCoupon?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -177,9 +222,9 @@ const DealCouponList = () => {
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"
                                             end_icon={"fa fa-trash"}
-                                            // onClick={() =>
-                                            //   handleDelete(data)
-                                            // }
+                                            onClick={() =>
+                                              showAlert(dealcoupoun)
+                                            }
                                           />
                                         </div>
                                       </td>

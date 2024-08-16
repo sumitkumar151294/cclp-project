@@ -408,7 +408,6 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                       : ""
                                   }`}
                                   onChange={(e) => {
-                                    debugger;
                                     setShowFields(e);
                                   }}
                                 />
@@ -457,7 +456,6 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                       : ""
                                   }`}
                                   onChange={(e) => {
-                                    debugger;
                                     setShowFields(e);
                                   }}
                                 />
