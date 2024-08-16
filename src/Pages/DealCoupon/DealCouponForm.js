@@ -56,6 +56,7 @@ const DealCouponForm = () => {
   const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
+  const call_to_action_required = GetTranslationData("UIMasterAdmin", "call_to_action_required");
   const upload_image_for_phone = GetTranslationData(
     "UIMasterAdmin",
     "upload_image_for_phone"
@@ -78,7 +79,7 @@ const DealCouponForm = () => {
     weekDays: [],
     segmentId: "",
     cta: "",
-    titie: "",
+    title: "",
   });
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   const dealOptions = getDealData?.map((dealCategory) => ({
@@ -91,12 +92,11 @@ const DealCouponForm = () => {
     weekDays: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one week is required"),
     typeOfCoupoun: Yup.string().required("Coupon Type is required"),
     image: Yup.string().required("Image is required"),
-    cta: Yup.string().required("Call To Action is required"),
+    cta: Yup.string().required(call_to_action_required),
   });
   // to handle form submit
   const handleSubmit = (values) => {
     if (typeof values.image==="object") {
-
       dispatch(onPostuploadImage(values.image));
       setValues(values);
     }
@@ -139,6 +139,7 @@ const DealCouponForm = () => {
     }
   }, [uploadImage, values]);
   // to handle navigation and toast notifications based on deal coupon status
+  console.log(dealCouponData)
   useEffect(() => {
     if (dealCouponData?.post_status_code === "201") {
       toast.success(dealCouponData.postMessage);
@@ -163,7 +164,7 @@ const DealCouponForm = () => {
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                {false ? (
+                {dealCouponData.isLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader />
                   </div>
@@ -225,8 +226,6 @@ const DealCouponForm = () => {
                                 />
                               </div>
                             )}
-
-
 
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>

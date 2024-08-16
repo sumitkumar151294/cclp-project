@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDealCouponCode, onPostDealCouponCode, onPostDealCouponCodeReset } from "../../Store/Slices/dealCouponCodeSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 // options for type of coupon
 const typeOfCoupon = [
   { value: 1, label: "Static" },
@@ -23,6 +24,20 @@ const statusOptions = [
 ];
 const DealCouponCodeForm = () => {
   const dispatch = useDispatch();
+  // to get labels and placeholders from translation  
+  const deal_coupon_code = GetTranslationData("UIMasterAdmin","deal_coupon_code");
+  const coupon_code = GetTranslationData("UIMasterAdmin","coupon_code");
+  const deal_coupon = GetTranslationData("UIMasterAdmin","deal_coupon");
+  const coupon_code_placeholder = GetTranslationData("UIMasterAdmin", "coupon_code_placeholder");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const deal_coupon_required = GetTranslationData("UIMasterAdmin", "deal_coupon_required");
+  const coupon_code_required = GetTranslationData("UIMasterAdmin", "coupon_code_required");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   // to get deal coupon code data from redux store
   const dealCouponCodeData=useSelector(state=>state.dealCouponCodeReducer);
   // initial state for the input fields
@@ -32,19 +47,20 @@ const DealCouponCodeForm = () => {
     enabled: "",
 
   });
-   // to validate the form using Yup schema
+  // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    couponCode: Yup.string().required("Coupon Code is required"),
-    dealCouponId: Yup.string().required("Deal Coupon is required"),
-    enabled: Yup.string().required("Status is required"),
+    couponCode: Yup.string().required(coupon_code_required),
+    dealCouponId: Yup.string().required(deal_coupon_required),
+    enabled: Yup.string().required(status_required),
   });
   // to handle form submit
   const handleSubmit = (values) => {
     if (values) {
+      console.log(values)
       dispatch(onPostDealCouponCode(values));
     }
   };
-  // to handle navigation and toast notifications based on deal coupon code status
+
   useEffect(() => {
     if (dealCouponCodeData?.post_status_code === "201") {
       toast.success(dealCouponCodeData?.postMessage)
@@ -63,10 +79,7 @@ const DealCouponCodeForm = () => {
   //     setButton("Update")
   //   }
   // }, [templateTypeData])
-  const handleImageChange = (setFieldValue, event) => {
-    setFieldValue("image", event.currentTarget.files[0]);
-  };
-
+ // to handle navigation and toast notifications based on deal coupon code status
   return (
     <>
       <ToastContainer />
@@ -75,7 +88,7 @@ const DealCouponCodeForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Deal Coupon Code</h4>
+                <h4 className="card-title">{deal_coupon_code}</h4>
               </div>
               <div className="card-body">
                 {false ? (
@@ -94,7 +107,7 @@ const DealCouponCodeForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>Coupon Code</label>
+                              <label>{coupon_code}</label>
                               <Field
                                 type="text"
                                 name="couponCode"
@@ -103,7 +116,7 @@ const DealCouponCodeForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder="Enter Category Name"
+                                placeholder={coupon_code_placeholder}
                               />
                               <ErrorMessage
                                 name="couponCode"
@@ -113,7 +126,7 @@ const DealCouponCodeForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                               Deal Coupon
+                               {deal_coupon}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -135,7 +148,7 @@ const DealCouponCodeForm = () => {
 
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                             Status
+                             {status_label}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -156,7 +169,7 @@ const DealCouponCodeForm = () => {
                             </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={"Sumbit"}
+                                text={submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />

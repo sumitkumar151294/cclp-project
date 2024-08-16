@@ -30,6 +30,7 @@ const RoleMasterList = () => {
   const modules = GetTranslationData("UIMasterAdmin", "modules");
   const action = GetTranslationData("UIMasterAdmin", "action_label");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
+  const description = GetTranslationData("UIMasterAdmin", "description");
   const dispatch = useDispatch();
   // to get the user-role-data from redux
   const roleAccessList = useSelector((state) => state?.userRoleReducer);
@@ -137,7 +138,7 @@ const RoleMasterList = () => {
                         <tr>
                           <th>{roleName}</th>
                           <th>{modules}</th>
-                          <th>{"Description"}</th>
+                          <th>{description}</th>
                           <th>{action}</th>
                         </tr>
                       </thead>

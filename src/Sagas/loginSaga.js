@@ -20,7 +20,6 @@ function* Login({ payload }) {
           data: loginResponse?.response,
         })
       );
-      console.log(loginResponse)
     } else {
       yield put(
         onLoginSubmitError({
