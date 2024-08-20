@@ -15,6 +15,7 @@ import DealCouponList from "../Pages/DealCoupon/DealCouponList";
 import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList";
 import PageError from "../Components/PageError/PageError";
+import DealCouponFrequencyList from "../Pages/DealCouponFrequency/DealCouponFrequencyList";
 
 function RouteConfiq() {
   return (
@@ -58,6 +59,10 @@ function RouteConfiq() {
         <Route
           path="/dealCouponCode"
           element={<Layout Component={DealCouponCodeList} />}
+        />
+        <Route
+          path="/dealCouponFreq"
+          element={<Layout Component={DealCouponFrequencyList} />}
         />
           <Route
           path="/navConfiguration"

@@ -16,6 +16,7 @@ import dealCouponSaga from "./dealCouponSaga";
 import dealCouponCodeSaga from "./dealCouponCodeSaga";
 import uploadSaga from "./uploadSaga";
 import navConfigureSaga from "./navConfigureSaga";
+import dealCouponFreqSaga from "./dealCouponFreqSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -37,6 +38,7 @@ export default function* rootSaga() {
     dealCouponSaga(),
     dealCouponCodeSaga(),
     uploadSaga(),
-    navConfigureSaga()
+    navConfigureSaga(),
+    dealCouponFreqSaga(),
   ]);
 }

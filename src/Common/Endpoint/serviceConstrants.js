@@ -33,5 +33,7 @@ const API = {
   uploadImage:"upload",
   // nav-configuration
   navConfiguration:"nav-configure",
+  // deal-coupon-frequency
+  dealcouponfrequency:"deal-coupoun-frequency",
 };
 export default API;
