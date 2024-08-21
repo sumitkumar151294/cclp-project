@@ -82,7 +82,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
         const dealCategoryData = {
           webImage: values.webImage,
           mobImage: values.mobImage,
-          clientId: 4,
+          clientId: 6,
           deleted: false,
           name:values?.name,
           displayOrder: JSON.stringify(values?.displayOrder),
@@ -120,7 +120,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
       const dealCategoryData = {
         webImage: getwebImage,
         mobImage: getmobImage,
-        clientId: 4,
+        clientId: 6,
         deleted: false,
         name: values?.name,
         displayOrder: JSON.stringify(values?.displayOrder),

@@ -186,7 +186,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       const sectionContentMasteData = {
         webImage: webImage || "",
         mobImage: mobImage || "",
-        clientId: 4,
+        clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
         displayOrder: values?.displayOrder,
@@ -209,7 +209,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       const sectionContentMasteData = {
         webImage: sectionContentData?.webImage,
         mobImage: sectionContentData?.mobImage,
-        clientId: 4,
+        clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
         displayOrder: values?.displayOrder,

@@ -15,10 +15,7 @@ import {
 } from "../../Store/Slices/sectionContentMasterSlice";
 import Button from "../../Components/Button/Button";
 import { toast } from "react-toastify";
-import {
-  onPostuploadImageReset,
-  onPostuploadMobileImageReset,
-} from "../../Store/Slices/uploadSlice";
+
 
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
@@ -83,7 +80,7 @@ const SectionContentMasterList = () => {
       deleted: true,
       createdBy: 0,
       updatedBy: 0,
-      clientId: 0,
+      clientId: 6,
       sectionMasterId: sectionContent?.sectionMasterId,
       webImage: sectionContent?.webImage,
       mobImage: sectionContent?.mobImage,
@@ -101,11 +98,11 @@ const SectionContentMasterList = () => {
     }
   };
   useEffect(() => {
-    if (getSectionContenMasterData?.update_status_code == "204") {
+    if (getSectionContenMasterData?.update_status_code === "204") {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onUpdateSectionContentMasterReset());
-    }else if (getSectionContenMasterData?.post_status_code == "205") {
+    }else if (getSectionContenMasterData?.post_status_code === "205") {
       setSectionContentData({
         webImage: "",
         mobImage: "",

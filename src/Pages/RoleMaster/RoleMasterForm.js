@@ -88,7 +88,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
       deleted: false,
       name: values?.name,
       description: values?.description || "",
-      clientId: 4,
+      clientId: 6,
       ...(roleMasterData && { id: roleMasterData.id }),
     };
     setValues(values.modules);
@@ -108,7 +108,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
           viewAccess: view,
           addAccess: add,
           editAccess: edit,
-          clientId: 4,
+          clientId: 6,
         };
       });
 

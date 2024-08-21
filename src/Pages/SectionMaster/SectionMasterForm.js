@@ -123,7 +123,7 @@ const SectionMasterForm = ({ sectionData }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 4,
+        clientId: 6,
         displayOrder:
           typeof values?.displayOrder === "string"
             ? values.displayOrder

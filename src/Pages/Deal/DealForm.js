@@ -56,6 +56,7 @@ const DealForm = () => {
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
+  
   const uploadImage = useSelector((state) => state.uploadReducer);
   const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
   const dealCategoryOptions = dealCategoryData?.map(dealCategory => ({
@@ -118,7 +119,7 @@ const DealForm = () => {
       const dealData = {
         webImage: getwebImage,
         mobImage: getmobImage,
-        clientId: 4,
+        clientId: 6,
         deleted: false,
         displayOrder: JSON.stringify(values?.displayOrder),
         startDate:values.startDate,

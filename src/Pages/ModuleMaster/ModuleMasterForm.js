@@ -21,11 +21,23 @@ const ModuleMasterForm = () => {
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const module_name = GetTranslationData("UIMasterAdmin", "module_name");
   const module_master = GetTranslationData("UIMasterAdmin", "module_master");
-  const module_name_placeholder = GetTranslationData("UIMasterAdmin", "module_name_placeholder");
-  const module_route_path = GetTranslationData("UIMasterAdmin", "module_route_path");
-  const route_path_placeholder = GetTranslationData("UIMasterAdmin", "route_path_placeholder");
+  const module_name_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "module_name_placeholder"
+  );
+  const module_route_path = GetTranslationData(
+    "UIMasterAdmin",
+    "module_route_path"
+  );
+  const route_path_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "route_path_placeholder"
+  );
   const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
-  const module_icon_placeholder = GetTranslationData("UIMasterAdmin", "module_icon_placeholder");
+  const module_icon_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "module_icon_placeholder"
+  );
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   // initial values for the input fields
@@ -38,7 +50,6 @@ const ModuleMasterForm = () => {
   const validateForm = yup.object({
     name: yup.string().required("Module name is required"),
     routePath: yup.string().required("Module route path is required"),
-    icon: yup.string().required("Module Icon is required"),
   });
   // to handle form using useFormik hook
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
@@ -46,7 +57,11 @@ const ModuleMasterForm = () => {
     validationSchema: validateForm,
     onSubmit: (values, action) => {
       setIsSubmit(true);
-      dispatch(onPostModule(values));
+      const updatedValues = {
+        ...values,
+        clientId: 6,
+      };
+      dispatch(onPostModule(updatedValues));
       action.resetForm();
     },
   });
@@ -124,7 +139,8 @@ const ModuleMasterForm = () => {
                         </div>
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="description">
-                            {module_icon}<span className="text-danger">*</span>
+                            {module_icon}
+                            <span className="text-danger">*</span>
                           </label>
                           <InputField
                             className={`form-control ${

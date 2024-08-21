@@ -54,7 +54,7 @@ const DealCategoryList = () => {
       deleted: true,
       createdBy: 0,
       updatedBy: 0,
-      clientId: 4,
+      clientId: 6,
       name: dealCategory?.name,
       displayOrder: dealCategory?.displayOrder,
       mobImage: dealCategory?.mobImage,

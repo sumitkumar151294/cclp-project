@@ -92,7 +92,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
             typeof values?.enabled === "boolean"
               ? values.enabled
               : values?.enabled === "true",
-          clientId: 4,
+          clientId: 6,
           cta: values?.cta,
           navigationMenuName: values?.navigationMenuName,
           displayOrder:values?.displayOrder,

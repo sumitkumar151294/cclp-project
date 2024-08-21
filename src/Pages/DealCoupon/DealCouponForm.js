@@ -81,11 +81,15 @@ const DealCouponForm = () => {
     cta: "",
     title: "",
   });
-  const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  const dealOptions = getDealData?.map((dealCategory) => ({
-    value: dealCategory.id,
-    label: dealCategory.name,
-  }));
+  const oferTypeOptions = [
+    { value: "Feature", label: "Feature" },
+    { value: "NetworkdCardType", label: "Networkd Card Type" },
+    { value: "SpecialType", label: "SpecialType" },
+    { value: "Generic", label: "Generic" },
+  ];
+  const oferSubTypeOptions = [
+    { value: "EMI", label: "EMI" }
+  ];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     months: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one month is required"),
@@ -121,7 +125,7 @@ const DealCouponForm = () => {
     if (uploadImage?.post_status_code == "201") {
       const dealCouponData = {
         image: getImage,
-        clientId: 4,
+        clientId: 6,
         deleted: false,
         displayOrder: JSON.stringify(values?.displayOrder),
         segmentId: 10,
@@ -313,12 +317,33 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {deal_label}
+                                {"Offer Type"}
                               </label>
 
                               <Field
                                 name="dealId"
-                                options={dealOptions}
+                                options={oferTypeOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.dealId && touched.dealId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="dealId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                                {"Offer Sub Type"}
+                              </label>
+
+                              <Field
+                                name="dealId"
+                                options={oferSubTypeOptions}
                                 component={Dropdown}
                                 className={`form-select ${
                                   errors.dealId && touched.dealId
@@ -353,50 +378,8 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{select_months}</label>
-                              <Select
-                                isMulti
-                                name="months"
-                                options={monthNames}
-                                className={`form-select ${
-                                  errors.months && touched.months
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                classNamePrefix="react-select"
-                                onChange={(selectedOptions) =>
-                                  setFieldValue("months", selectedOptions)
-                                }
-                              />
-                              <ErrorMessage
-                                name="months"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{select_week_days}</label>
-                              <Select
-                                isMulti
-                                name="weekDays"
-                                options={weekDayNames}
-                                className={`form-select ${
-                                  errors.weekDays && touched.weekDays
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                classNamePrefix="react-select"
-                                onChange={(selectedOptions) =>
-                                  setFieldValue("weekDays", selectedOptions)
-                                }
-                              />
-                              <ErrorMessage
-                                name="weekDays"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
+
+
 
                             <div className="col-sm-12 form-group mb-4">
                               <label>{"Terms And Conditons"}</label>
