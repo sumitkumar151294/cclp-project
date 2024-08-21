@@ -40,6 +40,7 @@ const UserMasterList = () => {
   const mobile = GetTranslationData("UIMasterAdmin", "mobile_label");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const active_label = GetTranslationData("UIMasterAdmin", "active_label");
   const non_active_label = GetTranslationData(
     "UIMasterAdmin",
     "non_active_label"
@@ -217,7 +218,7 @@ const UserMasterList = () => {
                                     }
                                   >
                                     {userMasterData.enabled
-                                      ? action_label
+                                      ? active_label
                                       : non_active_label}
                                   </span>
                                 </td>
