@@ -63,7 +63,23 @@ const RoleMasterForm = ({ roleMasterData }) => {
       {}
     ),
   });
-
+const reset={
+  name: "",
+  description: "",
+  modules: moduleAccessData.reduce(
+    (acc, module) => ({
+      ...acc,
+      [module.id]: {
+        id:0,
+        moduleID: module.id,
+        view: false,
+        add: false,
+        edit: false,
+      },
+    }),
+    {}
+  ),
+}
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     name: Yup.string().required(mandatory_Req_Label),
@@ -111,7 +127,6 @@ const RoleMasterForm = ({ roleMasterData }) => {
           clientId: 6,
         };
       });
-
       dispatch(onPostUserRoleModuleAccess(modulesData));
       dispatch(onPostUserRoleReset());
     } else if (getUserModalAccessData?.status_code === "201") {
@@ -119,6 +134,12 @@ const RoleMasterForm = ({ roleMasterData }) => {
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
+    }else if (getUserModalAccessData?.status_code === "205") {
+      toast.success(getUserModalAccessData?.message);
+      dispatch(onGetUserRole());
+      dispatch(onGetUserRoleModuleAccess());
+      dispatch(onPostUserRoleModuleAccessReset());
+      setInitialValue(reset)
     }
   }, [getUserRoleData, getUserModalAccessData]);
   useEffect(() => {

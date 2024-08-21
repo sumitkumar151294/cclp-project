@@ -92,39 +92,11 @@ export const userRoleModuleAccessSlice = createSlice({
         isError: false,
       };
     },
-    onUpdateUserRoleModuleAccess: (state) => {
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-        data: [],
-        message: "",
-      };
-    },
 
-    onUpdateUserRoleModuleAccessSuccess: (state, { payload }) => {
-      const { data = [], message = "", status_code = "205" } = payload;
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        data:data,
-        message,
-        status_code,
-      };
-    },
 
-    onUpdateUserRoleModuleAccessError: (state, { payload }) => {
-      const { data = [], message = "", status_code = 400 } = payload;
-      return {
-        ...state,
-        data,
-        message,
-        status_code,
-        isLoading: false,
-        isError: true,
-      };
-    },
+
+
+
   },
 });
 export const { onGetUserRoleModuleAccess,
@@ -135,9 +107,8 @@ export const { onGetUserRoleModuleAccess,
   onPostUserRoleModuleAccessReset,
   onPostUserRoleModuleAccessSuccess, 
   onPostUserRoleModuleAccessError,
-  onUpdateUserRoleModuleAccess,
-  onUpdateUserRoleModuleAccessSuccess,
-  onUpdateUserRoleModuleAccessError
+  
+
  } = userRoleModuleAccessSlice.actions;
 
 export default userRoleModuleAccessSlice.reducer;

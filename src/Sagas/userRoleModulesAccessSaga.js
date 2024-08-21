@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { callUserRoleModuleAccessGetApi, callUserRoleModuleAccessPostApi} from "../Context/userRoleModuleAccessApi";
-import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRoleModuleAccessSuccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess, onUpdateUserRoleModuleAccess, onUpdateUserRoleModuleAccessError, onUpdateUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
+import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRoleModuleAccessSuccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
 
 function* GetUserRoleModuleAccess() {
   try {
@@ -48,32 +48,8 @@ function* PostUserRoleModuleAccess({ payload }) {
     yield put(onPostUserRoleModuleAccessError({ data: [], message, status_code: 400 }));
   }
 }
-function* UpdateUserRoleModuleAccess({ payload }) {
-  try {
-    const updateUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
-    if (updateUserRoleModuleAccessResponse.httpStatusCode === "205") {
-      yield put(
-        onUpdateUserRoleModuleAccessSuccess({
-          data: updateUserRoleModuleAccessResponse.result,
-          status_code: updateUserRoleModuleAccessResponse.httpStatusCode,
-          message: updateUserRoleModuleAccessResponse.errorMessage,
-        })
-      );
-    } else {
-      yield put(
-        onUpdateUserRoleModuleAccessError({
-          data: updateUserRoleModuleAccessResponse.result,
-          message: updateUserRoleModuleAccessResponse.result.message,
-        })
-      );
-    }
-  } catch (error) {
-    const message = error.response || "Something went wrong";
-    yield put(onUpdateUserRoleModuleAccessError({ data: [], message, status_code: 400 }));
-  }
-}
+
 export default function* userRoleModuleAccessSaga() {
   yield takeLatest(onGetUserRoleModuleAccess.type, GetUserRoleModuleAccess);
   yield takeLatest(onPostUserRoleModuleAccess.type, PostUserRoleModuleAccess);
-  yield takeLatest(onUpdateUserRoleModuleAccess.type, UpdateUserRoleModuleAccess);
 }
