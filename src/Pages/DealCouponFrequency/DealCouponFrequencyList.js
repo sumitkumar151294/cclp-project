@@ -10,20 +10,46 @@ import Swal from "sweetalert2";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { toast } from "react-toastify";
 import DealCouponFrequencyForm from "./DealCouponFrequencyForm";
-import { onGetDealCouponFreq, onUpdateDealCouponFreq, onUpdateDealCouponFreqReset } from "../../Store/Slices/dealCouponFreqSlice";
+import {
+  onGetDealCouponFreq,
+  onUpdateDealCouponFreq,
+  onUpdateDealCouponFreqReset,
+} from "../../Store/Slices/dealCouponFreqSlice";
 
 const DealCouponFrequencyList = () => {
   const dispatch = useDispatch();
   const [dealCouponFreq, setDealCouponFreq] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  // to get coulumn heading from translation
+  const deal_coupon_frequency_list = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_coupon_frequency_list"
+  );
+  const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
+  const valid_from = GetTranslationData("UIMasterAdmin", "valid_from");
+  const valid_to = GetTranslationData("UIMasterAdmin", "valid_to");
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
     "search_here_label"
   );
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const active_label = GetTranslationData("UIMasterAdmin", "active_label");
+  const non_active_label = GetTranslationData(
+    "UIMasterAdmin",
+    "non_active_label"
+  );
+  // Get deal coupon data from Redux store
   const getDealCouponFeq = useSelector((state) => state.dealCouponFreqReducer);
+  const getDealCouponData = useSelector((state) => state?.dealCouponReducer?.getDealCouponData);
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
+  // Create a mapping of coupon ID to label
+  const couponLabelMap = getDealCouponData?.reduce((map, coupon) => {
+    map[coupon.id] = coupon.title; // Assuming `title` is the label
+    return map;
+  }, {});
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
@@ -41,17 +67,23 @@ const DealCouponFrequencyList = () => {
       }
     });
   };
+   // to handle edit functionality
+   const handleEdit = (data) => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const prefilled = data;
+    setDealCouponFreq(prefilled);
+  };
   //to handle edit and delete
   const handleSubmit = (dealCouponFreq, isEdit) => {
     const dealCouponfreqData = {
       ...dealCouponFreq,
       deleted: true,
     };
-    if (isEdit) {
-      setDealCouponFreq(dealCouponfreqData);
-    } else {
+    // if (isEdit) {
+    //   setDealCouponFreq(dealCouponfreqData);
+    // } else {
       dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
-    }
+   // }
   };
 
   // to handle pagination
@@ -61,12 +93,12 @@ const DealCouponFrequencyList = () => {
     setPage(selected.selected + 1);
   };
   // to filter getDealCoupon
-  const filteredData = getDealCouponFeq?.getDealCouponFreqData
-  // ?.filter((data) => {
-  //   const dealCoupounId = data.dealCoupounId?.toLowerCase() || '';
-  //   return dealCoupounId.includes(searchQuery?.toLowerCase());
-  // });
-  console.log(filteredData)
+  const filteredData = getDealCouponFeq?.getDealCouponFreqData?.filter((data) => {
+    const dealCoupounId = couponLabelMap[data.dealCoupounId]?.toLowerCase() || '';
+    return dealCoupounId.includes(searchQuery?.toLowerCase());
+  });
+  
+  console.log(filteredData);
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -90,11 +122,21 @@ const DealCouponFrequencyList = () => {
       dispatch(onGetDealCouponFreq());
       dispatch(onUpdateDealCouponFreqReset());
     }
+    // else if (getDealCouponFeq?.update_status_code == "205") {
+    //   toast.success(getDealCouponFeq?.updateMessage);
+    //   setDealCouponFreq(null);
+    //   dispatch(onGetDealCouponFreq());
+    //   dispatch(onUpdateDealCouponFreqReset());
+    // }
+     else if (getDealCouponFeq?.update_status_code) {
+      toast.error(getDealCouponFeq?.updateMessage);
+      dispatch(onUpdateDealCouponFreqReset());
+    }
   }, [getDealCouponFeq]);
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && <DealCouponFrequencyForm />}
+      {getRoleAccess[0]?.addAccess && <DealCouponFrequencyForm dealCouponFreq={dealCouponFreq} setDealCouponFreq={setDealCouponFreq}/>}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -102,7 +144,7 @@ const DealCouponFrequencyList = () => {
               <div className="container-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Coupon Frequency List"}</h4>
+                    <h4 className="card-title">{deal_coupon_frequency_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -133,45 +175,51 @@ const DealCouponFrequencyList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Deal Coupon"}</th>
-                                <th>{"Valid From"}</th>
-                                <th>{"Valid UpTo"}</th>
-                                <th>{"Status"}</th>
+                                <th>{deal_coupon}</th>
+                                <th>{valid_from}</th>
+                                <th>{valid_to}</th>
+                                <th>{status_label}</th>
                                 {getRoleAccess[0]?.editAccess && (
-                                  <th>{"Action"}</th>
+                                  <th>{action_label}</th>
                                 )}
                               </tr>
                             </thead>
                             <tbody>
-                              {filteredData
-                                .slice(startIndex, endIndex)
-                                .map((dealfreq, index) => (
+                              {filteredData?.slice(startIndex, endIndex)?.map((dealfreq, index) => (
                                   <tr key={index}>
-                                    <td>{dealfreq?.dealCoupounId}</td>
-                                    <td>
-                                      {dealfreq?.validFrom}
-                                    </td>
+                                    <td>{couponLabelMap[dealfreq?.dealCoupounId] || 'Unknown'}</td>
+                                    <td>{dealfreq?.validFrom}</td>
                                     <td>{dealfreq?.validUpto}</td>
-                                    <td>{dealfreq?.enabed}</td>
+                                    <td>
+                                      {" "}
+                                      <span
+                                        className={
+                                          dealfreq?.enabled
+                                            ? "badge badge-success"
+                                            : "badge badge-danger"
+                                        }
+                                      >
+                                        {dealfreq?.enabled
+                                          ? active_label
+                                          : non_active_label}
+                                      </span>
+                                    </td>
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
                                           <Button
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             end_icon={"fas fa-pencil-alt"}
-                                            // onClick={() =>
-                                            //   handleEdit(
-                                            //     data,
-                                            //     clientPayData
-                                            //   )
-                                            // }
+                                            onClick={() =>
+                                              handleEdit(dealfreq, {
+                                                isEdit: true,
+                                              })
+                                            }
                                           />
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"
                                             end_icon={"fa fa-trash"}
-                                            onClick={() =>
-                                              showAlert(dealfreq)
-                                            }
+                                            onClick={() => showAlert(dealfreq)}
                                           />
                                         </div>
                                       </td>

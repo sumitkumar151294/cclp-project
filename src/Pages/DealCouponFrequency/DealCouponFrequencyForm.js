@@ -8,14 +8,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import Select from "react-select";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import { onGetDealCouponFreq, onPostDealCouponFreq, onPostDealCouponFreqReset } from "../../Store/Slices/dealCouponFreqSlice";
-
-const typeOfCoupoun = [
-  { value: "Static", label: "Static" },
-  { value: "Dynamic", label: "Dynamic" },
-  { value: "NoCode", label: "No Code" },
-  { value: "Membership", label: "Membership" },
-];
+import { onGetDealCouponFreq, onPostDealCouponFreq, onPostDealCouponFreqReset, onUpdateDealCouponFreq, onUpdateDealCouponFreqReset } from "../../Store/Slices/dealCouponFreqSlice";
+import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
+//to get weekday's name
+const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
+  value: index + 1,
+  label: new Date(0, 0, index + 1).toLocaleString("default", { weekday: "long" }),
+}));
 // to get today's date
 const getTodayDate = () => {
   const today = new Date();
@@ -24,28 +24,47 @@ const getTodayDate = () => {
   const day = today.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
-const DealCouponFrequencyForm = () => {
+
+const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   const todayDate = getTodayDate();
   const dispatch = useDispatch();
-  // to get data from redux store
+  // to get column heading name from translation
+  const deal_coupon_frequency = GetTranslationData("UIMasterAdmin", "deal_coupon_frequency");
+  const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
+  const valid_from = GetTranslationData("UIMasterAdmin", "valid_from");
+  const valid_to = GetTranslationData("UIMasterAdmin", "valid_to");
+  const select_week_days = GetTranslationData("UIMasterAdmin", "select_week_days");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const submit = GetTranslationData("UIMasterAdmin", "submit");
+  const update = GetTranslationData("UIMasterAdmin", "update");
+  const deal_coupon_required = GetTranslationData("UIMasterAdmin", "deal_coupon_required");
+  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required");
+  const end_date_required = GetTranslationData("UIMasterAdmin", "end_date_required");
+  const week_required = GetTranslationData("UIMasterAdmin", "week_required");
+  // to get module data from the Redux store
   const getDealCouponFeqData = useSelector((state) => state.dealCouponFreqReducer);
-  const dealCouponData = useSelector((state) => state.dealCouponReducer);
-  console.log(dealCouponData);
-  // initial state for the input fields
-  const [intialValue, setInitialValue] = useState({
+  const getDealCouponData=useSelector((state) => state?.dealCouponReducer?.getDealCouponData);
+ // initial state for the input fields
+  const [initialValue, setInitialValue] = useState({
     dealCoupounId: "",
     validfrom: "",
     validUpto: "",
     weekDayId: [],
-    enabled:"",
+    enabled: "",
   });
+  const dealCoupons = getDealCouponData ? getDealCouponData?.filter(data => data.title).map(data => ({
+        value: data.id,  // ID for API
+        label: data.title // Title for display
+      }))
+    : [];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    dealCoupounId: Yup.string().required("Coupon Type is required"),
-    validfrom: Yup.string().required("Start dateis required"),
-    validUpto: Yup.string().required("End date is required"),
-    weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one week is required"),
-    enabled: Yup.boolean().required("Status is required")
+    dealCoupounId: Yup.string().required(deal_coupon_required),
+    validfrom: Yup.string().required(start_date_required),
+    validUpto: Yup.string().required(end_date_required),
+    weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.number().required() })).min(1, week_required),
+    enabled: Yup.string().required(status_required)
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -53,49 +72,76 @@ const DealCouponFrequencyForm = () => {
       const dealFreqData = {
         ...values,
         deleted: false,
-        enabled:  values?.enabled === "true",
+        enabled: values?.enabled === 'true' || values?.enabled === true,
         clientId: 4,
-        dealCoupounId:1,
-        validfrom:values?.validfrom,
-        validUpto:values?.validUpto,
-        weekDayId:values?.weekDayId?.map((day) => day.value),
-        enabled:values?.enabled
+        dealCoupounId: values?.dealCoupounId,
+        validfrom: values?.validfrom,
+        validUpto: values?.validUpto,
+        weekDayId: values?.weekDayId?.map(day => day.value),
       };
-      dispatch(onPostDealCouponFreq(dealFreqData));
+      if (dealCouponFreq) {
+        dealFreqData.id = dealCouponFreq.id;
+        dispatch(onUpdateDealCouponFreq(dealFreqData));
+      } else {
+        dispatch(onPostDealCouponFreq(dealFreqData));
+      }
+      setInitialValue({
+        dealCoupounId: "",
+        validfrom: "",
+        validUpto: "",
+        weekDayId: [],
+        enabled: "",
+      });
     }
   };
   // options for status
-const statusOptions = [
-  { value: true, label: "Active" },
-  { value: false, label: "Non Active" },
-];
-  //to get weekday's name
-  const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
-    value: index + 1,
-    label: new Date(0, 0, index + 1).toLocaleString("default", { weekday: "long" }),
-  }));
-  // to handle navigation and toast notifications based on deal coupon status
+  const statusOptions = [
+    { value: 'true', label: "Active" },
+    { value: 'false', label: "Non Active" },
+  ];
+  useEffect(() => {
+    if (dealCouponFreq) {
+      const weekDays = weekDayNames.filter(day => dealCouponFreq.weekDayId.includes(day.value));
+      setInitialValue({
+        dealCoupounId: dealCoupons.find(option =>option.value === dealCouponFreq.dealCoupounId),
+        validFrom: dealCouponFreq.validFrom,
+        validUpto: dealCouponFreq.validUpto,
+        weekDayId: weekDays,
+        enabled: dealCouponFreq.enabled.toString(),
+      });
+    }
+  }, [dealCouponFreq]);
+
   useEffect(() => {
     if (getDealCouponFeqData?.post_status_code === "201") {
       toast.success(getDealCouponFeqData.postMessage);
       dispatch(onPostDealCouponFreqReset());
       dispatch(onGetDealCouponFreq());
+    } else if (getDealCouponFeqData?.update_status_code === "205") {
+      toast.success(getDealCouponFeqData?.updateMessage);
+      setDealCouponFreq(null);
+      dispatch(onGetDealCouponFreq());
+      dispatch(onUpdateDealCouponFreqReset());
     } else if (getDealCouponFeqData?.post_status_code) {
       toast.error(getDealCouponFeqData?.postMessage);
       dispatch(onPostDealCouponFreqReset());
     }
   }, [getDealCouponFeqData]);
 
+  useEffect(() => {
+    dispatch(onGetDealCoupon());
+  }, []);
+
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <ToastContainer />
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{"Deal Coupon Frequency"}</h4>
+                <h4 className="card-title">{deal_coupon_frequency}</h4>
               </div>
               <div className="card-body">
                 {getDealCouponFeqData.isLoading ? (
@@ -105,24 +151,23 @@ const statusOptions = [
                 ) : (
                   <div className="container-fluid">
                     <Formik
-                      initialValues={intialValue}
+                      initialValues={initialValue}
                       validationSchema={validations}
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched, setFieldValue }) => (
+                      {({ errors, touched, setFieldValue, values }) => (
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Deal Coupon"}
+                                {deal_coupon}
                                 <span className="text-danger">*</span>
                               </label>
-
                               <Field
                                 name="dealCoupounId"
                                 component={Dropdown}
-                                options={typeOfCoupoun}
+                                options={dealCoupons}
                                 className={`form-select ${
                                   errors.dealCoupounId && touched.dealCoupounId
                                     ? "is-invalid"
@@ -136,8 +181,8 @@ const statusOptions = [
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{"Valid From"}
-                              <span className="text-danger">*</span>
+                              <label>{valid_from}
+                                <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="date"
@@ -155,8 +200,8 @@ const statusOptions = [
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{"Valid To"}
-                              <span className="text-danger">*</span>
+                              <label>{valid_to}
+                                <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="date"
@@ -174,13 +219,14 @@ const statusOptions = [
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Select Week Days"}
-                              <span className="text-danger">*</span>
+                              <label>{select_week_days}
+                                <span className="text-danger">*</span>
                               </label>
                               <Select
                                 isMulti
                                 name="weekDayId"
                                 options={weekDayNames}
+                                value={values.weekDayId}
                                 className={`form-select ${
                                   errors.weekDayId && touched.weekDayId
                                     ? "is-invalid"
@@ -199,18 +245,18 @@ const statusOptions = [
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                             {"Status"}
+                                {status_label}
                                 <span className="text-danger">*</span>
                               </label>
-
                               <Field
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
-                                  ? "is-invalid"
-                                  : ""
-                                  }`}
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"
@@ -220,7 +266,7 @@ const statusOptions = [
                             </div>
                             <div className="col-sm-12 form-group mb-4">
                               <Button
-                                text={"Submit"}
+                                text={dealCouponFreq ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary float-right pad-aa mt-2"
                               />
@@ -241,4 +287,3 @@ const statusOptions = [
 };
 
 export default DealCouponFrequencyForm;
-/* eslint-enable react-hooks/exhaustive-deps */
