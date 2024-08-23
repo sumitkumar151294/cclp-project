@@ -15,6 +15,9 @@ import BestSellergift from "./bestSeller/BestSellergift";
 import { useDispatch } from "react-redux";
 import { onGetsectionMaster } from "../Store/Slices/sectionMasterSlice";
 import { onGetSectionContentMaster } from "../Store/Slices/sectionContentMasterSlice";
+import RewardsNotification from "./rewardsNotification/RewardsNotification";
+import SmallCard from "./smallCard/SmallCard";
+import FeaturedBannerCarousel from "./featuredBannerCarousel/FeaturedBannerCarousel";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -27,7 +30,10 @@ const HomePage = () => {
   return (
     <>
       <Header />
+        <RewardsNotification />
       <div className="container">
+        <SmallCard />
+        <FeaturedBannerCarousel />
         <HeroSection />
         <SpecialofferSlide />
         <TabBar />

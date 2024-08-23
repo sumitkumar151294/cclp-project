@@ -1,0 +1,70 @@
+.rewards-notification {
+    height: 114px;
+    padding: 12px 12px 12px 16px;
+    gap: 12px;
+    opacity: 0;
+    background: linear-gradient(
+      92.7deg,
+      #F65425 2.58%,
+      #EC8409 40.6%,
+      #FA29A6 101.95%
+    );
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22.4px;
+    letter-spacing: -0.01em;
+    text-align: left;
+    // border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .rewards-notification.show {
+    opacity: 1;
+  }
+  
+  .rewards-notification.hide {
+    opacity: 0;
+    display: none;
+  }
+  
+  .rewards-notification .content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .rewards-notification .title {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22.4px;
+    letter-spacing: -0.01em;
+    text-align: left;
+    color: #ffffff;
+  }
+  
+  .rewards-notification .body {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 19.6px;
+    letter-spacing: -0.01em;
+    text-align: left;
+    color: #ffffff;
+  }
+  
+  .rewards-notification .close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    padding-top: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #ffffff;
+    // font-weight: bold;
+  }

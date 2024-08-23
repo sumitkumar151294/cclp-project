@@ -1,0 +1,81 @@
+/* Scoped by wrapping in .small-card-wrapper */
+.small-card-wrapper {
+    /* Ensure the card is only visible on screens smaller than 768px */
+    @media only screen and (max-width: 768px) {
+      .card-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+  
+      .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 167.5px;
+        height: 72px;
+        border-radius: 12px;
+        padding: 12px 0;
+        background: linear-gradient(111.92deg, #323434 14.03%, #141616 65.2%);
+        margin-bottom: 0;
+      }
+  
+      .card-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+  
+      .card-content {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 12px;
+        width: 100%;
+      }
+  
+      .card-title {
+        font-size: 12px;
+        color: white;
+        font-weight: bold;
+      }
+  
+      .card-subtitle {
+        font-size: 18px;
+        color: white;
+      }
+  
+      .other-cards, .redeemable-points {
+        padding-left: 12px;
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: -0.01em;
+        text-align: left;
+        color: #A0A0A0;
+        width: 100%;
+      }
+  
+      .card-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0px 12px;
+      }
+  
+      .card-points {
+        font-size: 18px;
+        color: white;
+        font-weight: bold;
+      }
+    }
+  
+    /* Hide the card on screens larger than 768px */
+    @media only screen and (min-width: 769px) {
+      .card-container {
+        display: none;
+      }
+    }
+  }
