@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 
 const DealList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [dealsData,setdealData]=useState();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
@@ -76,7 +77,7 @@ const DealList = () => {
       deleted: true
     };
     if (isEdit) {
-      // setdealData(sectionMasterData);
+      setdealData(dealDataInfo);
     } else {
       dispatch(onUpdateDeal(dealDataInfo));
     }
@@ -118,7 +119,7 @@ const DealList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (<DealForm />)}
+      {getRoleAccess[0]?.addAccess && (<DealForm dealsData={dealsData} />)}
       <div className="container-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

@@ -17,11 +17,16 @@ const getTodayDate = () => {
   const day = today.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+const statusOptions = [
+  { value: true, label: "Active" },
+  { value: false, label: "Non Active" },
+];
+const DealForm = ({dealsData}) => {
 
-const DealForm = () => {
   const todayDate = getTodayDate();
   const [values, setValues] = useState(null);
-  // to get labels and placeholders from translation  
+  // to get labels and placeholders from translation
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const deal_form = GetTranslationData("UIMasterAdmin","deal_form");
   const deal_name = GetTranslationData("UIMasterAdmin","deal_name");
   const deal_name_placeholder = GetTranslationData("UIMasterAdmin","deal_name_placeholder");
@@ -35,7 +40,7 @@ const DealForm = () => {
   const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
   const deal_name_required = GetTranslationData("UIMasterAdmin","deal_name_required");
   const deal_type_required = GetTranslationData("UIMasterAdmin","deal_type_required");
-  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required"); 
+  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required");
   const end_date_required = GetTranslationData("UIMasterAdmin", "end_date_required");
   const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
   const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
@@ -68,14 +73,16 @@ const DealForm = () => {
   const dealData = useSelector(state => state.dealReducer)
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
+    enabled:"",
     webImage: "",
     mobImage: "",
     displayOrder: "",
     category: "",
     name: "",
     startDate: "",
-    endDate: "",
+    endDate: dealsData?.endDate || "",
     dealType: "",
+    alias:[""]
   });
   // options form deal type
   const dealTypeOptions = [
@@ -86,14 +93,20 @@ const DealForm = () => {
   const validations = Yup.object().shape({
     webImage: Yup.string().required(mobile_image_required),
     mobImage: Yup.string().required(web_image_required),
-    displayOrder: Yup.string().required(display_order_required),
+    displayOrder: Yup.string()
+    .required(display_order_required)
+    .matches(/^[0-9]+$/, "Display Order must be a number"),
     category: Yup.string().required(category_name_required),
     name: Yup.string().required(deal_name_required),
     dealType: Yup.string().required(deal_type_required),
     startDate: Yup.string().required(start_date_required),
     endDate: Yup.string().required(end_date_required),
+    enabled: Yup.string().required("Status is required"),
+    alias: Yup.array()
+    .of(Yup.string().required("Alias is required"))
+    .required("At least one alias is required"),
   });
- 
+
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -121,12 +134,16 @@ const DealForm = () => {
         mobImage: getmobImage,
         clientId: 6,
         deleted: false,
-        displayOrder: JSON.stringify(values?.displayOrder),
+        displayOrder: values?.displayOrder,
         startDate:values.startDate,
         endDate:values.endDate,
         name:values.name,
         dealType:values.dealType,
-        category:values?.category
+        category:values?.category,
+        alias:values.alias,
+        enabled:  typeof values?.enabled === "boolean"
+        ? values.enabled
+        : values?.enabled === "true",
       };
       dispatch(onPostDeal(dealData));
     }
@@ -146,6 +163,23 @@ const DealForm = () => {
       dispatch(onPostDealReset())
     }
   }, [dealData]);
+const formatDate = (datetime) => {
+  if (!datetime) return todayDate;
+  return datetime.split('T')[0];
+};
+
+useEffect(() => {
+  if (dealsData) {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const updatedData = {
+      ...dealsData,
+      startDate: formatDate(dealsData?.startDate),
+      endDate: formatDate(dealsData?.endDate),
+    };
+    setInitialValue(updatedData);
+  }
+}, [dealsData]);
+
   return (
     <>
       <ToastContainer />
@@ -157,7 +191,7 @@ const DealForm = () => {
                 <h4 className="card-title">{deal_form}</h4>
               </div>
               <div className="card-body">
-                {dealData?.isPostLoading ? (
+                    {(dealData?.isPostLoading || uploadImage?.isPostLoading) ? (
                   <div style={{ height: "200px" }}>
                  <Loader classType={"absoluteLoader"} />
                   </div>
@@ -172,7 +206,7 @@ const DealForm = () => {
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-3">
                               <label>{deal_name}</label>
                               <span className="text-danger">*</span>
 
@@ -191,7 +225,7 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
+                            <div className="col-sm-4 form-group mb-3">
                               <label>
                                 {deal_category}
                                 <span className="text-danger">*</span>
@@ -212,7 +246,7 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4 ">
+                            <div className="col-sm-4 form-group mb-3 ">
                               <label>
                                 {deal_type}
                                 <span className="text-danger">*</span>
@@ -233,27 +267,33 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-3">
                               <label>
-                                {display_order}
+                                {"Alias"}
                                 <span className="text-danger">*</span>
+
                               </label>
                               <Field
-                                type="number"
-                                name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
+                                type="text"
+                                name="alias"
+                                className={`form-control ${errors.alias && touched.alias
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder={displayOrderPlaceholder}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    const arrayValue = value.split(',').map(item => item.trim());
+                                    setFieldValue("alias", arrayValue);
+                                  }}
+                                placeholder={"Enter Alias"}
                               />
-                              <ErrorMessage
-                                name="displayOrder"
+ <ErrorMessage
+                                name="alias"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-3">
                               <label>
                                 {upload_image_for_web}
                                 <span className="text-danger">*</span>
@@ -276,8 +316,8 @@ const DealForm = () => {
                                 component="div"
                                 className="error-message"
                               />
-                            </div>{" "}
-                            <div className="col-sm-4 form-group mb-2">
+                            </div>
+                            <div className="col-sm-4 form-group mb-3">
                               <label>
                                 {upload_image_for_phone}
                                 <span className="text-danger">*</span>
@@ -300,7 +340,7 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 mt-2">
+                            <div className="col-sm-4 form-group mb-3">
                               <label>{start_date_label}</label>
                               <Field
                                 type="date"
@@ -317,7 +357,7 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 mt-2">
+                            <div className="col-sm-4 form-group mb-3 ">
                               <label>{end_date_label}</label>
                               <Field
                                 type="date"
@@ -334,7 +374,45 @@ const DealForm = () => {
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-3">
+                              <label>
+                                {display_order}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                name="displayOrder"
+                                className={`form-control ${errors.displayOrder && touched.displayOrder
+                                    ? "is-invalid"
+                                    : ""
+                                  }`}
+                                placeholder={displayOrderPlaceholder}
+                              />
+                              <ErrorMessage
+                                name="displayOrder"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{status_label}</label>
+                              <span className="text-danger">*</span>
 
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={submit}

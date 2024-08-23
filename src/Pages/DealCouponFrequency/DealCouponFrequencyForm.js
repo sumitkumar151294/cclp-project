@@ -72,7 +72,9 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       const dealFreqData = {
         ...values,
         deleted: false,
-        enabled: values?.enabled === 'true' || values?.enabled === true,
+        enabled:  typeof values?.enabled === "boolean"
+        ? values.enabled
+        : values?.enabled === "true",
         clientId: 4,
         dealCoupounId: values?.dealCoupounId,
         validfrom: values?.validfrom,
@@ -99,16 +101,19 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
     { value: 'true', label: "Active" },
     { value: 'false', label: "Non Active" },
   ];
+  const formatDate = (datetime) => {
+    if (!datetime) return todayDate;
+    return datetime.split('T')[0];
+  };
   useEffect(() => {
     if (dealCouponFreq) {
       const weekDays = weekDayNames.filter(day => dealCouponFreq.weekDayId.includes(day.value));
-      setInitialValue({
-        dealCoupounId: dealCoupons.find(option =>option.value === dealCouponFreq.dealCoupounId),
-        validFrom: dealCouponFreq.validFrom,
-        validUpto: dealCouponFreq.validUpto,
-        weekDayId: weekDays,
-        enabled: dealCouponFreq.enabled.toString(),
-      });
+      const updatedValues={
+          validFrom:formatDate(dealCouponFreq.validFrom),
+          validUpto: formatDate(dealCouponFreq.validUpto),
+          weekDayId: weekDays,
+      }
+      setInitialValue(updatedValues);
     }
   }, [dealCouponFreq]);
 

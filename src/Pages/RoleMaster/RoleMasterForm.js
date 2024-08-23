@@ -34,9 +34,18 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const add = GetTranslationData("UIMasterAdmin", "add");
   const edit = GetTranslationData("UIMasterAdmin", "edit");
   const description = GetTranslationData("UIMasterAdmin", "description");
-  const role_master_placeholder = GetTranslationData("UIMasterAdmin", "role_master_placeholder");
-  const mandatory_Req_Label = GetTranslationData("UIMasterAdmin", "role_Req_Label");
-  const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
+  const role_master_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "role_master_placeholder"
+  );
+  const mandatory_Req_Label = GetTranslationData(
+    "UIMasterAdmin",
+    "role_Req_Label"
+  );
+  const description_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "description_placeholder"
+  );
   // to get data from redux store
   const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
   const getmoduleLoading = useSelector((state) => state?.moduleReducer);
@@ -44,8 +53,10 @@ const RoleMasterForm = ({ roleMasterData }) => {
     (state) => state?.userRoleModuleAccessReducer
   );
   const editModules = roleMasterData
-  ? getUserModalAccessData.data.filter(item => item.roleId === roleMasterData.id)
-  : [];
+    ? getUserModalAccessData.data.filter(
+        (item) => item.roleId === roleMasterData.id
+      )
+    : [];
   const [intialValue, setInitialValue] = useState({
     name: "",
     description: "",
@@ -53,7 +64,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
       (acc, module) => ({
         ...acc,
         [module.id]: {
-          id:0,
+          id: 0,
           moduleID: module.id,
           view: false,
           add: false,
@@ -63,33 +74,31 @@ const RoleMasterForm = ({ roleMasterData }) => {
       {}
     ),
   });
-const reset={
-  name: "",
-  description: "",
-  modules: moduleAccessData.reduce(
-    (acc, module) => ({
-      ...acc,
-      [module.id]: {
-        id:0,
-        moduleID: module.id,
-        view: false,
-        add: false,
-        edit: false,
-      },
-    }),
-    {}
-  ),
-}
+  const reset = {
+    name: "",
+    description: "",
+    modules: moduleAccessData.reduce(
+      (acc, module) => ({
+        ...acc,
+        [module.id]: {
+          id: 0,
+          moduleID: module.id,
+          view: false,
+          add: false,
+          edit: false,
+        },
+      }),
+      {}
+    ),
+  };
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     name: Yup.string().required(mandatory_Req_Label),
-    modules: Yup.object().test(checkBox_Error,
-      (modules) => {
-        return Object.values(modules).some(
-          (module) => module.view || module.add || module.edit
-        );
-      }
-    ),
+    modules: Yup.object().test(checkBox_Error, (modules) => {
+      return Object.values(modules).some(
+        (module) => module.view || module.add || module.edit
+      );
+    }),
   });
 
   const roleId = useSelector(
@@ -113,9 +122,12 @@ const reset={
   };
 
   useEffect(() => {
-    if (getUserRoleData?.status_code === "201" || getUserRoleData?.status_code === "205") {
+    if (
+      getUserRoleData?.status_code === "201" ||
+      getUserRoleData?.status_code === "205"
+    ) {
       const modulesData = Object.keys(value).map((moduleId) => {
-        const { id,view, add, edit } = value[moduleId];
+        const { id, view, add, edit } = value[moduleId];
         return {
           id: id,
           deleted: false,
@@ -134,18 +146,19 @@ const reset={
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
-    }else if (getUserModalAccessData?.status_code === "205") {
+    } else if (getUserModalAccessData?.status_code === "205") {
       toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
-      setInitialValue(reset)
+      setInitialValue(reset);
     }
   }, [getUserRoleData, getUserModalAccessData]);
   useEffect(() => {
     if (roleMasterData) {
       const initialModules = moduleAccessData.reduce((acc, module) => {
-        const moduleAccess = editModules.find(item => item.moduleId === module.id) || {};
+        const moduleAccess =
+          editModules.find((item) => item.moduleId === module.id) || {};
         return {
           ...acc,
           [module.id]: {
@@ -157,7 +170,7 @@ const reset={
           },
         };
       }, {});
-  
+
       setInitialValue({
         name: roleMasterData.name || "",
         description: roleMasterData.description || "",
@@ -230,7 +243,7 @@ const reset={
                             </div>
 
                             <div className="row top-top mt-2">
-                              <div className="col-lg-4">
+                              <div className="col-lg-3">
                                 <div className="form-check mb-2 padd">
                                   <Field
                                     className="form-check-input"

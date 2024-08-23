@@ -226,7 +226,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                           )}
                         </div>
 
-                        <div className="col-lg-4 py-4">
+                        <div className="col-lg-3 py-4">
                           <div className="form-check mb-2 padd mt-4">
                             <InputField
                               className="form-check-input"
