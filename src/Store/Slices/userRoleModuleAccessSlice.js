@@ -25,7 +25,7 @@ export const userRoleModuleAccessSlice = createSlice({
         ...state,
         isLoading: false,
         isError: false,
-        data:data,
+        data: data,
         message,
         status_code,
       };
@@ -61,10 +61,10 @@ export const userRoleModuleAccessSlice = createSlice({
     },
 
     onPostUserRoleModuleAccessSuccess: (state, { payload }) => {
-      const {  data=[],message = "", status_code = "201" } = payload;
+      const { data = [], message = "", status_code = "201" } = payload;
       return {
         ...state,
-        data:data,
+        data: data,
         isLoading: false,
         isError: false,
         message,
@@ -73,7 +73,7 @@ export const userRoleModuleAccessSlice = createSlice({
     },
 
     onPostUserRoleModuleAccessError: (state, { payload }) => {
-      const {  message = "", status_code = 400 } = payload;
+      const { message = "", status_code = 400 } = payload;
       return {
         ...state,
         message,
@@ -86,29 +86,23 @@ export const userRoleModuleAccessSlice = createSlice({
     onPostUserRoleModuleAccessReset: (state) => {
       return {
         ...state,
-        message:"",
-        status_code:null,
+        message: "",
+        status_code: null,
         isLoading: false,
         isError: false,
       };
     },
-
-
-
-
-
   },
 });
-export const { onGetUserRoleModuleAccess,
+export const {
+  onGetUserRoleModuleAccess,
   onGetUserRoleModuleAccessSuccess,
   onGetUserRoleModuleAccessError,
   onGetUserRoleModuleAccessReset,
-  onPostUserRoleModuleAccess, 
+  onPostUserRoleModuleAccess,
   onPostUserRoleModuleAccessReset,
-  onPostUserRoleModuleAccessSuccess, 
+  onPostUserRoleModuleAccessSuccess,
   onPostUserRoleModuleAccessError,
-  
-
- } = userRoleModuleAccessSlice.actions;
+} = userRoleModuleAccessSlice.actions;
 
 export default userRoleModuleAccessSlice.reducer;
