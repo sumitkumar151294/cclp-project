@@ -86,7 +86,7 @@ const TopOfferPage = () => {
     };
   }, []);
 
-  const itemsToShow = isMobile ? (showAll ? getDealCategories?.getDealCategoryData : getDealCategories?.getDealCategoryData.slice(0, 4)) : getDealCategories?.getDealCategoryData;
+  const itemsToShow = isMobile ? (showAll ? getDealCategories?.getDealCategoryData : getDealCategories?.getDealCategoryData?.slice(0, 4)) : getDealCategories?.getDealCategoryData;
 
   const handleToggle = () => {
     setShowAll((prev) => !prev);
