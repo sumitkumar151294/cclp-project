@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Header from "../../Header/Header";
+import Header from "../../NewUI/Header/Header";
 import "../top-offer-component/TopOfferPage.scss";
 import cartBag from "../../../Assets/imgNewUI/topoffer/cartBag.png";
 import cardarrow from "../../../Assets/imgNewUI/card-arrow.png";
