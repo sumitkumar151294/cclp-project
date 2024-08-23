@@ -16,7 +16,7 @@ import {
 } from "../../Store/Slices/NavConfigurationSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
-const NavConfigurationForm = ({ navData,setNavData }) => {
+const NavConfigurationForm = ({ navData, setNavData }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get lables and placeholder from translation
@@ -57,6 +57,11 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
     "UIMasterAdmin",
     "display_order_required"
   );
+  const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
+  const nav_icon_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "nav_icon_placeholder"
+  );
   // to get nav-configure data from the Redux store
   const navConfigureData = useSelector(
     (state) => state?.navConfigurationReducer
@@ -67,6 +72,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
     navigationMenuName: "",
     displayOrder: "",
     loginRequired: false,
+    icon: "",
   };
   // to validate nav configure form using Yup schema
   const validateForm = yup.object({
@@ -95,7 +101,8 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
           clientId: 6,
           cta: values?.cta,
           navigationMenuName: values?.navigationMenuName,
-          displayOrder:values?.displayOrder,
+          displayOrder: values?.displayOrder,
+          icon: values?.icon,
           loginRequired: values?.loginRequired,
         };
         if (navData) {
@@ -115,6 +122,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
         cta: navData?.cta,
         navigationMenuName: navData?.navigationMenuName,
         displayOrder: navData?.displayOrder,
+        icon: navData?.icon,
         loginRequired: navData?.loginRequired,
       });
     }
@@ -159,7 +167,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                       <div className="row">
                         <div className="col-sm-4 form-group mb-2">
                           <label htmlFor="name-f">
-                           {menu_name}
+                            {menu_name}
                             <span className="text-danger">*</span>
                           </label>
                           <InputField
@@ -226,7 +234,27 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                           )}
                         </div>
 
-                        <div className="col-lg-3 py-4">
+                        <div className="col-sm-4 form-group mb-2">
+                          <label htmlFor="description">
+                            {nav_icon}
+                            <span className="text-danger">*</span>
+                          </label>
+                          <InputField
+                            className={`form-control ${
+                              errors.icon && touched.icon ? "is-invalid" : ""
+                            }`}
+                            type="text"
+                            name="icon"
+                            id="flexCheckDefault2"
+                            placeholder={nav_icon_placeholder}
+                            value={values.icon}
+                            onChange={handleChange}
+                          />
+                          {errors.icon && touched.icon && (
+                            <p className="error-message">{errors.icon}</p>
+                          )}
+                        </div>
+                        <div className="col-lg-4 py-4">
                           <div className="form-check mb-2 padd mt-4">
                             <InputField
                               className="form-check-input"
@@ -239,6 +267,7 @@ const NavConfigurationForm = ({ navData,setNavData }) => {
                           </div>
                         </div>
                       </div>
+
                       <div className="col-sm-4 mb-4">
                         <Button
                           text={navData ? update : submit}

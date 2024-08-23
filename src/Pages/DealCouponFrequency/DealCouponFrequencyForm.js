@@ -62,7 +62,13 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   const validations = Yup.object().shape({
     dealCoupounId: Yup.string().required(deal_coupon_required),
     validfrom: Yup.string().required(start_date_required),
-    validUpto: Yup.string().required(end_date_required),
+    validUpto: Yup.string()
+      .required(end_date_required)
+      .test('is-not-same', 'Valid From date and Valid To date must be different', function(value) {
+        const { validfrom } = this.parent;
+        if (!validfrom || !value) return true;
+        return new Date(value).getTime() !== new Date(validfrom).getTime();
+      }),
     weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.number().required() })).min(1, week_required),
     enabled: Yup.string().required(status_required)
   });
@@ -197,6 +203,9 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
+                                  onChange={(e) => {
+                                    setFieldValue("validfrom", e.target.value);
+                                  }}
                               />
                               <ErrorMessage
                                 name="validfrom"
@@ -216,6 +225,13 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
+                                  onChange={(e) => {
+                                    const validUptoDate = e.target.value;
+                                    setFieldValue("validUpto", validUptoDate);
+                                    if (!values.validfrom) {
+                                      setFieldValue("validfrom", todayDate);
+                                    }
+                                  }}
                               />
                               <ErrorMessage
                                 name="validUpto"
