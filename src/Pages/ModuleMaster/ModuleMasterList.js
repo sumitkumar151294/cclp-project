@@ -22,23 +22,32 @@ const ModuleMasterList = () => {
     "module_route_path"
   );
   const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
   const getModuleData = getModule?.data;
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
   //fetch module master data on mount
   useEffect(() => {
-    if(!getModule){
-    dispatch(onGetModule())};
+    if (!getModule) {
+      dispatch(onGetModule());
+    }
   }, []);
   // to handle search
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
   // to filter selected data
-  const filteredData =Array.isArray(getModuleData) && getModuleData?.filter(
-    (data) => data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-  );
+  const filteredData =
+    Array.isArray(getModuleData) &&
+    getModuleData?.filter((data) =>
+      data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+    );
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -49,7 +58,7 @@ const ModuleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <ModuleMasterForm />
+      {getRoleAccess[0]?.addAccess && <ModuleMasterForm />}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
