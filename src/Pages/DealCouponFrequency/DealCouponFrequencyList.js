@@ -85,7 +85,11 @@ const DealCouponFrequencyList = () => {
       dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
    // }
   };
-
+  // Function to format dates
+const formatDate = (datetime) => {
+  if (!datetime) return "";
+  return datetime.split('T')[0]; // Extract the date part only
+};
   // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -122,13 +126,7 @@ const DealCouponFrequencyList = () => {
       dispatch(onGetDealCouponFreq());
       dispatch(onUpdateDealCouponFreqReset());
     }
-    // else if (getDealCouponFeq?.update_status_code == "205") {
-    //   toast.success(getDealCouponFeq?.updateMessage);
-    //   setDealCouponFreq(null);
-    //   dispatch(onGetDealCouponFreq());
-    //   dispatch(onUpdateDealCouponFreqReset());
-    // }
-     else if (getDealCouponFeq?.update_status_code) {
+    else if (getDealCouponFeq?.update_status_code) {
       toast.error(getDealCouponFeq?.updateMessage);
       dispatch(onUpdateDealCouponFreqReset());
     }
@@ -188,8 +186,8 @@ const DealCouponFrequencyList = () => {
                               {filteredData?.slice(startIndex, endIndex)?.map((dealfreq, index) => (
                                   <tr key={index}>
                                     <td>{couponLabelMap[dealfreq?.dealCoupounId] || 'Unknown'}</td>
-                                    <td>{dealfreq?.validFrom}</td>
-                                    <td>{dealfreq?.validUpto}</td>
+                                    <td>{formatDate(dealfreq.validFrom)}</td>
+                                    <td>{formatDate(dealfreq.validUpto)}</td>
                                     <td>
                                       {" "}
                                       <span

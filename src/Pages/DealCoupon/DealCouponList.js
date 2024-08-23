@@ -65,8 +65,7 @@ const DealCouponList = () => {
   // to filter getDealCoupon
   const filteredData = getDealCoupon?.getDealCouponData?.filter((data) => {
     const couponCodeLower = data.coupounCode?.toLowerCase() || '';
-    const dealIdLower = data.dealId?.toLowerCase() || '';  
-    return couponCodeLower.includes(searchQuery?.toLowerCase()) || dealIdLower.includes(searchQuery?.toLowerCase());
+    return couponCodeLower.includes(searchQuery?.toLowerCase()) 
   });
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);

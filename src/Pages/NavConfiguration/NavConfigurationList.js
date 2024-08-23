@@ -32,7 +32,8 @@ const NavConfigurationList = () => {
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label")
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
   // to get module data from the Redux store
   const navConfigure = useSelector((state) => state?.navConfigurationReducer);
   const navConfigureData = navConfigure?.getNavConfigureData;
@@ -147,6 +148,7 @@ const NavConfigurationList = () => {
                           <th>{menu_name}</th>
                           <th>{call_to_action}</th>
                           <th>{display_order}</th>
+                          <th>{nav_icon}</th>
                           <th>{"Login Required"}</th>
                           {getRoleAccess[0]?.editAccess && <th>{action_label}</th>}
                         </tr>
@@ -159,6 +161,7 @@ const NavConfigurationList = () => {
                               <td>{data.cta}</td>
                               <td>{data.navigationMenuName}</td>
                               <td>{data.displayOrder}</td>
+                              <td>{data.icon}</td>
                               <td>{data.loginRequired ? "Yes" : "No"}</td>
                               {getRoleAccess[0]?.editAccess && (
                                 <td>

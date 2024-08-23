@@ -50,6 +50,10 @@ const UserMasterList = () => {
   const roleAccessListData = useSelector(
     (state) => state?.userRoleReducer?.userRoleData
   );
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
+  //to fetch data on mount
   useEffect(() => {
     dispatch(onGetuserMaster());
     dispatch(onGetUserRole());
@@ -133,10 +137,12 @@ const UserMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <UserMasterForm
-        userMasterData={userMasterData}
-        setuserMasterData={setuserMasterData}
-      />
+      {getRoleAccess[0]?.addAccess && (
+        <UserMasterForm
+          userMasterData={userMasterData}
+          setuserMasterData={setuserMasterData}
+        />
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -181,7 +187,9 @@ const UserMasterList = () => {
                             <th>{mobile}</th>
                             <th>{"Role Access"}</th>
                             <th>{status_label}</th>
-                            <th>{action_label}</th>
+                            {getRoleAccess[0]?.editAccess && (
+                              <th>{action_label}</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
@@ -222,26 +230,28 @@ const UserMasterList = () => {
                                       : non_active_label}
                                   </span>
                                 </td>
-                                <td>
-                                  <div className="d-flex">
-                                    <Button
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                      end_icon={"fas fa-pencil-alt"}
-                                      onClick={() =>
-                                        handleSubmit(userMasterData, {
-                                          isEdit: true,
-                                        })
-                                      }
-                                    />
-                                    <Button
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                      end_icon={"fa fa-trash"}
-                                      onClick={() =>
-                                        showAlert(userMasterData)
-                                      }
-                                    />
-                                  </div>
-                                </td>
+                                {getRoleAccess[0]?.editAccess && (
+                                  <td>
+                                    <div className="d-flex">
+                                      <Button
+                                        className="btn btn-primary shadow btn-xs sharp me-1"
+                                        end_icon={"fas fa-pencil-alt"}
+                                        onClick={() =>
+                                          handleSubmit(userMasterData, {
+                                            isEdit: true,
+                                          })
+                                        }
+                                      />
+                                      <Button
+                                        className="btn btn-danger shadow btn-xs sharp"
+                                        end_icon={"fa fa-trash"}
+                                        onClick={() =>
+                                          showAlert(userMasterData)
+                                        }
+                                      />
+                                    </div>
+                                  </td>
+                                )}
                               </tr>
                             ))}
                         </tbody>

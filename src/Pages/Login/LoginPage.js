@@ -12,6 +12,7 @@ import { onLoginReset, onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import {onGetuserMaster} from "../../Store/Slices/userMasterSlice";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -29,6 +30,8 @@ const LoginPage = () => {
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
+  // to get user master data from redux store
+  const userMasterData = useSelector((state) => state?.userMasterReducer?.getuserMasterData);
   // initial values for the input fields
   const initialValues = {
     email: "",
@@ -46,9 +49,19 @@ const LoginPage = () => {
     onSubmit: (values, action) => {
       setIsLogin(true);
       dispatch(onLoginSubmit(values));
+      if (userName) {
+        const fullName = `${userName.firstName} ${userName.lastName}`;
+        sessionStorage.setItem("userFullName", fullName);
+      }
       action.resetForm();
     },
   });
+  // to filter user name who is login 
+   const userName = userMasterData?.find(user => user.email === values.email);
+  // to fetch usermaster data on mount
+  useEffect(() => {
+    dispatch(onGetuserMaster());
+  }, []);
   //to handle navigation and toast notifications based on login status
   useEffect(() => {
     if (isLogin && loginDetails?.status_code === "201") {
@@ -62,8 +75,8 @@ const LoginPage = () => {
   // to handle checkbox
   const handleCheckboxChange = async (e) => {
     const { checked } = e.target;
-    if (checked) {
-      sessionStorage.setItem("userEmail", values.email);
+    if (checked) {     
+      sessionStorage.setItem("userEmail", values.email); 
       sessionStorage.setItem("userPassword", values.password);
     } else {
       sessionStorage.removeItem("userEmail");
