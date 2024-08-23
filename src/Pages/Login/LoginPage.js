@@ -77,7 +77,7 @@ const LoginPage = () => {
       <ToastContainer />
       <div className="vh-100">
         <div className="authincation h-100">
-          <div className="container h-100">
+          <div className="containers h-100">
             <div className="row justify-content-center h-100 align-items-center">
               <div className="col-md-6">
                 <div className="authincation-content">
@@ -154,7 +154,7 @@ const LoginPage = () => {
                           <div className="text-center">
                             <Button
                               text={sign_me_label}
-                              className="btn btn-primary btn-block btn-sm float-right p-btn mt-2"
+                              className="btn btn-primary btn-block btn-sm float-right p-btn mt-2 mb-9"
                             />
                           </div>
                         </form>

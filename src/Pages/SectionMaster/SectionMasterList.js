@@ -147,11 +147,11 @@ const SectionMasterList = () => {
               {getRoleAccess[0]?.addAccess && (
                 <SectionMasterForm sectionData={sectionData} />
               )}
-              <div className="container-fluid pt-0">
+              <div className="containers-fluid pt-0">
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="card">
-                      <div className="container-fluid mt-2 mb-2 pt-1">
+                      <div className="containers-fluid mt-2 mb-2 pt-1">
                         <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                           <div className="card-header">
                             <h4 className="card-title">

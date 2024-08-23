@@ -79,7 +79,7 @@ const ModuleMasterForm = () => {
   return (
     <>
       <ScrollToTop />
-      <div className="container-fluid">
+      <div className="containers-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
@@ -92,7 +92,7 @@ const ModuleMasterForm = () => {
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
-                  <div className="container-fluid">
+                  <div className="containers-fluid">
                     <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-sm-4 form-group mb-2">
@@ -162,7 +162,7 @@ const ModuleMasterForm = () => {
                         <Button
                           text={submit}
                           end_icon="fa fa-arrow-right"
-                          className="btn btn-primary float-right pad-aa mt-2"
+                          className="btn btn-primary  pad-aa mt-2"
                         />
                         <ToastContainer />
                       </div>

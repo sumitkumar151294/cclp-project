@@ -83,7 +83,7 @@ const DealCouponCodeForm = () => {
   return (
     <>
       <ToastContainer />
-      <div className="container-fluid">
+      <div className="containers-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
@@ -96,7 +96,7 @@ const DealCouponCodeForm = () => {
                     <Loader />
                   </div>
                 ) : (
-                  <div className="container-fluid">
+                  <div className="containers-fluid">
                     <Formik
                       initialValues={intialValue}
                       validationSchema={validations}
@@ -171,7 +171,7 @@ const DealCouponCodeForm = () => {
                               <Button
                                 text={submit}
                                 end_icon="fa fa-arrow-right"
-                                className="btn btn-primary float-right pad-aa mt-2"
+                                className="btn btn-primary  pad-aa mt-2"
                               />
                             </div>
                           </div>

@@ -183,7 +183,7 @@ const SectionMasterForm = ({ sectionData }) => {
     <>
       <ScrollToTop />
       <ToastContainer />
-      <div className="container-fluid">
+      <div className="containers-fluid">
         <div className="row">
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
@@ -197,7 +197,7 @@ const SectionMasterForm = ({ sectionData }) => {
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
-                  <div className="container-fluid">
+                  <div className="containers-fluid">
                     <Formik
                       initialValues={intialValue}
 
@@ -415,7 +415,7 @@ const SectionMasterForm = ({ sectionData }) => {
                               <Button
                                 text={sectionData ? update : submit}
                                 end_icon="fa fa-arrow-right"
-                                className="btn btn-primary float-right pad-aa mt-2"
+                                className="btn btn-primary  pad-aa mt-2"
                               />
                             </div>
                           </div>

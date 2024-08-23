@@ -5,7 +5,7 @@ $primary-white-2: var(--primary-white-2);
 $rgba-primary-16: var(--rgba-primary-16);
 $h100: var(--h100);
 
-.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+.containers, .containers-fluid, .containers-sm, .containers-md, .containers-lg, .containers-xl, .containers-xxl {
   width: 100%;
   padding-right: var(--bs-gutter-x, 15px) ;
   padding-left: var(--bs-gutter-x, 15px) ;
@@ -15,19 +15,19 @@ $h100: var(--h100);
 
 }
 @media only screen and (min-width: 998px)  {
-  .container{
+  .containers{
     padding: 0 3rem !important;
   }
 }
 
 @media only screen and (min-width: 1200px)  {
-  .container{
+  .containers{
     padding: 0 4.5rem !important;
   }
 }
 
 @media only screen and (min-width: 1400px)  {
-  .container{
+  .containers{
     padding: 0 6rem !important;
   }
 }
@@ -39,7 +39,7 @@ $h100: var(--h100);
   }
 }
 
-.content-body .container-fluid{
+.content-body .containers-fluid{
   padding-top: 1.3rem;
   padding-right: 2.5rem;
   padding-left: 2.5rem;
@@ -63,7 +63,7 @@ $h100: var(--h100);
   }
   
   @media only screen and (min-width: 1400px)  {
-    .card-body .container-fluid{
+    .card-body .containers-fluid{
       padding-top: 1.5rem !important;
     }
   }
