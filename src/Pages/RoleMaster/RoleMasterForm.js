@@ -198,7 +198,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
-                  <div className="containers-fluid">
+                  <div className="container-fluid">
                     <Formik
                       initialValues={intialValue}
                       validationSchema={validations}
@@ -360,7 +360,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                             <Button
                               text={roleMasterData ? update : submit}
                               end_icon="fa fa-arrow-right"
-                              className="btn btn-primary  pad-aa mt-2"
+                              className="btn btn-primary float-right pad-aa mt-2"
                             />
                           </div>
                         </Form>

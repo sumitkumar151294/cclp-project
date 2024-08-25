@@ -24,13 +24,9 @@ export default function* rootSaga() {
     loginSaga(),
     loginAuthSaga(),
     translationSaga(),
-
-
-
     userRoleSaga(),
     userRoleModulesAccessSaga(),
     userMasterSaga(),
-
     sectionMasterSaga(),
     SectionContentMasterSaga(),
     dealCategorySaga(),

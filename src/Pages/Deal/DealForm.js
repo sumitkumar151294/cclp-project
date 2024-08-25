@@ -6,8 +6,17 @@ import Button from "../../Components/Button/Button";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-import { onGetDeal, onPostDeal, onPostDealReset } from "../../Store/Slices/dealSlice";
-import { onPostuploadImage, onPostuploadImageReset, onPostuploadMobileImage, onPostuploadMobileImageReset } from "../../Store/Slices/uploadSlice";
+import {
+  onGetDeal,
+  onPostDeal,
+  onPostDealReset,
+} from "../../Store/Slices/dealSlice";
+import {
+  onPostuploadImage,
+  onPostuploadImageReset,
+  onPostuploadMobileImage,
+  onPostuploadMobileImageReset,
+} from "../../Store/Slices/uploadSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const getTodayDate = () => {
@@ -21,28 +30,60 @@ const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
-const DealForm = ({dealsData}) => {
-
+const DealForm = ({ dealsData }) => {
   const todayDate = getTodayDate();
   const [values, setValues] = useState(null);
   // to get labels and placeholders from translation
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
-  const deal_form = GetTranslationData("UIMasterAdmin","deal_form");
-  const deal_name = GetTranslationData("UIMasterAdmin","deal_name");
-  const deal_name_placeholder = GetTranslationData("UIMasterAdmin","deal_name_placeholder");
+  const deal_form = GetTranslationData("UIMasterAdmin", "deal_form");
+  const deal_name = GetTranslationData("UIMasterAdmin", "deal_name");
+  const deal_name_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_name_placeholder"
+  );
   const deal_category = GetTranslationData("UIMasterAdmin", "deal_category");
   const deal_type = GetTranslationData("UIMasterAdmin", "deal_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
-  const display_order_required = GetTranslationData("UIMasterAdmin","display_order_required");
-  const displayOrderPlaceholder = GetTranslationData("UIMasterAdmin","displayOrderPlaceholder");
-  const category_name_required = GetTranslationData("UIMasterAdmin","category_name_required");
-  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
-  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
-  const deal_name_required = GetTranslationData("UIMasterAdmin","deal_name_required");
-  const deal_type_required = GetTranslationData("UIMasterAdmin","deal_type_required");
-  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required");
-  const end_date_required = GetTranslationData("UIMasterAdmin", "end_date_required");
-  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
+  const displayOrderPlaceholder = GetTranslationData(
+    "UIMasterAdmin",
+    "displayOrderPlaceholder"
+  );
+  const category_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "category_name_required"
+  );
+  const mobile_image_required = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_image_required"
+  );
+  const web_image_required = GetTranslationData(
+    "UIMasterAdmin",
+    "web_image_required"
+  );
+  const deal_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_name_required"
+  );
+  const deal_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_type_required"
+  );
+  const start_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_required"
+  );
+  const end_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "end_date_required"
+  );
+  const start_date_label = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_label"
+  );
   const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
   const upload_image_for_web = GetTranslationData(
     "UIMasterAdmin",
@@ -54,26 +95,28 @@ const DealForm = ({dealsData}) => {
     "UIMasterAdmin",
     "upload_image_for_phone"
   );
-  // to get data from redux store 
+  // to get data from redux store
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
-  
+
   const uploadImage = useSelector((state) => state.uploadReducer);
-  const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
-  const dealCategoryOptions = dealCategoryData?.map(dealCategory => ({
+  const dealCategoryData = useSelector(
+    (state) => state.dealCategoryReducer?.getDealCategoryData
+  );
+  const dealCategoryOptions = dealCategoryData?.map((dealCategory) => ({
     value: dealCategory.id,
     label: dealCategory.name,
   }));
   const dispatch = useDispatch();
   // to get deal data from redux store
-  const dealData = useSelector(state => state.dealReducer)
+  const dealData = useSelector((state) => state.dealReducer);
   // initial values for the input fields
   const [intialValue, setInitialValue] = useState({
-    enabled:"",
+    enabled: "",
     webImage: "",
     mobImage: "",
     displayOrder: "",
@@ -82,7 +125,7 @@ const DealForm = ({dealsData}) => {
     startDate: "",
     endDate: dealsData?.endDate || "",
     dealType: "",
-    alias:[""]
+    alias: [""],
   });
   // options form deal type
   const dealTypeOptions = [
@@ -91,11 +134,10 @@ const DealForm = ({dealsData}) => {
   ];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    webImage: Yup.string().required(mobile_image_required),
     mobImage: Yup.string().required(web_image_required),
     displayOrder: Yup.string()
-    .required(display_order_required)
-    .matches(/^[0-9]+$/, "Display Order must be a number"),
+      .required(display_order_required)
+      .matches(/^[0-9]+$/, "Display Order must be a number"),
     category: Yup.string().required(category_name_required),
     name: Yup.string().required(deal_name_required),
     dealType: Yup.string().required(deal_type_required),
@@ -103,8 +145,8 @@ const DealForm = ({dealsData}) => {
     endDate: Yup.string().required(end_date_required),
     enabled: Yup.string().required("Status is required"),
     alias: Yup.array()
-    .of(Yup.string().required("Alias is required"))
-    .required("At least one alias is required"),
+      .of(Yup.string().required("Alias is required"))
+      .required("At least one alias is required"),
   });
 
   const handleImageChange = (setFieldValue, event, isMobile) => {
@@ -135,15 +177,16 @@ const DealForm = ({dealsData}) => {
         clientId: 6,
         deleted: false,
         displayOrder: values?.displayOrder,
-        startDate:values.startDate,
-        endDate:values.endDate,
-        name:values.name,
-        dealType:values.dealType,
-        category:values?.category,
-        alias:values.alias,
-        enabled:  typeof values?.enabled === "boolean"
-        ? values.enabled
-        : values?.enabled === "true",
+        startDate: values.startDate,
+        endDate: values.endDate,
+        name: values.name,
+        dealType: values.dealType,
+        category: values?.category,
+        alias: values.alias,
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
       };
       dispatch(onPostDeal(dealData));
     }
@@ -151,34 +194,34 @@ const DealForm = ({dealsData}) => {
 
   useEffect(() => {
     if (dealData?.post_status_code === "201") {
-      toast.success(dealData?.postMessage)
-      dispatch(onGetDeal())
+      toast.success(dealData?.postMessage);
+      dispatch(onGetDeal());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
-      dispatch(onPostDealReset())
+      dispatch(onPostDealReset());
     } else if (dealData?.post_status_code) {
-      toast.error(dealData.postMessage)
+      toast.error(dealData.postMessage);
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
-      dispatch(onPostDealReset())
+      dispatch(onPostDealReset());
     }
   }, [dealData]);
-const formatDate = (datetime) => {
-  if (!datetime) return todayDate;
-  return datetime.split('T')[0];
-};
+  const formatDate = (datetime) => {
+    if (!datetime) return todayDate;
+    return datetime.split("T")[0];
+  };
 
-useEffect(() => {
-  if (dealsData) {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    const updatedData = {
-      ...dealsData,
-      startDate: formatDate(dealsData?.startDate),
-      endDate: formatDate(dealsData?.endDate),
-    };
-    setInitialValue(updatedData);
-  }
-}, [dealsData]);
+  useEffect(() => {
+    if (dealsData) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      const updatedData = {
+        ...dealsData,
+        startDate: formatDate(dealsData?.startDate),
+        endDate: formatDate(dealsData?.endDate),
+      };
+      setInitialValue(updatedData);
+    }
+  }, [dealsData]);
 
   return (
     <>
@@ -191,9 +234,9 @@ useEffect(() => {
                 <h4 className="card-title">{deal_form}</h4>
               </div>
               <div className="card-body">
-                    {(dealData?.isPostLoading || uploadImage?.isPostLoading) ? (
+                {dealData?.isPostLoading || uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                 <Loader classType={"absoluteLoader"} />
+                    <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="containers-fluid">
@@ -213,10 +256,11 @@ useEffect(() => {
                               <Field
                                 type="text"
                                 name="name"
-                                className={`form-control ${errors.name && touched.name
+                                className={`form-control ${
+                                  errors.name && touched.name
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder={deal_name_placeholder}
                               />
                               <ErrorMessage
@@ -235,10 +279,11 @@ useEffect(() => {
                                 name="category"
                                 component={Dropdown}
                                 options={dealCategoryOptions}
-                                className={`form-select ${errors.category && touched.category
+                                className={`form-select ${
+                                  errors.category && touched.category
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="category"
@@ -256,10 +301,11 @@ useEffect(() => {
                                 name="dealType"
                                 component={Dropdown}
                                 options={dealTypeOptions}
-                                className={`form-select ${errors.dealType && touched.dealType
+                                className={`form-select ${
+                                  errors.dealType && touched.dealType
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="dealType"
@@ -271,23 +317,25 @@ useEffect(() => {
                               <label>
                                 {"Alias"}
                                 <span className="text-danger">*</span>
-
                               </label>
                               <Field
                                 type="text"
                                 name="alias"
-                                className={`form-control ${errors.alias && touched.alias
+                                className={`form-control ${
+                                  errors.alias && touched.alias
                                     ? "is-invalid"
                                     : ""
-                                  }`}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    const arrayValue = value.split(',').map(item => item.trim());
-                                    setFieldValue("alias", arrayValue);
-                                  }}
+                                }`}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const arrayValue = value
+                                    .split(",")
+                                    .map((item) => item.trim());
+                                  setFieldValue("alias", arrayValue);
+                                }}
                                 placeholder={"Enter Alias"}
                               />
- <ErrorMessage
+                              <ErrorMessage
                                 name="alias"
                                 component="div"
                                 className="error-message"
@@ -296,20 +344,18 @@ useEffect(() => {
                             <div className="col-sm-4 form-group mb-3">
                               <label>
                                 {upload_image_for_web}
-                                <span className="text-danger">*</span>
                               </label>
                               <input
                                 type="file"
                                 name="webImage"
-                                className={`form-control ${errors.webImage && touched.webImage
+                                className={`form-control ${
+                                  errors.webImage && touched.webImage
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, false)
                                 }
-
-
                               />
                               <ErrorMessage
                                 name="webImage"
@@ -325,14 +371,14 @@ useEffect(() => {
                               <input
                                 type="file"
                                 name="mobImage"
-                                className={`form-control ${errors.mobImage && touched.mobImage
+                                className={`form-control ${
+                                  errors.mobImage && touched.mobImage
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 onChange={(event) =>
                                   handleImageChange(setFieldValue, event, true)
                                 }
-
                               />
                               <ErrorMessage
                                 name="mobImage"
@@ -346,10 +392,11 @@ useEffect(() => {
                                 type="date"
                                 name="startDate"
                                 min={todayDate}
-                                className={`form-control ${errors.startDate && touched.startDate
+                                className={`form-control ${
+                                  errors.startDate && touched.startDate
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="startDate"
@@ -363,10 +410,11 @@ useEffect(() => {
                                 type="date"
                                 name="endDate"
                                 min={todayDate}
-                                className={`form-control ${errors.endDate && touched.endDate
+                                className={`form-control ${
+                                  errors.endDate && touched.endDate
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="endDate"
@@ -382,10 +430,11 @@ useEffect(() => {
                               <Field
                                 type="text"
                                 name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder={displayOrderPlaceholder}
                               />
                               <ErrorMessage
@@ -402,10 +451,11 @@ useEffect(() => {
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"

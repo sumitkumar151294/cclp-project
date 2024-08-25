@@ -5,8 +5,6 @@ import Layout from "../Layout/Layout";
 import DealList from "../Pages/Deal/DealList";
 import RoleMasterList from "../Pages/RoleMaster/RoleMasterList";
 import UserMasterList from "../Pages/UserMaster/UserMasterList";
-import HomePage from "../UI/HomePage";
-import TopOfferPage from "../UI/pages/top-offer-component/TopOfferPage";
 import SectionMasterList from "../Pages/SectionMaster/SectionMasterList";
 import SectionContentMasterList from "../Pages/SectionContentMaster/SectionContentMasterList";
 import ModuleMasterList from "../Pages/ModuleMaster/ModuleMasterList";
@@ -23,9 +21,6 @@ function RouteConfiq() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
-        {/* New-UI */}
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/topOffer" element={<TopOfferPage />} />
         <Route
           path="/roleMaster"
           element={<Layout Component={RoleMasterList} />}
