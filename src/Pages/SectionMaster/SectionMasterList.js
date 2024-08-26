@@ -334,7 +334,7 @@ const SectionMasterList = () => {
 
 
 
-  
+
   );
 };
 
