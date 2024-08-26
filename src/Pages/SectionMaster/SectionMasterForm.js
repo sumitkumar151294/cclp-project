@@ -89,8 +89,8 @@ const SectionMasterForm = ({ sectionData }) => {
     "display_limit_required"
   );
   const sectionTypeOptions = [
-    { value: "Banner", label: "Banner" },
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
+    { value: "Banner", label: "Banner" },
     { value: "CustomerBenefits", label: "Customer Benefits" },
     { value: "SupportingBanner", label: "Supporting Banner" },
     { value: "SpecialSection", label: "Special Section" },
@@ -110,10 +110,28 @@ const SectionMasterForm = ({ sectionData }) => {
       .required(display_limit_required)
       .matches(/^[0-9]+$/, "Display Limit must be a number"),
     claimLimit: Yup.string()
-      .nullable()  // Allows the value to be null
-      .matches(/^[0-9]*$/, "Claim Limit must be a number")
+      .nullable() // Allows the value to be null
+      .matches(/^[0-9]*$/, "Claim Limit must be a number"),
+      noOfpointToClaim: Yup.string()
+      .nullable()
+      .matches(/^[0-9]*$/, "Number of Points to Claim must be a number"),
   });
+const resetState=[
+{
+    sectionName: "",
+    sectionType: "",
+    enabled: "",
+    displayOrder: "",
+    displayLimit: "",
+    text: "",
+    claimLimit: "",
+    pointToClaim: "",
+    noOfpointToClaim: "",
+    segmentId: "",
 
+}
+]
+console.log(showFields)
   const handleSubmit = (values) => {
     if (values) {
       const SectionformData = {
@@ -137,7 +155,10 @@ const SectionMasterForm = ({ sectionData }) => {
         noOfpointToClaim: values?.noOfpointToClaim
           ? values?.noOfpointToClaim
           : null,
-        pointToClaim: values?.pointToClaim ? values?.pointToClaim : false,
+        pointToClaim:
+        typeof values?.pointToClaim === "boolean"
+          ? values.pointToClaim
+          : values?.pointToClaim === "true",
         ...(sectionData && { id: sectionData.id }),
       };
 
@@ -147,24 +168,15 @@ const SectionMasterForm = ({ sectionData }) => {
         dispatch(onPostsectionMaster(SectionformData));
       }
       setShowFields(false);
-      setInitialValue({
-        sectionName: "",
-        sectionType: "",
-        enabled: "",
-        displayOrder: "",
-        displayLimit: "",
-        text: "",
-        claimLimit: "",
-        pointToClaim: "",
-        noOfpointToClaim: "",
-        segmentId: "",
-      });
+
     }
   };
 
   useEffect(() => {
     if (sectionMasterData?.post_status_code === "201") {
+
       toast.success(sectionMasterData.postMessage);
+      setInitialValue(resetState)
       dispatch(onGetsectionMaster());
       dispatch(onPostsectionMasterReset());
     } else if (sectionMasterData?.post_status_code) {
@@ -200,13 +212,11 @@ const SectionMasterForm = ({ sectionData }) => {
                   <div className="containers-fluid">
                     <Formik
                       initialValues={intialValue}
-
                       validationSchema={validations}
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
                       {({ errors, touched, values }) => (
-
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
@@ -246,7 +256,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                     : ""
                                 }`}
                                 onChange={(e) => {
-                                  setShowFields(e === "SpecialSection");
+                                  setShowFields(e || false);
                                 }}
                               />
                               <ErrorMessage
@@ -255,7 +265,6 @@ const SectionMasterForm = ({ sectionData }) => {
                                 className="error-message"
                               />
                             </div>
-
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 {display_order}
@@ -300,7 +309,7 @@ const SectionMasterForm = ({ sectionData }) => {
                               />
                             </div>
 
-                            {showFields && (
+                            {( values?.sectionType && showFields!=="UnlockStaticCard" )&& (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{text_label}</label>
                                 <Field
@@ -315,7 +324,8 @@ const SectionMasterForm = ({ sectionData }) => {
                                 />
                               </div>
                             )}
-                            {showFields && (
+
+                            {showFields === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{claim_limit}</label>
                                 <Field
@@ -335,7 +345,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                 />
                               </div>
                             )}
-                            {showFields && (
+                            {showFields === "SpecialSection" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
@@ -349,11 +359,11 @@ const SectionMasterForm = ({ sectionData }) => {
                                 </div>
                               </div>
                             )}
-                            {values.pointToClaim && showFields && (
+                            {values.pointToClaim && (
                               <div className="col-sm-4 form-group mb-1">
                                 <label>{no_Of_Points_To_Claim}</label>
                                 <Field
-                                  type="number"
+                                  type="text"
                                   name="noOfpointToClaim"
                                   className={`form-control ${
                                     errors.noOfpointToClaim &&
@@ -370,7 +380,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                 />
                               </div>
                             )}
-                            {showFields && (
+                            {showFields === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-2 ">
                                 <label>{segment_label}</label>
 

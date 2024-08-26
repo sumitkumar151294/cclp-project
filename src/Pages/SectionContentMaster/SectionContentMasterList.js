@@ -5,7 +5,7 @@ import InputField from "../../Components/InputField/InputField";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import Loader from "../../Components/Loader/Loader";
 import SectionContentMasterForm from "./SectionContentMasterForm";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -75,21 +75,8 @@ const SectionContentMasterList = () => {
   }, []);
   const handleSumbit = (sectionContent, isEdit) => {
     const sectionMasterData = {
-      id: sectionContent.id,
-      enabled: sectionContent.enabled,
+      ...sectionContent,
       deleted: true,
-      createdBy: 0,
-      updatedBy: 0,
-      clientId: 6,
-      sectionMasterId: sectionContent?.sectionMasterId,
-      webImage: sectionContent?.webImage,
-      mobImage: sectionContent?.mobImage,
-      cta: sectionContent?.cta,
-      text: sectionContent?.text,
-      displayOrder: sectionContent?.displayOrder,
-      contentSourceType: sectionContent?.contentSourceType,
-      linkedMasterId: sectionContent?.linkedMasterId,
-      segmentId: sectionContent?.sectionContent,
     };
     if (isEdit) {
       setSectionContentData(sectionMasterData);
@@ -102,7 +89,7 @@ const SectionContentMasterList = () => {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onUpdateSectionContentMasterReset());
-    }else if (getSectionContenMasterData?.post_status_code === "205") {
+    } else if (getSectionContenMasterData?.post_status_code === "205") {
       setSectionContentData({
         webImage: "",
         mobImage: "",
@@ -159,9 +146,9 @@ const SectionContentMasterList = () => {
               </div>
               <div className="card-body">
                 {getSectionContenMasterData?.isgetLoading ||
-                getSectionContenMasterData?.isUpdateLoading ||
-                (getSectionContenMasterData?.isUpdateLoading &&
-                  getSectionContenMasterData?.update_status_code == "205") ? (
+                  getSectionContenMasterData?.isUpdateLoading ||
+                  (getSectionContenMasterData?.isUpdateLoading &&
+                    getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -180,6 +167,8 @@ const SectionContentMasterList = () => {
                                 <th>{content_source_type}</th>
                                 <th>{segment_label}</th>
                                 <th>{text_label}</th>
+                                <th>{"Status"}</th>
+                                <th>{"Over-Ride Data"}</th>
                                 <th>{action_label}</th>
                               </tr>
                             </thead>
@@ -231,6 +220,30 @@ const SectionContentMasterList = () => {
                                         <span className="hyphen">-</span>
                                       )}
                                     </td>
+                                    <td>
+                                          <span
+                                            className={
+                                              sectionContent.enabled
+                                                ? "badge badge-success"
+                                                : "badge badge-danger"
+                                            }
+                                          >
+                                            {sectionContent.enabled
+                                              ? "Active"
+                                              : "Non Active"}
+                                          </span>
+                                        </td>
+                                        <td>
+                                          {sectionContent?.isOverrideMetadata ? <Button
+
+text={"Edit Data"}
+
+className="btn btn-primary btn-sm float-right client_Btn"
+/>
+: "Not Allowed"}
+
+
+                                        </td>
                                     <td>
                                       <div className="d-flex">
                                         <Button

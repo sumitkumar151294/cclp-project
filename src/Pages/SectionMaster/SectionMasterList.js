@@ -138,12 +138,10 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0] !== undefined ? (
-        <>
-          {showError ? (
-            <PageError pageError={pageError} setPageError={setPageError} />
-          ) : (
-            <>
+
+
+
+
               {getRoleAccess[0]?.addAccess && (
                 <SectionMasterForm sectionData={sectionData} />
               )}
@@ -176,7 +174,7 @@ const SectionMasterList = () => {
                       </div>
                       <div className="card-body">
                         {SectionMaster?.isgetLoading ||
-                        SectionMaster?.isUpdateLoading ? (
+                          SectionMaster?.isUpdateLoading ? (
                           <div style={{ height: "200px" }}>
                             <Loader classType={"absoluteLoader"} />
                           </div>
@@ -217,9 +215,9 @@ const SectionMasterList = () => {
                                             SectionMasterData?.sectionType
                                           )
                                             ? SectionMasterData?.sectionType.replace(
-                                                /([a-z])([A-Z])/g,
-                                                "$1 $2"
-                                              )
+                                              /([a-z])([A-Z])/g,
+                                              "$1 $2"
+                                            )
                                             : SectionMasterData?.sectionType}
                                         </td>
                                         <td>
@@ -285,6 +283,7 @@ const SectionMasterList = () => {
                                               sectionId: SectionMasterData.id,
                                               sectionLimit:
                                                 SectionMasterData.displayLimit,
+                                              sectionName: SectionMasterData.sectionName
                                             }}
                                           >
                                             <Button
@@ -332,21 +331,10 @@ const SectionMasterList = () => {
                 </div>
               </div>
             </>
-          )}
-        </>
-      ) : (
-        <PageError
-          pageError={{
-            StatusCode: "401",
-            ErrorName: "Permission Denied",
-            ErrorDesription:
-              "Your application url is not registerd to our application",
-            url: "/",
-            buttonText: "Back to Home",
-          }}
-        />
-      )}
-    </>
+
+
+
+  
   );
 };
 

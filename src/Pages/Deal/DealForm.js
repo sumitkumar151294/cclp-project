@@ -172,17 +172,11 @@ const DealForm = ({ dealsData }) => {
       uploadImage?.post_status_code == "201"
     ) {
       const dealData = {
+        ...values,
         webImage: getwebImage,
         mobImage: getmobImage,
         clientId: 6,
         deleted: false,
-        displayOrder: values?.displayOrder,
-        startDate: values.startDate,
-        endDate: values.endDate,
-        name: values.name,
-        dealType: values.dealType,
-        category: values?.category,
-        alias: values.alias,
         enabled:
           typeof values?.enabled === "boolean"
             ? values.enabled
@@ -343,28 +337,6 @@ const DealForm = ({ dealsData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-3">
                               <label>
-                                {upload_image_for_web}
-                              </label>
-                              <input
-                                type="file"
-                                name="webImage"
-                                className={`form-control ${
-                                  errors.webImage && touched.webImage
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event, false)
-                                }
-                              />
-                              <ErrorMessage
-                                name="webImage"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-3">
-                              <label>
                                 {upload_image_for_phone}
                                 <span className="text-danger">*</span>
                               </label>
@@ -386,6 +358,29 @@ const DealForm = ({ dealsData }) => {
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-3">
+                              <label>
+                                {upload_image_for_web}
+                              </label>
+                              <input
+                                type="file"
+                                name="webImage"
+                                className={`form-control ${
+                                  errors.webImage && touched.webImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, false)
+                                }
+                              />
+                              <ErrorMessage
+                                name="webImage"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+
                             <div className="col-sm-4 form-group mb-3">
                               <label>{start_date_label}</label>
                               <Field

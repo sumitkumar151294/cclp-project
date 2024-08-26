@@ -22,6 +22,7 @@ const UserMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage] = useState(5);
   const [userMasterData, setuserMasterData] = useState();
+  const roleList = useSelector((state) => state?.userRoleReducer);
   const dispatch = useDispatch();
   //To get the labels from API
   const user_list_label = GetTranslationData(
@@ -170,7 +171,7 @@ const UserMasterList = () => {
               </div>
               <div className="card-body">
                 {userList?.isgetLoading ||
-                userList?.isUpdateLoading ||
+                userList?.isUpdateLoading || roleList?.isgetLoading ||
                 (userList?.update_status_code === "205" &&
                   userList?.isPostLoading) ? (
                   <div style={{ height: "200px" }}>

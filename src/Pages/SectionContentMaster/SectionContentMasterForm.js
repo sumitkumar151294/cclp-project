@@ -92,13 +92,20 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   );
   const location = useLocation();
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  const dealOptions = getDealData?.map((dealCategory) => ({
+  const dealOptions = getDealData?.filter(dealData=>dealData?.dealType==="UnlockDeals").map((dealCategory) => ({
     value: dealCategory.id,
     label: dealCategory.name,
   }));
   const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  // options for status
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
@@ -108,6 +115,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   const uploadImage = useSelector((state) => state.uploadReducer);
 
   const type = location?.state?.sectionType;
+  const sectionName = location?.state?.sectionName;
   const typeID = location?.state?.sectionId;
   const sectionLimit = location?.state?.sectionLimit;
   // get labels and placeholder from translation
@@ -119,34 +127,17 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     text: "",
     contentSourceType: "",
     segmentId: "",
+    textElementFlag:"",
+    textbgColor:"",
+    enabled:"",
+    isOverrideMetadata:""
   });
   const [showFeild, setShowFields] = useState("");
     const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
-    webImage: Yup.lazy(() =>
-      [
-        "Banner",
-        "SupportingBanner",
-        "CustomerBenefits",
-        "SpecialSection",
-        "SpecialBannerOne",
-        "SpecialBannerTwo",
-        "SupportingBannerBottom",
-      ].includes(type)
-        ? Yup.string().required(web_image_required)
-        : Yup.string()
-    ),
     mobImage: Yup.lazy(() =>
-      [
-        "Banner",
-        "CustomerBenefits",
-        "SupportingBanner",
-        "SpecialSection",
-        "SpecialBannerOne",
-        "SpecialBannerTwo",
-        "SupportingBannerBottom",
-      ].includes(type)
+  type !== "UnlockStaticCard"
         ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
@@ -164,6 +155,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
             )
         : Yup.string().nullable()
     ),
+    enabled: Yup.string().required(status_required),
+
   });
 
   const displayLimit =
@@ -184,17 +177,19 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       }
     } else {
       const sectionContentMasteData = {
+        ...values,
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         webImage: webImage || "",
         mobImage: mobImage || "",
         clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
-        displayOrder: values?.displayOrder,
-        linkedMasterId: values?.linkedMasterId || null,
+        linkedMasterId: [2],
         segmentId: values?.segmentId || null,
-        contentSourceType: values.contentSourceType || "",
-        cta: values?.cta,
-        text: values?.text || "",
+        isOverrideMetadata:
+        typeof values?.isOverrideMetadata === "boolean"
+          ? values.isOverrideMetadata
+          : values?.isOverrideMetadata === "true",
         ...(sectionContentData && { id: values.id }),
       };
 
@@ -207,18 +202,21 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   useEffect(() => {
     if (uploadImage) {
       const sectionContentMasteData = {
+        ...values,
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         webImage: sectionContentData?.webImage,
         mobImage: sectionContentData?.mobImage,
         clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
-        displayOrder: values?.displayOrder,
-        linkedMasterId: values?.linkedMasterId || null,
+        linkedMasterId: [4],
+        isOverrideMetadata:
+        typeof values?.isOverrideMetadata === "boolean"
+          ? values.isOverrideMetadata
+          : values?.isOverrideMetadata === "true",
         segmentId: values?.segmentId || null,
-        contentSourceType: values?.contentSourceType || "",
-        cta: values?.cta,
-        text: values?.text || "",
         ...(sectionContentData && { id: values?.id }),
+
       };
       let shouldDispatch = false;
       if (
@@ -251,8 +249,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       setFieldValue("mobImage", formData);
     } else {
       setFieldValue("webImage", formData);
-    }
-  };
+
+    }}
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
       toast.success(getSectiontContentMasterData?.postMessage);
@@ -296,7 +294,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">
-                  {section_content_master} {type && `(${type})`}
+                  {section_content_master} {type && `(Type:${type}, Name:${sectionName} )`}
                 </h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
@@ -320,51 +318,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched, setFieldValue }) => (
+                      {({ errors, touched,values, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            {(type === "Banner" ||
-                              type === "CustomerBenefits" ||
-                              type === "SupportingBanner" ||
-                              type === "SpecialSection" ||
-                              type === "SpecialBannerOne" ||
-                              type === "SpecialBannerTwo" ||
-                              type === "SupportingBannerBottom") && (
-                              <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {upload_image_for_web}
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <input
-                                  type="file"
-                                  name="webImage"
-                                  className={`form-control ${
-                                    errors.webImage && touched.webImage
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  onChange={(event) =>
-                                    handleImageChange(
-                                      setFieldValue,
-                                      event,
-                                      false
-                                    )
-                                  }
-                                />
-                                <ErrorMessage
-                                  name="webImage"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
-                            {(type === "Banner" ||
-                              type === "CustomerBenefits" ||
-                              type === "SupportingBanner" ||
-                              type === "SpecialSection" ||
-                              type === "SpecialBannerOne" ||
-                              type === "SpecialBannerTwo" ||
-                              type === "SupportingBannerBottom") && (
+
+                            {(type !== "UnlockStaticCard") && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Phone
@@ -388,6 +346,34 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                                 <ErrorMessage
                                   name="mobImage"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                             {(type !== "UnlockStaticCard" ) && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>
+                                  {upload_image_for_web}
+                                </label>
+                                <input
+                                  type="file"
+                                  name="webImage"
+                                  className={`form-control ${
+                                    errors.webImage && touched.webImage
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(event) =>
+                                    handleImageChange(
+                                      setFieldValue,
+                                      event,
+                                      false
+                                    )
+                                  }
+                                />
+                                <ErrorMessage
+                                  name="webImage"
                                   component="div"
                                   className="error-message"
                                 />
@@ -428,7 +414,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 <Field
                                   name="linkedMasterId"
                                   component={Dropdown}
-                                  options={dealOptions}
+                                  options={showFeild === "Deal" ? dealOptions : dealOptions}
                                   className={`form-select ${
                                     errors.linkedMasterId &&
                                     touched.linkedMasterId
@@ -443,13 +429,27 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
+                              { (showFeild === "Product" && values.linkedMasterId)&& (
+                            <div className="col-lg-4 py-4">
+                                <div className="form-check  mb-2 padd mt-2">
+                                  <Field
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="isOverrideMetadata"
+
+                                  />
+                                  <label className="px-1">
+                                    {"is Over-ride MetaData"}
+                                  </label>
+                                </div>
+                              </div>)}
                             {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{segment_label}</label>
                                 <Field
                                   name="segmentId"
                                   component={Dropdown}
-                                  options={contentSourceTypeOptions}
+
                                   className={`form-select ${
                                     errors.segmentId && touched.segmentId
                                       ? "is-invalid"
@@ -467,11 +467,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {(type === "UnlockStaticCard" ||
-                              type === "SupportingBanner" ||
-                              type === "SpecialSection" ||
-                              type === "SpecialBannerOne" ||
-                              type === "SupportingBannerBottom") && (
+                            {(type === "UnlockStaticCard" ) && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
                                 <Field
@@ -513,7 +509,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2 ">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>{call_to_action}</label>
                               <Field
                                 type="text"
@@ -524,7 +520,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 placeholder={call_to_action_placeholder}
                               />
                             </div>
-                            {type === "CustomerBenefits" && (
+                            {type === "CustomerBenefits"   && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>{text_label}</label>
                                 <Field
@@ -539,7 +535,96 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
+                              {type === "CustomerBenefits" && (
+                            <div className="col-lg-4 py-4">
+                                <div className="form-check  mb-2 padd mt-2">
+                                  <Field
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="textElementFlag"
 
+                                  />
+                                  <label className="px-1">
+                                    {"Text Element Required"}
+                                  </label>
+                                </div>
+                              </div>)}
+
+                              {values?.textElementFlag && (
+                              <div className="col-sm-3 form-group mb-2">
+                                <label>{"Text Font Color"}</label>
+                                <Field
+                                  type="color"
+                                  name="textColor"
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
+                              </div>
+                            )}
+                              {values?.textElementFlag && (
+                              <div className="col-sm-3 form-group mb-2">
+                                <label>{"Text Background Color"}</label>
+                                <Field
+                                  type="color"
+                                  name="textbgColor"
+                                  className={`form-control ${
+                                    errors.text && touched.text
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
+                              </div>
+                            )}
+                                       {values?.textElementFlag && (
+                                <div className="col-sm-4 form-group mb-2">
+                                <label>
+                                  Upload Image For Text Element
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <input
+                                  type="file"
+                                  name="textIcon"
+                                  className={`form-control ${
+                                    errors.textIcon && touched.textIcon
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  onChange={(event) =>
+                                    handleImageChange(
+                                      setFieldValue,
+                                      event,
+                                      true
+                                    )
+                                  }
+                                />
+                                <ErrorMessage
+                                  name="textIcon"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>)}
+                              <div className="col-sm-4 form-group mb-2 ">
+                              <label>{status_label}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
                                 text={sectionContentData ? update : submit}
@@ -548,6 +633,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                               />
                             </div>
                           </div>
+
                         </Form>
                       )}
                     </Formik>

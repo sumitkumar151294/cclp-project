@@ -172,7 +172,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
               </div>
               <div className="card-body">
 
-                {roleList?.getUserRoleLoading ||  getUserMaster?.isUpdateLoading || getUserMaster?.isPostLoading? (
+                {roleList?.isgetLoading ||  getUserMaster?.isUpdateLoading || getUserMaster?.isPostLoading? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
