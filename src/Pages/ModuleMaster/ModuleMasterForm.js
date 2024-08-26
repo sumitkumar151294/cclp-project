@@ -13,9 +13,12 @@ import {
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-import { onPostuploadImage, onPostuploadImageReset } from "../../Store/Slices/uploadSlice";
+import {
+  onPostuploadImage,
+  onPostuploadImageReset,
+} from "../../Store/Slices/uploadSlice";
 
-const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
+const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
@@ -77,7 +80,7 @@ const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
     routePath: "",
     icon: "",
     displayOrder: "",
-    enabled: false, // Default to false (boolean)
+    enabled: "", // Default to false (boolean)
   });
 
   // reset all fields
@@ -120,15 +123,10 @@ const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
               ? values.enabled
               : values?.enabled === "true",
           clientId: 6,
-          name: values?.name,
-          routePath: values?.routePath,
-          icon: values?.icon,
-          displayOrder: values?.displayOrder,
-          id: values?.id,
+          ...(moduleMasterData && { id: values.id }),
         };
         dispatch(onUpdateModuleMaster(moduleData));
         setInitialValue(reset);
-        setModuleMasterData("");
       }
     }
   };
@@ -150,21 +148,9 @@ const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
         ...(moduleMasterData && { id: values.id }),
       };
       dispatch(onPostModule(moduleData));
-      setModuleMasterData("");
+      setInitialValue(reset);
     }
   }, [uploadImage, values]);
-  // useEffect(() => {
-  //   if (moduleMasterData) {
-  //     setInitialValue({
-  //       name: moduleMasterData?.name || "",
-  //       routePath: moduleMasterData?.routePath || "",
-  //       icon: moduleMasterData?.icon || "",
-  //       displayOrder: moduleMasterData?.displayOrder || "",
-  //       enabled: moduleMasterData?.enabled ?? false, // Ensure boolean
-  //     });
-  //     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //   }
-  // }, [moduleMasterData]);
 
   // to handle navigation and toast notifications based on module master status
   useEffect(() => {
@@ -178,7 +164,7 @@ const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
       dispatch(onGetModule());
       dispatch(onPostModuleReset());
       setInitialValue(reset);
-    }else if (moduleData?.status_code) {
+    } else if (moduleData?.status_code) {
       toast.error(moduleData.message);
       dispatch(onPostModuleReset());
     }
@@ -266,9 +252,7 @@ const ModuleMasterForm = ({ moduleMasterData,setModuleMasterData }) => {
                               type="file"
                               name="icon"
                               className={`form-control ${
-                                errors.icon && touched.icon
-                                  ? "is-invalid"
-                                  : ""
+                                errors.icon && touched.icon ? "is-invalid" : ""
                               }`}
                               onChange={(event) =>
                                 handleImageChange(setFieldValue, event)

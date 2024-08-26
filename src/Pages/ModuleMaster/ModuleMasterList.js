@@ -4,7 +4,11 @@ import ModuleMasterForm from "./ModuleMasterForm";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
-import { onGetModule, onUpdateModuleMaster, onUpdateModuleMasterReset } from "../../Store/Slices/moduleSlice";
+import {
+  onGetModule,
+  onUpdateModuleMaster,
+  onUpdateModuleMasterReset,
+} from "../../Store/Slices/moduleSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import InputField from "../../Components/InputField/InputField";
 import NoRecord from "../../Components/NoRecord/NoRecord";
@@ -60,7 +64,7 @@ const ModuleMasterList = () => {
     getModuleData?.filter((data) =>
       data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
     );
-    // modal for delete warning
+  // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
       title: "Are you sure?",
@@ -114,7 +118,12 @@ const ModuleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && <ModuleMasterForm moduleMasterData={moduleMasterData} setModuleMasterData={setModuleMasterData}/>}
+      {getRoleAccess[0]?.addAccess && (
+        <ModuleMasterForm
+          moduleMasterData={moduleMasterData}
+          setModuleMasterData={setModuleMasterData}
+        />
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -156,8 +165,8 @@ const ModuleMasterList = () => {
                           <th>{display_order}</th>
                           <th>{status_label}</th>
                           {getRoleAccess[0]?.editAccess && (
-                              <th>{action_label}</th>
-                            )}
+                            <th>{action_label}</th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -167,43 +176,47 @@ const ModuleMasterList = () => {
                             <tr key={index}>
                               <td>{module.name}</td>
                               <td>{module.routePath}</td>
-                              <td>{module.icon}</td>
+                              <td>
+                                <img
+                                  src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${module.icon}`}
+                                  style={{ width: "50px" }}
+                                  alt="mobImage"
+                                />
+                              </td>
                               <td>{module.displayOrder}</td>
                               <td>
-                                  <span
-                                    className={
-                                      module.enabled
-                                        ? "badge badge-success"
-                                        : "badge badge-danger"
-                                    }
-                                  >
-                                    {module.enabled
-                                      ? active_label
-                                      : non_active_label}
-                                  </span>
+                                <span
+                                  className={
+                                    module.enabled
+                                      ? "badge badge-success"
+                                      : "badge badge-danger"
+                                  }
+                                >
+                                  {module.enabled
+                                    ? active_label
+                                    : non_active_label}
+                                </span>
+                              </td>
+                              {getRoleAccess[0]?.editAccess && (
+                                <td>
+                                  <div className="d-flex">
+                                    <Button
+                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                      end_icon={"fas fa-pencil-alt"}
+                                      onClick={() =>
+                                        handleSubmit(module, {
+                                          isEdit: true,
+                                        })
+                                      }
+                                    />
+                                    <Button
+                                      className="btn btn-danger shadow btn-xs sharp"
+                                      end_icon={"fa fa-trash"}
+                                      onClick={() => showAlert(module)}
+                                    />
+                                  </div>
                                 </td>
-                                {getRoleAccess[0]?.editAccess && (
-                                  <td>
-                                    <div className="d-flex">
-                                      <Button
-                                        className="btn btn-primary shadow btn-xs sharp me-1"
-                                        end_icon={"fas fa-pencil-alt"}
-                                        onClick={() =>
-                                          handleSubmit(module, {
-                                            isEdit: true,
-                                          })
-                                        }
-                                      />
-                                      <Button
-                                        className="btn btn-danger shadow btn-xs sharp"
-                                        end_icon={"fa fa-trash"}
-                                        onClick={() =>
-                                          showAlert(module)
-                                        }
-                                      />
-                                    </div>
-                                  </td>
-                                )}
+                              )}
                             </tr>
                           ))}
                       </tbody>
