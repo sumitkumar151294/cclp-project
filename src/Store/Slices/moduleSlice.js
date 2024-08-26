@@ -108,10 +108,47 @@ export const moduleSlice = createSlice({
         isError: false,
       };
     },
+    onUpdateModuleMaster: (state) => {
+      return {
+        ...state,
+        isUpdateLoading: true,
+        updateModuleMasterData: [],
+        updateMessage: "",
+      };
+    },
 
+    onUpdateModuleMasterSuccess: (state, { payload }) => {
+      const {data=[], message = "", status_code = "201" } = payload;
+      return {
+        ...state,
+        isUpdateLoading: false,
+        updateModuleMasterData:data,
+        updateMessage:message,
+        update_status_code:status_code,
+      };
+    },
+
+    onUpdateModuleMasterError: (state, { payload }) => {
+      const {data=[], message = "", status_code = 400 } = payload;
+      return {
+        ...state,
+        updateModuleMasterData:data,
+        updateMessage:message,
+        update_status_code:status_code,
+        isUpdateLoading: false,
+      };
+    },
+    onUpdateModuleMasterReset: (state) => {
+      return {
+        ...state,
+        updateMessage:"",
+        updateModuleMasterData:[],
+        update_status_code:null,
+      };
+    },
   },
 });
-export const {allowModules, resetAllowModules,onGetModule, onGetModuleSuccess, onGetModuleError ,onGetModuleReset,onPostModule,onPostModuleSuccess,onPostModuleError,onPostModuleReset } =
+export const {allowModules, resetAllowModules,onGetModule, onGetModuleSuccess, onGetModuleError ,onGetModuleReset,onPostModule,onPostModuleSuccess,onPostModuleError,onPostModuleReset,onUpdateModuleMaster,onUpdateModuleMasterSuccess,onUpdateModuleMasterError,onUpdateModuleMasterReset } =
 moduleSlice.actions;
 
 export default moduleSlice.reducer;

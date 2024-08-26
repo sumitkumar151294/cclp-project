@@ -509,6 +509,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 className="error-message"
                               />
                             </div>
+                            {(type !== "UnlockStaticCard" ) && (
                             <div className="col-sm-4 form-group mb-4">
                               <label>{call_to_action}</label>
                               <Field
@@ -519,7 +520,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 }`}
                                 placeholder={call_to_action_placeholder}
                               />
-                            </div>
+                            </div>)}
                             {type === "CustomerBenefits"   && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>{text_label}</label>

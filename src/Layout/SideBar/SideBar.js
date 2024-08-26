@@ -62,14 +62,7 @@ const SideBar = () => {
     sessionStorage.clear();
     navigate("/");
   };
-  // function to dynamically import icons based on the icon name
-  const iconDynamic = (icon) => {
-    try {
-      return require(`../../Assets/icon/${icon}.png`);
-    } catch (error) {
-      throw error;
-    }
-  };
+
   // to add an active class to the clicked navigation item
   const hanleClick = (e, moduleId) => {
     document.querySelectorAll(".mm-active").forEach((e) => {
@@ -81,7 +74,7 @@ const SideBar = () => {
   };
   // filter and set sidebar modules based on user role access
   useEffect(() => {
-    if (!getModule?.isLoading && userRoleModuleAccess?.length ) {
+    if (!getModule?.isLoading && userRoleModuleAccess?.length) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
       const filterData = userRoleModuleAccess?.filter((item) => {
         return (
@@ -137,7 +130,7 @@ const SideBar = () => {
   return (
     <div className="deznav">
       <div className="deznav-scroll mm-active ps ps--active-y">
-        { getModule?.isLoading ? (
+        {getModule?.isLoading ? (
           <div style={{ height: "400px" }}>
             <Loader classType={"absoluteLoader"} />
           </div>
@@ -150,16 +143,17 @@ const SideBar = () => {
                   className={`nav-icn ${
                     sideBar.routePath === currentUrl.pathname ? "mm-active" : ""
                   }`}
-                  onClick={(e) => hanleClick(e, sideBar.id)}>
+                  onClick={(e) => hanleClick(e, sideBar.id)}
+                >
                   <Link
                     className="ai-icon"
                     to={sideBar.routePath}
                     aria-expanded="false"
                   >
                     <img
-                      className="w-20px"
-                      src={iconDynamic(sideBar.icon)}
-                      alt={sideBar.icon}
+                      src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sideBar.icon}`}
+                      style={{ width: "50px" }}
+                      alt="mobImage"
                     />
                     <span className="nav-text ps-1">{sideBar.name}</span>
                   </Link>

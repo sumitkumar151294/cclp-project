@@ -4,13 +4,21 @@ import ModuleMasterForm from "./ModuleMasterForm";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
-import { onGetModule } from "../../Store/Slices/moduleSlice";
+import {
+  onGetModule,
+  onUpdateModuleMaster,
+  onUpdateModuleMasterReset,
+} from "../../Store/Slices/moduleSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import InputField from "../../Components/InputField/InputField";
 import NoRecord from "../../Components/NoRecord/NoRecord";
+import Button from "../../Components/Button/Button";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const ModuleMasterList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [moduleMasterData, setModuleMasterData] = useState();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
@@ -25,6 +33,14 @@ const ModuleMasterList = () => {
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
     "search_here_label"
+  );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const display_order = GetTranslationData("UIMasterAdmin", "display_order");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const active_label = GetTranslationData("UIMasterAdmin", "active_label");
+  const non_active_label = GetTranslationData(
+    "UIMasterAdmin",
+    "non_active_label"
   );
   // to get module data from the Redux store
   const getModule = useSelector((state) => state?.moduleReducer);
@@ -48,6 +64,35 @@ const ModuleMasterList = () => {
     getModuleData?.filter((data) =>
       data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
     );
+  // modal for delete warning
+  const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSubmit(data);
+      }
+    });
+  };
+  //to handle edit and delete
+  const handleSubmit = (moduleInfo, isEdit) => {
+    const userData = {
+      ...moduleInfo,
+      deleted: true,
+    };
+    if (isEdit) {
+      setModuleMasterData(userData);
+    } else {
+      dispatch(onUpdateModuleMaster(userData));
+    }
+  };
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -55,10 +100,30 @@ const ModuleMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
+  useEffect(() => {
+    if (getModule?.update_status_code == "204") {
+      toast.success(getModule?.updateMessage);
+      dispatch(onGetModule());
+      dispatch(onUpdateModuleMasterReset());
+    } else if (getModule?.update_status_code == "205") {
+      toast.success(getModule?.updateMessage);
+      setModuleMasterData(null);
+      dispatch(onGetModule());
+      dispatch(onUpdateModuleMasterReset());
+    } else if (getModule?.update_status_code) {
+      toast.error(getModule?.updateMessage);
+      dispatch(onUpdateModuleMasterReset());
+    }
+  }, [getModule]);
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && <ModuleMasterForm />}
+      {getRoleAccess[0]?.addAccess && (
+        <ModuleMasterForm
+          moduleMasterData={moduleMasterData}
+          setModuleMasterData={setModuleMasterData}
+        />
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -97,16 +162,61 @@ const ModuleMasterList = () => {
                           <th>{module_name}</th>
                           <th>{module_route_path}</th>
                           <th>{module_icon}</th>
+                          <th>{display_order}</th>
+                          <th>{status_label}</th>
+                          {getRoleAccess[0]?.editAccess && (
+                            <th>{action_label}</th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
                         {filteredData
                           ?.slice(startIndex, endIndex)
-                          ?.map((data, index) => (
+                          ?.map((module, index) => (
                             <tr key={index}>
-                              <td>{data.name}</td>
-                              <td>{data.routePath}</td>
-                              <td>{data.icon}</td>
+                              <td>{module.name}</td>
+                              <td>{module.routePath}</td>
+                              <td>
+                                <img
+                                  src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${module.icon}`}
+                                  style={{ width: "50px" }}
+                                  alt="mobImage"
+                                />
+                              </td>
+                              <td>{module.displayOrder}</td>
+                              <td>
+                                <span
+                                  className={
+                                    module.enabled
+                                      ? "badge badge-success"
+                                      : "badge badge-danger"
+                                  }
+                                >
+                                  {module.enabled
+                                    ? active_label
+                                    : non_active_label}
+                                </span>
+                              </td>
+                              {getRoleAccess[0]?.editAccess && (
+                                <td>
+                                  <div className="d-flex">
+                                    <Button
+                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                      end_icon={"fas fa-pencil-alt"}
+                                      onClick={() =>
+                                        handleSubmit(module, {
+                                          isEdit: true,
+                                        })
+                                      }
+                                    />
+                                    <Button
+                                      className="btn btn-danger shadow btn-xs sharp"
+                                      end_icon={"fa fa-trash"}
+                                      onClick={() => showAlert(module)}
+                                    />
+                                  </div>
+                                </td>
+                              )}
                             </tr>
                           ))}
                       </tbody>

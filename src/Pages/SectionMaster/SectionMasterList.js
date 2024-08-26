@@ -272,7 +272,7 @@ const SectionMasterList = () => {
                                   >
                                     <Button
                                       disabled={!SectionMasterData?.enabled}
-                                      text={"Update"}
+                                      text={"Customize"}
                                       end_icon={"fa fa-eye"}
                                       className="btn btn-primary btn-sm float-right client_Btn"
                                     />
