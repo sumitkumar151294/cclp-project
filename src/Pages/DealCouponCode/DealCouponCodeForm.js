@@ -56,7 +56,6 @@ const DealCouponCodeForm = () => {
   // to handle form submit
   const handleSubmit = (values) => {
     if (values) {
-      console.log(values)
       dispatch(onPostDealCouponCode(values));
     }
   };
