@@ -101,8 +101,7 @@ const formatDate = (datetime) => {
     const dealCoupounId = couponLabelMap[data.dealCoupounId]?.toLowerCase() || '';
     return dealCoupounId.includes(searchQuery?.toLowerCase());
   });
-  
-  console.log(filteredData);
+  // to search data
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -124,10 +123,6 @@ const formatDate = (datetime) => {
     if (getDealCouponFeq?.update_status_code == "204") {
       toast.success(getDealCouponFeq?.updateMessage);
       dispatch(onGetDealCouponFreq());
-      dispatch(onUpdateDealCouponFreqReset());
-    }
-    else if (getDealCouponFeq?.update_status_code) {
-      toast.error(getDealCouponFeq?.updateMessage);
       dispatch(onUpdateDealCouponFreqReset());
     }
   }, [getDealCouponFeq]);

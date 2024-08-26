@@ -26,7 +26,6 @@ const API = {
   dealCategory:"deal-category",
   //deal-coupon
   dealCoupon:"deal-coupoun",
-
   //deal-coupon-code
   dealCouponCode:"deal-coupon-code",
   // upload image path

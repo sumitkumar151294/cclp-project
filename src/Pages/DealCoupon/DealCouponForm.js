@@ -143,7 +143,6 @@ const DealCouponForm = () => {
     }
   }, [uploadImage, values]);
   // to handle navigation and toast notifications based on deal coupon status
-  console.log(dealCouponData)
   useEffect(() => {
     if (dealCouponData?.post_status_code === "201") {
       toast.success(dealCouponData.postMessage);

@@ -8,13 +8,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import Select from "react-select";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import { onGetDealCouponFreq, onPostDealCouponFreq, onPostDealCouponFreqReset, onUpdateDealCouponFreq, onUpdateDealCouponFreqReset } from "../../Store/Slices/dealCouponFreqSlice";
+import {
+  onGetDealCouponFreq,
+  onPostDealCouponFreq,
+  onPostDealCouponFreqReset,
+  onUpdateDealCouponFreq,
+  onUpdateDealCouponFreqReset,
+} from "../../Store/Slices/dealCouponFreqSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
 //to get weekday's name
 const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
   value: index + 1,
-  label: new Date(0, 0, index + 1).toLocaleString("default", { weekday: "long" }),
+  label: new Date(0, 0, index + 1).toLocaleString("default", {
+    weekday: "long",
+  }),
 }));
 // to get today's date
 const getTodayDate = () => {
@@ -29,48 +37,80 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   const todayDate = getTodayDate();
   const dispatch = useDispatch();
   // to get column heading name from translation
-  const deal_coupon_frequency = GetTranslationData("UIMasterAdmin", "deal_coupon_frequency");
+  const deal_coupon_frequency = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_coupon_frequency"
+  );
   const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
   const valid_from = GetTranslationData("UIMasterAdmin", "valid_from");
   const valid_to = GetTranslationData("UIMasterAdmin", "valid_to");
-  const select_week_days = GetTranslationData("UIMasterAdmin", "select_week_days");
+  const select_week_days = GetTranslationData(
+    "UIMasterAdmin",
+    "select_week_days"
+  );
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
-  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const deal_coupon_required = GetTranslationData("UIMasterAdmin", "deal_coupon_required");
-  const start_date_required = GetTranslationData("UIMasterAdmin", "start_date_required");
-  const end_date_required = GetTranslationData("UIMasterAdmin", "end_date_required");
+  const deal_coupon_required = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_coupon_required"
+  );
+  const start_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_required"
+  );
+  const end_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "end_date_required"
+  );
   const week_required = GetTranslationData("UIMasterAdmin", "week_required");
   // to get module data from the Redux store
-  const getDealCouponFeqData = useSelector((state) => state.dealCouponFreqReducer);
-  const getDealCouponData=useSelector((state) => state?.dealCouponReducer?.getDealCouponData);
- // initial state for the input fields
+  const getDealCouponFeqData = useSelector(
+    (state) => state.dealCouponFreqReducer
+  );
+  const getDealCouponData = useSelector(
+    (state) => state?.dealCouponReducer?.getDealCouponData
+  );
+  // initial state for the input fields
   const [initialValue, setInitialValue] = useState({
     dealCoupounId: "",
-    validfrom: "",
+    validFrom: "",
     validUpto: "",
     weekDayId: [],
     enabled: "",
   });
-  const dealCoupons = getDealCouponData ? getDealCouponData?.filter(data => data.title).map(data => ({
-        value: data.id,  // ID for API
-        label: data.title // Title for display
-      }))
+  const dealCoupons = getDealCouponData
+    ? getDealCouponData
+        ?.filter((data) => data.title)
+        .map((data) => ({
+          value: data.id, // ID for API
+          label: data.title, // Title for display
+        }))
     : [];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     dealCoupounId: Yup.string().required(deal_coupon_required),
-    validfrom: Yup.string().required(start_date_required),
+    validFrom: Yup.string().required(start_date_required),
     validUpto: Yup.string()
       .required(end_date_required)
-      .test('is-not-same', 'Valid From date and Valid To date must be different', function(value) {
-        const { validfrom } = this.parent;
-        if (!validfrom || !value) return true;
-        return new Date(value).getTime() !== new Date(validfrom).getTime();
+      .test("validDate", end_date_required, function (value) {
+        const { validFrom } = this.parent;
+        if (validFrom && new Date(value) < new Date(validFrom)) {
+          return this.createError({
+            path: "validUpto",
+            message: "Valid to date must be after or on the valid from date.",
+          });
+        }
+        return true;
       }),
-    weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.number().required() })).min(1, week_required),
-    enabled: Yup.string().required(status_required)
+    weekDayId: Yup.array()
+      .of(Yup.object().shape({ value: Yup.number().required() }))
+      .min(1, week_required),
+    enabled: Yup.string().required(status_required),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -78,14 +118,15 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       const dealFreqData = {
         ...values,
         deleted: false,
-        enabled:  typeof values?.enabled === "boolean"
-        ? values.enabled
-        : values?.enabled === "true",
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         clientId: 4,
         dealCoupounId: values?.dealCoupounId,
-        validfrom: values?.validfrom,
+        validFrom: values?.validFrom,
         validUpto: values?.validUpto,
-        weekDayId: values?.weekDayId?.map(day => day.value),
+        weekDayId: values?.weekDayId?.map((day) => day.value),
       };
       if (dealCouponFreq) {
         dealFreqData.id = dealCouponFreq.id;
@@ -95,7 +136,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       }
       setInitialValue({
         dealCoupounId: "",
-        validfrom: "",
+        validFrom: "",
         validUpto: "",
         weekDayId: [],
         enabled: "",
@@ -104,21 +145,24 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   };
   // options for status
   const statusOptions = [
-    { value: 'true', label: "Active" },
-    { value: 'false', label: "Non Active" },
+    { value: "true", label: "Active" },
+    { value: "false", label: "Non Active" },
   ];
   const formatDate = (datetime) => {
     if (!datetime) return todayDate;
-    return datetime.split('T')[0];
+    return datetime.split("T")[0];
   };
   useEffect(() => {
     if (dealCouponFreq) {
-      const weekDays = weekDayNames.filter(day => dealCouponFreq.weekDayId.includes(day.value));
-      const updatedValues={
-          validFrom:formatDate(dealCouponFreq.validFrom),
-          validUpto: formatDate(dealCouponFreq.validUpto),
-          weekDayId: weekDays,
-      }
+      const weekDays = weekDayNames.filter((day) =>
+        dealCouponFreq.weekDayId.includes(day.value)
+      );
+      const updatedValues = {
+        ...dealCouponFreq,
+        validFrom: formatDate(dealCouponFreq.validFrom),
+        validUpto: formatDate(dealCouponFreq.validUpto),
+        weekDayId: weekDays,
+      };
       setInitialValue(updatedValues);
     }
   }, [dealCouponFreq]);
@@ -192,46 +236,50 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{valid_from}
+                              <label>
+                                {valid_from}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="date"
-                                name="validfrom"
+                                name="validFrom"
                                 min={todayDate}
-                                className={`form-control ${errors.validfrom && touched.validfrom
+                                className={`form-control ${
+                                  errors.validFrom && touched.validFrom
                                     ? "is-invalid"
                                     : ""
-                                  }`}
-                                  onChange={(e) => {
-                                    setFieldValue("validfrom", e.target.value);
-                                  }}
+                                }`}
+                                onChange={(e) => {
+                                  setFieldValue("validFrom", e.target.value);
+                                }}
                               />
                               <ErrorMessage
-                                name="validfrom"
+                                name="validFrom"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{valid_to}
+                              <label>
+                                {valid_to}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="date"
                                 name="validUpto"
                                 min={todayDate}
-                                className={`form-control ${errors.validUpto && touched.validUpto
+                                className={`form-control ${
+                                  errors.validUpto && touched.validUpto
                                     ? "is-invalid"
                                     : ""
-                                  }`}
-                                  onChange={(e) => {
-                                    const validUptoDate = e.target.value;
-                                    setFieldValue("validUpto", validUptoDate);
-                                    if (!values.validfrom) {
-                                      setFieldValue("validfrom", todayDate);
-                                    }
-                                  }}
+                                }`}
+                                onChange={(e) => {
+                                  const validUptoDate = e.target.value;
+                                  setFieldValue("validUpto", validUptoDate);
+                                  if (!values.validFrom) {
+                                    setFieldValue("validFrom", todayDate);
+                                  }
+                                }}
                               />
                               <ErrorMessage
                                 name="validUpto"
@@ -240,7 +288,8 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{select_week_days}
+                              <label>
+                                {select_week_days}
                                 <span className="text-danger">*</span>
                               </label>
                               <Select
