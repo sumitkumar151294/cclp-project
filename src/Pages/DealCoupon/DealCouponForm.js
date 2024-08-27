@@ -160,11 +160,8 @@ const DealCouponForm = ({dealCouponDatas}) => {
         image: dealCouponDatas?.image || "",
         clientId: 6,
         deleted: false,
-        segmentId: 10,
-        cta: values?.cta,
-        typeOfCoupoun: values?.typeOfCoupoun,
-        dealid: values?.dealId,
-        title: values?.title,
+        segmentId:3,
+        // segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
@@ -187,11 +184,8 @@ const DealCouponForm = ({dealCouponDatas}) => {
         image: getImage,
         clientId: 6,
         deleted: false,
-        segmentId: 10,
-        cta: values?.cta,
-        typeOfCoupoun: values?.typeOfCoupoun,
-        dealid: values?.dealId,
-        title: values?.title,
+        segmentId:3,
+        // segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
@@ -201,15 +195,27 @@ const DealCouponForm = ({dealCouponDatas}) => {
   useEffect(() => {
     if (dealCouponData?.post_status_code === "201") {
       toast.success(dealCouponData.postMessage);
+      dispatch(onPostuploadImageReset())
+      dispatch(onPostDealCouponReset());
+      dispatch(onGetDealCoupon());
+    }else if (dealCouponData?.post_status_code === "205") {
+      toast.success(dealCouponData.postMessage);
+      dispatch(onPostuploadImageReset())
       dispatch(onPostDealCouponReset());
       dispatch(onGetDealCoupon());
     } else if (dealCouponData?.post_status_code) {
       toast.error(dealCouponData?.postMessage);
+      dispatch(onPostuploadImageReset())
       dispatch(onPostuploadImageReset());
       dispatch(onPostDealCouponReset());
     }
   }, [dealCouponData]);
-
+  useEffect(() => {
+    if (dealCouponDatas) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(dealCouponDatas);
+    }
+  }, [dealCouponDatas]);
   return (
     <>
       <ScrollToTop />

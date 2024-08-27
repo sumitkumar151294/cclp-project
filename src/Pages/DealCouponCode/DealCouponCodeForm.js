@@ -1,4 +1,4 @@
-  /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,16 +18,28 @@ const typeOfCoupon = [
   { value: 4, label: "Membership" },
 ];
 // options for status
+const dealCouponStatus = [
+  { value: "Active", label: "Active" },
+  { value: "Used" , label:"Used" },
+];
 const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
 const DealCouponCodeForm = () => {
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  const todayDate = getTodayDate();
   const dispatch = useDispatch();
   // to get labels and placeholders from translation  
-  const deal_coupon_code = GetTranslationData("UIMasterAdmin","deal_coupon_code");
-  const coupon_code = GetTranslationData("UIMasterAdmin","coupon_code");
-  const deal_coupon = GetTranslationData("UIMasterAdmin","deal_coupon");
+  const deal_coupon_code = GetTranslationData("UIMasterAdmin", "deal_coupon_code");
+  const coupon_code = GetTranslationData("UIMasterAdmin", "coupon_code");
+  const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
   const coupon_code_placeholder = GetTranslationData("UIMasterAdmin", "coupon_code_placeholder");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
@@ -39,19 +51,32 @@ const DealCouponCodeForm = () => {
     "status_required"
   );
   // to get deal coupon code data from redux store
-  const dealCouponCodeData=useSelector(state=>state.dealCouponCodeReducer);
+  const dealCouponCodeData = useSelector(state => state.dealCouponCodeReducer);
+  const getDealCoupon = useSelector((state) => state.dealCouponReducer?.getDealData);
+  const dealCouponsOptions = getDealCoupon
+  ?.filter(dealCoupon => dealCoupon?.enabled && (dealCoupon.typeOfCoupoun==="Membership" || dealCoupon.typeOfCoupoun==="Dynamic" ))
+  .map(dealCoupon => ({
+    value: dealCoupon.id,
+    label: dealCoupon.name
+  }));
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
-    couponCode: "",
-    dealCouponId: "",
-    enabled: "",
-
+    coupounCode: "",
+    dealCoupounId: "",
+    status: "",
+    startDate: "",
+    endDate: "",
+    descriptions: "",
+    enabled:""
   });
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    couponCode: Yup.string().required(coupon_code_required),
-    dealCouponId: Yup.string().required(deal_coupon_required),
-    enabled: Yup.string().required(status_required),
+    coupounCode: Yup.string().required("Coupon Code is required"),
+    dealCoupounId: Yup.string().required("Deal Coupon is required"),
+    enabled: Yup.string().required("Status is required"),
+    status: Yup.string().required("Coupon Status is required"),
+    startDate: Yup.string().required("Start Date is required"),
+    endDate: Yup.string().required("End Date is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -78,7 +103,7 @@ const DealCouponCodeForm = () => {
   //     setButton("Update")
   //   }
   // }, [templateTypeData])
- // to handle navigation and toast notifications based on deal coupon code status
+  // to handle navigation and toast notifications based on deal coupon code status
   return (
     <>
       <ToastContainer />
@@ -106,48 +131,84 @@ const DealCouponCodeForm = () => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{coupon_code}</label>
+                              <label>{"Coupon Code"}</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="text"
-                                name="couponCode"
-                                className={`form-control ${
-                                  errors.couponCode && touched.couponCode
+                                name="coupounCode"
+                                className={`form-control ${errors.coupounCode && touched.coupounCode
                                     ? "is-invalid"
                                     : ""
-                                }`}
-                                placeholder={coupon_code_placeholder}
+                                  }`}
+                                placeholder={"Enter Coupon Code"}
                               />
                               <ErrorMessage
-                                name="couponCode"
+                                name="coupounCode"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                               {deal_coupon}
+                                {"Deal Coupon"}
                                 <span className="text-danger">*</span>
                               </label>
 
                               <Field
-                                name="dealCouponId"
+                                name="dealCoupounId"
                                 component={Dropdown}
-                                options={typeOfCoupon}
-                                className={`form-select ${errors.dealCouponId && touched.dealCouponId
+                                options={dealCouponsOptions}
+                                className={`form-select ${errors.dealCoupounId && touched.dealCoupounId
                                   ? "is-invalid"
                                   : ""
                                   }`}
                               />
                               <ErrorMessage
-                                name="dealCouponId"
+                                name="dealCoupounId"
                                 component="div"
                                 className="error-message"
                               />
                             </div>
-
+                            <div className="col-sm-4 form-group mb-3">
+                              <label>{"Start Date"}</label>
+                              <Field
+                                type="date"
+                                name="startDate"
+                                min={todayDate}
+                                className={`form-control ${
+                                  errors.startDate && touched.startDate
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="startDate"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-3 ">
+                              <label>{"End Date"}</label>
+                              <Field
+                                type="date"
+                                name="endDate"
+                                min={todayDate}
+                                className={`form-control ${
+                                  errors.endDate && touched.endDate
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="endDate"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                             {status_label}
+                                {status_label}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -162,6 +223,27 @@ const DealCouponCodeForm = () => {
                               />
                               <ErrorMessage
                                 name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                                {"Deal Coupon Status"}
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <Field
+                                name="status"
+                                component={Dropdown}
+                                options={dealCouponStatus}
+                                className={`form-select ${errors.status && touched.status
+                                  ? "is-invalid"
+                                  : ""
+                                  }`}
+                              />
+                              <ErrorMessage
+                                name="status"
                                 component="div"
                                 className="error-message"
                               />
