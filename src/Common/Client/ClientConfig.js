@@ -11,7 +11,7 @@ export const config = [{
   PARTNER_KEY: "UIMasterAdmin",
 },
 {
-  API_URL: " https://qa-idfc-cclp-admin.ai-loyalty.com",
+  API_URL: " https://qa-idfc-cclp-admin.ai-loyalty.com/",
   ACCESS_KEY: "demo1",
   SECRET_KEY: "demo1",
   PARTNER_KEY: "UIMasterAdmin",

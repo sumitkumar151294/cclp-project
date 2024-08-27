@@ -141,9 +141,8 @@ const DealCategoryList = () => {
                                 <th>{web_image}</th>
                                 <th>{"Status"}</th>
 
-                                {getRoleAccess[0]?.editAccess && (
                                   <th>{action_label}</th>
-                                )}
+
                               </tr>
                             </thead>
                             <tbody>
@@ -181,7 +180,7 @@ const DealCategoryList = () => {
                                       : "Non Active"}
                                   </span>
                                 </td>
-                                    {getRoleAccess[0]?.editAccess && (
+
                                       <td>
                                         <div className="d-flex">
                                           <Button
@@ -202,7 +201,7 @@ const DealCategoryList = () => {
                                           />
                                         </div>
                                       </td>
-                                    )}
+
                                   </tr>
                                 ))}
                             </tbody>

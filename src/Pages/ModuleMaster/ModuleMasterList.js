@@ -164,9 +164,9 @@ const ModuleMasterList = () => {
                           <th>{module_icon}</th>
                           <th>{display_order}</th>
                           <th>{status_label}</th>
-                          {getRoleAccess[0]?.editAccess && (
+
                             <th>{action_label}</th>
-                          )}
+
                         </tr>
                       </thead>
                       <tbody>
@@ -197,7 +197,7 @@ const ModuleMasterList = () => {
                                     : non_active_label}
                                 </span>
                               </td>
-                              {getRoleAccess[0]?.editAccess && (
+
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -216,7 +216,7 @@ const ModuleMasterList = () => {
                                     />
                                   </div>
                                 </td>
-                              )}
+
                             </tr>
                           ))}
                       </tbody>

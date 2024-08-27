@@ -8,7 +8,11 @@ import InputField from "../../Components/InputField/InputField";
 import DealCouponForm from "./DealCouponForm";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetDeal } from "../../Store/Slices/dealSlice";
-import { onGetDealCoupon, onUpdateDealCoupon, onUpdateDealCouponReset } from "../../Store/Slices/dealCouponSlice";
+import {
+  onGetDealCoupon,
+  onUpdateDealCoupon,
+  onUpdateDealCouponReset,
+} from "../../Store/Slices/dealCouponSlice";
 import Swal from "sweetalert2";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { toast } from "react-toastify";
@@ -26,7 +30,8 @@ const DealCouponList = () => {
     (state) => state.moduleReducer?.filteredData
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-   // modal for delete warning
+
+  // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
       title: "Are you sure?",
@@ -39,22 +44,22 @@ const DealCouponList = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result?.value) {
-        // handleSubmit(data);
+        handleSubmit(data);
       }
     });
   };
   //to handle edit and delete
-  // const handleSubmit = (dealCouponDatas, isEdit) => {
-  //   const dealCouponData = {
-  //     ...dealCouponDatas,
-  //     deleted: true,
-  //   };
-  //   if (isEdit) {
-  //     setDealCouponDatas(dealCouponData);
-  //   } else {
-  //     dispatch(onUpdateDealCoupon(dealCouponData));
-  //   }
-  // };
+  const handleSubmit = (dealCouponDatas, isEdit) => {
+    const dealCouponData = {
+      ...dealCouponDatas,
+      deleted: true,
+    };
+    if (isEdit) {
+      setDealCouponDatas(dealCouponData);
+    } else {
+      dispatch(onUpdateDealCoupon(dealCouponData));
+    }
+  };
 
   // to handle pagination
   const [page, setPage] = useState(1);
@@ -64,8 +69,8 @@ const DealCouponList = () => {
   };
   // to filter getDealCoupon
   const filteredData = getDealCoupon?.getDealCouponData?.filter((data) => {
-    const couponCodeLower = data.coupounCode?.toLowerCase() || '';
-    return couponCodeLower.includes(searchQuery?.toLowerCase()) 
+    const couponCodeLower = data.coupounCode?.toLowerCase() || "";
+    return couponCodeLower.includes(searchQuery?.toLowerCase());
   });
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -136,7 +141,7 @@ const DealCouponList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                              <th>{"Title "}</th>
+                                <th>{"Title "}</th>
                                 <th>{"Coupoun Type"}</th>
                                 <th>{"Coupoun Code"}</th>
                                 <th>{"Offer Type"}</th>
@@ -155,15 +160,15 @@ const DealCouponList = () => {
 
                                 <th>{"Status "}</th>
 
-                                {getRoleAccess[0]?.editAccess && (
+
                                   <th>{"Action"}</th>
-                                )}
+
                               </tr>
                             </thead>
                             <tbody>
                               {filteredData
-                                .slice(startIndex, endIndex)
-                                .map((dealcoupoun, index) => (
+                                ?.slice(startIndex, endIndex)
+                                ?.map((dealcoupoun, index) => (
                                   <tr key={index}>
                                     <td>{dealcoupoun.title}</td>
                                     <td>{dealcoupoun.typeOfCoupoun}</td>
@@ -174,7 +179,12 @@ const DealCouponList = () => {
                                     </td>
                                     <td>{dealcoupoun.offerType}</td>
                                     <td>{dealcoupoun.offerSubType}</td>
-                                    <td>{dealcoupoun.offerTypeValue}</td>
+                                    <td>
+                                      {" "}
+                                      {dealcoupoun.offerTypeValue || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
                                     <td>
                                       {dealcoupoun.segmentId || (
                                         <span className="hyphen"> -</span>
@@ -183,21 +193,24 @@ const DealCouponList = () => {
                                     <td>
                                       {dealcoupoun.dealId ? (
                                         getDealData
-                                          .filter(
+                                          ?.filter(
                                             (deal) =>
-                                              deal.id === parseInt(dealcoupoun.dealId)
+                                              deal.id ===
+                                              parseInt(dealcoupoun.dealId)
                                           )
-                                          .map((filteredDeal) => (
+                                          ?.map((filteredDeal) => (
                                             <span key={filteredDeal.id}>
                                               {filteredDeal.name}
-                                            </span>   ))
+                                            </span>
+                                          ))
                                       ) : (
                                         <span className="hyphen"> - </span>
                                       )}
                                     </td>
                                     <td>{dealcoupoun.source}</td>
                                     <td>{dealcoupoun.offerId}</td>
-                                    <td>{dealcoupoun.cta}</td> <td>
+                                    <td>{dealcoupoun.cta}</td>{" "}
+                                    <td>
                                       {dealcoupoun.image ? (
                                         <img
                                           src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealcoupoun.image}`}
@@ -208,16 +221,14 @@ const DealCouponList = () => {
                                         <span className="hyphen"> -</span>
                                       )}
                                     </td>
-
                                     <td>
                                       {dealcoupoun.description || (
                                         <span className="hyphen"> -</span>
                                       )}
                                     </td>
                                     <td>{dealcoupoun.terms}</td>
-
-
-                                    <span
+                                    <td>
+                                      <span
                                         className={
                                           dealcoupoun.enabled
                                             ? "badge badge-success"
@@ -228,28 +239,25 @@ const DealCouponList = () => {
                                           ? "Active"
                                           : "Non Active"}
                                       </span>
-
-
-
-
-
-                                    {getRoleAccess[0]?.editAccess && (
-                                      <td>
-                                        <div className="d-flex">
-                                          <Button
-                                            className="btn btn-primary shadow btn-xs sharp me-1"
-                                            end_icon={"fas fa-pencil-alt"}
-                                          />
-                                          <Button
-                                            className="btn btn-danger shadow btn-xs sharp"
-                                            end_icon={"fa fa-trash"}
-                                            onClick={() =>
-                                              showAlert(dealcoupoun)
-                                            }
-                                          />
-                                        </div>
-                                      </td>
-                                    )}
+                                    </td>
+                                    <td>
+                                      <div className="d-flex">
+                                        <Button
+                                          className="btn btn-primary shadow btn-xs sharp me-1"
+                                          end_icon={"fas fa-pencil-alt"}
+                                          onClick={() =>
+                                            handleSubmit(dealcoupoun, {
+                                              isEdit: true,
+                                            })
+                                          }
+                                        />
+                                        <Button
+                                          className="btn btn-danger shadow btn-xs sharp"
+                                          end_icon={"fa fa-trash"}
+                                          onClick={() => showAlert(dealcoupoun)}
+                                        />
+                                      </div>
+                                    </td>
                                   </tr>
                                 ))}
                             </tbody>

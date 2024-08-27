@@ -183,12 +183,12 @@ const resetState=[
       dispatch(onPostsectionMasterReset());
     }
   }, [sectionMasterData]);
-  useEffect(() => {
-    if (sectionData) {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      setInitialValue(sectionData);
-    }
-  }, [sectionData]);
+    useEffect(() => {
+      if (sectionData) {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        setInitialValue(sectionData);
+      }
+    }, [sectionData]);
 
   return (
     <>

@@ -189,9 +189,9 @@ const UserMasterList = () => {
                             <th>{mobile}</th>
                             <th>{"Role Access"}</th>
                             <th>{status_label}</th>
-                            {getRoleAccess[0]?.editAccess && (
+
                               <th>{action_label}</th>
-                            )}
+
                           </tr>
                         </thead>
                         <tbody>
@@ -232,7 +232,7 @@ const UserMasterList = () => {
                                       : non_active_label}
                                   </span>
                                 </td>
-                                {getRoleAccess[0]?.editAccess && (
+
                                   <td>
                                     <div className="d-flex">
                                       <Button
@@ -253,7 +253,7 @@ const UserMasterList = () => {
                                       />
                                     </div>
                                   </td>
-                                )}
+
                               </tr>
                             ))}
                         </tbody>
