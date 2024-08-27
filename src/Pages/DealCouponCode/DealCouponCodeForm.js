@@ -87,7 +87,7 @@ const DealCouponCodeForm = () => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{deal_coupon_code}</h4>
+                <h4 className="card-title">{"Deal Coupon Code"}</h4>
               </div>
               <div className="card-body">
                 {false ? (

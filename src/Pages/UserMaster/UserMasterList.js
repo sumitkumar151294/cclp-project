@@ -66,10 +66,11 @@ const UserMasterList = () => {
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-
+  // to handle search
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  // to filter user data 
   const filteredData = userList?.getuserMasterData?.filter(
     (data) =>
       data?.firstName?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||

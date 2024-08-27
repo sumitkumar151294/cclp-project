@@ -139,7 +139,7 @@ const formatDate = (datetime) => {
               <div className="containers-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{deal_coupon_frequency_list}</h4>
+                    <h4 className="card-title">{"Deal Coupon Frequency List"}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -170,9 +170,9 @@ const formatDate = (datetime) => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{deal_coupon}</th>
-                                <th>{valid_from}</th>
-                                <th>{valid_to}</th>
+                                <th>{"Deal COupon"}</th>
+                                <th>{"Valid From"}</th>
+                                <th>{"Valid To"}</th>
                                 <th>{status_label}</th>
                                 {getRoleAccess[0]?.editAccess && (
                                   <th>{action_label}</th>
