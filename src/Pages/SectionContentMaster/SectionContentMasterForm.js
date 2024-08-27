@@ -163,6 +163,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     getSectiontContentMasterData?.getSectionContentMasterData?.filter(
       (sectionContent) => sectionContent?.sectionMasterId === typeID
     )?.length === sectionLimit;
+
   const handleSubmit = (values) => {
     if (!values) return;
     const { webImage, mobImage } = values;
@@ -201,7 +202,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
 
   useEffect(() => {
     if (uploadImage) {
-      const sectionContentMasteData = {
+      const   sectionContentMasteData = {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         webImage: sectionContentData?.webImage,

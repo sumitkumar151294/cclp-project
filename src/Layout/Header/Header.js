@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import user from "../../Assets/img/user-profile.png";
 import image from "../../Assets/img/logo.png";
 import { Link } from "react-router-dom/dist";
 const Header = ({ setSideBar, sidebar }) => {
   const [hamburgerClass, setHamburgerClass] = useState(false);
+  const [initial, setinitial] = useState("false");
+
   const handleShowSideBar = () => {
     setHamburgerClass(!hamburgerClass);
     setSideBar(!sidebar);
@@ -31,8 +33,13 @@ const Header = ({ setSideBar, sidebar }) => {
     body.setAttribute("data-primary", "color_1");
     body.setAttribute("direction", "ltr");
   }
-  // For transition of sidebar - End
-  const initials = `${"J"}${"G"}`;
+  useEffect(()=>{
+    const fullName=localStorage?.getItem("userFullName")
+    const nameParts = fullName?.split(" ");
+    const initials =nameParts ? `${nameParts?.[0]?.charAt?.(0)}${nameParts[1]?.charAt?.(0)}`: "NA";
+    setinitial(initials)
+  },[])
+
   return (
     <>
       <div className="nav-header">
@@ -62,7 +69,7 @@ const Header = ({ setSideBar, sidebar }) => {
                   <div className="user-profile">
       {/* Display the initials */}
       <div className="user-initials">
-        {initials.toUpperCase()}
+        {initial.toUpperCase()}
       </div>
     </div>
                   </div>

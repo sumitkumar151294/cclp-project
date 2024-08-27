@@ -31,6 +31,8 @@ const statusOptions = [
   { value: false, label: "Non Active" },
 ];
 const DealForm = ({ dealsData }) => {
+  const [mobile, setMobile] = useState(false);
+  const [web, setWeb] = useState(false);
   const todayDate = getTodayDate();
   const [values, setValues] = useState(null);
   // to get labels and placeholders from translation
@@ -148,7 +150,18 @@ const DealForm = ({ dealsData }) => {
       .of(Yup.string().required("Alias is required"))
       .required("At least one alias is required"),
   });
-
+const resetState=[{
+  enabled: "",
+  webImage: "",
+  mobImage: "",
+  displayOrder: "",
+  category: "",
+  name: "",
+  startDate: "",
+  endDate: dealsData?.endDate || "",
+  dealType: "",
+  alias: [""],
+}]
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -160,34 +173,76 @@ const DealForm = ({ dealsData }) => {
     }
   };
   const handleSubmit = (values) => {
-    if (values) {
-      dispatch(onPostuploadImage(values.webImage));
-      dispatch(onPostuploadMobileImage(values.mobImage));
-      setValues(values);
-    }
-  };
-  useEffect(() => {
-    if (
-      uploadImage?.postMobileStatusCode == "201" &&
-      uploadImage?.post_status_code == "201"
-    ) {
-      const dealData = {
+debugger
+    if (!values) return;
+    const { webImage, mobImage } = values;
+    if (typeof webImage === "object" || typeof mobImage === "object") {
+      if (typeof webImage === "object") {
+        dispatch(onPostuploadImage(webImage));
+        if (typeof mobImage !== "object") setWeb(true);
+      }
+      if (typeof mobImage === "object") {
+        dispatch(onPostuploadMobileImage(mobImage));
+        if (typeof webImage !== "object") setMobile(true);
+      }
+    } else {
+      const dealInfo = {
         ...values,
-        webImage: getwebImage,
-        mobImage: getmobImage,
-        clientId: 6,
-        deleted: false,
-        enabled:
-          typeof values?.enabled === "boolean"
-            ? values.enabled
-            : values?.enabled === "true",
+        deleted:false,
+        clientId:6,
+        webImage: webImage || "",
+        mobImage: mobImage || "",
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        ...(dealsData && { id: values.id }),
       };
-      dispatch(onPostDeal(dealData));
+      dispatch(onPostDeal(dealInfo));
     }
-  }, [uploadImage, values]);
+    setValues(values);
+  };
+
+  useEffect(() => {
+    if (uploadImage) {
+      const dealDataInfo = {
+        ...values,
+        deleted: false,
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        webImage: dealsData?.webImage,
+        mobImage: dealsData?.mobImage,
+        clientId: 6,
+        ...(dealsData && { id: values?.id }),
+
+      };
+      let shouldDispatch = false;
+      if (
+        uploadImage.postMobileStatusCode === "201" &&
+        uploadImage.post_status_code === "201"
+      ) {
+        dealDataInfo.webImage = getwebImage;
+        dealDataInfo.mobImage = getmobImage;
+        shouldDispatch = true;
+      } else if (uploadImage.post_status_code === "201" && web) {
+        dealDataInfo.webImage = getwebImage;
+        shouldDispatch = true;
+        setWeb(false);
+      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+        dealDataInfo.mobImage = getmobImage;
+        shouldDispatch = true;
+        setMobile(false);
+      }
+      if (shouldDispatch) {
+        dispatch(onPostDeal(dealDataInfo));
+      }
+    }
+  }, [uploadImage, values, web, mobile]);
 
   useEffect(() => {
     if (dealData?.post_status_code === "201") {
+      toast.success(dealData?.postMessage);
+      dispatch(onGetDeal());
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostDealReset());
+    }else if (dealData?.post_status_code === "205") {
       toast.success(dealData?.postMessage);
       dispatch(onGetDeal());
       dispatch(onPostuploadImageReset());
@@ -309,7 +364,7 @@ const DealForm = ({ dealsData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-3">
                               <label>
-                                {"Alias"}
+                                {"Deal Alias"}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field

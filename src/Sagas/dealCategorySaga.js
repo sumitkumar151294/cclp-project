@@ -4,12 +4,12 @@ import { callDealCategoryGetApi, callDealCategoryPostApi, callDealCategoryUpdate
 function* GetDealCategory() {
   try {
     const getDealCategoryResponse = yield call(callDealCategoryGetApi);
-    if (getDealCategoryResponse.httpStatusCode === "200") {
+    if (getDealCategoryResponse.errorCode === "200") {
       yield put(
         onGetDealCategorySuccess({
           data: getDealCategoryResponse.response,
           message: getDealCategoryResponse.errorMessage,
-          status_code:getDealCategoryResponse.httpStatusCode
+          status_code:getDealCategoryResponse.errorCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetDealCategory() {
         onGetDealCategoryError({
           data: getDealCategoryResponse.response,
           message: getDealCategoryResponse.response.message,
-          status_code:getDealCategoryResponse.httpStatusCode
+          status_code:getDealCategoryResponse.errorCode
         })
       );
     }
@@ -29,12 +29,12 @@ function* GetDealCategory() {
 function* PostDealCategory({ payload }) {
   try {
     const postDealCategoryResponse = yield call(callDealCategoryPostApi, payload);
-    if (postDealCategoryResponse.httpStatusCode === "201") {
+    if (postDealCategoryResponse.errorCode === "201") {
       yield put(
         onPostDealCategorySuccess({
           postData: postDealCategoryResponse.response,
           message: postDealCategoryResponse.errorMessage,
-          status_code: postDealCategoryResponse.httpStatusCode,
+          status_code: postDealCategoryResponse.errorCode,
         })
       );
     } else {
@@ -42,7 +42,7 @@ function* PostDealCategory({ payload }) {
         onPostDealCategoryError({
           data: postDealCategoryResponse.response,
           message: postDealCategoryResponse.errorMessage,
-          status_code:postDealCategoryResponse.httpStatusCode
+          status_code:postDealCategoryResponse.errorCode
         })
       );
     }
@@ -54,10 +54,10 @@ function* PostDealCategory({ payload }) {
 function* UpdateDealCategory({ payload }) {
   try {
     const updateDealCategoryResponse = yield call(callDealCategoryUpdateApi, payload);
-    if (updateDealCategoryResponse.httpStatusCode === "201") {
+    if (updateDealCategoryResponse.errorCode === "201") {
       yield put(
         onUpdateDealCategorySuccess({
-          status_code: updateDealCategoryResponse.httpStatusCode,
+          status_code: updateDealCategoryResponse.errorCode,
           message: updateDealCategoryResponse.errorMessage,
           data:updateDealCategoryResponse.response
         })
@@ -65,7 +65,7 @@ function* UpdateDealCategory({ payload }) {
     } else {
       yield put(
         onUpdateDealCategoryError({
-          status_code: updateDealCategoryResponse.httpStatusCode,
+          status_code: updateDealCategoryResponse.errorCode,
           message: updateDealCategoryResponse.errorMessage,
           data:updateDealCategoryResponse.response
         })

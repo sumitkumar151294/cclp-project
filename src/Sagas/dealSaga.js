@@ -5,12 +5,12 @@ import { onGetDeal, onGetDealError, onGetDealSuccess, onPostDeal, onPostDealErro
 function* GetDeal() {
   try {
     const getDealResponse = yield call(callDealGetApi);
-    if (getDealResponse.httpStatusCode === "200") {
+    if (getDealResponse.errorCode === "200") {
       yield put(
         onGetDealSuccess({
           data: getDealResponse.response,
           message: getDealResponse.errorMessage,
-          status_code:getDealResponse.httpStatusCode
+          status_code:getDealResponse.errorCode
         })
       );
     } else {
@@ -18,7 +18,7 @@ function* GetDeal() {
         onGetDealError({
           data: getDealResponse.response,
           message: getDealResponse.response.message,
-          status_code:getDealResponse.httpStatusCode
+          status_code:getDealResponse.errorCode
         })
       );
     }
@@ -30,12 +30,12 @@ function* GetDeal() {
 function* PostDeal({ payload }) {
   try {
     const postDealResponse = yield call(callDealPostApi, payload);
-    if (postDealResponse.httpStatusCode === "201") {
+    if (postDealResponse.errorCode === "201") {
       yield put(
         onPostDealSuccess({
           postData: postDealResponse.response,
           message: postDealResponse.errorMessage,
-          status_code: postDealResponse.httpStatusCode,
+          status_code: postDealResponse.errorCode,
         })
       );
     } else {
@@ -43,7 +43,7 @@ function* PostDeal({ payload }) {
         onPostDealError({
           data: postDealResponse.response,
           message: postDealResponse.errorMessage,
-          status_code:postDealResponse.httpStatusCode
+          status_code:postDealResponse.errorCode
         })
       );
     }
@@ -55,10 +55,10 @@ function* PostDeal({ payload }) {
 function* UpdateDeal({ payload }) {
   try {
     const updateDealResponse = yield call(callDealUpdateApi, payload);
-    if (updateDealResponse.httpStatusCode === "205") {
+    if (updateDealResponse.errorCode === "205") {
       yield put(
         onUpdateDealSuccess({
-          status_code: updateDealResponse.httpStatusCode,
+          status_code: updateDealResponse.errorCode,
           message: updateDealResponse.errorMessage,
           data:updateDealResponse.response
         })
@@ -66,7 +66,7 @@ function* UpdateDeal({ payload }) {
     } else {
       yield put(
         onUpdateDealError({
-          status_code: updateDealResponse.httpStatusCode,
+          status_code: updateDealResponse.errorCode,
           message: updateDealResponse.errorMessage,
           data:updateDealResponse.response
         })

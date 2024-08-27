@@ -16,7 +16,6 @@ import {
 import Button from "../../Components/Button/Button";
 import { toast } from "react-toastify";
 
-
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
 
@@ -44,6 +43,7 @@ const SectionContentMasterList = () => {
 
   const location = useLocation();
   const type = location?.state?.sectionId;
+  const sectionType = location?.state?.sectionType;
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -98,7 +98,7 @@ const SectionContentMasterList = () => {
         text: "",
         contentSourceType: "",
         segmentId: "",
-      })
+      });
     }
   }, [getSectionContenMasterData]);
   useEffect(() => {
@@ -146,9 +146,9 @@ const SectionContentMasterList = () => {
               </div>
               <div className="card-body">
                 {getSectionContenMasterData?.isgetLoading ||
-                  getSectionContenMasterData?.isUpdateLoading ||
-                  (getSectionContenMasterData?.isUpdateLoading &&
-                    getSectionContenMasterData?.update_status_code == "205") ? (
+                getSectionContenMasterData?.isUpdateLoading ||
+                (getSectionContenMasterData?.isUpdateLoading &&
+                  getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -160,15 +160,27 @@ const SectionContentMasterList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{web_image}</th>
-                                <th>{mobile_image}</th>
+                                {sectionType !== "UnlockStaticCard" && (
+                                  <th>{mobile_image}</th>
+                                )}
+                                {sectionType !== "UnlockStaticCard" && (
+                                  <th>{web_image}</th>
+                                )}
                                 <th>{display_order}</th>
-                                <th>{call_to_action}</th>
-                                <th>{content_source_type}</th>
-                                <th>{segment_label}</th>
-                                <th>{text_label}</th>
+                                {sectionType !== "UnlockStaticCard" && (
+                                  <th>{call_to_action}</th>
+                                )}
+                                {sectionType === "SpecialSection" && (
+                                  <th>{content_source_type}</th>
+                                )}
+                                {sectionType === "SpecialSection" && (
+                                  <th>{segment_label}</th>
+                                )}
+                                {(sectionType === "UnlockStaticCard" || sectionType === "CustomerBenefits") &&   <th>{text_label}</th>}
                                 <th>{"Status"}</th>
-                                <th>{"Over-Ride Data"}</th>
+                                {sectionType === "SpecialSection" && (
+                                  <th>{"Over-Ride Data"}</th>
+                                )}
                                 <th>{action_label}</th>
                               </tr>
                             </thead>
@@ -177,73 +189,89 @@ const SectionContentMasterList = () => {
                                 ?.slice(startIndex, endIndex)
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
-                                    <td>
-                                      {sectionContent.webImage ? (
-                                        <img
-                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
-                                          style={{ width: "50px" }}
-                                          alt="webImage"
-                                        />
-                                      ) : (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {sectionContent.mobImage ? (
-                                        <img
-                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
-                                          style={{ width: "50px" }}
-                                          alt="mobImage"
-                                        />
-                                      ) : (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
+                                         {sectionType !== "UnlockStaticCard" && (
+                                      <td>
+                                        {sectionContent.mobImage ? (
+                                          <img
+                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
+                                            style={{ width: "50px" }}
+                                            alt="mobImage"
+                                          />
+                                        ) : (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType !== "UnlockStaticCard" && (
+                                      <td>
+                                        {sectionContent.webImage ? (
+                                          <img
+                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
+                                            style={{ width: "50px" }}
+                                            alt="webImage"
+                                          />
+                                        ) : (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+
+
                                     <td>{sectionContent.displayOrder}</td>
-                                    <td>
-                                      {sectionContent.cta.substring(0, 18) +
-                                        "..."}
-                                    </td>
-                                    <td>
-                                      {sectionContent?.contentSourceType || (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {sectionContent?.segmentId || (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {sectionContent?.text ? sectionContent?.text.substring(0, 5) +
-                                        "..." : (
+
+                                    {sectionType !== "UnlockStaticCard" && (
+                                      <td>
+                                        {sectionContent.cta.substring(0, 18) +
+                                          "..."}
+                                      </td>
+                                    )}
+                                    {sectionType === "SpecialSection" && (
+                                      <td>
+                                        {sectionContent?.contentSourceType || (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType === "SpecialSection" && (
+                                      <td>
+                                        {sectionContent?.segmentId || (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                   {(sectionType === "UnlockStaticCard" || sectionType === "CustomerBenefits") &&      <td>
+                                      {sectionContent?.text ? (
+                                        sectionContent?.text.substring(0, 10) +
+                                        "..."
+                                      ) : (
                                         <span className="hyphen">-</span>
                                       )}
-                                    </td>
+                                    </td>}
                                     <td>
-                                          <span
-                                            className={
-                                              sectionContent.enabled
-                                                ? "badge badge-success"
-                                                : "badge badge-danger"
-                                            }
-                                          >
-                                            {sectionContent.enabled
-                                              ? "Active"
-                                              : "Non Active"}
-                                          </span>
-                                        </td>
-                                        <td>
-                                          {sectionContent?.isOverrideMetadata ? <Button
-
-text={"Edit Data"}
-
-className="btn btn-primary btn-sm float-right client_Btn"
-/>
-: "Not Allowed"}
-
-
-                                        </td>
+                                      <span
+                                        className={
+                                          sectionContent.enabled
+                                            ? "badge badge-success"
+                                            : "badge badge-danger"
+                                        }
+                                      >
+                                        {sectionContent.enabled
+                                          ? "Active"
+                                          : "Non Active"}
+                                      </span>
+                                    </td>
+                                    {sectionType === "SpecialSection" && (
+                                      <td>
+                                        {sectionContent?.isOverrideMetadata ? (
+                                          <Button
+                                            text={"Edit Data"}
+                                            className="btn btn-primary btn-sm float-right client_Btn"
+                                          />
+                                        ) : (
+                                          "Not Allowed"
+                                        )}
+                                      </td>
+                                    )}
                                     <td>
                                       <div className="d-flex">
                                         <Button

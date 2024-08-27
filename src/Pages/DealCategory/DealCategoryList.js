@@ -49,16 +49,9 @@ const DealCategoryList = () => {
   };
   const handleSumbit = (dealCategory, isEdit) => {
     const dealCategoryData = {
-      id: dealCategory?.id,
-      enabled: dealCategory?.enabled,
+     ...dealCategory,
       deleted: true,
-      createdBy: 0,
-      updatedBy: 0,
-      clientId: 6,
-      name: dealCategory?.name,
-      displayOrder: dealCategory?.displayOrder,
-      mobImage: dealCategory?.mobImage,
-      webImage: dealCategory?.webImage,
+
     };
     if (isEdit) {
       setdealCategory(dealCategoryData);
@@ -144,8 +137,10 @@ const DealCategoryList = () => {
                               <tr>
                                 <th>{name_label}</th>
                                 <th>{display_order}</th>
-                                <th>{web_image}</th>
                                 <th>{mobile_image}</th>
+                                <th>{web_image}</th>
+                                <th>{"Status"}</th>
+
                                 {getRoleAccess[0]?.editAccess && (
                                   <th>{action_label}</th>
                                 )}
@@ -160,18 +155,32 @@ const DealCategoryList = () => {
                                     <td>{dealCategoryData.displayOrder}</td>
                                     <td>
                                       <img
-                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.webImage}`}
-                                        style={{ width: "50px" }}
-                                        alt="webImage"
-                                      />
-                                    </td>
-                                    <td>
-                                      <img
                                         src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.mobImage}`}
                                         style={{ width: "50px" }}
                                         alt="mobImage"
                                       />
                                     </td>
+                                    <td>
+                                      <img
+                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.webImage}`}
+                                        style={{ width: "50px" }}
+                                        alt="webImage"
+                                      />
+                                    </td>
+
+                                    <td>
+                                  <span
+                                    className={
+                                      dealCategoryData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {dealCategoryData.enabled
+                                      ? "Active"
+                                      : "Non Active"}
+                                  </span>
+                                </td>
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">

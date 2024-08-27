@@ -91,6 +91,7 @@ const SectionMasterForm = ({ sectionData }) => {
   const sectionTypeOptions = [
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
     { value: "Banner", label: "Banner" },
+    { value: "UnlockDeals", label: "Unlock Deals" },
     { value: "CustomerBenefits", label: "Customer Benefits" },
     { value: "SupportingBanner", label: "Supporting Banner" },
     { value: "SpecialSection", label: "Special Section" },
@@ -131,7 +132,6 @@ const resetState=[
 
 }
 ]
-console.log(showFields)
   const handleSubmit = (values) => {
     if (values) {
       const SectionformData = {
@@ -167,6 +167,7 @@ console.log(showFields)
       } else {
         dispatch(onPostsectionMaster(SectionformData));
       }
+      setInitialValue(resetState)
       setShowFields(false);
 
     }
@@ -174,9 +175,7 @@ console.log(showFields)
 
   useEffect(() => {
     if (sectionMasterData?.post_status_code === "201") {
-
       toast.success(sectionMasterData.postMessage);
-      setInitialValue(resetState)
       dispatch(onGetsectionMaster());
       dispatch(onPostsectionMasterReset());
     } else if (sectionMasterData?.post_status_code) {

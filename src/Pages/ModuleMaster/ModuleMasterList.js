@@ -179,7 +179,7 @@ const ModuleMasterList = () => {
                               <td>
                                 <img
                                   src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${module.icon}`}
-                                  style={{ width: "50px" }}
+                                  style={{ width: "30px" }}
                                   alt="mobImage"
                                 />
                               </td>

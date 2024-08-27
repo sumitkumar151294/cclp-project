@@ -4,12 +4,12 @@ import { callSectionContentMasterGetApi, callSectionContentMasterPostApi, callSe
 function* GetSectionContentMaster() {
   try {
     const getSectionContentMasterResponse = yield call(callSectionContentMasterGetApi);
-    if (getSectionContentMasterResponse.httpStatusCode === "200") {
+    if (getSectionContentMasterResponse.errorCode === "200") {
       yield put(
         onGetSectionContentMasterSuccess({
           data: getSectionContentMasterResponse.response,
           message: getSectionContentMasterResponse.errorMessage,
-          status_code:getSectionContentMasterResponse.httpStatusCode
+          status_code:getSectionContentMasterResponse.errorCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetSectionContentMaster() {
         onGetSectionContentMasterError({
           data: getSectionContentMasterResponse.response,
           message: getSectionContentMasterResponse.response.message,
-          status_code:getSectionContentMasterResponse.httpStatusCode
+          status_code:getSectionContentMasterResponse.errorCode
         })
       );
     }
@@ -29,12 +29,12 @@ function* GetSectionContentMaster() {
 function* PostSectionContentMaster({ payload }) {
   try {
     const postSectionContentMasterResponse = yield call(callSectionContentMasterPostApi, payload);
-    if (postSectionContentMasterResponse.httpStatusCode === "201") {
+    if (postSectionContentMasterResponse.errorCode === "201") {
       yield put(
         onPostSectionContentMasterSuccess({
           postData: postSectionContentMasterResponse.response,
           message: postSectionContentMasterResponse.errorMessage,
-          status_code: postSectionContentMasterResponse.httpStatusCode,
+          status_code: postSectionContentMasterResponse.errorCode,
         })
       );
     } else {
@@ -42,7 +42,7 @@ function* PostSectionContentMaster({ payload }) {
         onPostSectionContentMasterError({
           data: postSectionContentMasterResponse.response,
           message: postSectionContentMasterResponse.errorMessage,
-          status_code:postSectionContentMasterResponse.httpStatusCode
+          status_code:postSectionContentMasterResponse.errorCode
         })
       );
     }
@@ -54,10 +54,10 @@ function* PostSectionContentMaster({ payload }) {
 function* UpdateSectionContentMaster({ payload }) {
   try {
     const updateSectionContentMasterResponse = yield call(callSectionContentMasterUpdateApi, payload);
-    if (updateSectionContentMasterResponse.httpStatusCode === "201") {
+    if (updateSectionContentMasterResponse.errorCode === "201") {
       yield put(
         onUpdateSectionContentMasterSuccess({
-          status_code: updateSectionContentMasterResponse.httpStatusCode,
+          status_code: updateSectionContentMasterResponse.errorCode,
           message: updateSectionContentMasterResponse.errorMessage,
           data:updateSectionContentMasterResponse.response
         })
@@ -65,7 +65,7 @@ function* UpdateSectionContentMaster({ payload }) {
     } else {
       yield put(
         onUpdateSectionContentMasterError({
-          status_code: updateSectionContentMasterResponse.httpStatusCode,
+          status_code: updateSectionContentMasterResponse.errorCode,
           message: updateSectionContentMasterResponse.errorMessage,
           data:updateSectionContentMasterResponse.response
         })

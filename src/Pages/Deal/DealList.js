@@ -161,11 +161,13 @@ const DealList = () => {
                                 <th>{deal_name}</th>
                                 <th>{deal_category}</th>
                                 <th>{deal_type}</th>
+                                <th>{"Deal Alias"}</th>
                                 <th>{display_order}</th>
                                 <th>{start_date_label}</th>
                                 <th>{end_date_label}</th>
                                 <th>{mobile_image}</th>
                                 <th>{web_image}</th>
+                                <th>{"Status"}</th>
                                 {getRoleAccess[0]?.editAccess && (<th>{action_label}</th>)}
                               </tr>
                             </thead>
@@ -181,6 +183,7 @@ const DealList = () => {
                                       }
                                     </td>
                                     <td>{dealData.dealType}</td>
+                                    <td>{dealData.alias}</td>
                                     <td>{dealData.displayOrder}</td>
                                     <td>{new Date(dealData.startDate).toLocaleDateString()}</td>
                                     <td>{new Date(dealData.endDate).toLocaleDateString()}</td>
@@ -199,6 +202,19 @@ const DealList = () => {
                                         alt="mobImage"
                                       />
                                     </td>
+                                    <td>
+                                  <span
+                                    className={
+                                      dealData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {dealData.enabled
+                                      ? "Active"
+                                      : "Non Active"}
+                                  </span>
+                                </td>
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">

@@ -7,12 +7,12 @@ function* PostuploadImage({ payload }) {
 
   try {
     const postuploadImageResponse = yield call(calluploadApi, payload);
-    if (postuploadImageResponse.httpStatusCode === "201") {
+    if (postuploadImageResponse.errorCode === "201") {
       yield put(
         onPostuploadImageSuccess({
           postData: postuploadImageResponse.response,
           message: postuploadImageResponse.errorMessage,
-          status_code: postuploadImageResponse.httpStatusCode,
+          status_code: postuploadImageResponse.errorCode,
         })
       );
     } else {
@@ -20,7 +20,7 @@ function* PostuploadImage({ payload }) {
         onPostuploadImageError({
           data: postuploadImageResponse.response,
           message: postuploadImageResponse?.data?.errorMessage,
-          status_code:postuploadImageResponse.httpStatusCode
+          status_code:postuploadImageResponse.errorCode
         })
       );
     }
@@ -33,12 +33,12 @@ function* PostuploadMobileImage({ payload }) {
 
   try {
     const postuploadMobileImageResponse = yield call(calluploadApi, payload);
-    if (postuploadMobileImageResponse.httpStatusCode === "201") {
+    if (postuploadMobileImageResponse.errorCode === "201") {
       yield put(
         onPostuploadMobileImageSuccess({
           postData: postuploadMobileImageResponse.response,
           message: postuploadMobileImageResponse.errorMessage,
-          status_code: postuploadMobileImageResponse.httpStatusCode,
+          status_code: postuploadMobileImageResponse.errorCode,
         })
       );
     } else {
@@ -46,7 +46,7 @@ function* PostuploadMobileImage({ payload }) {
         onPostuploadMobileImageError({
           data: postuploadMobileImageResponse.response,
           message: postuploadMobileImageResponse?.data?.errorMessage,
-          status_code:postuploadMobileImageResponse.httpStatusCode
+          status_code:postuploadMobileImageResponse.errorCode
         })
       );
     }

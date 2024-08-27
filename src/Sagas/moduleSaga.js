@@ -5,7 +5,7 @@ import { callModuleApi, callPostModuleApi } from "../Context/moduleApi";
 function* Module() {
   try {
     const moduleResponse = yield call(callModuleApi);
-    if (moduleResponse.httpStatusCode === "200") {
+    if (moduleResponse.errorCode === "200") {
       yield put(
         onGetModuleSuccess({
           data: moduleResponse.response,
@@ -29,12 +29,12 @@ function* Module() {
 function* PostModule({ payload }) {
   try {
     const postModuleResponse = yield call(callPostModuleApi, payload);
-    if (postModuleResponse.httpStatusCode === "201") {
+    if (postModuleResponse.errorCode === "201") {
       yield put(
         onPostModuleSuccess({
           postData: postModuleResponse.response,
           message: postModuleResponse.errorMessage,
-          httpStatusCode: postModuleResponse.httpStatusCode,
+          errorCode: postModuleResponse.errorCode,
         })
       );
     } else {
@@ -42,7 +42,7 @@ function* PostModule({ payload }) {
         onPostModuleError({
           data: postModuleResponse.response,
           message: postModuleResponse.errorMessage,
-          status_code:postModuleResponse.httpStatusCode
+          status_code:postModuleResponse.errorCode
         })
       );
     }
@@ -54,10 +54,10 @@ function* PostModule({ payload }) {
 function* UpdateModuleMaster({ payload }) {
   try {
     const updateModuleMasterResponse = yield call(callPostModuleApi, payload);
-    if (updateModuleMasterResponse.httpStatusCode === "201") {
+    if (updateModuleMasterResponse.errorCode === "201") {
       yield put(
         onUpdateModuleMasterSuccess({
-          status_code: updateModuleMasterResponse.httpStatusCode,
+          status_code: updateModuleMasterResponse.errorCode,
           message: updateModuleMasterResponse.errorMessage,
           data:updateModuleMasterResponse.response
         })
@@ -65,7 +65,7 @@ function* UpdateModuleMaster({ payload }) {
     } else {
       yield put(
         onUpdateModuleMasterError({
-          status_code: updateModuleMasterResponse.httpStatusCode,
+          status_code: updateModuleMasterResponse.errorCode,
           message: updateModuleMasterResponse.errorMessage,
           data:updateModuleMasterResponse.response
         })

@@ -31,32 +31,53 @@ const DealCouponForm = () => {
   const [showFields, setShowFields] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
-  // to get labels and placeholders from translation  
-  const deal_coupoun = GetTranslationData("UIMasterAdmin","deal_coupoun");
-  const type_of_coupoun = GetTranslationData("UIMasterAdmin","type_of_coupoun");
-  const coupoun_code = GetTranslationData("UIMasterAdmin","coupoun_code");
-  const coupoun_code_placeholder = GetTranslationData("UIMasterAdmin", "coupoun_code_placeholder");
-  const deal_label = GetTranslationData("UIMasterAdmin", "deal_label");
-  const title_placeholder = GetTranslationData("UIMasterAdmin","title_placeholder");
-  const title_label = GetTranslationData("UIMasterAdmin","title_label");
-  const select_months = GetTranslationData("UIMasterAdmin", "select_months");
-  const select_week_days = GetTranslationData("UIMasterAdmin", "select_week_days");
-  const terms_and_condition = GetTranslationData("UIMasterAdmin", "select_months");
-  const terms_placeholder = GetTranslationData("UIMasterAdmin", "terms_placeholder");
-  const call_to_action = GetTranslationData(
+  // to get labels and placeholders from translation
+  const deal_coupoun = GetTranslationData("UIMasterAdmin", "deal_coupoun");
+  const type_of_coupoun = GetTranslationData(
     "UIMasterAdmin",
-    "call_to_action"
+    "type_of_coupoun"
   );
+  const coupoun_code = GetTranslationData("UIMasterAdmin", "coupoun_code");
+  const coupoun_code_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "coupoun_code_placeholder"
+  );
+  const deal_label = GetTranslationData("UIMasterAdmin", "deal_label");
+  const title_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "title_placeholder"
+  );
+  const title_label = GetTranslationData("UIMasterAdmin", "title_label");
+  const select_months = GetTranslationData("UIMasterAdmin", "select_months");
+  const select_week_days = GetTranslationData(
+    "UIMasterAdmin",
+    "select_week_days"
+  );
+  const terms_and_condition = GetTranslationData(
+    "UIMasterAdmin",
+    "select_months"
+  );
+  const terms_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "terms_placeholder"
+  );
+  const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const call_to_action_placeholder = GetTranslationData(
     "UIMasterAdmin",
     "call_to_action_placeholder"
   );
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
   const description = GetTranslationData("UIMasterAdmin", "description");
-  const description_placeholder = GetTranslationData("UIMasterAdmin", "description_placeholder");
+  const description_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "description_placeholder"
+  );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const call_to_action_required = GetTranslationData("UIMasterAdmin", "call_to_action_required");
+  const call_to_action_required = GetTranslationData(
+    "UIMasterAdmin",
+    "call_to_action_required"
+  );
   const upload_image_for_phone = GetTranslationData(
     "UIMasterAdmin",
     "upload_image_for_phone"
@@ -66,6 +87,13 @@ const DealCouponForm = () => {
   const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
+  const getDealData = useSelector((state) => state.dealReducer?.getDealData);
+  const dealOptions = getDealData
+  ?.filter(deal => deal?.enabled)
+  .map(dealData => ({
+    value: dealData.id,
+    label: dealData.name
+  }));
   const uploadImage = useSelector((state) => state.uploadReducer);
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
@@ -75,32 +103,40 @@ const DealCouponForm = () => {
     image: "",
     description: "",
     terms: "",
-    months: [],
-    weekDays: [],
+    offerType: "",
     segmentId: "",
     cta: "",
     title: "",
   });
-  const oferTypeOptions = [
+  const offerTypeOptions = [
     { value: "Feature", label: "Feature" },
-    { value: "NetworkdCardType", label: "Networkd Card Type" },
+    { value: "NetworkCardType", label: "Networkd Card Type" },
     { value: "SpecialType", label: "SpecialType" },
     { value: "Generic", label: "Generic" },
   ];
-  const oferSubTypeOptions = [
-    { value: "EMI", label: "EMI" }
+  const offerTypeValue1 = [
+    { value: "Visa", label: "Visa" },
+    { value: "Master Card", label: "Master Card" },
   ];
+  const offerTypeValue2 = [{ value: "First Wealth", label: "First Wealth" }];
+  const oferSubTypeOptions = [{ value: "EMI", label: "EMI" }];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    months: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one month is required"),
-    weekDays: Yup.array().of(Yup.object().shape({ value: Yup.string() })).min(1, "At least one week is required"),
+    months: Yup.array()
+      .of(Yup.object().shape({ value: Yup.string() }))
+      .min(1, "At least one month is required"),
+    weekDays: Yup.array()
+      .of(Yup.object().shape({ value: Yup.string() }))
+      .min(1, "At least one week is required"),
     typeOfCoupoun: Yup.string().required("Coupon Type is required"),
     image: Yup.string().required("Image is required"),
     cta: Yup.string().required(call_to_action_required),
+    title: Yup.string().required("Title is required"),
+    offerType: Yup.string().required("Offer Type is required"),
   });
   // to handle form submit
   const handleSubmit = (values) => {
-    if (typeof values.image==="object") {
+    if (typeof values.image === "object") {
       dispatch(onPostuploadImage(values.image));
       setValues(values);
     }
@@ -111,15 +147,6 @@ const DealCouponForm = () => {
     formData.append("file", file);
     setFieldValue("image", formData);
   };
-  const monthNames = Array.from({ length: 12 }, (_, index) => ({
-    value: index + 1,
-    label: new Date(0, index).toLocaleString("default", { month: "long" }),
-  }));
-  
-  const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
-    value: index + 1,
-    label: new Date(0, 0, index + 1).toLocaleString("default", { weekday: "long" }),
-  }));
 
   useEffect(() => {
     if (uploadImage?.post_status_code == "201") {
@@ -133,11 +160,6 @@ const DealCouponForm = () => {
         typeOfCoupoun: values?.typeOfCoupoun,
         dealid: values?.dealId,
         title: values?.title,
-        terms: values?.terms,
-        months: values?.months.map((item) => item.value),
-        weekDays: values?.weekDays.map((item) => item.value),
-        coupounCode: values?.coupounCode,
-        description: JSON.stringify(values?.description),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
@@ -157,7 +179,7 @@ const DealCouponForm = () => {
 
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <ToastContainer />
       <div className="containers-fluid">
         <div className="row">
@@ -179,9 +201,30 @@ const DealCouponForm = () => {
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched, setFieldValue }) => (
+                      {({ errors, touched, setFieldValue, values }) => (
                         <Form>
                           <div className="row">
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                                {title_label}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                name="title"
+                                className={`form-control ${
+                                  errors.title && touched.title
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={title_placeholder}
+                              />
+                              <ErrorMessage
+                                name="title"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
                                 {type_of_coupoun}
@@ -197,11 +240,6 @@ const DealCouponForm = () => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(e) => {
-                                  setShowFields(
-                                    e === "Static" || e === "Membership"
-                                  );
-                                }}
                               />
                               <ErrorMessage
                                 name="typeOfCoupoun"
@@ -209,7 +247,7 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            {showFields && (
+                            {values.typeOfCoupoun === "Static" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label> {coupoun_code}</label>
                                 <Field
@@ -229,7 +267,91 @@ const DealCouponForm = () => {
                                 />
                               </div>
                             )}
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>{"Offer Type"}</label>
 
+                              <Field
+                                name="offerType"
+                                options={offerTypeOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.offerType && touched.offerType
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="offerType"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            {(values.offerType === "SpecialType" ||
+                              values.offerType === "NetworkCardType") && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>{"Offer Type Value"}</label>
+
+                                <Field
+                                  name="offerTypeValue"
+                                  options={
+                                    values.offerType === "NetworkCardType"
+                                      ? offerTypeValue1
+                                      : offerTypeValue2
+                                  }
+                                  component={Dropdown}
+                                  className={`form-select ${
+                                    errors.offerTypeValue &&
+                                    touched.offerTypeValue
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
+                                <ErrorMessage
+                                  name="offerTypeValue"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>{segment_label}</label>
+                              {values.offerType==="Feature" && <span className="text-danger">*</span>}
+                              <Field
+                                name="segmentId"
+                                component={Dropdown}
+                                options={offerTypeValue2}
+                                className={`form-select ${
+                                  errors.segmentId && touched.segmentId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+
+                              <ErrorMessage
+                                name="segmentId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>{"Deal Id"}</label>
+
+                              <Field
+                                name="dealId"
+                                options={dealOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.dealId && touched.dealId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="dealId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>
                                 {call_to_action}
@@ -252,7 +374,7 @@ const DealCouponForm = () => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {upload_image_for_phone}
+                                {"Upload Image"}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -273,31 +395,9 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                {title_label}
-                              </label>
-                              <Field
-                                type="text"
-                                name="title"
-                                className={`form-control ${
-                                  errors.title && touched.title
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={title_placeholder}
-                              />
-                              <ErrorMessage
-                                name="title"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
 
                             <div className="col-sm-4 form-group ">
-                              <label>
-                                {description}
-                              </label>
+                              <label>{description}</label>
                               <Field
                                 type="text"
                                 name="description"
@@ -315,13 +415,11 @@ const DealCouponForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                {"Offer Type"}
-                              </label>
+                              <label>{"Deal Id"}</label>
 
                               <Field
                                 name="dealId"
-                                options={oferTypeOptions}
+                                options={offerTypeOptions}
                                 component={Dropdown}
                                 className={`form-select ${
                                   errors.dealId && touched.dealId
@@ -336,9 +434,7 @@ const DealCouponForm = () => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                {"Offer Sub Type"}
-                              </label>
+                              <label>{"Offer Sub Type"}</label>
 
                               <Field
                                 name="dealId"
@@ -356,29 +452,6 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>
-                                {segment_label}
-                              </label>
-
-                              <Field
-                                name="segmentId"
-                                component={Dropdown}
-                                options={typeOfCoupoun}
-                                className={`form-select ${
-                                  errors.segmentId && touched.segmentId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="segmentId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-
-
 
                             <div className="col-sm-12 form-group mb-4">
                               <label>{"Terms And Conditons"}</label>

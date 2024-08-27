@@ -18,9 +18,15 @@ import {
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-
+import Dropdown from "../../Components/Dropdown/Dropdown";
+const statusOptions = [
+  { value: true, label: "Active" },
+  { value: false, label: "Non Active" },
+];
 const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   const [values, setValues] = useState(null);
+  const [mobile, setMobile] = useState(false);
+  const [web, setWeb] = useState(false);
   const dispatch = useDispatch();
   // to get lables and placeholder from translation
   const deal_category = GetTranslationData("UIMasterAdmin", "deal_category"); 
@@ -60,45 +66,52 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
     mobImage: "",
     displayOrder: "",
     name: "",
+    enabled:""
   });
+  const resetState=[{
+    webImage: "",
+    mobImage: "",
+    displayOrder: "",
+    name: "",
+    enabled:""
+  }]
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    webImage: Yup.string().required(web_image_required),
-    mobImage: Yup.string().required(mobile_image_required),
-    displayOrder: Yup.string().required(display_order_required),
-    name: Yup.string().required(category_name_required),
+    name:Yup.string().required("Deal Category Name is required"),
+    enabled:Yup.string().required("Status is required"),
+   mobImage: Yup.string().required(mobile_image_required),
+    displayOrder: Yup.string()
+      .required(display_order_required)
+      .matches(/^[0-9]+$/, "Display Order must be a number"),    name: Yup.string().required(category_name_required),
   });
+
   //to handle submit
   const handleSubmit = (values) => {
-    if (values) {
-      if (
-        typeof values.webImage === "object" &&
-        typeof values.mobImage === "object"
-      ) {
-        dispatch(onPostuploadImage(values.webImage));
-        dispatch(onPostuploadMobileImage(values.mobImage));
-        setValues(values);
-      } else {
-        const dealCategoryData = {
-          webImage: values.webImage,
-          mobImage: values.mobImage,
-          clientId: 6,
-          deleted: false,
-          name:values?.name,
-          displayOrder: JSON.stringify(values?.displayOrder),
-          id: values.id,
-        };
-        dispatch(onUpdateDealCategory(dealCategoryData));
 
+    if (!values) return;
+    const { webImage, mobImage } = values;
+    if (typeof webImage === "object" || typeof mobImage === "object") {
+      if (typeof webImage === "object") {
+        dispatch(onPostuploadImage(webImage));
+        if (typeof mobImage !== "object") setWeb(true);
       }
-      setInitialValue({
-        webImage: "",
-        mobImage: "",
-        displayOrder: "",
-        name: "",
-      })
-      setdealCategory("")
+      if (typeof mobImage === "object") {
+        dispatch(onPostuploadMobileImage(mobImage));
+        if (typeof webImage !== "object") setMobile(true);
       }
+    } else {
+      const dealCategoryData = {
+        ...values,
+        deleted:false,
+        clientId:6,
+        webImage: webImage || "",
+        mobImage: mobImage || "",
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        ...(dealCategory && { id: values.id }),
+      };
+      dispatch(onPostDealCategory(dealCategoryData));
+    }
+    setValues(values);
   };
 
   // to handle image changes
@@ -112,28 +125,53 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
       setFieldValue("webImage", formData);
     }
   };
+
   useEffect(() => {
-    if (
-      uploadImage?.postMobileStatusCode == "201" &&
-      uploadImage?.post_status_code == "201"
-    ) {
+    if (uploadImage) {
       const dealCategoryData = {
-        webImage: getwebImage,
-        mobImage: getmobImage,
+        ...values,
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        webImage: dealCategory?.webImage,
+        mobImage: dealCategory?.mobImage,
         clientId: 6,
         deleted: false,
-        name: values?.name,
-        displayOrder: JSON.stringify(values?.displayOrder),
-        ...(dealCategory && { id: values.id }),
+        ...(dealCategory && { id: values?.id }),
+
       };
-      dispatch(onPostDealCategory(dealCategoryData));
-      setdealCategory("")
+      let shouldDispatch = false;
+      if (
+        uploadImage.postMobileStatusCode === "201" &&
+        uploadImage.post_status_code === "201"
+      ) {
+        dealCategoryData.webImage = getwebImage;
+        dealCategoryData.mobImage = getmobImage;
+        shouldDispatch = true;
+      } else if (uploadImage.post_status_code === "201" && web) {
+        dealCategoryData.webImage = getwebImage;
+        shouldDispatch = true;
+        setWeb(false);
+      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+        dealCategoryData.mobImage = getmobImage;
+        shouldDispatch = true;
+        setMobile(false);
+      }
+      if (shouldDispatch) {
+        dispatch(onPostDealCategory(dealCategoryData));
+      }
     }
-  }, [uploadImage, values]);
+  }, [uploadImage, values, web, mobile]);
   // to handle navigation and toast notifications based on deal category status
   useEffect(() => {
     if (dealCategoryData?.post_status_code === "201") {
       toast.success(dealCategoryData.postMessage);
+      setInitialValue(resetState)
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostDealCategoryReset());
+      dispatch(onGetDealCategory());
+    }else if (dealCategoryData?.post_status_code === "205") {
+      toast.success(dealCategoryData.postMessage);
+      setInitialValue(resetState)
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealCategoryReset());
@@ -195,13 +233,13 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>
                                 {display_order}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="displayOrder"
                                 className={`form-control ${
                                   errors.displayOrder && touched.displayOrder
@@ -216,10 +254,32 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 className="error-message"
                               />
                             </div>
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>
+                                {upload_image_for_phone}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <input
+                                type="file"
+                                name="mobImage"
+                                className={`form-control ${
+                                  errors.mobImage && touched.mobImage
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event, true)
+                                }
+                              />
+                              <ErrorMessage
+                                name="mobImage"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
                                 {upload_image_for_web}
-                                <span className="text-danger">*</span>
                               </label>
                               <input
                                 type="file"
@@ -239,25 +299,23 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 className="error-message"
                               />
                             </div>{" "}
-                            <div className="col-sm-4 form-group mb-2 mt-2">
-                              <label>
-                                {upload_image_for_phone}
-                                <span className="text-danger">*</span>
-                              </label>
-                              <input
-                                type="file"
-                                name="mobImage"
-                                className={`form-control ${
-                                  errors.mobImage && touched.mobImage
+
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{"Status"}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                onChange={(event) =>
-                                  handleImageChange(setFieldValue, event, true)
-                                }
                               />
                               <ErrorMessage
-                                name="mobImage"
+                                name="enabled"
                                 component="div"
                                 className="error-message"
                               />

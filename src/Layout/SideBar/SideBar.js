@@ -76,24 +76,34 @@ const SideBar = () => {
   useEffect(() => {
     if (!getModule?.isLoading && userRoleModuleAccess?.length) {
       let tempideModules = JSON.parse(JSON.stringify(getModuleData));
+  
+      // Filter the userRoleModuleAccess data based on role ID and access permissions
       const filterData = userRoleModuleAccess?.filter((item) => {
         return (
           item.roleId === userRoleID &&
           (item.addAccess || item.editAccess || item.viewAccess)
         );
       });
+  
       const filterModules = [];
-      for (var i = 0; i < tempideModules.length; i++) {
-        for (var j = 0; j < filterData?.length; j++) {
-          if (tempideModules[i].id === filterData[j].moduleId) {
+      for (let i = 0; i < tempideModules.length; i++) {
+        for (let j = 0; j < filterData?.length; j++) {
+          // Check if the module ID matches and the module is enabled
+          if (tempideModules[i].id === filterData[j].moduleId && tempideModules[i].enabled) {
             tempideModules[i].moduleId = filterData[j].moduleId;
             filterModules.push(tempideModules[i]);
           }
         }
       }
+  
+      // Sort the filtered modules based on display_order
+      filterModules.sort((a, b) => a.displayOrder - b.displayOrder);
+  
       setIsSideBarModules(filterModules);
     }
   }, [getModule, userRoleModuleAccess]);
+
+
 
   // to filter module access data
   const getModuleDataAccess = userRoleModuleAccess.filter((item) => {
@@ -129,6 +139,7 @@ const SideBar = () => {
   }, [userRoleModuleAccess, selectedModuleId, sideBarModules]);
   return (
     <div className="deznav">
+      {console.log(sideBarModules)}
       <div className="deznav-scroll mm-active ps ps--active-y">
         {getModule?.isLoading ? (
           <div style={{ height: "400px" }}>
@@ -152,7 +163,7 @@ const SideBar = () => {
                   >
                     <img
                       src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sideBar.icon}`}
-                      style={{ width: "50px" }}
+                      style={{ width: "18px" }}
                       alt="mobImage"
                     />
                     <span className="nav-text ps-1">{sideBar.name}</span>

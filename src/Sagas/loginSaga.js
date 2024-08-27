@@ -14,8 +14,7 @@ function* Login({ payload }) {
       yield put(
 
         onLoginSubmitSuccess({
-
-          status_code: loginResponse?.httpStatusCode,
+          status_code: loginResponse?.errorCode,
           message: loginResponse?.errorMessage,
           data: loginResponse?.response,
         })
@@ -23,7 +22,7 @@ function* Login({ payload }) {
     } else {
       yield put(
         onLoginSubmitError({
-          status_code: loginResponse?.httpStatusCode,
+          status_code: loginResponse?.errorCode,
           message: loginResponse?.errorMessage,
         })
       );

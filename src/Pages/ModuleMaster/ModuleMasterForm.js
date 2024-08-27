@@ -94,10 +94,13 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
 
   // to validate module master form using Yup schema
   const validations = yup.object({
-    name: yup.string().required(modul_name_required),
-    routePath: yup.string().required(Module_route_path_required),
-    displayOrder: yup.number().required(display_order_required),
+    name: yup.string().required("Module Name is required"),
+    routePath: yup.string().required("Module Route Path is required"),
+    displayOrder: yup.string()
+      .required(display_order_required)
+      .matches(/^[0-9]+$/, "Display Order must be a number"),
     enabled: yup.string().required(status_required), // Validate as boolean
+    icon: yup.string().required("Module Icon is required"), // Validate as boolean
   });
 
   // to handle image changes
@@ -159,13 +162,15 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
       dispatch(onPostuploadImageReset());
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
-    } else if (moduleData?.update_status_code === "205") {
-      toast.success(moduleData?.updateMessage);
+    } else if (moduleData?.status_code === "205") {
+      toast.success(moduleData?.message);
+      dispatch(onPostuploadImageReset());
       dispatch(onGetModule());
       dispatch(onPostModuleReset());
       setInitialValue(reset);
     } else if (moduleData?.status_code) {
       toast.error(moduleData.message);
+      dispatch(onPostuploadImageReset());
       dispatch(onPostModuleReset());
     }
     setIsSubmit(false); // reset the submit state after processing
@@ -201,7 +206,7 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
                     {({ errors, touched, setFieldValue }) => (
                       <Form>
                         <div className="row">
-                          <div className="col-sm-4 form-group mb-2">
+                          <div className="col-sm-4 form-group mb-4">
                             <label htmlFor="name-f">
                               {module_name}
                               <span className="text-danger">*</span>
@@ -212,7 +217,6 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
                                 errors.name && touched.name ? "is-invalid" : ""
                               }`}
                               name="name"
-                              id="name-f"
                               placeholder={module_name_placeholder}
                             />
                             <ErrorMessage
@@ -270,7 +274,7 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
                               <span className="text-danger">*</span>
                             </label>
                             <Field
-                              type="number"
+                              type="text"
                               name="displayOrder"
                               className={`form-control ${
                                 errors.displayOrder && touched.displayOrder

@@ -47,7 +47,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
     "description_placeholder"
   );
   // to get data from redux store
-  const moduleAccessData = useSelector((state) => state?.moduleReducer?.data);
+  const modulesData = useSelector((state) => state?.moduleReducer?.data);
   const getmoduleLoading = useSelector((state) => state?.moduleReducer);
   const getUserModalAccessData = useSelector(
     (state) => state?.userRoleModuleAccessReducer
@@ -60,7 +60,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const [intialValue, setInitialValue] = useState({
     name: "",
     description: "",
-    modules: moduleAccessData.reduce(
+    modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
         [module.id]: {
@@ -77,7 +77,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const reset = {
     name: "",
     description: "",
-    modules: moduleAccessData.reduce(
+    modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
         [module.id]: {
@@ -156,7 +156,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   }, [getUserRoleData, getUserModalAccessData]);
   useEffect(() => {
     if (roleMasterData) {
-      const initialModules = moduleAccessData.reduce((acc, module) => {
+      const initialModules = modulesData.reduce((acc, module) => {
         const moduleAccess =
           editModules.find((item) => item.moduleId === module.id) || {};
         return {
@@ -198,7 +198,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
-                  <div className="container-fluid">
+                  <div className="containers-fluid">
                     <Formik
                       initialValues={intialValue}
                       validationSchema={validations}
@@ -252,7 +252,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                     checked={selectAll}
                                     onChange={(e) => {
                                       const isChecked = e.target.checked;
-                                      moduleAccessData.forEach((module) => {
+                                      modulesData.forEach((module) => {
                                         setFieldValue(
                                           `modules.${module.id}.view`,
                                           isChecked
@@ -271,84 +271,90 @@ const RoleMasterForm = ({ roleMasterData }) => {
                               </div>
                               <div className="col-lg-12 br pt-2">
                                 <label>{module_access}</label>
-                                {Array.isArray(moduleAccessData) &&
-                                  moduleAccessData.map((moduleData, index) => {
-                                    return (
-                                      <div
-                                        className="row mb-3 mt-3"
-                                        key={index}
-                                      >
-                                        <h4 className="col-lg-3">
-                                          {moduleData.name}
-                                        </h4>
-                                        <div className="col-lg-9 d-flex justify-content-end">
-                                          <div className="form-check form-check-inline">
-                                            <label className="form-check-label">
-                                              <Field
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                name={`modules.${moduleData.id}.view`}
-                                              />
-                                              {view}
-                                            </label>
-                                          </div>
-                                          <div className="form-check form-check-inline">
-                                            <label className="form-check-label">
-                                              <Field
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                name={`modules.${moduleData.id}.add`}
-                                                onChange={(e) => {
-                                                  const isChecked =
-                                                    e.target.checked;
-                                                  setFieldValue(
-                                                    `modules.${moduleData.id}.add`,
-                                                    isChecked
-                                                  );
-                                                  if (isChecked) {
-                                                    setFieldValue(
-                                                      `modules.${moduleData.id}.view`,
-                                                      true
-                                                    );
-                                                  }
-                                                }}
-                                              />
-                                              {add}
-                                            </label>
-                                          </div>
-                                          <div className="form-check form-check-inline">
-                                            <label className="form-check-label">
-                                              <Field
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                name={`modules.${moduleData.id}.edit`}
-                                                onChange={(e) => {
-                                                  const isChecked =
-                                                    e.target.checked;
-                                                  setFieldValue(
-                                                    `modules.${moduleData.id}.edit`,
-                                                    isChecked
-                                                  );
-                                                  if (isChecked) {
-                                                    setFieldValue(
-                                                      `modules.${moduleData.id}.view`,
-                                                      true
-                                                    );
+                                {Array.isArray(modulesData) &&
+                                  modulesData
+                                    .filter((moduleData) => moduleData.enabled) // Filter out disabled modules
+                                    .sort(
+                                      (a, b) => a.displayOrder - b.displayOrder
+                                    ) // Sort by displayOrder
+                                    .map((moduleData, index) => {
+                                      return (
+                                        <div
+                                          className="row mb-3 mt-3"
+                                          key={index}
+                                        >
+                                          <h4 className="col-lg-3">
+                                            {moduleData.name}
+                                          </h4>
+                                          <div className="col-lg-9 d-flex justify-content-end">
+                                            <div className="form-check form-check-inline">
+                                              <label className="form-check-label">
+                                                <Field
+                                                  type="checkbox"
+                                                  className="form-check-input"
+                                                  name={`modules.${moduleData.id}.view`}
+                                                />
+                                                {view}
+                                              </label>
+                                            </div>
+                                            <div className="form-check form-check-inline">
+                                              <label className="form-check-label">
+                                                <Field
+                                                  type="checkbox"
+                                                  className="form-check-input"
+                                                  name={`modules.${moduleData.id}.add`}
+                                                  onChange={(e) => {
+                                                    const isChecked =
+                                                      e.target.checked;
                                                     setFieldValue(
                                                       `modules.${moduleData.id}.add`,
-                                                      true
+                                                      isChecked
                                                     );
-                                                  }
-                                                }}
-                                              />
-                                              {edit}
-                                            </label>
+                                                    if (isChecked) {
+                                                      setFieldValue(
+                                                        `modules.${moduleData.id}.view`,
+                                                        true
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                                {add}
+                                              </label>
+                                            </div>
+                                            <div className="form-check form-check-inline">
+                                              <label className="form-check-label">
+                                                <Field
+                                                  type="checkbox"
+                                                  className="form-check-input"
+                                                  name={`modules.${moduleData.id}.edit`}
+                                                  onChange={(e) => {
+                                                    const isChecked =
+                                                      e.target.checked;
+                                                    setFieldValue(
+                                                      `modules.${moduleData.id}.edit`,
+                                                      isChecked
+                                                    );
+                                                    if (isChecked) {
+                                                      setFieldValue(
+                                                        `modules.${moduleData.id}.view`,
+                                                        true
+                                                      );
+                                                      setFieldValue(
+                                                        `modules.${moduleData.id}.add`,
+                                                        true
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                                {edit}
+                                              </label>
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    );
-                                  })}
+                                      );
+                                    })}
                               </div>
+
                               <ErrorMessage
                                 name="modules"
                                 component="div"

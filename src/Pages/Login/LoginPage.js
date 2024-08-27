@@ -51,7 +51,7 @@ const LoginPage = () => {
       dispatch(onLoginSubmit(values));
       if (userName) {
         const fullName = `${userName.firstName} ${userName.lastName}`;
-        sessionStorage.setItem("userFullName", fullName);
+        localStorage.setItem("userFullName", fullName);
       }
       action.resetForm();
     },

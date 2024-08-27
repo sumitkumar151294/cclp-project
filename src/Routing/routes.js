@@ -21,6 +21,7 @@ function RouteConfiq() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Layout Component={Dashboard} />} />
+
         <Route
           path="/roleMaster"
           element={<Layout Component={RoleMasterList} />}
