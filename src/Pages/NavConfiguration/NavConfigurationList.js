@@ -74,7 +74,7 @@ const NavConfigurationList = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes!',
       cancelButtonText: 'Cancel'
-    }).then((result) => {      
+    }).then((result) => {
       if (result?.value) {        
         handleDelete(data)
       }
@@ -107,9 +107,8 @@ const NavConfigurationList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (
         <NavConfigurationForm navData={navData} setNavData={setNavData}/>
-      )}
+
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -150,7 +149,7 @@ const NavConfigurationList = () => {
                           <th>{display_order}</th>
                           <th>{nav_icon}</th>
                           <th>{"Login Required"}</th>
-                          {getRoleAccess[0]?.editAccess && <th>{action_label}</th>}
+                         <th>{action_label}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -163,7 +162,7 @@ const NavConfigurationList = () => {
                               <td>{data.displayOrder}</td>
                               <td>{data.icon}</td>
                               <td>{data.loginRequired ? "Yes" : "No"}</td>
-                              {getRoleAccess[0]?.editAccess && (
+
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -178,7 +177,7 @@ const NavConfigurationList = () => {
                                     />
                                   </div>
                                 </td>
-                              )}
+
                             </tr>
                           ))}
                       </tbody>

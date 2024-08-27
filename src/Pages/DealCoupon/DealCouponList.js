@@ -30,7 +30,7 @@ const DealCouponList = () => {
     (state) => state.moduleReducer?.filteredData
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  
+
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
@@ -160,15 +160,15 @@ const DealCouponList = () => {
 
                                 <th>{"Status "}</th>
 
-                                {getRoleAccess[0]?.editAccess && (
+
                                   <th>{"Action"}</th>
-                                )}
+
                               </tr>
                             </thead>
                             <tbody>
                               {filteredData
-                                .slice(startIndex, endIndex)
-                                .map((dealcoupoun, index) => (
+                                ?.slice(startIndex, endIndex)
+                                ?.map((dealcoupoun, index) => (
                                   <tr key={index}>
                                     <td>{dealcoupoun.title}</td>
                                     <td>{dealcoupoun.typeOfCoupoun}</td>
@@ -193,12 +193,12 @@ const DealCouponList = () => {
                                     <td>
                                       {dealcoupoun.dealId ? (
                                         getDealData
-                                          .filter(
+                                          ?.filter(
                                             (deal) =>
                                               deal.id ===
                                               parseInt(dealcoupoun.dealId)
                                           )
-                                          .map((filteredDeal) => (
+                                          ?.map((filteredDeal) => (
                                             <span key={filteredDeal.id}>
                                               {filteredDeal.name}
                                             </span>
