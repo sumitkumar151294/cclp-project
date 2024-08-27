@@ -15,4 +15,9 @@ export const config = [{
   ACCESS_KEY: "demo1",
   SECRET_KEY: "demo1",
   PARTNER_KEY: "UIMasterAdmin",
+},{
+  API_URL: "http://192.168.29.89:3000",
+  ACCESS_KEY: "demo1",
+  SECRET_KEY: "demo1",
+  PARTNER_KEY: "UIMasterAdmin",
 }]

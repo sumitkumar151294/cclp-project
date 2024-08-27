@@ -4,12 +4,12 @@ import { onGetDealCouponFreq, onGetDealCouponFreqError, onGetDealCouponFreqSucce
 function* GetDealCouponFreq() {
   try {
     const getDealCouponFreqResponse = yield call(callDealCouponFreqGetApi);
-    if (getDealCouponFreqResponse.httpStatusCode === "200") {
+    if (getDealCouponFreqResponse.errorCode === "200") {
       yield put(
         onGetDealCouponFreqSuccess({
           data: getDealCouponFreqResponse.response,
           message: getDealCouponFreqResponse.errorMessage,
-          status_code:getDealCouponFreqResponse.httpStatusCode
+          status_code:getDealCouponFreqResponse.errorCode
         })
       );
     } else {
@@ -19,7 +19,7 @@ function* GetDealCouponFreq() {
 
           data: getDealCouponFreqResponse.response,
           message: getDealCouponFreqResponse.response.message,
-          status_code:getDealCouponFreqResponse.httpStatusCode
+          status_code:getDealCouponFreqResponse.errorCode
         })
       );
     }
@@ -31,12 +31,12 @@ function* GetDealCouponFreq() {
 function* PostDealCouponFreq({ payload }) {
   try {
     const postDealCouponFreqResponse = yield call(callDealCouponFreqPostApi, payload);
-    if (postDealCouponFreqResponse.httpStatusCode === "201") {
+    if (postDealCouponFreqResponse.errorCode === "201") {
       yield put(
         onPostDealCouponFreqSuccess({
           postData: postDealCouponFreqResponse.response,
           message: postDealCouponFreqResponse.errorMessage,
-          status_code: postDealCouponFreqResponse.httpStatusCode,
+          status_code: postDealCouponFreqResponse.errorCode,
         })
       );
     } else {
@@ -44,7 +44,7 @@ function* PostDealCouponFreq({ payload }) {
         onPostDealCouponFreqError({
           data: postDealCouponFreqResponse.response,
           message: postDealCouponFreqResponse?.data?.errorMessage,
-          status_code:postDealCouponFreqResponse.httpStatusCode
+          status_code:postDealCouponFreqResponse.errorCode
         })
       );
     }
@@ -56,10 +56,10 @@ function* PostDealCouponFreq({ payload }) {
 function* UpdateDealCouponFreq({ payload }) {
   try {
     const updateDealCouponFreqResponse = yield call(callDealCouponFreqUpdateApi, payload);
-    if (updateDealCouponFreqResponse.httpStatusCode === "201") {
+    if (updateDealCouponFreqResponse.errorCode === "201") {
       yield put(
         onUpdateDealCouponFreqSuccess({
-          status_code: updateDealCouponFreqResponse.httpStatusCode,
+          status_code: updateDealCouponFreqResponse.errorCode,
           message: updateDealCouponFreqResponse.errorMessage,
           data:updateDealCouponFreqResponse.response
         })
@@ -67,7 +67,7 @@ function* UpdateDealCouponFreq({ payload }) {
     } else {
       yield put(
         onUpdateDealCouponFreqError({
-          status_code: updateDealCouponFreqResponse.httpStatusCode,
+          status_code: updateDealCouponFreqResponse.errorCode,
           message: updateDealCouponFreqResponse.errorMessage,
           data:updateDealCouponFreqResponse.response
         })

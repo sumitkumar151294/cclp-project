@@ -9,10 +9,10 @@ import {
 function* Translation() {
   try { 
     const translationResponse = yield call(translationApi);
-    if (translationResponse.httpStatusCode === "200") {
+    if (translationResponse.errorCode === "200") {
       yield put(
         onTranslationSubmitSuccess({
-          status_code: translationResponse?.httpStatusCode,
+          status_code: translationResponse?.errorCode,
           message: translationResponse?.errorMessage,
           data: translationResponse?.response
         })
@@ -21,7 +21,7 @@ function* Translation() {
       yield put(
         onTranslationSubmitError({
           data: translationResponse?.response,
-          status_code: translationResponse?.httpStatusCode,
+          status_code: translationResponse?.errorCode,
           message: translationResponse?.errorMessage
         })
       );
@@ -29,7 +29,7 @@ function* Translation() {
   } catch (error) {
     const message = error.response || "Something went wrong";
     yield put(
-      onTranslationSubmitError({ data: {}, message, httpStatusCode: 400 })
+      onTranslationSubmitError({ data: {}, message, errorCode: 400 })
     );
   }
 }

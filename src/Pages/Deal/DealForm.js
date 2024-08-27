@@ -173,7 +173,6 @@ const resetState=[{
     }
   };
   const handleSubmit = (values) => {
-debugger
     if (!values) return;
     const { webImage, mobImage } = values;
     if (typeof webImage === "object" || typeof mobImage === "object") {

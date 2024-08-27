@@ -39,22 +39,22 @@ const DealCouponList = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result?.value) {
-        handleSubmit(data);
+        // handleSubmit(data);
       }
     });
   };
   //to handle edit and delete
-  const handleSubmit = (dealCouponDatas, isEdit) => {
-    const dealCouponData = {
-      ...dealCouponDatas,
-      deleted: true,
-    };
-    if (isEdit) {
-      setDealCouponDatas(dealCouponData);
-    } else {
-      dispatch(onUpdateDealCoupon(dealCouponData));
-    }
-  };
+  // const handleSubmit = (dealCouponDatas, isEdit) => {
+  //   const dealCouponData = {
+  //     ...dealCouponDatas,
+  //     deleted: true,
+  //   };
+  //   if (isEdit) {
+  //     setDealCouponDatas(dealCouponData);
+  //   } else {
+  //     dispatch(onUpdateDealCoupon(dealCouponData));
+  //   }
+  // };
 
   // to handle pagination
   const [page, setPage] = useState(1);
@@ -95,7 +95,7 @@ const DealCouponList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && <DealCouponForm />}
+      {getRoleAccess[0]?.addAccess && <DealCouponForm dealCouponDatas={dealCouponDatas} />}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -134,16 +134,25 @@ const DealCouponList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
+                              <th>{"Title "}</th>
                                 <th>{"Coupoun Type"}</th>
                                 <th>{"Coupoun Code"}</th>
-                                <th>{"Deal"}</th>
-                                <th>{"Call To Action"}</th>
+                                <th>{"Offer Type"}</th>
+                                <th>{"Offer Sub Value"}</th>
+                                <th>{"Offer Type Value"}</th>
 
-                                <th>{"Title "}</th>
-                                <th>{"Terms and Condtions "}</th>
-                                <th>{"Description "}</th>
                                 <th>{"Segment "}</th>
+                                <th>{"Deal"}</th>
+                                <th>{"Source"}</th>
+                                <th>{"Offer Id"}</th>
+
+                                <th>{"Call To Action"}</th>
                                 <th>{"Image "}</th>
+                                <th>{"Description "}</th>
+                                <th>{"Terms and Condtions "}</th>
+
+                                <th>{"Status "}</th>
+
                                 {getRoleAccess[0]?.editAccess && (
                                   <th>{"Action"}</th>
                                 )}
@@ -154,9 +163,18 @@ const DealCouponList = () => {
                                 .slice(startIndex, endIndex)
                                 .map((dealcoupoun, index) => (
                                   <tr key={index}>
+                                    <td>{dealcoupoun.title}</td>
                                     <td>{dealcoupoun.typeOfCoupoun}</td>
                                     <td>
                                       {dealcoupoun.coupounCode || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>{dealcoupoun.offerType}</td>
+                                    <td>{dealcoupoun.offerSubType}</td>
+                                    <td>{dealcoupoun.offerTypeValue}</td>
+                                    <td>
+                                      {dealcoupoun.segmentId || (
                                         <span className="hyphen"> -</span>
                                       )}
                                     </td>
@@ -175,26 +193,9 @@ const DealCouponList = () => {
                                         <span className="hyphen"> - </span>
                                       )}
                                     </td>
-
-                                    <td>{dealcoupoun.cta}</td>
-
-                                    <td>
-                                      {dealcoupoun.title || (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>{dealcoupoun.terms}</td>
-                                    <td>
-                                      {dealcoupoun.description || (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {dealcoupoun.segmentId || (
-                                        <span className="hyphen"> -</span>
-                                      )}
-                                    </td>
-                                    <td>
+                                    <td>{dealcoupoun.source}</td>
+                                    <td>{dealcoupoun.offerId}</td>
+                                    <td>{dealcoupoun.cta}</td> <td>
                                       {dealcoupoun.image ? (
                                         <img
                                           src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealcoupoun.image}`}
@@ -205,18 +206,37 @@ const DealCouponList = () => {
                                         <span className="hyphen"> -</span>
                                       )}
                                     </td>
+
+                                    <td>
+                                      {dealcoupoun.description || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>{dealcoupoun.terms}</td>
+
+
+                                    <span
+                                        className={
+                                          dealcoupoun.enabled
+                                            ? "badge badge-success"
+                                            : "badge badge-danger"
+                                        }
+                                      >
+                                        {dealcoupoun.enabled
+                                          ? "Active"
+                                          : "Non Active"}
+                                      </span>
+
+
+
+
+
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
                                           <Button
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             end_icon={"fas fa-pencil-alt"}
-                                            // onClick={() =>
-                                            //   handleEdit(
-                                            //     data,
-                                            //     clientPayData
-                                            //   )
-                                            // }
                                           />
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"

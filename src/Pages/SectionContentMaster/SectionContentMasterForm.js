@@ -180,6 +180,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       const sectionContentMasteData = {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        textElementFlag: typeof values?.textElementFlag === 'boolean' ? values.textElementFlag : values?.textElementFlag === 'true',
         webImage: webImage || "",
         mobImage: mobImage || "",
         clientId: 6,
@@ -205,6 +206,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       const   sectionContentMasteData = {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        textElementFlag: typeof values?.textElementFlag === 'boolean' ? values.textElementFlag : values?.textElementFlag === 'true',
         webImage: sectionContentData?.webImage,
         mobImage: sectionContentData?.mobImage,
         clientId: 6,

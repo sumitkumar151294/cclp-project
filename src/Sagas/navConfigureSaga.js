@@ -4,12 +4,12 @@ import { onGetNavConfigure, onGetNavConfigureError, onGetNavConfigureSuccess, on
 function* GetNavConfigure() {
   try {
     const getNavConfigureResponse = yield call(callNavConfigureGetApi);
-    if (getNavConfigureResponse.httpStatusCode === "200") {
+    if (getNavConfigureResponse.errorCode === "200") {
       yield put(
         onGetNavConfigureSuccess({
           data: getNavConfigureResponse.response,
           message: getNavConfigureResponse.errorMessage,
-          status_code:getNavConfigureResponse.httpStatusCode
+          status_code:getNavConfigureResponse.errorCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetNavConfigure() {
         onGetNavConfigureError({
           data: getNavConfigureResponse.response,
           message: getNavConfigureResponse.response.message,
-          status_code:getNavConfigureResponse.httpStatusCode
+          status_code:getNavConfigureResponse.errorCode
         })
       );
     }
@@ -29,12 +29,12 @@ function* GetNavConfigure() {
 function* PostNavConfigure({ payload }) {
   try {
     const postNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (postNavConfigureResponse.httpStatusCode === "201") {
+    if (postNavConfigureResponse.errorCode === "201") {
       yield put(
         onPostNavConfigureSuccess({
           postData: postNavConfigureResponse.response,
           message: postNavConfigureResponse.errorMessage,
-          status_code: postNavConfigureResponse.httpStatusCode,
+          status_code: postNavConfigureResponse.errorCode,
         })
       );
     } else {
@@ -42,7 +42,7 @@ function* PostNavConfigure({ payload }) {
         onPostNavConfigureError({
           data: postNavConfigureResponse.response,
           message: postNavConfigureResponse?.data?.errorMessage,
-          status_code:postNavConfigureResponse.httpStatusCode
+          status_code:postNavConfigureResponse.errorCode
         })
       );
     }
@@ -54,10 +54,10 @@ function* PostNavConfigure({ payload }) {
 function* UpdateNavConfigure({ payload }) {
   try {
     const updateNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (updateNavConfigureResponse.httpStatusCode === "205") {
+    if (updateNavConfigureResponse.errorCode === "205") {
       yield put(
         onUpdateNavConfigureSuccess({
-          status_code: updateNavConfigureResponse.httpStatusCode,
+          status_code: updateNavConfigureResponse.errorCode,
           message: updateNavConfigureResponse.errorMessage,
           data:updateNavConfigureResponse.response
         })
@@ -65,7 +65,7 @@ function* UpdateNavConfigure({ payload }) {
     } else {
       yield put(
         onUpdateNavConfigureError({
-          status_code: updateNavConfigureResponse.httpStatusCode,
+          status_code: updateNavConfigureResponse.errorCode,
           message: updateNavConfigureResponse.errorMessage,
           data:updateNavConfigureResponse.response
         })

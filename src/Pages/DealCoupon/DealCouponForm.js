@@ -27,8 +27,7 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = () => {
-  const [showFields, setShowFields] = useState(false);
+const DealCouponForm = ({dealCouponDatas}) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   // to get labels and placeholders from translation
@@ -94,6 +93,10 @@ const DealCouponForm = () => {
     value: dealData.id,
     label: dealData.name
   }));
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   const uploadImage = useSelector((state) => state.uploadReducer);
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
@@ -107,6 +110,9 @@ const DealCouponForm = () => {
     segmentId: "",
     cta: "",
     title: "",
+    source:"",
+    dealId:"",
+    offerSubType:"",
   });
   const offerTypeOptions = [
     { value: "Feature", label: "Feature" },
@@ -133,12 +139,35 @@ const DealCouponForm = () => {
     cta: Yup.string().required(call_to_action_required),
     title: Yup.string().required("Title is required"),
     offerType: Yup.string().required("Offer Type is required"),
+    offerSubType: Yup.string().required("Offer Sub Type is required"),
+    dealId: Yup.string().required("Deal Id is required"),
+    source: Yup.string().required("Souce is required"),
+    enabled: Yup.string().required("Status is required"),
+
   });
   // to handle form submit
   const handleSubmit = (values) => {
     if (typeof values.image === "object") {
       dispatch(onPostuploadImage(values.image));
       setValues(values);
+    }else{
+      const dealCouponData = {
+        ...values,
+        enabled:
+        typeof values?.enabled === "boolean"
+          ? values.enabled
+          : values?.enabled === "true",
+        image: dealCouponDatas?.image || "",
+        clientId: 6,
+        deleted: false,
+        segmentId: 10,
+        cta: values?.cta,
+        typeOfCoupoun: values?.typeOfCoupoun,
+        dealid: values?.dealId,
+        title: values?.title,
+        ...(dealCouponDatas && { id: values.id }),
+      };
+      dispatch(onPostDealCoupon(dealCouponData));
     }
   };
   const handleImageChange = (setFieldValue, event) => {
@@ -151,15 +180,19 @@ const DealCouponForm = () => {
   useEffect(() => {
     if (uploadImage?.post_status_code == "201") {
       const dealCouponData = {
+        ...values, enabled:
+        typeof values?.enabled === "boolean"
+          ? values.enabled
+          : values?.enabled === "true",
         image: getImage,
         clientId: 6,
         deleted: false,
-        displayOrder: JSON.stringify(values?.displayOrder),
         segmentId: 10,
         cta: values?.cta,
         typeOfCoupoun: values?.typeOfCoupoun,
         dealid: values?.dealId,
         title: values?.title,
+        ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
@@ -189,10 +222,10 @@ const DealCouponForm = () => {
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                {dealCouponData.isLoading ? (
-                  <div style={{ height: "200px" }}>
-                    <Loader />
-                  </div>
+                {(dealCouponData.isPostLoading ||  uploadImage?.isPostLoading)? (
+             <div style={{ height: "200px" }}>
+             <Loader classType={"absoluteLoader"} />
+           </div>
                 ) : (
                   <div className="containers-fluid">
                     <Formik
@@ -313,6 +346,25 @@ const DealCouponForm = () => {
                                 />
                               </div>
                             )}
+                                    <div className="col-sm-4 form-group mb-4">
+                              <label>{"Offer Sub Type"}</label>
+
+                              <Field
+                                name="offerSubType"
+                                options={oferSubTypeOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.offerSubType && touched.offerSubType
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="offerSubType"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>{segment_label}</label>
                               {values.offerType==="Feature" && <span className="text-danger">*</span>}
@@ -335,6 +387,7 @@ const DealCouponForm = () => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>{"Deal Id"}</label>
+                              <span className="text-danger">*</span>
 
                               <Field
                                 name="dealId"
@@ -348,6 +401,44 @@ const DealCouponForm = () => {
                               />
                               <ErrorMessage
                                 name="dealId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4 ">
+                              <label>
+                                {"Source"}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                name="source"
+                                className={`form-control ${
+                                  errors.source && touched.source ? "is-invalid" : ""
+                                }`}
+                                placeholder={"Enter Source"}
+                              />
+                              <ErrorMessage
+                                name="source"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4 ">
+                              <label>
+                                {"Offer Id"}
+
+                              </label>
+                              <Field
+                                type="text"
+                                name="offerId"
+                                className={`form-control ${
+                                  errors.offerId && touched.offerId ? "is-invalid" : ""
+                                }`}
+                                placeholder={"Enter Offer Id"}
+                              />
+                              <ErrorMessage
+                                name="offerId"
                                 component="div"
                                 className="error-message"
                               />
@@ -372,7 +463,7 @@ const DealCouponForm = () => {
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>
                                 {"Upload Image"}
                                 <span className="text-danger">*</span>
@@ -414,40 +505,23 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{"Deal Id"}</label>
+
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{"Status"}</label>
+                              <span className="text-danger">*</span>
 
                               <Field
-                                name="dealId"
-                                options={offerTypeOptions}
+                                name="enabled"
                                 component={Dropdown}
+                                options={statusOptions}
                                 className={`form-select ${
-                                  errors.dealId && touched.dealId
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
                                 }`}
                               />
                               <ErrorMessage
-                                name="dealId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{"Offer Sub Type"}</label>
-
-                              <Field
-                                name="dealId"
-                                options={oferSubTypeOptions}
-                                component={Dropdown}
-                                className={`form-select ${
-                                  errors.dealId && touched.dealId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="dealId"
+                                name="enabled"
                                 component="div"
                                 className="error-message"
                               />
@@ -471,6 +545,7 @@ const DealCouponForm = () => {
                                 className="error-message"
                               />
                             </div>
+
                             <div className="col-sm-12 form-group mb-4">
                               <Button
                                 text={submit}

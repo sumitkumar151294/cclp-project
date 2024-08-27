@@ -5,7 +5,7 @@ import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRole
 function* GetUserRoleModuleAccess() {
   try {
     const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi);
-    if (getUserRoleModuleAccessResponse.httpStatusCode === "200") {
+    if (getUserRoleModuleAccessResponse.errorCode === "200") {
       yield put(
         onGetUserRoleModuleAccessSuccess({
           data: getUserRoleModuleAccessResponse.response,
@@ -28,10 +28,10 @@ function* GetUserRoleModuleAccess() {
 function* PostUserRoleModuleAccess({ payload }) {
   try {
     const postUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
-    if (postUserRoleModuleAccessResponse.httpStatusCode === "201") {
+    if (postUserRoleModuleAccessResponse.errorCode === "201") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
-          status_code: postUserRoleModuleAccessResponse.httpStatusCode,
+          status_code: postUserRoleModuleAccessResponse.errorCode,
           message: postUserRoleModuleAccessResponse.errorMessage,
         })
       );

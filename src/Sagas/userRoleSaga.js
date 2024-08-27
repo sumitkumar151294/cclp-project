@@ -4,12 +4,12 @@ import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole
 function* GetUserRole() {
   try {
     const getUserRoleResponse = yield call(callUserRoleGetApi);
-    if (getUserRoleResponse.httpStatusCode === "200") {
+    if (getUserRoleResponse.errorCode === "200") {
       yield put(
         onGetUserRoleSuccess({
           data: getUserRoleResponse.response,
           message: getUserRoleResponse.errorMessage,
-          status_code:getUserRoleResponse.httpStatusCode
+          status_code:getUserRoleResponse.errorCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetUserRole() {
         onGetUserRoleError({
           data: getUserRoleResponse.response,
           message: getUserRoleResponse.response.message,
-          status_code:getUserRoleResponse.httpStatusCode
+          status_code:getUserRoleResponse.errorCode
         })
       );
     }
@@ -29,12 +29,12 @@ function* GetUserRole() {
 function* PostUserRole({ payload }) {
   try {
     const postUserRoleResponse = yield call(callUserRolePostApi, payload);
-    if (postUserRoleResponse.httpStatusCode === "201") {
+    if (postUserRoleResponse.errorCode === "201") {
       yield put(
         onPostUserRoleSuccess({
           postData: postUserRoleResponse.response,
           message: postUserRoleResponse.errorMessage,
-          httpStatusCode: postUserRoleResponse.httpStatusCode,
+          errorCode: postUserRoleResponse.errorCode,
         })
       );
     } else {
@@ -42,7 +42,7 @@ function* PostUserRole({ payload }) {
         onPostUserRoleError({
           data: postUserRoleResponse.response,
           message: postUserRoleResponse.errorMessage,
-          status_code:postUserRoleResponse.httpStatusCode
+          status_code:postUserRoleResponse.errorCode
         })
       );
     }
@@ -54,10 +54,10 @@ function* PostUserRole({ payload }) {
 function* UpdateUserRole({ payload }) {
   try {
     const updateUserRoleResponse = yield call(callUserRolePostApi, payload);    
-    if (updateUserRoleResponse.httpStatusCode === "205") {
+    if (updateUserRoleResponse.errorCode === "205") {
       yield put(
         onUpdateUserRoleSuccess({
-          status_code: updateUserRoleResponse.httpStatusCode,
+          status_code: updateUserRoleResponse.errorCode,
           message: updateUserRoleResponse.errorMessage,
           data:updateUserRoleResponse.response
         })
