@@ -10,10 +10,13 @@ import { useSelector } from "react-redux";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 
 const DealCouponCodeList = () => {
-  // to get labels and placeholders from translation  
-  const deal_coupon_code_list = GetTranslationData("UIMasterAdmin","deal_coupon_code_list");
-  const coupon_code = GetTranslationData("UIMasterAdmin","coupon_code");
-  const deal_coupon = GetTranslationData("UIMasterAdmin","deal_coupon");
+  // to get labels and placeholders from translation
+  const deal_coupon_code_list = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_coupon_code_list"
+  );
+  const coupon_code = GetTranslationData("UIMasterAdmin", "coupon_code");
+  const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
@@ -105,7 +108,7 @@ const DealCouponCodeList = () => {
       displayOrder: "3",
     },
   ];
-  // to get data from translation 
+  // to get data from translation
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
@@ -119,9 +122,10 @@ const DealCouponCodeList = () => {
   const endIndex = startIndex + rowsPerPage;
   return (
     <>
-
       <ScrollToTop />
-      {!getRoleAccess[0]?.addAccess ? getRoleAccess[0]?.addAcces && (<DealCouponCodeForm />) : (<DealCouponCodeForm />)}
+      {/* {!getRoleAccess[0]?.addAccess ? getRoleAccess[0]?.addAcces && (<DealCouponCodeForm />) : ( */}
+      <DealCouponCodeForm />
+      {/* )} */}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -162,7 +166,9 @@ const DealCouponCodeList = () => {
                               <tr>
                                 <th>{coupon_code}</th>
                                 <th>{deal_coupon}</th>
-                                {getRoleAccess[0]?.editAccess && (<th>{action_label}</th>)}
+                                {getRoleAccess[0]?.editAccess && (
+                                  <th>{action_label}</th>
+                                )}
                               </tr>
                             </thead>
                             <tbody>
@@ -173,27 +179,27 @@ const DealCouponCodeList = () => {
                                     <td>{dealCategoryData.categoryName}</td>
                                     <td>{dealCategoryData.displayOrder}</td>
                                     {getRoleAccess[0]?.editAccess && (
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          end_icon={"fas fa-pencil-alt"}
-                                          // onClick={() =>
-                                          //   handleEdit(
-                                          //     data,
-                                          //     clientPayData
-                                          //   )
-                                          // }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          // onClick={() =>
-                                          //   handleDelete(data)
-                                          // }
-                                        />
-                                      </div>
-                                    </td>
+                                      <td>
+                                        <div className="d-flex">
+                                          <Button
+                                            className="btn btn-primary shadow btn-xs sharp me-1"
+                                            end_icon={"fas fa-pencil-alt"}
+                                            // onClick={() =>
+                                            //   handleEdit(
+                                            //     data,
+                                            //     clientPayData
+                                            //   )
+                                            // }
+                                          />
+                                          <Button
+                                            className="btn btn-danger shadow btn-xs sharp"
+                                            end_icon={"fa fa-trash"}
+                                            // onClick={() =>
+                                            //   handleDelete(data)
+                                            // }
+                                          />
+                                        </div>
+                                      </td>
                                     )}
                                   </tr>
                                 ))}

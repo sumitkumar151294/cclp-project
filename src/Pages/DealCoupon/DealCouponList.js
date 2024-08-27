@@ -95,7 +95,9 @@ const DealCouponList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && <DealCouponForm dealCouponDatas={dealCouponDatas} />}
+      {/* {getRoleAccess[0]?.addAccess &&  */}
+      <DealCouponForm />
+      {/* } */}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

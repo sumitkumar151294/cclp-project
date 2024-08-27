@@ -3,36 +3,40 @@ const API = {
   loginAuth: "generate-auth-token",
   login: "login",
   //translation
-  translationApi:"translation-content/by-client-id", //"/translation-content/by-client-id",
+  translationApi: "translation-content/by-client-id", 
   //module
-  moduleApi:"module-master",
+  moduleApi: "module-master",
   //user-role
   RoleMaster: "user-role",
   // user-role-module-access
   postUserRoleModuleAccess: "user-role-module-access",
   getUserRoleModuleAccessbyclientId: "user-role-module-access-by-role-id",
 
-//user-master
+  //user-master
   userMaster: "client-user",
   //add Coupon
   addCoupon: "addCoupon",
   //section-master
-  sectionMaster:"section-master",
+  sectionMaster: "section-master",
   //section-content-master
-  sectionContentMaster:"section-content-master",
+  sectionContentMaster: "section-content-master",
   //deal
-  deal:"deal",
+  deal: "deal",
   //deal-category
-  dealCategory:"deal-category",
+  dealCategory: "deal-category",
   //deal-coupon
-  dealCoupon:"deal-coupoun",
+  dealCoupon: "deal-coupoun",
   //deal-coupon-code
-  dealCouponCode:"deal-coupon-code",
+  dealCouponCode: "deal-coupon-code",
   // upload image path
-  uploadImage:"upload",
+  uploadImage: "upload",
   // nav-configuration
-  navConfiguration:"nav-configure",
+  navConfiguration: "nav-configure",
   // deal-coupon-frequency
-  dealcouponfrequency:"deal-coupoun-frequency",
+  dealcouponfrequency: "deal-coupoun-frequency",
+  //customer-segment
+  customersegment:"customer-segment",
+  //product-content
+  productcontent:"product-content"
 };
 export default API;

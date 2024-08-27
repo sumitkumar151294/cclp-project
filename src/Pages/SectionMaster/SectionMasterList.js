@@ -138,9 +138,9 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (
+      {/* {getRoleAccess[0]?.addAccess && ( */}
         <SectionMasterForm sectionData={sectionData} />
-      )}
+      {/* )} */}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

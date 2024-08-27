@@ -89,12 +89,12 @@ const DealCategoryList = () => {
   }, []);
   return (
     <>
-      {getRoleAccess[0]?.addAccess && (
+      {/* {getRoleAccess[0]?.addAccess && ( */}
         <DealCategoryForm
           setdealCategory={setdealCategory}
           dealCategory={dealCategory}
         />
-      )}
+      {/* )} */}
       <ScrollToTop />
       <div className="containers-fluid pt-0">
         <div className="row">

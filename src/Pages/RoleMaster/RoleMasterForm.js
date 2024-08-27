@@ -17,6 +17,7 @@ import {
   onPostUserRoleModuleAccess,
   onPostUserRoleModuleAccessReset,
 } from "../../Store/Slices/userRoleModuleAccessSlice";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
 const RoleMasterForm = ({ roleMasterData }) => {
   const dispatch = useDispatch();
@@ -46,12 +47,21 @@ const RoleMasterForm = ({ roleMasterData }) => {
     "UIMasterAdmin",
     "description_placeholder"
   );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   // to get data from redux store
   const modulesData = useSelector((state) => state?.moduleReducer?.data);
   const getmoduleLoading = useSelector((state) => state?.moduleReducer);
   const getUserModalAccessData = useSelector(
     (state) => state?.userRoleModuleAccessReducer
   );
+  const roleId = useSelector(
+    (state) => state?.userRoleReducer?.postRoleData?.[0]?.roleId
+  );
+  const getUserRoleData = useSelector((state) => state?.userRoleReducer);
   const editModules = roleMasterData
     ? getUserModalAccessData.data.filter(
         (item) => item.roleId === roleMasterData.id
@@ -60,6 +70,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const [intialValue, setInitialValue] = useState({
     name: "",
     description: "",
+    enabled:"",
     modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
@@ -77,6 +88,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   const reset = {
     name: "",
     description: "",
+    enabled:"",
     modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
@@ -94,6 +106,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     name: Yup.string().required(mandatory_Req_Label),
+    enabled: Yup.string().required(status_required),
     modules: Yup.object().test(checkBox_Error, (modules) => {
       return Object.values(modules).some(
         (module) => module.view || module.add || module.edit
@@ -101,11 +114,11 @@ const RoleMasterForm = ({ roleMasterData }) => {
     }),
   });
 
-  const roleId = useSelector(
-    (state) => state?.userRoleReducer?.postRoleData?.[0]?.roleId
-  );
-  const getUserRoleData = useSelector((state) => state?.userRoleReducer);
-
+// options for status
+const statusOptions = [
+  { value: true, label: "Active" },
+  { value: false, label: "Non Active" },
+];
   //to handle form submit
   const handleSubmit = (values) => {
     if (!values) return;
@@ -114,6 +127,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
       name: values?.name,
       description: values?.description || "",
       clientId: 6,
+      enabled:values?.enabled || "",
       ...(roleMasterData && { id: roleMasterData.id }),
     };
     setValues(values.modules);
@@ -174,6 +188,7 @@ const RoleMasterForm = ({ roleMasterData }) => {
       setInitialValue({
         name: roleMasterData.name || "",
         description: roleMasterData.description || "",
+        enabled: roleMasterData.enabled || "",
         modules: initialModules,
       });
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -241,7 +256,27 @@ const RoleMasterForm = ({ roleMasterData }) => {
                                 placeholder={description_placeholder}
                               />
                             </div>
-
+                            <div className="col-sm-4 form-group mb-2">
+                            <label>
+                              {status_label}
+                              <span className="text-danger">*</span>
+                            </label>
+                            <Field
+                              name="enabled"
+                              component={Dropdown}
+                              options={statusOptions}
+                              className={`form-select ${
+                                errors.enabled && touched.enabled
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                            />
+                            <ErrorMessage
+                              name="enabled"
+                              component="div"
+                              className="error-message"
+                            />
+                          </div>
                             <div className="row top-top mt-2">
                               <div className="col-lg-3">
                                 <div className="form-check mb-2 padd">
