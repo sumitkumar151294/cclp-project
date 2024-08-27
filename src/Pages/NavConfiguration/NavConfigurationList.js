@@ -8,6 +8,7 @@ import NavConfigurationForm from "./NavConfigurationForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import {
   onGetNavConfigure,
+  onPostNavConfigureReset,
   onUpdateNavConfigure,
   onUpdateNavConfigureReset,
 } from "../../Store/Slices/NavConfigurationSlice";
@@ -34,6 +35,12 @@ const NavConfigurationList = () => {
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
   const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const active_label = GetTranslationData("UIMasterAdmin", "active_label");
+  const non_active_label = GetTranslationData(
+    "UIMasterAdmin",
+    "non_active_label"
+  );
   // to get module data from the Redux store
   const navConfigure = useSelector((state) => state?.navConfigurationReducer);
   const navConfigureData = navConfigure?.getNavConfigureData;
@@ -76,18 +83,21 @@ const NavConfigurationList = () => {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result?.value) {        
-        handleDelete(data)
+        handleSubmit(data)
       }
     });
   };
   //to handle delete
-  const handleDelete = (data) => {
-    const deletedData = {
+  const handleSubmit = (data,isEdit) => {
+    const navConfigData = {
     ...data,
     deleted:true  
     };
-    dispatch(onUpdateNavConfigure(deletedData));
-
+    if (isEdit) {
+      setNavData(navConfigData);
+    } else {
+      dispatch(onUpdateNavConfigure(navConfigData));
+    }
   }
  // to show the snackbar and call get api
   useEffect(() => {
@@ -108,7 +118,6 @@ const NavConfigurationList = () => {
     <>
       <ScrollToTop />
         <NavConfigurationForm navData={navData} setNavData={setNavData}/>
-
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -147,8 +156,9 @@ const NavConfigurationList = () => {
                           <th>{menu_name}</th>
                           <th>{call_to_action}</th>
                           <th>{display_order}</th>
-                          <th>{nav_icon}</th>
+                          <th>{"Nav Icon"}</th>
                           <th>{"Login Required"}</th>
+                          <th>{status_label}</th>
                          <th>{action_label}</th>
                         </tr>
                       </thead>
@@ -162,18 +172,36 @@ const NavConfigurationList = () => {
                               <td>{data.displayOrder}</td>
                               <td>{data.icon}</td>
                               <td>{data.loginRequired ? "Yes" : "No"}</td>
-
+                              <td>
+                                  <span
+                                    className={
+                                      data.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {data.enabled
+                                      ? active_label
+                                      : non_active_label}
+                                  </span>
+                                </td>
                                 <td>
                                   <div className="d-flex">
                                     <Button
                                       className="btn btn-primary shadow btn-xs sharp me-1"
                                       end_icon={"fas fa-pencil-alt"}
-                                      onClick={() => handleEdit(data)}
+                                      onClick={() =>
+                                        handleSubmit(data, {
+                                          isEdit: true,
+                                        })
+                                      }
                                     />
                                     <Button
                                       className="btn btn-danger shadow btn-xs sharp"
                                       end_icon={"fa fa-trash"}
-                                      onClick={() => showAlert(data)}
+                                      onClick={() => showAlert(data, {
+                                        isEdit: false,
+                                      })}
                                     />
                                   </div>
                                 </td>

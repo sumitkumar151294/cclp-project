@@ -27,7 +27,7 @@ const API = {
   //deal-coupon
   dealCoupon: "deal-coupoun",
   //deal-coupon-code
-  dealCouponCode: "deal-coupon-code",
+  dealCouponCode: "deal-coupounCode",
   // upload image path
   uploadImage: "upload",
   // nav-configuration

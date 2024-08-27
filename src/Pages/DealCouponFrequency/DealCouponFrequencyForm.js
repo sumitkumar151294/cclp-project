@@ -196,7 +196,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{deal_coupon_frequency}</h4>
+                <h4 className="card-title">{"Deal Coupon Frequency"}</h4>
               </div>
               <div className="card-body">
                 {getDealCouponFeqData.isLoading ? (
@@ -216,7 +216,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {deal_coupon}
+                                {"Deal Coupon"}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -237,7 +237,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {valid_from}
+                                {"Valid From"}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -261,7 +261,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {valid_to}
+                                {"Valid To"}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field

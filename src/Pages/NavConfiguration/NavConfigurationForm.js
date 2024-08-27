@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { ErrorMessage, Form, Field, Formik } from "formik";
 import * as yup from "yup";
 import Button from "../../Components/Button/Button";
 import { toast, ToastContainer } from "react-toastify";
-import InputField from "../../Components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
@@ -11,13 +10,11 @@ import {
   onGetNavConfigure,
   onPostNavConfigure,
   onPostNavConfigureReset,
-  onUpdateNavConfigure,
-  onUpdateNavConfigureReset,
 } from "../../Store/Slices/NavConfigurationSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
 const NavConfigurationForm = ({ navData, setNavData }) => {
-  const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   // to get lables and placeholder from translation
   const nav_configuration_form = GetTranslationData(
@@ -62,83 +59,87 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
     "UIMasterAdmin",
     "nav_icon_placeholder"
   );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   // to get nav-configure data from the Redux store
   const navConfigureData = useSelector(
     (state) => state?.navConfigurationReducer
   );
   // initial values for the input fields
-  const initialValues = {
+  const [intialValue, setInitialValue] = useState({
     cta: "",
     navigationMenuName: "",
     displayOrder: "",
     loginRequired: false,
     icon: "",
-  };
+    enabled: "",
+  });
+  // options for status
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   // to validate nav configure form using Yup schema
-  const validateForm = yup.object({
+  const validations = yup.object({
     cta: yup.string().required(menu_name_required),
     navigationMenuName: yup.string().required(call_to_action_required),
     displayOrder: yup.string().required(display_order_required),
+    enabled: yup.string().required(status_required),
   });
-  // Custom handler for checkbox change
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    handleChange({ target: { name, value: checked } });
-  };
   // to handle form using useFormik hook
-  const { values, errors, touched, handleChange, handleSubmit, setValues } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: validateForm,
-      onSubmit: (values, action) => {
-        const postData = {
-          ...values,
-          deleted: false,
-          enabled:
-            typeof values?.enabled === "boolean"
-              ? values.enabled
-              : values?.enabled === "true",
-          clientId: 6,
-          cta: values?.cta,
-          navigationMenuName: values?.navigationMenuName,
-          displayOrder: values?.displayOrder,
-          icon: values?.icon,
-          loginRequired: values?.loginRequired,
-        };
-        if (navData) {
-          postData.id = navData.id;
-          dispatch(onUpdateNavConfigure(postData));
-        } else {
-          dispatch(onPostNavConfigure(postData));
-        }
-        setIsSubmit(true);
-        action.resetForm();
-      },
-    });
+  const handleSubmit = (values) => {
+    if (values) {
+      const postData = {
+        ...values,
+        deleted: false,
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
+        clientId: 6,
+        cta: values?.cta,
+        navigationMenuName: values?.navigationMenuName,
+        displayOrder: values?.displayOrder,
+        icon: values?.icon,
+        loginRequired: values?.loginRequired,
+        ...(navData && { id: navData.id }),
+      };
+      dispatch(onPostNavConfigure(postData));
+      setInitialValue({
+        cta: "",
+        navigationMenuName: "",
+        displayOrder: "",
+        loginRequired: false,
+        icon: "",
+        enabled: "",
+      });
+    }
+  };
   // to prefill form when we click on the edit icon
   useEffect(() => {
     if (navData) {
-      setValues({
-        cta: navData?.cta,
-        navigationMenuName: navData?.navigationMenuName,
-        displayOrder: navData?.displayOrder,
-        icon: navData?.icon,
-        loginRequired: navData?.loginRequired,
-      });
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(navData);
     }
-  }, [navData, setValues]);
+  }, [navData]);
   // to handle navigation and toast notifications based on post and update status
   useEffect(() => {
-    if (isSubmit && navConfigureData?.post_status_code === "201") {
+    if (navConfigureData?.post_status_code === "201" || navConfigureData?.post_status_code === "205") {
+      setNavData(null);
       toast.success(navConfigureData?.postMessage);
       dispatch(onGetNavConfigure());
       dispatch(onPostNavConfigureReset());
-    } else if (isSubmit && navConfigureData?.update_status_code === "205") {
-      toast.success(navConfigureData?.updateMessage);
-      setNavData();
-      dispatch(onGetNavConfigure());
-      dispatch(onUpdateNavConfigureReset());
-    } else if (navConfigureData?.post_status_code) {
+    } 
+    // else if ( navConfigureData?.update_status_code === "205") {
+    //   setNavData(null);
+    //   toast.success(navConfigureData?.updateMessage);
+    //   dispatch(onGetNavConfigure());
+    //   dispatch(onUpdateNavConfigureReset());
+    // } 
+    else if (navConfigureData?.post_status_code) {
       toast.error(navConfigureData?.postMessage?.data?.ErrorMessage);
       dispatch(onPostNavConfigureReset());
     }
@@ -156,126 +157,153 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                 <h4 className="card-title">{nav_configuration_form}</h4>
               </div>
               <div className="card-body">
-                {navConfigureData?.isPostLoading ||
-                (navData && navConfigureData?.isUpdateLoading) ? (
+                {navConfigureData?.isPostLoading ? (
                   <div style={{ height: "100px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="containers-fluid">
-                    <form onSubmit={handleSubmit}>
-                      <div className="row">
-                        <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="name-f">
-                            {menu_name}
-                            <span className="text-danger">*</span>
-                          </label>
-                          <InputField
-                            type="text"
-                            className={`form-control ${
-                              errors.cta && touched.cta ? "is-invalid" : ""
-                            }`}
-                            name="cta"
-                            placeholder={menu_name_placeholder}
-                            value={values.cta}
-                            onChange={handleChange}
-                          />
-                          {errors.cta && touched.cta && (
-                            <p className="error-message">{errors.cta}</p>
-                          )}
-                        </div>
-                        <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="description">
-                            {call_to_action}
-                            <span className="text-danger">*</span>
-                          </label>
-                          <InputField
-                            type="text"
-                            className={`form-control ${
-                              errors.navigationMenuName &&
-                              touched.navigationMenuName
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            name="navigationMenuName"
-                            placeholder={call_to_action_placeholder}
-                            value={values.navigationMenuName}
-                            onChange={handleChange}
-                          />
-                          {errors.navigationMenuName &&
-                            touched.navigationMenuName && (
-                              <p className="error-message">
-                                {errors.navigationMenuName}
-                              </p>
-                            )}
-                        </div>
+                    <Formik
+                      initialValues={intialValue}
+                      validationSchema={validations}
+                      onSubmit={handleSubmit}
+                      enableReinitialize={true}
+                    >
+                      {({ errors, touched, setFieldValue }) => (
+                        <Form>
+                          <div className="row">
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="name-f">
+                                {menu_name}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                className={`form-control ${
+                                  errors.cta && touched.cta ? "is-invalid" : ""
+                                }`}
+                                name="cta"
+                                placeholder={menu_name_placeholder}
+                              />
+                              <ErrorMessage
+                                name="cta"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="description">
+                                {call_to_action}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                className={`form-control ${
+                                  errors.navigationMenuName &&
+                                  touched.navigationMenuName
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                name="navigationMenuName"
+                                placeholder={call_to_action_placeholder}
+                              />
+                              <ErrorMessage
+                                name="navigationMenuName"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
 
-                        <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="description">
-                            {display_order}
-                            <span className="text-danger">*</span>
-                          </label>
-                          <InputField
-                            type="number"
-                            name="displayOrder"
-                            className={`form-control ${
-                              errors.displayOrder && touched.displayOrder
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            placeholder={displayOrderPlaceholder}
-                            value={values.displayOrder}
-                            onChange={handleChange}
-                          />
-                          {errors.displayOrder && touched.displayOrder && (
-                            <p className="error-message">
-                              {errors.displayOrder}
-                            </p>
-                          )}
-                        </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="description">
+                                {display_order}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="number"
+                                name="displayOrder"
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={displayOrderPlaceholder}
+                              />
+                              <ErrorMessage
+                                name="displayOrder"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
 
-                        <div className="col-sm-4 form-group mb-2">
-                          <label htmlFor="description">
-                            {nav_icon}
-                            <span className="text-danger">*</span>
-                          </label>
-                          <InputField
-                            className={`form-control ${
-                              errors.icon && touched.icon ? "is-invalid" : ""
-                            }`}
-                            type="text"
-                            name="icon"
-                            id="flexCheckDefault2"
-                            placeholder={nav_icon_placeholder}
-                            value={values.icon}
-                            onChange={handleChange}
-                          />
-                          {errors.icon && touched.icon && (
-                            <p className="error-message">{errors.icon}</p>
-                          )}
-                        </div>
-                        <div className="col-lg-4 py-4">
-                          <div className="form-check mb-2 padd mt-4">
-                            <InputField
-                              className="form-check-input"
-                              type="checkbox"
-                              name="loginRequired"
-                              checked={values.loginRequired}
-                              onChange={handleCheckboxChange}
-                            />
-                            <label className="px-1">{is_login_required}</label>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="description">
+                                {"Nav Icon"}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                className={`form-control ${
+                                  errors.icon && touched.icon
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                type="text"
+                                name="icon"
+                                id="flexCheckDefault2"
+                                placeholder={"Enter Nav Icon Name"}
+                              />
+                              <ErrorMessage
+                                name="icon"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{status_label}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-lg-4 py-4">
+                              <div className="form-check mb-2 padd mt-4">
+                                <Field
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  name="loginRequired"
+                                  onChange={({ target: { checked } }) =>
+                                    setFieldValue("loginRequired", checked)
+                                  }
+                                />
+                                <label className="px-1">
+                                  {is_login_required}
+                                </label>
+                              </div>
+                            </div>
+                            <div className="col-sm-4 mb-4">
+                              <Button
+                                text={navData ? update : submit}
+                                end_icon="fa fa-arrow-right"
+                                className="btn btn-primary  pad-aa mt-2"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="col-sm-4 mb-4">
-                        <Button
-                          text={navData ? update : submit}
-                          end_icon="fa fa-arrow-right"
-                          className="btn btn-primary  pad-aa mt-2"
-                        />
-                      </div>
-                    </form>
+                        </Form>
+                      )}
+                    </Formik>
                   </div>
                 )}
               </div>

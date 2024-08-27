@@ -29,7 +29,7 @@ function* GetNavConfigure() {
 function* PostNavConfigure({ payload }) {
   try {
     const postNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (postNavConfigureResponse.errorCode === "201") {
+    if (postNavConfigureResponse.errorCode === "201" || postNavConfigureResponse.errorCode === "205") {
       yield put(
         onPostNavConfigureSuccess({
           postData: postNavConfigureResponse.response,
@@ -54,7 +54,7 @@ function* PostNavConfigure({ payload }) {
 function* UpdateNavConfigure({ payload }) {
   try {
     const updateNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (updateNavConfigureResponse.errorCode === "205") {
+    if (updateNavConfigureResponse.errorCode === "204") {
       yield put(
         onUpdateNavConfigureSuccess({
           status_code: updateNavConfigureResponse.errorCode,
