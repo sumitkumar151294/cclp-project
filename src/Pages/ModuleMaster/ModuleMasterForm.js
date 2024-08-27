@@ -41,10 +41,6 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
     "route_path_placeholder"
   );
   const module_icon = GetTranslationData("UIMasterAdmin", "module_icon");
-  const module_icon_placeholder = GetTranslationData(
-    "UIMasterAdmin",
-    "module_icon_placeholder"
-  );
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const displayOrderPlaceholder = GetTranslationData(
     "UIMasterAdmin",
@@ -67,7 +63,6 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
     "UIMasterAdmin",
     "Module_route_path_required"
   );
-
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   const getwebImage = useSelector(
@@ -94,8 +89,8 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
 
   // to validate module master form using Yup schema
   const validations = yup.object({
-    name: yup.string().required("Module Name is required"),
-    routePath: yup.string().required("Module Route Path is required"),
+    name: yup.string().required(modul_name_required),
+    routePath: yup.string().required(Module_route_path_required),
     displayOrder: yup.string()
       .required(display_order_required)
       .matches(/^[0-9]+$/, "Display Order must be a number"),

@@ -292,9 +292,11 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                             <div className="col-lg-12 br pt-2 pb-2 mt-2">
                               <label htmlFor="name-f">{role_name}</label>
                               <div className="row ml-4">
+                                {console.log(roleList?.userRoleData)}
                                 {Array.isArray(roleList?.userRoleData) &&
                                   roleList?.userRoleData?.map(
                                     (userRole, index) => (
+                                      (userRole?.enabled) && (
                                       <div
                                         key={index}
                                         className="form-check mt-2 col-lg-3"
@@ -325,7 +327,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                                         </label>
                                       </div>
                                     )
-                                  )}
+                                  ))}
                               </div>
 
                               <ErrorMessage

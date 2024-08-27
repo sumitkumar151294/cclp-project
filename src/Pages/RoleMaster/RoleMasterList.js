@@ -31,6 +31,12 @@ const RoleMasterList = () => {
   const action = GetTranslationData("UIMasterAdmin", "action_label");
   const disabled_Text = GetTranslationData("UIMasterAdmin", "disabled_Text");
   const description = GetTranslationData("UIMasterAdmin", "description");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const active_label = GetTranslationData("UIMasterAdmin", "active_label");
+  const non_active_label = GetTranslationData(
+    "UIMasterAdmin",
+    "non_active_label"
+  );
   const dispatch = useDispatch();
   // to get the user-role-data from redux
   const roleAccessList = useSelector((state) => state?.userRoleReducer);
@@ -141,6 +147,7 @@ const RoleMasterList = () => {
                           <th>{roleName}</th>
                           <th>{modules}</th>
                           <th>{description}</th>
+                          <th>{status_label}</th>
                           <th>{action}</th>
                         </tr>
                       </thead>
@@ -180,6 +187,19 @@ const RoleMasterList = () => {
                                     <span className="hyphen"> -</span>
                                   )}
                                 </td>
+                                <td>
+                                <span
+                                  className={
+                                    roleMasterData.enabled
+                                      ? "badge badge-success"
+                                      : "badge badge-danger"
+                                  }
+                                >
+                                  {roleMasterData.enabled
+                                    ? active_label
+                                    : non_active_label}
+                                </span>
+                              </td>
                                 <td>
                                   <div className="d-flex">
                                     <Button
