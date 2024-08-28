@@ -17,6 +17,7 @@ import navConfigurationReducer from './Slices/NavConfigurationSlice';
 import dealCouponFreqReducer from './Slices/dealCouponFreqSlice';
 import customerSegmentReducer from './Slices/customerSegmentSlice';
 import productContentReducer from './Slices/productContentSlice';
+import clientMasterReducer from './Slices/clientMasterSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -37,6 +38,7 @@ const reducers = combineReducers({
     dealCouponFreqReducer:dealCouponFreqReducer,
     customerSegmentReducer:customerSegmentReducer,
     productContentReducer:productContentReducer,
+    clientMasterReducer:clientMasterReducer,
 });
 
 export default reducers;

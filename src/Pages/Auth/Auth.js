@@ -15,6 +15,8 @@ import Loader from "../../Components/Loader/Loader";
 import { onPartnerKeyLoginSubmit } from "../../Store/Slices/loginSlice";
 import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
 import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
+import { onGetClientMaster } from "../../Store/Slices/clientMasterSlice";
+
 
 const Auth = () => {
   const [showLoader, setShowLoader] = useState(false);
@@ -32,6 +34,14 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
+  const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;
+  const clientMaster = useSelector(
+    (state) => state?.clientMasterReducer?.clientMasterData
+  );
+  //fetch module master data on mount
+  useEffect(() => {
+    dispatch(onGetClientMaster({platformDomainUrlAdmin:cleanUrl}));
+  }, []);
   useEffect(() => {
     setShowLoader(true);
     // find the configuration that matches the current URL
@@ -89,7 +99,8 @@ const Auth = () => {
   }, [currentUrl]);
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
-      sessionStorage.setItem("clientCode", loginAuthData?.data?.[0]?.clientId);
+      debugger
+      sessionStorage.setItem("ClientId", clientMaster?.[0]?.id);
       axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
