@@ -35,8 +35,9 @@ const Auth = () => {
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
   const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;
+  // to get client master data from redux store
   const clientMaster = useSelector(
-    (state) => state?.clientMasterReducer?.clientMasterData
+    (state) => state?.clientMasterReducer
   );
   //fetch module master data on mount
   useEffect(() => {
@@ -71,7 +72,7 @@ const Auth = () => {
         loginAuthData?.data?.[0]?.clientId;
       axiosInstanceClient.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
-      if (!loginAuthData?.data.length || APICalled) {
+      if ((!loginAuthData?.data?.length || APICalled )) {
         dispatch(onTranslationReset());
         dispatch(
           onLoginAuthSubmit({
@@ -81,8 +82,8 @@ const Auth = () => {
           })
         );
       } else {
-        setShowError(false);
         setShowLoader(false);
+        setShowError(false);
       }
     } else {
       setShowLoader(false);
@@ -99,8 +100,6 @@ const Auth = () => {
   }, [currentUrl]);
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
-      debugger
-      sessionStorage.setItem("ClientId", clientMaster?.[0]?.id);
       axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
