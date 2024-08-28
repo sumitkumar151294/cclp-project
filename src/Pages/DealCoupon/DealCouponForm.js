@@ -19,7 +19,15 @@ import HtmlEditor from "../../Components/HtmlEditor/HtmlEditor";
 import Select from "react-select";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-
+// to get today's date
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+// type of coupon
 const typeOfCoupoun = [
   { value: "Static", label: "Static" },
   { value: "Dynamic", label: "Dynamic" },
@@ -27,9 +35,10 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = ({dealCouponDatas}) => {
+const DealCouponForm = ({ dealCouponDatas }) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
+  const todayDate = getTodayDate();
   // to get labels and placeholders from translation
   const deal_coupoun = GetTranslationData("UIMasterAdmin", "deal_coupoun");
   const type_of_coupoun = GetTranslationData(
@@ -81,6 +90,15 @@ const DealCouponForm = ({dealCouponDatas}) => {
     "UIMasterAdmin",
     "upload_image_for_phone"
   );
+  const start_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_required"
+  );
+  const end_date_required = GetTranslationData(
+    "UIMasterAdmin",
+    "end_date_required"
+  );
+  const week_required = GetTranslationData("UIMasterAdmin", "week_required");
   // to get data from redux store
   const dealCouponData = useSelector((state) => state.dealCouponReducer);
   const getImage = useSelector(
@@ -88,11 +106,11 @@ const DealCouponForm = ({dealCouponDatas}) => {
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   const dealOptions = getDealData
-  ?.filter(deal => deal?.enabled)
-  .map(dealData => ({
-    value: dealData.id,
-    label: dealData.name
-  }));
+    ?.filter((deal) => deal?.enabled)
+    .map((dealData) => ({
+      value: dealData.id,
+      label: dealData.name,
+    }));
   const statusOptions = [
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
@@ -110,9 +128,13 @@ const DealCouponForm = ({dealCouponDatas}) => {
     segmentId: "",
     cta: "",
     title: "",
-    source:"",
-    dealId:"",
-    offerSubType:"",
+    source: "",
+    dealId: "",
+    offerSubType: "",
+    validFrom:"",
+    validUpto:"",
+    weekDayId:"",
+    enabled:""
   });
   const offerTypeOptions = [
     { value: "Feature", label: "Feature" },
@@ -142,31 +164,51 @@ const DealCouponForm = ({dealCouponDatas}) => {
     offerSubType: Yup.string().required("Offer Sub Type is required"),
     dealId: Yup.string().required("Deal Id is required"),
     source: Yup.string().required("Souce is required"),
+    validFrom: Yup.string().required(start_date_required),
+    validUpto: Yup.string()
+      .required(end_date_required)
+      .test("validDate", end_date_required, function (value) {
+        const { validFrom } = this.parent;
+        if (validFrom && new Date(value) < new Date(validFrom)) {
+          return this.createError({
+            path: "validUpto",
+            message: "Valid to date must be after or on the valid from date.",
+          });
+        }
+        return true;
+      }),
+    weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.number().required() })).min(1, week_required),
     enabled: Yup.string().required("Status is required"),
-
   });
   // to handle form submit
   const handleSubmit = (values) => {
     if (typeof values.image === "object") {
       dispatch(onPostuploadImage(values.image));
       setValues(values);
-    }else{
+    } else {
       const dealCouponData = {
         ...values,
         enabled:
-        typeof values?.enabled === "boolean"
-          ? values.enabled
-          : values?.enabled === "true",
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         image: dealCouponDatas?.image || "",
         clientId: 6,
         deleted: false,
-        segmentId:3,
+        segmentId: 3,
         // segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
   };
+  //to get weekday's name
+const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
+  value: index + 1,
+  label: new Date(0, 0, index + 1).toLocaleString("default", {
+    weekday: "long",
+  }),
+}));
   const handleImageChange = (setFieldValue, event) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -177,14 +219,15 @@ const DealCouponForm = ({dealCouponDatas}) => {
   useEffect(() => {
     if (uploadImage?.post_status_code == "201") {
       const dealCouponData = {
-        ...values, enabled:
-        typeof values?.enabled === "boolean"
-          ? values.enabled
-          : values?.enabled === "true",
+        ...values,
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         image: getImage,
         clientId: 6,
         deleted: false,
-        segmentId:3,
+        segmentId: 3,
         // segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
@@ -195,17 +238,17 @@ const DealCouponForm = ({dealCouponDatas}) => {
   useEffect(() => {
     if (dealCouponData?.post_status_code === "201") {
       toast.success(dealCouponData.postMessage);
-      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadImageReset());
       dispatch(onPostDealCouponReset());
       dispatch(onGetDealCoupon());
-    }else if (dealCouponData?.post_status_code === "205") {
+    } else if (dealCouponData?.post_status_code === "205") {
       toast.success(dealCouponData.postMessage);
-      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadImageReset());
       dispatch(onPostDealCouponReset());
       dispatch(onGetDealCoupon());
     } else if (dealCouponData?.post_status_code) {
       toast.error(dealCouponData?.postMessage);
-      dispatch(onPostuploadImageReset())
+      dispatch(onPostuploadImageReset());
       dispatch(onPostuploadImageReset());
       dispatch(onPostDealCouponReset());
     }
@@ -228,10 +271,10 @@ const DealCouponForm = ({dealCouponDatas}) => {
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                {(dealCouponData.isPostLoading ||  uploadImage?.isPostLoading)? (
-             <div style={{ height: "200px" }}>
-             <Loader classType={"absoluteLoader"} />
-           </div>
+                {dealCouponData.isPostLoading || uploadImage?.isPostLoading ? (
+                  <div style={{ height: "200px" }}>
+                    <Loader classType={"absoluteLoader"} />
+                  </div>
                 ) : (
                   <div className="containers-fluid">
                     <Formik
@@ -352,7 +395,7 @@ const DealCouponForm = ({dealCouponDatas}) => {
                                 />
                               </div>
                             )}
-                                    <div className="col-sm-4 form-group mb-4">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>{"Offer Sub Type"}</label>
 
                               <Field
@@ -373,7 +416,9 @@ const DealCouponForm = ({dealCouponDatas}) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>{segment_label}</label>
-                              {values.offerType==="Feature" && <span className="text-danger">*</span>}
+                              {values.offerType === "Feature" && (
+                                <span className="text-danger">*</span>
+                              )}
                               <Field
                                 name="segmentId"
                                 component={Dropdown}
@@ -420,7 +465,9 @@ const DealCouponForm = ({dealCouponDatas}) => {
                                 type="text"
                                 name="source"
                                 className={`form-control ${
-                                  errors.source && touched.source ? "is-invalid" : ""
+                                  errors.source && touched.source
+                                    ? "is-invalid"
+                                    : ""
                                 }`}
                                 placeholder={"Enter Source"}
                               />
@@ -431,15 +478,14 @@ const DealCouponForm = ({dealCouponDatas}) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4 ">
-                              <label>
-                                {"Offer Id"}
-
-                              </label>
+                              <label>{"Offer Id"}</label>
                               <Field
                                 type="text"
                                 name="offerId"
                                 className={`form-control ${
-                                  errors.offerId && touched.offerId ? "is-invalid" : ""
+                                  errors.offerId && touched.offerId
+                                    ? "is-invalid"
+                                    : ""
                                 }`}
                                 placeholder={"Enter Offer Id"}
                               />
@@ -492,7 +538,6 @@ const DealCouponForm = ({dealCouponDatas}) => {
                                 className="error-message"
                               />
                             </div>
-
                             <div className="col-sm-4 form-group ">
                               <label>{description}</label>
                               <Field
@@ -507,6 +552,84 @@ const DealCouponForm = ({dealCouponDatas}) => {
                               />
                               <ErrorMessage
                                 name="description"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                {"Valid From"}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="date"
+                                name="validFrom"
+                                min={todayDate}
+                                className={`form-control ${
+                                  errors.validFrom && touched.validFrom
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onChange={(e) => {
+                                  setFieldValue("validFrom", e.target.value);
+                                }}
+                              />
+                              <ErrorMessage
+                                name="validFrom"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                {"Valid To"}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="date"
+                                name="validUpto"
+                                min={todayDate}
+                                className={`form-control ${
+                                  errors.validUpto && touched.validUpto
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onChange={(e) => {
+                                  const validUptoDate = e.target.value;
+                                  setFieldValue("validUpto", validUptoDate);
+                                  if (!values.validFrom) {
+                                    setFieldValue("validFrom", todayDate);
+                                  }
+                                }}
+                              />
+                              <ErrorMessage
+                                name="validUpto"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>
+                                {select_week_days}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Select
+                                isMulti
+                                name="weekDayId"
+                                options={weekDayNames}
+                                value={values.weekDayId}
+                                className={`form-select ${
+                                  errors.weekDayId && touched.weekDayId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                classNamePrefix="react-select"
+                                onChange={(selectedOptions) =>
+                                  setFieldValue("weekDayId", selectedOptions)
+                                }
+                              />
+                              <ErrorMessage
+                                name="weekDayId"
                                 component="div"
                                 className="error-message"
                               />
