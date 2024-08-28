@@ -6,19 +6,19 @@ import Loader from "../../Components/Loader/Loader";
 import ReactPaginate from "react-paginate";
 import {
   onGetModule,
-  onUpdateModuleMaster,
-  onUpdateModuleMasterReset,
+  onPostModule,
 } from "../../Store/Slices/moduleSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import InputField from "../../Components/InputField/InputField";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import Button from "../../Components/Button/Button";
 import Swal from "sweetalert2";
-import { toast } from "react-toastify";
 
 const ModuleMasterList = () => {
+
   const [searchQuery, setSearchQuery] = useState("");
   const [moduleMasterData, setModuleMasterData] = useState();
+  const [edit, setEdit] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const dispatch = useDispatch();
@@ -90,7 +90,8 @@ const ModuleMasterList = () => {
     if (isEdit) {
       setModuleMasterData(userData);
     } else {
-      dispatch(onUpdateModuleMaster(userData));
+      setEdit(true)
+      dispatch(onPostModule(userData));
     }
   };
   // for pagination
@@ -101,20 +102,14 @@ const ModuleMasterList = () => {
     setPage(selected.selected + 1);
   };
   useEffect(() => {
-    if (getModule?.update_status_code == "204") {
-      toast.success(getModule?.updateMessage);
-      dispatch(onGetModule());
-      dispatch(onUpdateModuleMasterReset());
-    } else if (getModule?.update_status_code == "205") {
-      toast.success(getModule?.updateMessage);
-      setModuleMasterData(null);
-      dispatch(onGetModule());
-      dispatch(onUpdateModuleMasterReset());
-    } else if (getModule?.update_status_code) {
-      toast.error(getModule?.updateMessage);
-      dispatch(onUpdateModuleMasterReset());
+    if (filteredData) {
+      const totalItems = filteredData.length;
+      const totalPages = Math.ceil(totalItems / rowsPerPage);
+      if (page > totalPages && page > 1) {
+        setPage(page - 1);
+      }
     }
-  }, [getModule]);
+  }, [filteredData]);
   return (
     <>
       <ScrollToTop />
@@ -122,6 +117,8 @@ const ModuleMasterList = () => {
         <ModuleMasterForm
           moduleMasterData={moduleMasterData}
           setModuleMasterData={setModuleMasterData}
+          edit={edit}
+          setEdit={setEdit}
         />
       {/* )} */}
       <div className="containers-fluid pt-0">
@@ -150,7 +147,7 @@ const ModuleMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getModule?.isLoading ? (
+                {(getModule?.postLoading || getModule?.isLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

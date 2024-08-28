@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { onGetModule, onGetModuleError, onGetModuleSuccess, onPostModule, onPostModuleError, onPostModuleSuccess, onUpdateModuleMaster, onUpdateModuleMasterError, onUpdateModuleMasterSuccess } from "../Store/Slices/moduleSlice";
+import { onGetModule, onGetModuleError, onGetModuleSuccess, onPostModule, onPostModuleError, onPostModuleSuccess } from "../Store/Slices/moduleSlice";
 import { callModuleApi, callPostModuleApi } from "../Context/moduleApi";
 
 function* Module() {
@@ -51,33 +51,7 @@ function* PostModule({ payload }) {
     yield put(onPostModuleError({ data: [], message, status_code: 400 }));
   }
 }
-function* UpdateModuleMaster({ payload }) {
-  try {
-    const updateModuleMasterResponse = yield call(callPostModuleApi, payload);
-    if (updateModuleMasterResponse.errorCode === "201") {
-      yield put(
-        onUpdateModuleMasterSuccess({
-          status_code: updateModuleMasterResponse.errorCode,
-          message: updateModuleMasterResponse.errorMessage,
-          data:updateModuleMasterResponse.response
-        })
-      );
-    } else {
-      yield put(
-        onUpdateModuleMasterError({
-          status_code: updateModuleMasterResponse.errorCode,
-          message: updateModuleMasterResponse.errorMessage,
-          data:updateModuleMasterResponse.response
-        })
-      );
-    }
-  } catch (error) {
-    const message = error.response || "Something went wrong";
-    yield put(onUpdateModuleMasterError({ data: {}, message, status_code: 400 }));
-  }
-}
 export default function* moduleSaga() {
   yield takeLatest(onGetModule.type, Module);
   yield takeLatest(onPostModule.type, PostModule);
-  yield takeLatest(onUpdateModuleMaster.type, UpdateModuleMaster);
 }

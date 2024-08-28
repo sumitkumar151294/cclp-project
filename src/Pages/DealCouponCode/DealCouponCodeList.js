@@ -9,6 +9,7 @@ import DealCouponCodeForm from "./DealCouponCodeForm";
 import { useDispatch, useSelector } from "react-redux";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetDealCouponCode } from "../../Store/Slices/dealCouponCodeSlice";
+import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
 
 const DealCouponCodeList = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const DealCouponCodeList = () => {
   //to fetch data on mount
   useEffect(() => {
     dispatch(onGetDealCouponCode());
+    dispatch(onGetDealCoupon())
   }, []);
   // to filter deal coupon code data
   const filteredData = dealCouponCodeData?.filter(

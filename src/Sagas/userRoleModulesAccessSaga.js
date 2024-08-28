@@ -28,11 +28,22 @@ function* GetUserRoleModuleAccess() {
 function* PostUserRoleModuleAccess({ payload }) {
   try {
     const postUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
-    if (postUserRoleModuleAccessResponse.errorCode === "201") {
+
+    const statusCode = postUserRoleModuleAccessResponse.errorCode;
+
+    if (statusCode === "201") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
-          status_code: postUserRoleModuleAccessResponse.errorCode,
+          status_code: statusCode,
           message: postUserRoleModuleAccessResponse.errorMessage,
+        })
+      );
+    } else if (statusCode === "205") {
+      yield put(
+        onPostUserRoleModuleAccessSuccess({
+          status_code: statusCode,
+          message: postUserRoleModuleAccessResponse.errorMessage,
+          additional_info: postUserRoleModuleAccessResponse.additionalInfo, // Assuming additional data for 205
         })
       );
     } else {

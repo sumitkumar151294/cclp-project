@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   onGetuserMaster,
-  onUpdateuserMaster,
-  onUpdateuserMasterReset,
+  onPostuserMaster,
 } from "../../Store/Slices/userMasterSlice";
 import UserMasterForm from "./UserMasterForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
@@ -18,6 +17,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const UserMasterList = () => {
+  const [edit, setEdit] = useState(false);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage] = useState(5);
@@ -102,7 +102,8 @@ const UserMasterList = () => {
     if (isEdit) {
       setuserMasterData(userData);
     } else {
-      dispatch(onUpdateuserMaster(userData));
+      setEdit(true)
+      dispatch(onPostuserMaster(userData));
     }
   };
   useEffect(() => {
@@ -120,21 +121,6 @@ const UserMasterList = () => {
     dispatch(onGetUserRole());
   }, []);
 
-  useEffect(() => {
-    if (userList?.update_status_code == "204") {
-      toast.success(userList?.updateMessage);
-      dispatch(onGetuserMaster());
-      dispatch(onUpdateuserMasterReset());
-    } else if (userList?.update_status_code == "205") {
-      toast.success(userList?.updateMessage);
-      setuserMasterData(null);
-      dispatch(onGetuserMaster());
-      dispatch(onUpdateuserMasterReset());
-    } else if (userList?.update_status_code) {
-      toast.error(userList?.updateMessage);
-      dispatch(onUpdateuserMasterReset());
-    }
-  }, [userList]);
 
   return (
     <>
@@ -143,6 +129,8 @@ const UserMasterList = () => {
         <UserMasterForm
           userMasterData={userMasterData}
           setuserMasterData={setuserMasterData}
+          edit={edit}
+          setEdit={setEdit}
         />
       {/* )} */}
       <div className="containers-fluid pt-0">
@@ -171,10 +159,8 @@ const UserMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {userList?.isgetLoading ||
-                userList?.isUpdateLoading || roleList?.isgetLoading ||
-                (userList?.update_status_code === "205" &&
-                  userList?.isPostLoading) ? (
+                {(userList?.isgetLoading || roleList?.isgetLoading ||       userList?.isPostLoading)
+             ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

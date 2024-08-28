@@ -11,14 +11,12 @@ import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import {
   onGetuserMaster,
   onPostuserMaster,
-  onPostuserMasterReset,
-  onUpdateuserMasterReset,
+  onPostuserMasterReset
 } from "../../Store/Slices/userMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-import { ClientId } from "../../Utility/Utility";
+const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
 
-const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   const dispatch = useDispatch();
   const roleList = useSelector((state) => state?.userRoleReducer);
   const getUserMaster = useSelector((state) => state?.userMasterReducer);
@@ -102,8 +100,11 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
     firstName: Yup.string().required(first_name_required),
     lastName: Yup.string().required(last_name_required),
     mobile: Yup.string()
-      .matches(/^\d{10}$/, mobil_10_digit_required)
-      .required(mobile_number_required),
+    .matches(/^\d+$/,"Phone Number Must Be a number") // Ensures only digits are allowed
+    .min(10, mobil_10_digit_required) // Ensures a minimum of 10 digits
+    .max(10, mobil_10_digit_required) // Ensures a maximum of 10 digits
+    .required(mobile_number_required), // Ensures the field is required
+
     email: Yup.string().email(email_invalid_format).required(email_required),
     roleId: Yup.string().required(please_select_one_role),
     enabled: Yup.string().required(status_required),
@@ -115,7 +116,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         deleted: false,
-        clientId: ClientId,
+        clientId: 6,
         mobile:typeof values?.mobile === "string"
         ? values.mobile
         : JSON.stringify(values?.mobile),
@@ -146,11 +147,16 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
       toast.success(getUserMaster.postMessage);
       dispatch(onGetuserMaster());
       dispatch(onPostuserMasterReset());
-    } else if (getUserMaster?.post_status_code==="205") {
+    }else if (getUserMaster?.post_status_code==="204") {
+      setEdit(false)
       setuserMasterData(null)
       toast.success(getUserMaster.postMessage);
       dispatch(onGetuserMaster())
-      dispatch(onUpdateuserMasterReset())
+      dispatch(onPostuserMasterReset());}
+       else if (getUserMaster?.post_status_code==="205") {
+      setuserMasterData(null)
+      toast.success(getUserMaster.postMessage);
+      dispatch(onGetuserMaster())
       dispatch(onPostuserMasterReset());
     }else if (getUserMaster?.post_status_code) {
       toast.error(getUserMaster.postMessage);
@@ -173,7 +179,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
               </div>
               <div className="card-body">
 
-                {roleList?.isgetLoading ||  getUserMaster?.isUpdateLoading || getUserMaster?.isPostLoading? (
+                {(roleList?.isgetLoading  || (!edit && getUserMaster?.isPostLoading))? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -256,7 +262,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="mobile"
                                 className={`form-control ${
                                   errors.mobile && touched.mobile

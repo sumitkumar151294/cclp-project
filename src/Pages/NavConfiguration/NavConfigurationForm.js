@@ -13,9 +13,15 @@ import {
 } from "../../Store/Slices/NavConfigurationSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { onPostuploadImage, onPostuploadImageReset } from "../../Store/Slices/uploadSlice";
 
 const NavConfigurationForm = ({ navData, setNavData }) => {
+  const getwebImage = useSelector(
+    (state) => state.uploadReducer?.postuploadImageData
+  );
+  const uploadImage = useSelector((state) => state.uploadReducer);
   const dispatch = useDispatch();
+  const [values, setValues] = useState(null);
   // to get lables and placeholder from translation
   const nav_configuration_form = GetTranslationData(
     "UIMasterAdmin",
@@ -77,6 +83,16 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
     icon: "",
     enabled: "",
   });
+  const reset={
+    cta: "",
+    navigationMenuName: "",
+    displayOrder: "",
+    loginRequired: false,
+    icon: "",
+    enabled: "",
+  }
+
+
   // options for status
   const statusOptions = [
     { value: true, label: "Active" },
@@ -84,40 +100,57 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
   ];
   // to validate nav configure form using Yup schema
   const validations = yup.object({
-    cta: yup.string().required(menu_name_required),
-    navigationMenuName: yup.string().required(call_to_action_required),
-    displayOrder: yup.string().required(display_order_required),
+    cta: yup.string().required("Call to Action is required"),
+    navigationMenuName: yup.string().required("Menu Name is required"),
+    displayOrder: yup.string()
+    .required(display_order_required)
+    .matches(/^[0-9]+$/, "Display Order must be a number"),
     enabled: yup.string().required(status_required),
+    icon:yup.string().required("Icon is required")
   });
   // to handle form using useFormik hook
   const handleSubmit = (values) => {
     if (values) {
+      if (typeof values.icon === "object") {
+        dispatch(onPostuploadImage(values.icon));
+        setValues(values);
+      }else {
       const postData = {
         ...values,
         deleted: false,
+        icon:navData?.icon||"",
         enabled:
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
         clientId: 6,
-        cta: values?.cta,
-        navigationMenuName: values?.navigationMenuName,
-        displayOrder: values?.displayOrder,
-        icon: values?.icon,
-        loginRequired: values?.loginRequired,
         ...(navData && { id: navData.id }),
       };
       dispatch(onPostNavConfigure(postData));
-      setInitialValue({
-        cta: "",
-        navigationMenuName: "",
-        displayOrder: "",
-        loginRequired: false,
-        icon: "",
-        enabled: "",
-      });
+    }
+    setInitialValue(reset)
     }
   };
+  useEffect(() => {
+    if (uploadImage?.post_status_code === "201") {
+      const postData = {
+        ...values,
+        deleted: false,
+        icon:getwebImage,
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
+        clientId: 6,
+        ...(navData && { id: navData.id }),
+      };
+      dispatch(onPostNavConfigure(postData));
+      setInitialValue(reset);
+    }else if(uploadImage?.post_status_code){
+      toast.error(uploadImage?.postMessage)
+      dispatch(onPostuploadImageReset())
+    }
+  }, [uploadImage, values]);
   // to prefill form when we click on the edit icon
   useEffect(() => {
     if (navData) {
@@ -130,15 +163,22 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
     if (navConfigureData?.post_status_code === "201" || navConfigureData?.post_status_code === "205") {
       setNavData(null);
       toast.success(navConfigureData?.postMessage);
+      dispatch(onPostuploadImageReset())
       dispatch(onGetNavConfigure());
       dispatch(onPostNavConfigureReset());
     }
     else if (navConfigureData?.post_status_code) {
       toast.error(navConfigureData?.postMessage?.data?.ErrorMessage);
+      dispatch(onPostuploadImageReset())
       dispatch(onPostNavConfigureReset());
     }
   }, [navConfigureData]);
-
+  const handleImageChange = (setFieldValue, event) => {
+    const file = event.currentTarget.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    setFieldValue("icon", formData);
+  };
   return (
     <>
       <ScrollToTop />
@@ -151,7 +191,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                 <h4 className="card-title">{nav_configuration_form}</h4>
               </div>
               <div className="card-body">
-                {navConfigureData?.isPostLoading ? (
+                {(navConfigureData?.isPostLoading || uploadImage?.isPostLoading) ? (
                   <div style={{ height: "100px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -166,21 +206,21 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                       {({ errors, touched, setFieldValue }) => (
                         <Form>
                           <div className="row">
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-4">
                               <label htmlFor="name-f">
-                                {menu_name}
+                                {"Navigation Name"}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
                                 type="text"
                                 className={`form-control ${
-                                  errors.cta && touched.cta ? "is-invalid" : ""
+                                  errors.navigationMenuName && touched.navigationMenuName ? "is-invalid" : ""
                                 }`}
-                                name="cta"
+                                name="navigationMenuName"
                                 placeholder={menu_name_placeholder}
                               />
                               <ErrorMessage
-                                name="cta"
+                                name="navigationMenuName"
                                 component="div"
                                 className="error-message"
                               />
@@ -193,16 +233,16 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                               <Field
                                 type="text"
                                 className={`form-control ${
-                                  errors.navigationMenuName &&
-                                  touched.navigationMenuName
+                                  errors.cta &&
+                                  touched.cta
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                name="navigationMenuName"
+                                name="cta"
                                 placeholder={call_to_action_placeholder}
                               />
                               <ErrorMessage
-                                name="navigationMenuName"
+                                name="cta"
                                 component="div"
                                 className="error-message"
                               />
@@ -214,7 +254,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
-                                type="number"
+                                type="text"
                                 name="displayOrder"
                                 className={`form-control ${
                                   errors.displayOrder && touched.displayOrder
@@ -235,16 +275,17 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                                 {"Nav Icon"}
                                 <span className="text-danger">*</span>
                               </label>
-                              <Field
+                              <input
                                 className={`form-control ${
                                   errors.icon && touched.icon
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                type="text"
+                                type="file"
                                 name="icon"
-                                id="flexCheckDefault2"
-                                placeholder={"Enter Nav Icon Name"}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event)
+                                }
                               />
                               <ErrorMessage
                                 name="icon"
