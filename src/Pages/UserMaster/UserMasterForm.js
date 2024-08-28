@@ -16,6 +16,7 @@ import {
 } from "../../Store/Slices/userMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { ClientId } from "../../Utility/Utility";
 
 const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
   const dispatch = useDispatch();
@@ -114,11 +115,11 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData}) => {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         deleted: false,
-        clientId: 6,
+        clientId: ClientId,
         mobile:typeof values?.mobile === "string"
         ? values.mobile
         : JSON.stringify(values?.mobile),
-        roleId: values.roleId,
+ 
         ...(userMasterData && { id: userMasterData.id }),
       };
       dispatch(onPostuserMaster(userMasterdata));

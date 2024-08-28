@@ -132,13 +132,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
       toast.success(navConfigureData?.postMessage);
       dispatch(onGetNavConfigure());
       dispatch(onPostNavConfigureReset());
-    } 
-    // else if ( navConfigureData?.update_status_code === "205") {
-    //   setNavData(null);
-    //   toast.success(navConfigureData?.updateMessage);
-    //   dispatch(onGetNavConfigure());
-    //   dispatch(onUpdateNavConfigureReset());
-    // } 
+    }
     else if (navConfigureData?.post_status_code) {
       toast.error(navConfigureData?.postMessage?.data?.ErrorMessage);
       dispatch(onPostNavConfigureReset());

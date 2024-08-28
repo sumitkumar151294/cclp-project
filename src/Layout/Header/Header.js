@@ -4,7 +4,7 @@ import image from "../../Assets/img/logo.png";
 import { Link } from "react-router-dom/dist";
 const Header = ({ setSideBar, sidebar }) => {
   const [hamburgerClass, setHamburgerClass] = useState(false);
-  const [initial, setinitial] = useState("false");
+  const [initial, setinitial] = useState("DD");
 
   const handleShowSideBar = () => {
     setHamburgerClass(!hamburgerClass);
@@ -33,12 +33,12 @@ const Header = ({ setSideBar, sidebar }) => {
     body.setAttribute("data-primary", "color_1");
     body.setAttribute("direction", "ltr");
   }
-  useEffect(()=>{
-    const fullName=localStorage?.getItem("userFullName")
-    const nameParts = fullName?.split(" ");
-    const initials =nameParts ? `${nameParts?.[0]?.charAt?.(0)}${nameParts[1]?.charAt?.(0)}`: "NA";
-    setinitial(initials)
-  },[])
+  // useEffect(()=>{
+  //   const fullName=localStorage?.getItem("userFullName")
+  //   const nameParts = fullName?.split(" ");
+  //   const initials =nameParts ? `${nameParts?.[0]?.charAt?.(0)}${nameParts[1]?.charAt?.(0)}`: "NA";
+  //   setinitial(initials)
+  // },[])
 
   return (
     <>

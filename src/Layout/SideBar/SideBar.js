@@ -139,7 +139,6 @@ const SideBar = () => {
   }, [userRoleModuleAccess, selectedModuleId, sideBarModules]);
   return (
     <div className="deznav">
-      {console.log(sideBarModules)}
       <div className="deznav-scroll mm-active ps ps--active-y">
         {getModule?.isLoading ? (
           <div style={{ height: "400px" }}>

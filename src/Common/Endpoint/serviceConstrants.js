@@ -37,6 +37,8 @@ const API = {
   //customer-segment
   customersegment:"customer-segment",
   //product-content
-  productcontent:"product-content"
+  productcontent:"product-content",
+  //client-master
+  clientmaster:"client-master"
 };
 export default API;

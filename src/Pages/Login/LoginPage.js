@@ -30,8 +30,6 @@ const LoginPage = () => {
 
   //to get login details from redux store
   const loginDetails = useSelector((state) => state.loginReducer);
-  // to get user master data from redux store
-  const userMasterData = useSelector((state) => state?.userMasterReducer?.getuserMasterData);
   // initial values for the input fields
   const initialValues = {
     email: "",
@@ -49,19 +47,9 @@ const LoginPage = () => {
     onSubmit: (values, action) => {
       setIsLogin(true);
       dispatch(onLoginSubmit(values));
-      if (userName) {
-        const fullName = `${userName.firstName} ${userName.lastName}`;
-        localStorage.setItem("userFullName", fullName);
-      }
       action.resetForm();
     },
   });
-  // to filter user name who is login 
-   const userName = userMasterData?.find(user => user.email === values.email);
-  // to fetch usermaster data on mount
-  useEffect(() => {
-    dispatch(onGetuserMaster());
-  }, []);
   //to handle navigation and toast notifications based on login status
   useEffect(() => {
     if (isLogin && loginDetails?.status_code === "201") {
