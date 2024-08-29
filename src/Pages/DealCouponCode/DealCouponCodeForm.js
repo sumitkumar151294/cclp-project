@@ -10,13 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDealCouponCode, onPostDealCouponCode, onPostDealCouponCodeReset } from "../../Store/Slices/dealCouponCodeSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-// options for type of coupon
-const typeOfCoupon = [
-  { value: 1, label: "Static" },
-  { value: 2, label: "Dynamic" },
-  { value: 3, label: "No Code" },
-  { value: 4, label: "Membership" },
-];
+// to get today date
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 // options for status
 const dealCouponStatus = [
   { value: "Active", label: "Active" },
@@ -26,15 +27,7 @@ const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
-const DealCouponCodeForm = () => {
-  // to get today date
-  const getTodayDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
   const todayDate = getTodayDate();
   const dispatch = useDispatch();
   // to get labels and placeholders from translation  
@@ -67,17 +60,10 @@ const DealCouponCodeForm = () => {
   // to get deal coupon code data from redux store
   const dealCouponCodeData = useSelector(state => state.dealCouponCodeReducer);
   const getDealCoupon = useSelector((state) => state.dealCouponReducer?.getDealCouponData);
-  // debugger
   const dealCouponsOptions = getDealCoupon?.map(dealCoupon => ({
     value: dealCoupon.id,
     label: dealCoupon.title
   }));
-  // const dealCouponsOptions = getDealCoupon ? getDealCoupon
-  //   .filter(dealCoupon => dealCoupon?.enabled).map(dealCoupon => ({
-  //     value: dealCoupon.id,
-  //     label: dealCoupon.title
-  //   })) : [];
-  // console.log(dealCouponsOptions);
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
     coupounCode: "",
@@ -117,7 +103,14 @@ const DealCouponCodeForm = () => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 4,
+        clientId: 6,
+        coupounCode:values?.coupounCode,
+        dealCoupounId:values?.dealCoupounId,
+        status:values?.status,
+        startDate:values?.startDate,
+        endDate:values?.endDate,
+        descriptions:values?.descriptions,
+        ...(dealCouponCode && { id: dealCouponCode.id }),
       }
       dispatch(onPostDealCouponCode(postData));
       setInitialValue({
@@ -131,26 +124,38 @@ const DealCouponCodeForm = () => {
       });
     }
   };
-
+   // to get formatDate
+   const formatDate = (datetime) => {
+    if (!datetime) return todayDate;
+    return datetime.split("T")[0];
+  };
+ // to prefill form when we click on the edit icon
+ useEffect(() => {
+  if (dealCouponCode) {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        setInitialValue({
+          coupounCode: dealCouponCode?.coupounCode,
+          dealCoupounId: dealCouponCode?.dealCoupounId,
+          status: dealCouponCode?.status,
+          startDate: formatDate(dealCouponCode?.startDate),
+          endDate: formatDate(dealCouponCode?.endDate),
+          descriptions: dealCouponCode?.descriptions,
+          enabled: dealCouponCode?.enabled,
+        });
+  }
+}, [dealCouponCode]);
+// to handle navigation and toast notifications based on post and update status_code
   useEffect(() => {
-    if (dealCouponCodeData?.post_status_code === "201") {
-      toast.success(dealCouponCodeData?.postMessage)
+    if (dealCouponCodeData?.post_status_code === "201" || dealCouponCodeData?.post_status_code === "205") {
+      toast.success(dealCouponCodeData?.postMessage);
+      setDealCouponCode(null);
       dispatch(onPostDealCouponCodeReset());
       dispatch(onGetDealCouponCode());
     } else if (dealCouponCodeData?.post_status_code) {
-      toast.error(dealCouponCodeData?.postMessage)
+      toast.error(dealCouponCodeData?.postMessage);
       dispatch(onPostDealCouponCodeReset());
     }
   }, [dealCouponCodeData]);
-
-  // useEffect(() => {
-  //   if (templateTypeData) {
-  //     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //     setInitialValue(templateTypeData)
-  //     setButton("Update")
-  //   }
-  // }, [templateTypeData])
-  // to handle navigation and toast notifications based on deal coupon code status
   return (
     <>
       <ToastContainer />
@@ -326,7 +331,7 @@ const DealCouponCodeForm = () => {
                            
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={submit}
+                                text={dealCouponCode ?  update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary  pad-aa mt-2"
                               />

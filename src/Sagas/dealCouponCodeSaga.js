@@ -29,7 +29,7 @@ function* GetDealCouponCode() {
 function* PostDealCouponCode({ payload }) {
   try {
     const postDealCouponCodeResponse = yield call(callDealCouponCodePostApi, payload);
-    if (postDealCouponCodeResponse.errorCode === "201") {
+    if (postDealCouponCodeResponse.errorCode === "201" || postDealCouponCodeResponse.errorCode === "205") {
       yield put(
         onPostDealCouponCodeSuccess({
           postData: postDealCouponCodeResponse.response,
@@ -54,7 +54,7 @@ function* PostDealCouponCode({ payload }) {
 function* UpdateDealCouponCode({ payload }) {
   try {
     const updateDealCouponCodeResponse = yield call(callDealCouponCodeUpdateApi, payload);
-    if (updateDealCouponCodeResponse.errorCode === "205") {
+    if (updateDealCouponCodeResponse.errorCode === "204") {
       yield put(
         onUpdateDealCouponCodeSuccess({
           status_code: updateDealCouponCodeResponse.errorCode,

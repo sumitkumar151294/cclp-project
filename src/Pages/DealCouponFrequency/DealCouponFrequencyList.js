@@ -20,6 +20,8 @@ const DealCouponFrequencyList = () => {
   const dispatch = useDispatch();
   const [dealCouponFreq, setDealCouponFreq] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
   // to get coulumn heading from translation
   const deal_coupon_frequency_list = GetTranslationData(
     "UIMasterAdmin",
@@ -74,16 +76,16 @@ const DealCouponFrequencyList = () => {
     setDealCouponFreq(prefilled);
   };
   //to handle edit and delete
-  const handleSubmit = (dealCouponFreq, isEdit) => {
+  const handleSubmit = (dealCouponFreq,isEdit) => {
     const dealCouponfreqData = {
       ...dealCouponFreq,
       deleted: true,
     };
-    // if (isEdit) {
-    //   setDealCouponFreq(dealCouponfreqData);
-    // } else {
-      dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
-   // }
+    if (isEdit) {
+      setDealCouponFreq(dealCouponfreqData);
+    } else {
+    dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
+    }
   };
   // Function to format dates
 const formatDate = (datetime) => {
@@ -91,8 +93,6 @@ const formatDate = (datetime) => {
   return datetime.split('T')[0]; // Extract the date part only
 };
   // to handle pagination
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
@@ -116,9 +116,11 @@ const formatDate = (datetime) => {
   }, [filteredData]);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  // to fetch data on mount
   useEffect(() => {
     dispatch(onGetDealCouponFreq());
   }, []);
+  // to show snackbar based on delete status code
   useEffect(() => {
     if (getDealCouponFeq?.update_status_code == "204") {
       toast.success(getDealCouponFeq?.updateMessage);
@@ -206,7 +208,7 @@ const formatDate = (datetime) => {
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             end_icon={"fas fa-pencil-alt"}
                                             onClick={() =>
-                                              handleEdit(dealfreq, {
+                                              handleSubmit(dealfreq, {
                                                 isEdit: true,
                                               })
                                             }

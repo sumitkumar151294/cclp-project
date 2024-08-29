@@ -8,11 +8,20 @@ import InputField from "../../Components/InputField/InputField";
 import DealCouponCodeForm from "./DealCouponCodeForm";
 import { useDispatch, useSelector } from "react-redux";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { onGetDealCouponCode } from "../../Store/Slices/dealCouponCodeSlice";
+import {
+  onGetDealCouponCode,
+  onUpdateDealCouponCode,
+  onUpdateDealCouponCodeReset,
+} from "../../Store/Slices/dealCouponCodeSlice";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const DealCouponCodeList = () => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
+  const [dealCouponCode, setDealCouponCode] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
   // to get labels and placeholders from translation
   const deal_coupon_code_list = GetTranslationData(
     "UIMasterAdmin",
@@ -36,16 +45,46 @@ const DealCouponCodeList = () => {
     (state) => state.moduleReducer?.filteredData
   );
   // to get deal coupon code data from redux
-  const dealCouponCode = useSelector((state) => state?.dealCouponCodeReducer);
-  const dealCouponCodeData = dealCouponCode?.getDealCouponCodeData;
+  const getDealCouponCode = useSelector(
+    (state) => state?.dealCouponCodeReducer
+  );
+  const dealCouponCodeData = getDealCouponCode?.getDealCouponCodeData;
   //to fetch data on mount
   useEffect(() => {
     dispatch(onGetDealCouponCode());
   }, []);
+  // modal for delete warning
+  const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSubmit(data);
+      }
+    });
+  };
+  //to handle edit and delete
+  const handleSubmit = (dealCouponCode, isEdit) => {
+    const dealCouponCodeData = {
+      ...dealCouponCode,
+      deleted: true,
+    };
+    if (isEdit) {
+      setDealCouponCode(dealCouponCodeData);
+    } else {
+      dispatch(onUpdateDealCouponCode(dealCouponCodeData));
+    }
+  };
   // to filter deal coupon code data
-  const filteredData = dealCouponCodeData?.filter(
-    (data) =>
-      data?.status?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  const filteredData = dealCouponCodeData?.filter((data) =>
+    data?.status?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   // Function to format dates
   const formatDate = (datetime) => {
@@ -57,18 +96,27 @@ const DealCouponCodeList = () => {
     setSearchQuery(event.target.value);
   };
   // to handle pagination
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  // to show snackbar based on delete status code
+  useEffect(() => {
+    if (getDealCouponCode?.update_status_code == "204") {
+      toast.success(getDealCouponCode?.updateMessage);
+      dispatch(onGetDealCouponCode());
+      dispatch(onUpdateDealCouponCodeReset());
+    }
+  }, [getDealCouponCode]);
   return (
     <>
       <ScrollToTop />
       {/* {!getRoleAccess[0]?.addAccess ? getRoleAccess[0]?.addAcces && (<DealCouponCodeForm />) : ( */}
-      <DealCouponCodeForm />
+      <DealCouponCodeForm
+        dealCouponCode={dealCouponCode}
+        setDealCouponCode={setDealCouponCode}
+      />
       {/* )} */}
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -96,7 +144,7 @@ const DealCouponCodeList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {dealCouponCode?.isgetLoading ? (
+                {getDealCouponCode?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -154,19 +202,18 @@ const DealCouponCodeList = () => {
                                           <Button
                                             className="btn btn-primary shadow btn-xs sharp me-1"
                                             end_icon={"fas fa-pencil-alt"}
-                                            // onClick={() =>
-                                            //   handleEdit(
-                                            //     data,
-                                            //     clientPayData
-                                            //   )
-                                            // }
+                                            onClick={() =>
+                                              handleSubmit(dealCouponCode, {
+                                                isEdit: true,
+                                              })
+                                            }
                                           />
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"
                                             end_icon={"fa fa-trash"}
-                                            // onClick={() =>
-                                            //   handleDelete(data)
-                                            // }
+                                            onClick={() =>
+                                              showAlert(dealCouponCode)
+                                            }
                                           />
                                         </div>
                                       </td>

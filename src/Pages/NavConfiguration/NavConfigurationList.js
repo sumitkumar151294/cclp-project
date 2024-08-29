@@ -64,12 +64,6 @@ const NavConfigurationList = () => {
         ?.toLowerCase()
         ?.includes(searchQuery?.toLowerCase())
   );
-  // to handle edit functionality
-  const handleEdit = (data) => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    const prefilled = data;
-    setNavData(prefilled);
-  };
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
