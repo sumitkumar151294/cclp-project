@@ -34,11 +34,7 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
-  const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;
-  // to get client master data from redux store
-  const clientMaster = useSelector(
-    (state) => state?.clientMasterReducer
-  );
+  const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;;
   //fetch module master data on mount
   useEffect(() => {
     dispatch(onGetClientMaster({platformDomainUrlAdmin:cleanUrl}));

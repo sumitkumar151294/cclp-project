@@ -163,7 +163,7 @@ const SideBar = () => {
                     <img
                       src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sideBar.icon}`}
                       style={{ width: "18px" }}
-                      alt="mobImage"
+                      alt="not-found"
                     />
                     <span className="nav-text ps-1">{sideBar.name}</span>
                   </Link>

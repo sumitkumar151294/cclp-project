@@ -77,54 +77,11 @@ export const userMasterSlice = createSlice({
         postMessage: "",
         post_status_code: null,
       };
-    },
-
-    onUpdateuserMaster: (state) => {
-      return {
-        ...state,
-        isUpdateLoading: true,
-        updateuserMasterData: [],
-        updateMessage: "",
-      };
-    },
-
-    onUpdateuserMasterSuccess: (state, { payload }) => {
-      const { data = [], message = "", status_code = "201" } = payload;
-      return {
-        ...state,
-        isUpdateLoading: false,
-        updateuserMasterData: data,
-        updateMessage: message,
-        update_status_code: status_code,
-      };
-    },
-
-    onUpdateuserMasterError: (state, { payload }) => {
-      const { data = [], message = "", status_code = 400 } = payload;
-      return {
-        ...state,
-        updateuserMasterData: data,
-        updateMessage: message,
-        update_status_code: status_code,
-        isUpdateLoading: false,
-      };
-    },
-    onUpdateuserMasterReset: (state) => {
-      return {
-        ...state,
-        updateMessage: "",
-        updateuserMasterData: [],
-        update_status_code: null,
-      };
-    },
+    }
   },
 });
 
 export const {
-  onUpdateuserMaster,
-  onUpdateuserMasterError,
-  onUpdateuserMasterReset,
-  onUpdateuserMasterSuccess,
   onPostuserMasterReset,
   onPostuserMasterSuccess,
   onGetuserMaster,

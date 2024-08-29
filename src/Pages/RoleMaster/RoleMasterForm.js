@@ -10,7 +10,7 @@ import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
-  onUpdateUserRoleReset,
+
 } from "../../Store/Slices/userRoleSlice";
 import {
   onGetUserRoleModuleAccess,
@@ -19,7 +19,7 @@ import {
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 
-const RoleMasterForm = ({ roleMasterData }) => {
+const RoleMasterForm = ({ roleMasterData , deleted ,setDeleted  }) => {
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
   const [value, setValues] = useState([]);
@@ -127,7 +127,7 @@ const statusOptions = [
       name: values?.name,
       description: values?.description || "",
       clientId: 6,
-      enabled:values?.enabled || "",
+        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
       ...(roleMasterData && { id: roleMasterData.id }),
     };
     setValues(values.modules);
@@ -142,8 +142,9 @@ const statusOptions = [
     ) {
       const modulesData = Object.keys(value).map((moduleId) => {
         const { id, view, add, edit } = value[moduleId];
+        debugger
         return {
-          id: id,
+          id: id || 0,
           deleted: false,
           roleId: roleMasterData?.id || roleId,
           moduleId: parseInt(moduleId, 10),
@@ -153,12 +154,20 @@ const statusOptions = [
           clientId: 6,
         };
       });
+      setInitialValue(reset)
       dispatch(onPostUserRoleModuleAccess(modulesData));
       dispatch(onPostUserRoleReset());
     } else if (getUserModalAccessData?.status_code === "201") {
       toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
+      dispatch(onPostUserRoleModuleAccessReset());
+    }else if (getUserRoleData?.status_code === "204") {
+      setDeleted(false)
+      toast.success(getUserRoleData?.message);
+      dispatch(onGetUserRole());
+      dispatch(onGetUserRoleModuleAccess());
+      dispatch(onPostUserRoleReset())
       dispatch(onPostUserRoleModuleAccessReset());
     } else if (getUserModalAccessData?.status_code === "205") {
       toast.success(getUserModalAccessData?.message);
@@ -186,9 +195,7 @@ const statusOptions = [
       }, {});
 
       setInitialValue({
-        name: roleMasterData.name || "",
-        description: roleMasterData.description || "",
-        enabled: roleMasterData.enabled || "",
+      ...roleMasterData,
         modules: initialModules,
       });
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -206,9 +213,9 @@ const statusOptions = [
                 <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
-                {getUserRoleData?.isPostLoading ||
+                {(!deleted && getUserRoleData?.isPostLoading||
                 getmoduleLoading?.isLoading ||
-                getUserModalAccessData?.isLoading ? (
+                getUserModalAccessData?.isLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

@@ -77,46 +77,7 @@ export const NavConfigurationSlice = createSlice({
         postMessage:"",
         post_status_code:null
       };
-    },
-
-    onUpdateNavConfigure: (state) => {
-      return {
-        ...state,
-        isUpdateLoading: true,
-        updateNavConfigureData: [],
-        updateMessage: "",
-      };
-    },
-
-    onUpdateNavConfigureSuccess: (state, { payload }) => {
-      const {data=[], message = "", status_code = "201" } = payload;
-      return {
-        ...state,
-        isUpdateLoading: false,
-        updateNavConfigureData:data,
-        updateMessage:message,
-        update_status_code:status_code,
-      };
-    },
-
-    onUpdateNavConfigureError: (state, { payload }) => {
-      const {data=[], message = "", status_code = 400 } = payload;
-      return {
-        ...state,
-        updateNavConfigureData:data,
-        updateMessage:message,
-        update_status_code:status_code,
-        isUpdateLoading: false,
-      };
-    },
-    onUpdateNavConfigureReset: (state) => {
-      return {
-        ...state,
-        updateMessage:"",
-        updateNavConfigureData:[],
-        update_status_code:null,
-      };
-    },
+    }
   },
 });
 
@@ -127,11 +88,7 @@ export const {
   onPostNavConfigure,
   onPostNavConfigureSuccess,
   onPostNavConfigureError,
-  onPostNavConfigureReset,
-  onUpdateNavConfigure,
-  onUpdateNavConfigureSuccess,
-  onUpdateNavConfigureError,
-  onUpdateNavConfigureReset
+  onPostNavConfigureReset
 } = NavConfigurationSlice.actions;
 
 export default NavConfigurationSlice.reducer;

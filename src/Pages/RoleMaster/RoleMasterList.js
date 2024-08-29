@@ -8,8 +8,6 @@ import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
-  onUpdateUserRole,
-  onUpdateUserRoleReset,
 } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
@@ -19,6 +17,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const RoleMasterList = () => {
+  const [deleted, setDeleted] = useState(false);
   const [page, setPage] = useState(1);
   const [roleMasterData, setRoleMasterData] = useState();
   // To get data from translation
@@ -91,6 +90,7 @@ const RoleMasterList = () => {
   };
   //to handle edit and delete
   const handleSubmit = (roleMaster, edit) => {
+    debugger
     if (edit) {
       setRoleMasterData(roleMaster);
     } else {
@@ -98,19 +98,11 @@ const RoleMasterList = () => {
         ...roleMaster,
         deleted: true,
       };
+      setDeleted(true)
       dispatch(onPostUserRole(roleMasterInfo));
     }
   };
-  useEffect(() => {
-    if (roleAccessList?.status_code === "204") {
-      dispatch(onGetUserRole());
-      dispatch(onGetUserRoleModuleAccess());
-      dispatch(onPostUserRoleReset());
-      toast.success(roleAccessList?.message);
-    } else if (roleAccessList?.status_code === "205") {
-      setRoleMasterData(null);
-    }
-  }, [roleAccessList]);
+
   useEffect(() => {
     if (userRoleAccessListData) {
       const totalItems = userRoleAccessListData.length;
@@ -123,7 +115,8 @@ const RoleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <RoleMasterForm roleMasterData={roleMasterData} />
+      <RoleMasterForm roleMasterData={roleMasterData}    deleted={deleted}
+          setDeleted={setDeleted}/>
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -133,7 +126,7 @@ const RoleMasterList = () => {
               </div>
               <div className="card-body position-relative">
                 {(roleAccessList?.isgetLoading ||
-                  roleAccessList?.isUpdateLoading ||
+                  roleAccessList?.isPostLoading ||
                   getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />

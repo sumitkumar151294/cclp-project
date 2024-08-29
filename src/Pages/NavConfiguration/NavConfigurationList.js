@@ -8,18 +8,16 @@ import NavConfigurationForm from "./NavConfigurationForm";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import {
   onGetNavConfigure,
-  onPostNavConfigureReset,
-  onUpdateNavConfigure,
-  onUpdateNavConfigureReset,
+  onPostNavConfigure,
 } from "../../Store/Slices/NavConfigurationSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const NavConfigurationList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [deleteddata, setDeleteData] = useState("");
+  const [edit, setEdit] = useState("");
   const [navData, setNavData] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -33,7 +31,10 @@ const NavConfigurationList = () => {
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
   const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const active_label = GetTranslationData("UIMasterAdmin", "active_label");
@@ -67,40 +68,34 @@ const NavConfigurationList = () => {
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to delete this row.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes!',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
     }).then((result) => {
-      if (result?.value) {        
-        handleSubmit(data)
+      if (result?.value) {
+        handleSubmit(data);
       }
     });
   };
   //to handle delete
-  const handleSubmit = (data,isEdit) => {
+  const handleSubmit = (data, isEdit) => {
     const navConfigData = {
-    ...data,
-    deleted:true  
+      ...data,
+      deleted: true,
     };
     if (isEdit) {
       setNavData(navConfigData);
     } else {
-      dispatch(onUpdateNavConfigure(navConfigData));
+      dispatch(onPostNavConfigure(navConfigData));
     }
-  }
- // to show the snackbar and call get api
-  useEffect(() => {
-    if (navConfigure?.update_status_code == "204") {
-      toast.success(navConfigure?.updateMessage);
-      dispatch(onGetNavConfigure());
-      dispatch(onUpdateNavConfigureReset());
-    }
-  }, [navConfigure]);
+  };
+  // to show the snackbar and call get api
+
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -111,7 +106,7 @@ const NavConfigurationList = () => {
   return (
     <>
       <ScrollToTop />
-        <NavConfigurationForm navData={navData} setNavData={setNavData}/>
+      <NavConfigurationForm navData={navData} setNavData={setNavData} edit={edit} setEdit={setEdit}/>
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -138,7 +133,7 @@ const NavConfigurationList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {navConfigure?.isgetLoading || (navConfigure?.isUpdateLoading) ? (
+                {(navConfigure?.isgetLoading )? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -153,7 +148,7 @@ const NavConfigurationList = () => {
                           <th>{"Nav Icon"}</th>
                           <th>{"Login Required"}</th>
                           <th>{status_label}</th>
-                         <th>{action_label}</th>
+                          <th>{action_label}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -161,45 +156,52 @@ const NavConfigurationList = () => {
                           ?.slice(startIndex, endIndex)
                           ?.map((data, index) => (
                             <tr key={index}>
-                              <td>{data.cta}</td>
                               <td>{data.navigationMenuName}</td>
+                              <td>{data.cta}</td>
                               <td>{data.displayOrder}</td>
-                              <td>{data.icon}</td>
+                              <td>
+                                <img
+                                  src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${data.icon}`}
+                                  style={{ width: "50px" }}
+                                  alt="mobImage"
+                                />
+                              </td>
                               <td>{data.loginRequired ? "Yes" : "No"}</td>
                               <td>
-                                  <span
-                                    className={
-                                      data.enabled
-                                        ? "badge badge-success"
-                                        : "badge badge-danger"
+                                <span
+                                  className={
+                                    data.enabled
+                                      ? "badge badge-success"
+                                      : "badge badge-danger"
+                                  }
+                                >
+                                  {data.enabled
+                                    ? active_label
+                                    : non_active_label}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="d-flex">
+                                  <Button
+                                    className="btn btn-primary shadow btn-xs sharp me-1"
+                                    end_icon={"fas fa-pencil-alt"}
+                                    onClick={() =>
+                                      handleSubmit(data, {
+                                        isEdit: true,
+                                      })
                                     }
-                                  >
-                                    {data.enabled
-                                      ? active_label
-                                      : non_active_label}
-                                  </span>
-                                </td>
-                                <td>
-                                  <div className="d-flex">
-                                    <Button
-                                      className="btn btn-primary shadow btn-xs sharp me-1"
-                                      end_icon={"fas fa-pencil-alt"}
-                                      onClick={() =>
-                                        handleSubmit(data, {
-                                          isEdit: true,
-                                        })
-                                      }
-                                    />
-                                    <Button
-                                      className="btn btn-danger shadow btn-xs sharp"
-                                      end_icon={"fa fa-trash"}
-                                      onClick={() => showAlert(data, {
+                                  />
+                                  <Button
+                                    className="btn btn-danger shadow btn-xs sharp"
+                                    end_icon={"fa fa-trash"}
+                                    onClick={() =>
+                                      showAlert(data, {
                                         isEdit: false,
-                                      })}
-                                    />
-                                  </div>
-                                </td>
-
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </td>
                             </tr>
                           ))}
                       </tbody>

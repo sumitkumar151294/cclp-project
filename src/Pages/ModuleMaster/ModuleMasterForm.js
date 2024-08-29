@@ -18,7 +18,7 @@ import {
   onPostuploadImageReset,
 } from "../../Store/Slices/uploadSlice";
 
-const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
+const ModuleMasterForm = ({ moduleMasterData , edit , setEdit }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
@@ -123,7 +123,7 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
           clientId: 6,
           ...(moduleMasterData && { id: values.id }),
         };
-        dispatch(onUpdateModuleMaster(moduleData));
+        dispatch(onPostModule(moduleData));
         setInitialValue(reset);
       }
     }
@@ -147,6 +147,9 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
       };
       dispatch(onPostModule(moduleData));
       setInitialValue(reset);
+    }else if(uploadImage?.post_status_code){
+      toast.error(uploadImage?.postMessage)
+      dispatch(onPostuploadImageReset())
     }
   }, [uploadImage, values]);
 
@@ -158,6 +161,13 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
     } else if (moduleData?.status_code === "205") {
+      toast.success(moduleData?.message);
+      dispatch(onPostuploadImageReset());
+      dispatch(onGetModule());
+      dispatch(onPostModuleReset());
+      setInitialValue(reset);
+    }else if (moduleData?.status_code === "204") {
+      setEdit(false)
       toast.success(moduleData?.message);
       dispatch(onPostuploadImageReset());
       dispatch(onGetModule());
@@ -187,11 +197,12 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
                 <h4 className="card-title">{module_master}</h4>
               </div>
               <div className="card-body">
-                {moduleData?.postLoading ? (
+                {((!edit && moduleData?.postLoading) | uploadImage?.isPostLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
+                  <div className="containers-fluid">
                   <Formik
                     initialValues={initialValue}
                     validationSchema={validations}
@@ -317,6 +328,7 @@ const ModuleMasterForm = ({ moduleMasterData, setModuleMasterData }) => {
                       </Form>
                     )}
                   </Formik>
+                  </div>
                 )}
               </div>
             </div>
