@@ -39,6 +39,8 @@ const API = {
   //product-content
   productcontent:"product-content",
   //client-master
-  clientmaster:"client-master"
+  clientmaster:"client-master",
+  //meta-data
+  metadata:"linked-master-metaData"
 };
 export default API;

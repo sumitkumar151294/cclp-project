@@ -14,6 +14,7 @@ import DealCouponCodeList from "../Pages/DealCouponCode/DealCouponCodeList";
 import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList";
 import PageError from "../Components/PageError/PageError";
 import DealCouponFrequencyList from "../Pages/DealCouponFrequency/DealCouponFrequencyList";
+import MetaDataList from "../Pages/MetaData/MetaDataList";
 
 function RouteConfiq() {
   return (
@@ -63,6 +64,10 @@ function RouteConfiq() {
           <Route
           path="/navConfiguration"
           element={<Layout Component={NavConfigurationList} />}
+        />
+        <Route
+          path="/metaData"
+          element={<Layout Component={MetaDataList} />}
         />
         <Route
           path="*"

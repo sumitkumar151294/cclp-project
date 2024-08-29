@@ -153,7 +153,7 @@ const ModuleMasterForm = ({ moduleMasterData , edit , setEdit }) => {
     }
   }, [uploadImage, values]);
 
-  // to handle navigation and toast notifications based on module master status
+  // to handle toast notifications based on module master status
   useEffect(() => {
     if (moduleData?.status_code === "201") {
       toast.success(moduleData.message);

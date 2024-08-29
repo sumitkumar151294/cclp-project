@@ -170,14 +170,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       setDealCouponFreq(null);
       dispatch(onPostDealCouponFreqReset());
       dispatch(onGetDealCouponFreq());
-    } 
-    // else if (getDealCouponFeqData?.update_status_code === "205") {
-    //   toast.success(getDealCouponFeqData?.updateMessage);
-    //   setDealCouponFreq(null);
-    //   dispatch(onGetDealCouponFreq());
-    //   dispatch(onUpdateDealCouponFreqReset());
-    // } 
-    else if (getDealCouponFeqData?.post_status_code) {
+    } else if (getDealCouponFeqData?.post_status_code) {
       toast.error(getDealCouponFeqData?.postMessage);
       dispatch(onPostDealCouponFreqReset());
     }

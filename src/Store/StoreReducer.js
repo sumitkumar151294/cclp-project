@@ -18,6 +18,7 @@ import dealCouponFreqReducer from './Slices/dealCouponFreqSlice';
 import customerSegmentReducer from './Slices/customerSegmentSlice';
 import productContentReducer from './Slices/productContentSlice';
 import clientMasterReducer from './Slices/clientMasterSlice';
+import metaDataReducer from './Slices/metaDataSlice';
 
 const reducers = combineReducers({
     loginReducer:loginReducer,
@@ -39,6 +40,7 @@ const reducers = combineReducers({
     customerSegmentReducer:customerSegmentReducer,
     productContentReducer:productContentReducer,
     clientMasterReducer:clientMasterReducer,
+    metaDataReducer:metaDataReducer
 });
 
 export default reducers;
