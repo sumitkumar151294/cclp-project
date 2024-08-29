@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDealCouponCode, onPostDealCouponCode, onPostDealCouponCodeReset } from "../../Store/Slices/dealCouponCodeSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
 // to get today date
 const getTodayDate = () => {
   const today = new Date();
@@ -74,6 +75,10 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
     descriptions: "",
     enabled:""
   });
+  // to fetch data on mount
+  useEffect(() => {
+    dispatch(onGetDealCoupon());
+  }, []);
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     coupounCode: Yup.string().required("Coupon Code is required"),
