@@ -65,8 +65,6 @@ const NavConfigurationList = () => {
         ?.toLowerCase()
         ?.includes(searchQuery?.toLowerCase())
   );
-
-
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({

@@ -127,13 +127,9 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
         validFrom: values?.validFrom,
         validUpto: values?.validUpto,
         weekDayId: values?.weekDayId?.map((day) => day.value),
+        ...(dealCouponFreq && { id: dealCouponFreq.id }),
       };
-      if (dealCouponFreq) {
-        dealFreqData.id = dealCouponFreq.id;
-        dispatch(onUpdateDealCouponFreq(dealFreqData));
-      } else {
-        dispatch(onPostDealCouponFreq(dealFreqData));
-      }
+      dispatch(onPostDealCouponFreq(dealFreqData));
       setInitialValue({
         dealCoupounId: "",
         validFrom: "",
@@ -148,12 +144,14 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
     { value: "true", label: "Active" },
     { value: "false", label: "Non Active" },
   ];
+  // to get formatDate
   const formatDate = (datetime) => {
     if (!datetime) return todayDate;
     return datetime.split("T")[0];
   };
   useEffect(() => {
     if (dealCouponFreq) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       const weekDays = weekDayNames.filter((day) =>
         dealCouponFreq.weekDayId.includes(day.value)
       );
@@ -166,23 +164,25 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       setInitialValue(updatedValues);
     }
   }, [dealCouponFreq]);
-
   useEffect(() => {
-    if (getDealCouponFeqData?.post_status_code === "201") {
+    if (getDealCouponFeqData?.post_status_code === "201" || getDealCouponFeqData?.post_status_code === "205") {
       toast.success(getDealCouponFeqData.postMessage);
+      setDealCouponFreq(null);
       dispatch(onPostDealCouponFreqReset());
       dispatch(onGetDealCouponFreq());
-    } else if (getDealCouponFeqData?.update_status_code === "205") {
-      toast.success(getDealCouponFeqData?.updateMessage);
-      setDealCouponFreq(null);
-      dispatch(onGetDealCouponFreq());
-      dispatch(onUpdateDealCouponFreqReset());
-    } else if (getDealCouponFeqData?.post_status_code) {
+    } 
+    // else if (getDealCouponFeqData?.update_status_code === "205") {
+    //   toast.success(getDealCouponFeqData?.updateMessage);
+    //   setDealCouponFreq(null);
+    //   dispatch(onGetDealCouponFreq());
+    //   dispatch(onUpdateDealCouponFreqReset());
+    // } 
+    else if (getDealCouponFeqData?.post_status_code) {
       toast.error(getDealCouponFeqData?.postMessage);
       dispatch(onPostDealCouponFreqReset());
     }
   }, [getDealCouponFeqData]);
-
+  // to fetch deal coupon data on mount
   useEffect(() => {
     dispatch(onGetDealCoupon());
   }, []);
