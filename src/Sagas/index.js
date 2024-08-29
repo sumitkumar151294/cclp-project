@@ -20,6 +20,7 @@ import dealCouponFreqSaga from "./dealCouponFreqSaga";
 import customerSegmentSaga from "./customerSegmentSaga";
 import productContentSaga from "./productContentSaga";
 import clientMasterSaga from "./clientMasterSaga";
+import metaDataSaga from "./metaDataSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -42,5 +43,6 @@ export default function* rootSaga() {
     customerSegmentSaga(),
     productContentSaga(),
     clientMasterSaga(),
+    metaDataSaga(),
   ]);
 }

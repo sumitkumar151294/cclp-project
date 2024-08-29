@@ -91,8 +91,6 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
     icon: "",
     enabled: "",
   }
-
-
   // options for status
   const statusOptions = [
     { value: true, label: "Active" },

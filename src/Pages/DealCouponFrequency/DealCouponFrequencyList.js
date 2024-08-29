@@ -69,12 +69,6 @@ const DealCouponFrequencyList = () => {
       }
     });
   };
-   // to handle edit functionality
-   const handleEdit = (data) => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    const prefilled = data;
-    setDealCouponFreq(prefilled);
-  };
   //to handle edit and delete
   const handleSubmit = (dealCouponFreq,isEdit) => {
     const dealCouponfreqData = {
