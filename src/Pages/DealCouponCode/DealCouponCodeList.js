@@ -52,7 +52,6 @@ const DealCouponCodeList = () => {
   //to fetch data on mount
   useEffect(() => {
     dispatch(onGetDealCouponCode());
-    dispatch(onGetDealCoupon())
   }, []);
   // modal for delete warning
   const showAlert = (data) => {
