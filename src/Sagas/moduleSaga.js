@@ -5,11 +5,11 @@ import { callModuleApi, callPostModuleApi } from "../Context/moduleApi";
 function* Module() {
   try {
     const moduleResponse = yield call(callModuleApi);
-    if (moduleResponse.errorCode === "200") {
+    if (moduleResponse.responseCode === "200") {
       yield put(
         onGetModuleSuccess({
           data: moduleResponse.response,
-          message: moduleResponse.response.errorMessage,
+          message: moduleResponse.response.responseMessage,
 
         })
       );
@@ -29,20 +29,20 @@ function* Module() {
 function* PostModule({ payload }) {
   try {
     const postModuleResponse = yield call(callPostModuleApi, payload);
-    if (postModuleResponse.errorCode === "201") {
+    if (postModuleResponse.responseCode === "201") {
       yield put(
         onPostModuleSuccess({
           postData: postModuleResponse.response,
-          message: postModuleResponse.errorMessage,
-          errorCode: postModuleResponse.errorCode,
+          message: postModuleResponse.responseMessage,
+          responseCode: postModuleResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostModuleError({
           data: postModuleResponse.response,
-          message: postModuleResponse.errorMessage,
-          status_code:postModuleResponse.errorCode
+          message: postModuleResponse.responseMessage,
+          status_code:postModuleResponse.responseCode
         })
       );
     }

@@ -5,12 +5,12 @@ import { onLoginAuthError, onLoginAuthSubmit, onLoginAuthSuccess } from "../Stor
 function* LoginAuth({payload}){
   try{
     const loginAuthResponse=yield call(loginAuthApi,payload);
-    if(loginAuthResponse.errorCode==="200"){
+    if(loginAuthResponse.responseCode==="200"){
       yield put(
         onLoginAuthSuccess({
             data:loginAuthResponse?.response,
             message: loginAuthResponse?.message,
-            status_code:loginAuthResponse?.errorCode
+            status_code:loginAuthResponse?.responseCode
         })
       )
     }
@@ -18,15 +18,15 @@ function* LoginAuth({payload}){
       yield put(
         onLoginAuthError({
           data: loginAuthResponse?.response,
-          message: loginAuthResponse?.errorMessage,
-          status_code:loginAuthResponse?.errorCode
+          message: loginAuthResponse?.responseMessage,
+          status_code:loginAuthResponse?.responseCode
         })
       )
     }
   }
   catch(error){
     const message = error.response || "Something went wrong";
-    yield put(onLoginAuthError({ data: {}, message, status_code: error?.response?.data?.errorCode }));
+    yield put(onLoginAuthError({ data: {}, message, status_code: error?.response?.data?.responseCode }));
   }
 }
 

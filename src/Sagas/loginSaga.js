@@ -14,21 +14,21 @@ function* Login({ payload }) {
       yield put(
 
         onLoginSubmitSuccess({
-          status_code: loginResponse?.errorCode,
-          message: loginResponse?.errorMessage,
+          status_code: loginResponse?.responseCode,
+          message: loginResponse?.responseMessage,
           data: loginResponse?.response,
         })
       );
     } else {
       yield put(
         onLoginSubmitError({
-          status_code: loginResponse?.errorCode,
-          message: loginResponse?.errorMessage,
+          status_code: loginResponse?.responseCode,
+          message: loginResponse?.responseMessage,
         })
       );
     }
   } catch (error) {
-    const message = error?.response?.data?.ErrorMessage || "Something went wrong";
+    const message = error?.response?.data?.responseMessage || "Something went wrong";
     yield put(onLoginSubmitError({ data: {}, message, status_code: 400 }));
   }
 }

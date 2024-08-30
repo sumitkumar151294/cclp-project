@@ -8,7 +8,6 @@ import {
   onGetModule,
   onPostModule,
   onPostModuleReset,
-  onUpdateModuleMaster,
 } from "../../Store/Slices/moduleSlice";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
@@ -18,7 +17,7 @@ import {
   onPostuploadImageReset,
 } from "../../Store/Slices/uploadSlice";
 
-const ModuleMasterForm = ({ moduleMasterData , edit , setEdit }) => {
+const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdit }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
@@ -161,6 +160,7 @@ const ModuleMasterForm = ({ moduleMasterData , edit , setEdit }) => {
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
     } else if (moduleData?.status_code === "205") {
+      setModuleMasterData(null)
       toast.success(moduleData?.message);
       dispatch(onPostuploadImageReset());
       dispatch(onGetModule());
@@ -259,6 +259,7 @@ const ModuleMasterForm = ({ moduleMasterData , edit , setEdit }) => {
                               <span className="text-danger">*</span>
                             </label>
                             <input
+                            accept=".jpg, .jpeg, .png, .webp .svg"
                               type="file"
                               name="icon"
                               className={`form-control ${

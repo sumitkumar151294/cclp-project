@@ -4,12 +4,12 @@ import { onGetDealCouponFreq, onGetDealCouponFreqError, onGetDealCouponFreqSucce
 function* GetDealCouponFreq() {
   try {
     const getDealCouponFreqResponse = yield call(callDealCouponFreqGetApi);
-    if (getDealCouponFreqResponse.errorCode === "200") {
+    if (getDealCouponFreqResponse.responseCode === "200") {
       yield put(
         onGetDealCouponFreqSuccess({
           data: getDealCouponFreqResponse.response,
-          message: getDealCouponFreqResponse.errorMessage,
-          status_code:getDealCouponFreqResponse.errorCode
+          message: getDealCouponFreqResponse.responseMessage,
+          status_code:getDealCouponFreqResponse.responseCode
         })
       );
     } else {
@@ -18,8 +18,8 @@ function* GetDealCouponFreq() {
         onGetDealCouponFreqError({
 
           data: getDealCouponFreqResponse.response,
-          message: getDealCouponFreqResponse.response.message,
-          status_code:getDealCouponFreqResponse.errorCode
+          message: getDealCouponFreqResponse.responseMessage,
+          status_code:getDealCouponFreqResponse.responseCode
         })
       );
     }
@@ -31,20 +31,20 @@ function* GetDealCouponFreq() {
 function* PostDealCouponFreq({ payload }) {
   try {
     const postDealCouponFreqResponse = yield call(callDealCouponFreqPostApi, payload);
-    if (postDealCouponFreqResponse.errorCode === "201" || postDealCouponFreqResponse.errorCode === "205") {
+    if (postDealCouponFreqResponse.responseCode === "201") {
       yield put(
         onPostDealCouponFreqSuccess({
           postData: postDealCouponFreqResponse.response,
-          message: postDealCouponFreqResponse.errorMessage,
-          status_code: postDealCouponFreqResponse.errorCode,
+          message: postDealCouponFreqResponse.responseMessage,
+          status_code: postDealCouponFreqResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostDealCouponFreqError({
           data: postDealCouponFreqResponse.response,
-          message: postDealCouponFreqResponse?.data?.errorMessage,
-          status_code:postDealCouponFreqResponse.errorCode
+          message: postDealCouponFreqResponse?.responseMessage,
+          status_code:postDealCouponFreqResponse.responseCode
         })
       );
     }
@@ -56,19 +56,19 @@ function* PostDealCouponFreq({ payload }) {
 function* UpdateDealCouponFreq({ payload }) {
   try {
     const updateDealCouponFreqResponse = yield call(callDealCouponFreqUpdateApi, payload);
-    if (updateDealCouponFreqResponse.errorCode === "204") {
+    if (updateDealCouponFreqResponse.responseCode === "201") {
       yield put(
         onUpdateDealCouponFreqSuccess({
-          status_code: updateDealCouponFreqResponse.errorCode,
-          message: updateDealCouponFreqResponse.errorMessage,
+          status_code: updateDealCouponFreqResponse.responseCode,
+          message: updateDealCouponFreqResponse.responseMessage,
           data:updateDealCouponFreqResponse.response
         })
       );
     } else {
       yield put(
         onUpdateDealCouponFreqError({
-          status_code: updateDealCouponFreqResponse.errorCode,
-          message: updateDealCouponFreqResponse.errorMessage,
+          status_code: updateDealCouponFreqResponse.responseCode,
+          message: updateDealCouponFreqResponse.responseMessage,
           data:updateDealCouponFreqResponse.response
         })
       );

@@ -12,13 +12,13 @@ const Layout = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  useEffect(() => {
-    if (!sessionStorage.getItem("login")) {
-      dispatch(onLogout());
-      sessionStorage.clear();
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem("login")) {
+  //     dispatch(onLogout());
+  //     sessionStorage.clear();
+  //     navigate("/");
+  //   }
+  // }, []);
 
   return (
     <div

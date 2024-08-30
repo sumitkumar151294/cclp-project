@@ -8,7 +8,7 @@ function* customerSegment({ payload }) {
       yield put(
         onGetCustomerSegmentSuccess({
           data: customerSegmentResponse.response,
-          message: customerSegmentResponse.errorMessage,
+          message: customerSegmentResponse.responseMessage,
           status_code: customerSegmentResponse.httpStatusCode,
         })
       );
@@ -16,14 +16,14 @@ function* customerSegment({ payload }) {
       yield put(
         onGetCustomerSegmentError({
           data: customerSegmentResponse.response,
-          message: customerSegmentResponse.errorMessage,
+          message: customerSegmentResponse.responseMessage,
           status_code: customerSegmentResponse.httpStatusCode,
         })
       );
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
-    yield put(onGetCustomerSegmentError({ data: {}, message, status_code: 400 }));
+    yield put(onGetCustomerSegmentError({ data: [], message, status_code: 400 }));
   }
 }
 

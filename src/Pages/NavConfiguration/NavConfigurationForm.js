@@ -15,7 +15,7 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onPostuploadImage, onPostuploadImageReset } from "../../Store/Slices/uploadSlice";
 
-const NavConfigurationForm = ({ navData, setNavData }) => {
+const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
@@ -116,7 +116,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
       const postData = {
         ...values,
         deleted: false,
-        icon:navData?.icon||"",
+        icon:values.icon,
         enabled:
           typeof values?.enabled === "boolean"
             ? values.enabled
@@ -158,13 +158,24 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
   }, [navData]);
   // to handle navigation and toast notifications based on post and update status
   useEffect(() => {
-    if (navConfigureData?.post_status_code === "201" || navConfigureData?.post_status_code === "205") {
+    if (navConfigureData?.post_status_code === "201" || navConfigureData?.post_status_code === "205"
+     ) {
       setNavData(null);
+      setEdit(false)
       toast.success(navConfigureData?.postMessage);
       dispatch(onPostuploadImageReset())
       dispatch(onGetNavConfigure());
       dispatch(onPostNavConfigureReset());
-    }
+    }else if (navConfigureData?.post_status_code === "204"
+    ) {
+     setNavData(null);
+     setEdit(false)
+
+     toast.success(navConfigureData?.postMessage);
+     dispatch(onPostuploadImageReset())
+     dispatch(onGetNavConfigure());
+     dispatch(onPostNavConfigureReset());
+   }
     else if (navConfigureData?.post_status_code) {
       toast.error(navConfigureData?.postMessage?.data?.ErrorMessage);
       dispatch(onPostuploadImageReset())
@@ -189,7 +200,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                 <h4 className="card-title">{nav_configuration_form}</h4>
               </div>
               <div className="card-body">
-                {(navConfigureData?.isPostLoading || uploadImage?.isPostLoading) ? (
+                {((!edit && navConfigureData?.isPostLoading )|| uploadImage?.isPostLoading) ? (
                   <div style={{ height: "100px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -279,6 +290,7 @@ const NavConfigurationForm = ({ navData, setNavData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="icon"
                                 onChange={(event) =>

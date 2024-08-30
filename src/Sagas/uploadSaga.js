@@ -7,20 +7,20 @@ function* PostuploadImage({ payload }) {
 
   try {
     const postuploadImageResponse = yield call(calluploadApi, payload);
-    if (postuploadImageResponse.errorCode === "201") {
+    if (postuploadImageResponse.responseCode === "201") {
       yield put(
         onPostuploadImageSuccess({
           postData: postuploadImageResponse.response,
-          message: postuploadImageResponse.errorMessage,
-          status_code: postuploadImageResponse.errorCode,
+          message: postuploadImageResponse.responseMessage,
+          status_code: postuploadImageResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostuploadImageError({
           data: postuploadImageResponse.response,
-          message: postuploadImageResponse?.data?.errorMessage,
-          status_code:postuploadImageResponse.errorCode
+          message: postuploadImageResponse?.data?.responseMessage,
+          status_code:postuploadImageResponse.responseCode
         })
       );
     }
@@ -33,20 +33,20 @@ function* PostuploadMobileImage({ payload }) {
 
   try {
     const postuploadMobileImageResponse = yield call(calluploadApi, payload);
-    if (postuploadMobileImageResponse.errorCode === "201") {
+    if (postuploadMobileImageResponse.responseCode === "201") {
       yield put(
         onPostuploadMobileImageSuccess({
           postData: postuploadMobileImageResponse.response,
-          message: postuploadMobileImageResponse.errorMessage,
-          status_code: postuploadMobileImageResponse.errorCode,
+          message: postuploadMobileImageResponse.responseMessage,
+          status_code: postuploadMobileImageResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostuploadMobileImageError({
           data: postuploadMobileImageResponse.response,
-          message: postuploadMobileImageResponse?.data?.errorMessage,
-          status_code:postuploadMobileImageResponse.errorCode
+          message: postuploadMobileImageResponse?.data?.responseMessage,
+          status_code:postuploadMobileImageResponse.responseCode
         })
       );
     }

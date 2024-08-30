@@ -5,20 +5,20 @@ import { onGetuserMaster, onGetuserMasterError, onGetuserMasterSuccess, onPostus
 function* userMaster({ payload }) {
   try {
     const userMasterResponse = yield call(callUserMasterApi, payload);
-    if (userMasterResponse.errorCode === "201") {
+    if (userMasterResponse.responseCode === "201") {
       yield put(
         onPostuserMasterSuccess({
           data: userMasterResponse.response,
-          message: userMasterResponse.errorMessage,
-          status_code: userMasterResponse.errorCode
+          message: userMasterResponse.responseMessage,
+          status_code: userMasterResponse.responseCode
         })
       );
     } else {
       yield put(
         onPostuserMasterError({
           data: userMasterResponse.response,
-          message: userMasterResponse.errorMessage,
-          status_code: userMasterResponse.errorCode
+          message: userMasterResponse.responseMessage,
+          status_code: userMasterResponse.responseCode
         })
       );
     }
@@ -30,20 +30,20 @@ function* userMaster({ payload }) {
 function* getUser() {
   try {
     const userMasterResponse = yield call(callUserMasterGetApi);
-    if (userMasterResponse.errorCode === "200") {
+    if (userMasterResponse.responseCode === "200") {
       yield put(
         onGetuserMasterSuccess({
           data: userMasterResponse.response,
-          message: userMasterResponse.errorMessage,
-          status_Code:userMasterResponse.errorCode
+          message: userMasterResponse.responseMessage,
+          status_Code:userMasterResponse.responseCode
         })
       );
     } else {
       yield put(
         onGetuserMasterError({
           data: userMasterResponse.response,
-          message: userMasterResponse.errorMessage,
-          status_Code:userMasterResponse.errorCode
+          message: userMasterResponse.responseMessage,
+          status_Code:userMasterResponse.responseCode
         })
       );
     }

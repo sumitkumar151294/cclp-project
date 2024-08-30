@@ -159,7 +159,7 @@ const UserMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {(userList?.isgetLoading || roleList?.isgetLoading ||       userList?.isPostLoading)
+                {(userList?.isgetLoading || roleList?.isgetLoading || (edit && userList?.isPostLoading))
              ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />

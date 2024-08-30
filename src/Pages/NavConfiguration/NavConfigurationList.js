@@ -12,7 +12,6 @@ import {
 } from "../../Store/Slices/NavConfigurationSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const NavConfigurationList = () => {
@@ -91,6 +90,7 @@ const NavConfigurationList = () => {
     if (isEdit) {
       setNavData(navConfigData);
     } else {
+      setEdit(true)
       dispatch(onPostNavConfigure(navConfigData));
     }
   };
@@ -133,7 +133,7 @@ const NavConfigurationList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {(navConfigure?.isgetLoading )? (
+                {(navConfigure?.isgetLoading || (edit && navConfigure?.isPostLoading) )? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

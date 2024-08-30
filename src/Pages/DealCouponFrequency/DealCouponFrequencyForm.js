@@ -152,6 +152,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   useEffect(() => {
     if (dealCouponFreq) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      
       const weekDays = weekDayNames.filter((day) =>
         dealCouponFreq.weekDayId.includes(day.value)
       );

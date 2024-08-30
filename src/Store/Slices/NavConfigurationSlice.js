@@ -42,7 +42,7 @@ export const NavConfigurationSlice = createSlice({
     },
 
     onPostNavConfigure: (state) => {
-      return {
+            return {
         ...state,
         isPostLoading: true,
         postNavConfigureData: [],

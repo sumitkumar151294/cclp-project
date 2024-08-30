@@ -19,6 +19,11 @@ import HtmlEditor from "../../Components/HtmlEditor/HtmlEditor";
 import Select from "react-select";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import {
+  onGetDealCouponFreq,
+  onPostDealCouponFreq,
+  onPostDealCouponFreqReset,
+} from "../../Store/Slices/dealCouponFreqSlice";
 // to get today's date
 const getTodayDate = () => {
   const today = new Date();
@@ -35,7 +40,7 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = ({ dealCouponDatas }) => {
+const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
@@ -104,7 +109,15 @@ const DealCouponForm = ({ dealCouponDatas }) => {
   const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
+
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
+  const getCustometSegemtData = useSelector(
+    (state) => state.customerSegmentReducer?.data
+  );
+  const SegmentOptions = getCustometSegemtData?.map((segementData) => ({
+    value: segementData.id,
+    label: segementData?.name?.substring(0, 18) + "...",
+  }));
   const dealOptions = getDealData
     ?.filter((deal) => deal?.enabled)
     .map((dealData) => ({
@@ -115,7 +128,11 @@ const DealCouponForm = ({ dealCouponDatas }) => {
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
   ];
+
   const uploadImage = useSelector((state) => state.uploadReducer);
+  const getDealCouponFeqData = useSelector(
+    (state) => state.dealCouponFreqReducer
+  );
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
     coupounCode: "",
@@ -131,11 +148,32 @@ const DealCouponForm = ({ dealCouponDatas }) => {
     source: "",
     dealId: "",
     offerSubType: "",
-    validFrom:"",
-    validUpto:"",
-    weekDayId:"",
-    enabled:""
+    validFrom: "",
+    validUpto: "",
+    weekDayId: "",
+    enabled: "",
+    offerId: "",
   });
+  const reset = {
+    coupounCode: "",
+    dealId: "",
+    typeOfCoupoun: "",
+    image: "",
+    description: "",
+    terms: "",
+    offerType: "",
+    segmentId: "",
+    cta: "",
+    title: "",
+    source: "",
+    dealId: "",
+    offerSubType: "",
+    validFrom: "",
+    validUpto: "",
+    weekDayId: "",
+    enabled: "",
+    offerId: "",
+  };
   const offerTypeOptions = [
     { value: "Feature", label: "Feature" },
     { value: "NetworkCardType", label: "Networkd Card Type" },
@@ -162,8 +200,17 @@ const DealCouponForm = ({ dealCouponDatas }) => {
     title: Yup.string().required("Title is required"),
     offerType: Yup.string().required("Offer Type is required"),
     offerSubType: Yup.string().required("Offer Sub Type is required"),
-    dealId: Yup.string().required("Deal Id is required"),
+    dealId: Yup.string().required("Deal is required"),
+    terms: Yup.string()
+      .required("Text is Required")
+      .test(
+        "no-empty-html",
+        "Text cannot be empty HTML",
+        (value) => value !== "<p><br></p>"
+      ),
     source: Yup.string().required("Souce is required"),
+    segmentId: Yup.string().required("Segment is required"),
+    offerId: Yup.string().required("Offer Id is required"),
     validFrom: Yup.string().required(start_date_required),
     validUpto: Yup.string()
       .required(end_date_required)
@@ -177,17 +224,28 @@ const DealCouponForm = ({ dealCouponDatas }) => {
         }
         return true;
       }),
-    weekDayId: Yup.array().of(Yup.object().shape({ value: Yup.number().required() })).min(1, week_required),
+
+    weekDayId: Yup.array()
+      .of(
+        Yup.object().shape({
+          value: Yup.number().required("Value is required"),
+        })
+      )
+      .min(1, "At least one week day is required")
+      .required("Week day is required"),
     enabled: Yup.string().required("Status is required"),
   });
   // to handle form submit
+  console.log(dealCouponData);
   const handleSubmit = (values) => {
+    debugger;
     if (typeof values.image === "object") {
       dispatch(onPostuploadImage(values.image));
       setValues(values);
     } else {
       const dealCouponData = {
         ...values,
+        deleted: false,
         enabled:
           typeof values?.enabled === "boolean"
             ? values.enabled
@@ -195,20 +253,20 @@ const DealCouponForm = ({ dealCouponDatas }) => {
         image: dealCouponDatas?.image || "",
         clientId: 6,
         deleted: false,
-        segmentId: 3,
-        // segmentId: values.segmentId || null,
+        segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
+    setValues(values);
   };
   //to get weekday's name
-const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
-  value: index + 1,
-  label: new Date(0, 0, index + 1).toLocaleString("default", {
-    weekday: "long",
-  }),
-}));
+  const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
+    value: index + 1,
+    label: new Date(0, 0, index + 1).toLocaleString("default", {
+      weekday: "long",
+    }),
+  }));
   const handleImageChange = (setFieldValue, event) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -227,38 +285,75 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
         image: getImage,
         clientId: 6,
         deleted: false,
-        segmentId: 3,
-        // segmentId: values.segmentId || null,
+        segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
     }
   }, [uploadImage, values]);
-  // to handle navigation and toast notifications based on deal coupon status
+
+  console.log(dealCouponData);
   useEffect(() => {
-    if (dealCouponData?.post_status_code === "201") {
-      toast.success(dealCouponData.postMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostDealCouponReset());
-      dispatch(onGetDealCoupon());
-    } else if (dealCouponData?.post_status_code === "205") {
-      toast.success(dealCouponData.postMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostDealCouponReset());
-      dispatch(onGetDealCoupon());
-    } else if (dealCouponData?.post_status_code) {
-      toast.error(dealCouponData?.postMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostDealCouponReset());
+    if (
+      dealCouponData?.post_status_code === "201" ||
+      dealCouponData?.post_status_code === "205"
+    ) {
+      debugger;
+      const dealCouponFrequncyData = {
+        ...values,
+        deleted: false,
+        dealId: values?.dealId || dealCouponDatas?.dealId,
+        dealCoupounId:
+          dealCouponData?.postDealCouponData?.[0]?.id || dealCouponDatas?.id,
+        weekDayId:
+          values?.weekDayId?.map((day) => day.value) ||
+          dealCouponDatas?.weekDayId,
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
+        clientId: 6,
+        ...(dealCouponDatas && { id: dealCouponDatas.frequency_id }),
+      };
+      dispatch(onPostDealCouponFreq(dealCouponFrequncyData));
     }
   }, [dealCouponData]);
+
+  useEffect(() => {
+    if (
+      getDealCouponFeqData?.post_status_code === "201" ||
+      getDealCouponFeqData?.post_status_code === "205"
+    ) {
+      setInitialValue(reset);
+      setDealCouponDatas(null);
+      toast.success(getDealCouponFeqData.postMessage);
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostDealCouponReset());
+      dispatch(onPostDealCouponFreqReset());
+      dispatch(onGetDealCouponFreq());
+      dispatch(onGetDealCoupon());
+    }
+  }, [getDealCouponFeqData]);
+  const formatDate = (datetime) => {
+    if (!datetime) return todayDate;
+    return datetime.split("T")[0];
+  };
   useEffect(() => {
     if (dealCouponDatas) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      setInitialValue(dealCouponDatas);
+      const weekDays = weekDayNames.filter((day) =>
+        dealCouponDatas.weekDayId.includes(day.value)
+      );
+      const updatedValues = {
+        ...dealCouponDatas,
+        validFrom: formatDate(dealCouponDatas.validFrom),
+        validUpto: formatDate(dealCouponDatas.validUpto),
+        weekDayId: weekDays,
+      };
+      setInitialValue(updatedValues);
     }
   }, [dealCouponDatas]);
+
   return (
     <>
       <ScrollToTop />
@@ -271,8 +366,10 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                {dealCouponData.isPostLoading || uploadImage?.isPostLoading ? (
-                  <div style={{ height: "200px" }}>
+                {dealCouponData.isPostLoading ||
+                getDealCouponFeqData.isPostLoading ||
+                uploadImage?.isPostLoading ? (
+                  <div style={{ height: "300px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
@@ -286,6 +383,26 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                       {({ errors, touched, setFieldValue, values }) => (
                         <Form>
                           <div className="row">
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>{"Deal"}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="dealId"
+                                options={dealOptions}
+                                component={Dropdown}
+                                className={`form-select ${
+                                  errors.dealId && touched.dealId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="dealId"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
                                 {title_label}
@@ -416,13 +533,13 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>{segment_label}</label>
-                              {values.offerType === "Feature" && (
-                                <span className="text-danger">*</span>
-                              )}
+
+                              <span className="text-danger">*</span>
+
                               <Field
                                 name="segmentId"
                                 component={Dropdown}
-                                options={offerTypeValue2}
+                                options={SegmentOptions}
                                 className={`form-select ${
                                   errors.segmentId && touched.segmentId
                                     ? "is-invalid"
@@ -436,26 +553,7 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{"Deal Id"}</label>
-                              <span className="text-danger">*</span>
 
-                              <Field
-                                name="dealId"
-                                options={dealOptions}
-                                component={Dropdown}
-                                className={`form-select ${
-                                  errors.dealId && touched.dealId
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="dealId"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
                             <div className="col-sm-4 form-group mb-4 ">
                               <label>
                                 {"Source"}
@@ -521,6 +619,7 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 <span className="text-danger">*</span>
                               </label>
                               <input
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="image"
                                 className={`form-control ${
@@ -538,7 +637,7 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group ">
+                            <div className="col-sm-4 form-group">
                               <label>{description}</label>
                               <Field
                                 type="text"
@@ -556,7 +655,7 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-2">
+                            <div className="col-sm-4 form-group mb-2  ">
                               <label>
                                 {"Valid From"}
                                 <span className="text-danger">*</span>
@@ -608,7 +707,7 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group mb-4">
+                            <div className="col-sm-4 form-group mb-2">
                               <label>
                                 {select_week_days}
                                 <span className="text-danger">*</span>
@@ -635,7 +734,25 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                               />
                             </div>
 
-                            <div className="col-sm-4 form-group mb-2 ">
+                            <div className="col-sm-12 form-group mb-4">
+                              <label>{"Terms And Conditons"}</label>
+                              <Field
+                                component={HtmlEditor}
+                                name="terms"
+                                className={`form-control ${
+                                  errors.terms && touched.terms
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={terms_placeholder}
+                              />
+                              <ErrorMessage
+                                name="terms"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-4">
                               <label>{"Status"}</label>
                               <span className="text-danger">*</span>
 
@@ -655,29 +772,9 @@ const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
                                 className="error-message"
                               />
                             </div>
-
-                            <div className="col-sm-12 form-group mb-4">
-                              <label>{"Terms And Conditons"}</label>
-                              <Field
-                                component={HtmlEditor}
-                                name="terms"
-                                className={`form-control ${
-                                  errors.terms && touched.terms
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={terms_placeholder}
-                              />
-                              <ErrorMessage
-                                name="terms"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
-
                             <div className="col-sm-12 form-group mb-4">
                               <Button
-                                text={submit}
+                                text={dealCouponDatas ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary  pad-aa mt-2"
                               />

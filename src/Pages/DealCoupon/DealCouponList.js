@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { onGetDeal } from "../../Store/Slices/dealSlice";
 import {
   onGetDealCoupon,
-  onUpdateDealCoupon,
-  onUpdateDealCouponReset,
+  onPostDealCoupon,
 } from "../../Store/Slices/dealCouponSlice";
 import Swal from "sweetalert2";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { toast } from "react-toastify";
+import { onGetDealCouponFreq } from "../../Store/Slices/dealCouponFreqSlice";
+import { onGetCustomerSegment } from "../../Store/Slices/customerSegmentSlice";
 
 const DealCouponList = () => {
   const dispatch = useDispatch();
@@ -30,7 +30,23 @@ const DealCouponList = () => {
     (state) => state.moduleReducer?.filteredData
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-
+  const getDealCouponFeq = useSelector(
+    (state) => state.dealCouponFreqReducer?.getDealCouponFreqData
+  );
+ const mergeDeals=(arr1, arr2)=> {
+    return arr1?.map(a => {
+      const matchingB = arr2?.find(b => b.dealId === a.dealId);
+      
+      return {
+        ...a,
+        weekDayId: matchingB ? matchingB?.weekDayId : null,
+        validFrom: matchingB ? matchingB?.validFrom : null,
+        validUpto: matchingB ? matchingB?.validUpto : null,
+        frequency_id: matchingB ? matchingB?.id : null
+      };
+    });
+  }
+  const merged = mergeDeals(getDealCoupon?.getDealCouponData, getDealCouponFeq);
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
@@ -50,6 +66,7 @@ const DealCouponList = () => {
   };
   //to handle edit and delete
   const handleSubmit = (dealCouponDatas, isEdit) => {
+    debugger
     const dealCouponData = {
       ...dealCouponDatas,
       deleted: true,
@@ -57,7 +74,7 @@ const DealCouponList = () => {
     if (isEdit) {
       setDealCouponDatas(dealCouponData);
     } else {
-      dispatch(onUpdateDealCoupon(dealCouponData));
+      dispatch(onPostDealCoupon(dealCouponData));
     }
   };
 
@@ -68,7 +85,7 @@ const DealCouponList = () => {
     setPage(selected.selected + 1);
   };
   // to filter getDealCoupon
-  const filteredData = getDealCoupon?.getDealCouponData?.filter((data) => {
+  const filteredData = merged?.filter((data) => {
     const couponCodeLower = data.coupounCode?.toLowerCase() || "";
     return couponCodeLower.includes(searchQuery?.toLowerCase());
   });
@@ -89,19 +106,15 @@ const DealCouponList = () => {
   useEffect(() => {
     dispatch(onGetDeal());
     dispatch(onGetDealCoupon());
+    dispatch(onGetDealCouponFreq());
+    dispatch(onGetCustomerSegment());
   }, []);
-  useEffect(() => {
-    if (getDealCoupon?.update_status_code == "204") {
-      toast.success(getDealCoupon?.updateMessage);
-      dispatch(onGetDealCoupon());
-      dispatch(onUpdateDealCouponReset());
-    }
-  }, [getDealCoupon]);
+
   return (
     <>
       <ScrollToTop />
       {/* {getRoleAccess[0]?.addAccess &&  */}
-      <DealCouponForm />
+      <DealCouponForm dealCouponDatas={dealCouponDatas} setDealCouponDatas={setDealCouponDatas}/>
       {/* } */}
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -147,22 +160,17 @@ const DealCouponList = () => {
                                 <th>{"Offer Type"}</th>
                                 <th>{"Offer Sub Value"}</th>
                                 <th>{"Offer Type Value"}</th>
-
                                 <th>{"Segment "}</th>
                                 <th>{"Deal"}</th>
                                 <th>{"Source"}</th>
                                 <th>{"Offer Id"}</th>
-
                                 <th>{"Call To Action"}</th>
                                 <th>{"Image "}</th>
                                 <th>{"Description "}</th>
                                 <th>{"Terms and Condtions "}</th>
-
+                                <th>{"Valid-From "}</th> <th>{"Valid-To "}</th>
                                 <th>{"Status "}</th>
-
-
-                                  <th>{"Action"}</th>
-
+                                <th>{"Action"}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -227,6 +235,16 @@ const DealCouponList = () => {
                                       )}
                                     </td>
                                     <td>{dealcoupoun.terms}</td>
+                                    <td>
+                                      {new Date(
+                                        dealcoupoun.validFrom
+                                      ).toLocaleDateString()}
+                                    </td>
+                                    <td>
+                                      {new Date(
+                                        dealcoupoun.validUpto
+                                      ).toLocaleDateString()}
+                                    </td>
                                     <td>
                                       <span
                                         className={

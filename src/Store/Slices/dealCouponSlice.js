@@ -72,7 +72,6 @@ export const dealCouponSlice = createSlice({
     onPostDealCouponReset: (state) => {
       return {
         ...state,
-        postDealCouponData: [],
         postMessage:"",
         post_status_code:null
       };

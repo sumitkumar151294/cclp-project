@@ -147,7 +147,7 @@ const ModuleMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {(getModule?.postLoading || getModule?.isLoading) ? (
+                {((edit && getModule?.postLoading) || getModule?.isLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

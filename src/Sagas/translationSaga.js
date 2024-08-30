@@ -9,11 +9,11 @@ import {
 function* Translation() {
   try { 
     const translationResponse = yield call(translationApi);
-    if (translationResponse.errorCode === "200") {
+    if (translationResponse.responseCode === "200") {
       yield put(
         onTranslationSubmitSuccess({
-          status_code: translationResponse?.errorCode,
-          message: translationResponse?.errorMessage,
+          status_code: translationResponse?.responseCode,
+          message: translationResponse?.responseMessage,
           data: translationResponse?.response
         })
       );
@@ -21,15 +21,15 @@ function* Translation() {
       yield put(
         onTranslationSubmitError({
           data: translationResponse?.response,
-          status_code: translationResponse?.errorCode,
-          message: translationResponse?.errorMessage
+          status_code: translationResponse?.responseCode,
+          message: translationResponse?.responseMessage
         })
       );
     }
   } catch (error) {
     const message = error.response || "Something went wrong";
     yield put(
-      onTranslationSubmitError({ data: {}, message, errorCode: 400 })
+      onTranslationSubmitError({ data: {}, message, responseCode: 400 })
     );
   }
 }

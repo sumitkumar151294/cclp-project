@@ -19,7 +19,7 @@ import {
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 
-const RoleMasterForm = ({ roleMasterData , deleted ,setDeleted  }) => {
+const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted  }) => {
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
   const [value, setValues] = useState([]);
@@ -142,7 +142,6 @@ const statusOptions = [
     ) {
       const modulesData = Object.keys(value).map((moduleId) => {
         const { id, view, add, edit } = value[moduleId];
-        debugger
         return {
           id: id || 0,
           deleted: false,
@@ -170,6 +169,7 @@ const statusOptions = [
       dispatch(onPostUserRoleReset())
       dispatch(onPostUserRoleModuleAccessReset());
     } else if (getUserModalAccessData?.status_code === "205") {
+      setRoleMasterData(null)
       toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
@@ -216,7 +216,7 @@ const statusOptions = [
                 {(!deleted && getUserRoleData?.isPostLoading||
                 getmoduleLoading?.isLoading ||
                 getUserModalAccessData?.isLoading) ? (
-                  <div style={{ height: "200px" }}>
+                  <div style={{ height: "500px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (

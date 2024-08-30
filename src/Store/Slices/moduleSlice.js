@@ -77,7 +77,6 @@ export const moduleSlice = createSlice({
       return {
         ...state,
         postLoading: false,
-
         postRoleData: postData,
         message,
         status_code,
@@ -102,7 +101,7 @@ export const moduleSlice = createSlice({
         message:"",
         status_code:null,
         postLoading: false,
- 
+
       };
     },
   },

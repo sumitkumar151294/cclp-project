@@ -7,13 +7,11 @@ import ReactPaginate from "react-paginate";
 import {
   onGetUserRole,
   onPostUserRole,
-  onPostUserRoleReset,
 } from "../../Store/Slices/userRoleSlice";
 import Button from "../../Components/Button/Button";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { onGetUserRoleModuleAccess } from "../../Store/Slices/userRoleModuleAccessSlice";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const RoleMasterList = () => {
@@ -90,7 +88,6 @@ const RoleMasterList = () => {
   };
   //to handle edit and delete
   const handleSubmit = (roleMaster, edit) => {
-    debugger
     if (edit) {
       setRoleMasterData(roleMaster);
     } else {
@@ -115,7 +112,7 @@ const RoleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <RoleMasterForm roleMasterData={roleMasterData}    deleted={deleted}
+      <RoleMasterForm roleMasterData={roleMasterData} setRoleMasterData={setRoleMasterData}   deleted={deleted}
           setDeleted={setDeleted}/>
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -126,7 +123,7 @@ const RoleMasterList = () => {
               </div>
               <div className="card-body position-relative">
                 {(roleAccessList?.isgetLoading ||
-                  roleAccessList?.isPostLoading ||
+            (deleted&& roleAccessList?.isPostLoading) ||
                   getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />

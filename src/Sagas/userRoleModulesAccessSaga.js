@@ -5,11 +5,11 @@ import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRole
 function* GetUserRoleModuleAccess() {
   try {
     const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi);
-    if (getUserRoleModuleAccessResponse.errorCode === "200") {
+    if (getUserRoleModuleAccessResponse.responseCode === "200") {
       yield put(
         onGetUserRoleModuleAccessSuccess({
           data: getUserRoleModuleAccessResponse.response,
-          message: getUserRoleModuleAccessResponse.errorMessage,
+          message: getUserRoleModuleAccessResponse.responseMessage,
         })
       );
     } else {
@@ -29,20 +29,20 @@ function* PostUserRoleModuleAccess({ payload }) {
   try {
     const postUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessPostApi, payload);
 
-    const statusCode = postUserRoleModuleAccessResponse.errorCode;
+    const statusCode = postUserRoleModuleAccessResponse.responseCode;
 
     if (statusCode === "201") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
           status_code: statusCode,
-          message: postUserRoleModuleAccessResponse.errorMessage,
+          message: postUserRoleModuleAccessResponse.responseMessage,
         })
       );
     } else if (statusCode === "205") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
           status_code: statusCode,
-          message: postUserRoleModuleAccessResponse.errorMessage,
+          message: postUserRoleModuleAccessResponse.responseMessage,
           additional_info: postUserRoleModuleAccessResponse.additionalInfo, // Assuming additional data for 205
         })
       );

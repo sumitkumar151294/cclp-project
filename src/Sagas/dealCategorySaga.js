@@ -4,12 +4,12 @@ import { callDealCategoryGetApi, callDealCategoryPostApi, callDealCategoryUpdate
 function* GetDealCategory() {
   try {
     const getDealCategoryResponse = yield call(callDealCategoryGetApi);
-    if (getDealCategoryResponse.errorCode === "200") {
+    if (getDealCategoryResponse.responseCode === "200") {
       yield put(
         onGetDealCategorySuccess({
           data: getDealCategoryResponse.response,
-          message: getDealCategoryResponse.errorMessage,
-          status_code:getDealCategoryResponse.errorCode
+          message: getDealCategoryResponse.responseMessage,
+          status_code:getDealCategoryResponse.responseCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetDealCategory() {
         onGetDealCategoryError({
           data: getDealCategoryResponse.response,
           message: getDealCategoryResponse.response.message,
-          status_code:getDealCategoryResponse.errorCode
+          status_code:getDealCategoryResponse.responseCode
         })
       );
     }
@@ -29,20 +29,20 @@ function* GetDealCategory() {
 function* PostDealCategory({ payload }) {
   try {
     const postDealCategoryResponse = yield call(callDealCategoryPostApi, payload);
-    if (postDealCategoryResponse.errorCode === "201") {
+    if (postDealCategoryResponse.responseCode === "201") {
       yield put(
         onPostDealCategorySuccess({
           postData: postDealCategoryResponse.response,
-          message: postDealCategoryResponse.errorMessage,
-          status_code: postDealCategoryResponse.errorCode,
+          message: postDealCategoryResponse.responseMessage,
+          status_code: postDealCategoryResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostDealCategoryError({
           data: postDealCategoryResponse.response,
-          message: postDealCategoryResponse.errorMessage,
-          status_code:postDealCategoryResponse.errorCode
+          message: postDealCategoryResponse.responseMessage,
+          status_code:postDealCategoryResponse.responseCode
         })
       );
     }
@@ -54,19 +54,19 @@ function* PostDealCategory({ payload }) {
 function* UpdateDealCategory({ payload }) {
   try {
     const updateDealCategoryResponse = yield call(callDealCategoryUpdateApi, payload);
-    if (updateDealCategoryResponse.errorCode === "201") {
+    if (updateDealCategoryResponse.responseCode === "201") {
       yield put(
         onUpdateDealCategorySuccess({
-          status_code: updateDealCategoryResponse.errorCode,
-          message: updateDealCategoryResponse.errorMessage,
+          status_code: updateDealCategoryResponse.responseCode,
+          message: updateDealCategoryResponse.responseMessage,
           data:updateDealCategoryResponse.response
         })
       );
     } else {
       yield put(
         onUpdateDealCategoryError({
-          status_code: updateDealCategoryResponse.errorCode,
-          message: updateDealCategoryResponse.errorMessage,
+          status_code: updateDealCategoryResponse.responseCode,
+          message: updateDealCategoryResponse.responseMessage,
           data:updateDealCategoryResponse.response
         })
       );

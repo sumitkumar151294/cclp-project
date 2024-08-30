@@ -395,6 +395,7 @@ const resetState=[{
                                 <span className="text-danger">*</span>
                               </label>
                               <input
+                              accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="mobImage"
                                 className={`form-control ${
@@ -417,6 +418,7 @@ const resetState=[{
                                 {upload_image_for_web}
                               </label>
                               <input
+                              accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="webImage"
                                 className={`form-control ${

@@ -9,7 +9,7 @@ function* productContent({ payload }) {
       yield put(
         onGetProductContentSuccess({
           data: productContentResponse.response,
-          message: productContentResponse.errorMessage,
+          message: productContentResponse.responseMessage,
           status_code: productContentResponse.httpStatusCode,
         })
       );
@@ -17,7 +17,7 @@ function* productContent({ payload }) {
       yield put(
         onGetProductContentError({
           data: productContentResponse.response,
-          message: productContentResponse.errorMessage,
+          message: productContentResponse.responseMessage,
           status_code: productContentResponse.httpStatusCode,
         })
       );

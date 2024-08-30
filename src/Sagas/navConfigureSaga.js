@@ -4,12 +4,12 @@ import { onGetNavConfigure, onGetNavConfigureError, onGetNavConfigureSuccess, on
 function* GetNavConfigure() {
   try {
     const getNavConfigureResponse = yield call(callNavConfigureGetApi);
-    if (getNavConfigureResponse.errorCode === "200") {
+    if (getNavConfigureResponse.responseCode === "200") {
       yield put(
         onGetNavConfigureSuccess({
           data: getNavConfigureResponse.response,
-          message: getNavConfigureResponse.errorMessage,
-          status_code:getNavConfigureResponse.errorCode
+          message: getNavConfigureResponse.responseMessage,
+          status_code:getNavConfigureResponse.responseCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetNavConfigure() {
         onGetNavConfigureError({
           data: getNavConfigureResponse.response,
           message: getNavConfigureResponse.response.message,
-          status_code:getNavConfigureResponse.errorCode
+          status_code:getNavConfigureResponse.responseCode
         })
       );
     }
@@ -29,20 +29,20 @@ function* GetNavConfigure() {
 function* PostNavConfigure({ payload }) {
   try {
     const postNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (postNavConfigureResponse.errorCode === "201" || postNavConfigureResponse.errorCode === "205") {
+    if (postNavConfigureResponse.responseCode === "201") {
       yield put(
         onPostNavConfigureSuccess({
           postData: postNavConfigureResponse.response,
-          message: postNavConfigureResponse.errorMessage,
-          status_code: postNavConfigureResponse.errorCode,
+          message: postNavConfigureResponse.responseMessage,
+          status_code: postNavConfigureResponse.responseCode,
         })
       );
     } else {
       yield put(
         onPostNavConfigureError({
           data: postNavConfigureResponse.response,
-          message: postNavConfigureResponse?.data?.errorMessage,
-          status_code:postNavConfigureResponse.errorCode
+          message: postNavConfigureResponse?.responseMessage,
+          status_code:postNavConfigureResponse.responseCode
         })
       );
     }

@@ -4,12 +4,12 @@ import { callClientMasterGetApi } from "../Context/clientMasterApi";
 function* GetClientMaster({ payload }) {
   try {
     const getClientMasterResponse = yield call(callClientMasterGetApi,payload);
-    if (getClientMasterResponse.errorCode === "200") {
+    if (getClientMasterResponse.responseCode === "200") {
       yield put(
         onGetClientMasterSuccess({
           data: getClientMasterResponse.response,
-          message: getClientMasterResponse.errorMessage,
-          status_code:getClientMasterResponse.errorCode
+          message: getClientMasterResponse.responseMessage,
+          status_code:getClientMasterResponse.responseCode
         })
       );
     } else {
@@ -17,7 +17,7 @@ function* GetClientMaster({ payload }) {
         onGetClientMasterError({
           data: getClientMasterResponse.response,
           message: getClientMasterResponse.response.message,
-          status_code:getClientMasterResponse.errorCode
+          status_code:getClientMasterResponse.responseCode
         })
       );
     }

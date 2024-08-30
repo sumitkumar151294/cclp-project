@@ -332,6 +332,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="mobImage"
                                   className={`form-control ${
@@ -360,6 +361,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   {upload_image_for_web}
                                 </label>
                                 <input
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="webImage"
                                   className={`form-control ${
@@ -589,6 +591,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="textIcon"
                                   className={`form-control ${
