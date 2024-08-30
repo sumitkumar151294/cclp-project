@@ -87,13 +87,13 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
   );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
+  const title_required = GetTranslationData("UIMasterAdmin", "title_required");
+  const offer_type_required = GetTranslationData("UIMasterAdmin", "offer_type_required");
+  const offer_sub_type_required = GetTranslationData("UIMasterAdmin", "offer_sub_type_required");
+  const deal_required = GetTranslationData("UIMasterAdmin", "deal_required");
   const call_to_action_required = GetTranslationData(
     "UIMasterAdmin",
     "call_to_action_required"
-  );
-  const upload_image_for_phone = GetTranslationData(
-    "UIMasterAdmin",
-    "upload_image_for_phone"
   );
   const start_date_required = GetTranslationData(
     "UIMasterAdmin",
@@ -103,7 +103,10 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
     "UIMasterAdmin",
     "end_date_required"
   );
-  const week_required = GetTranslationData("UIMasterAdmin", "week_required");
+  const at_least_one_month_required = GetTranslationData("UIMasterAdmin", "at_least_one_month_required");
+  const at_least_one_week_required = GetTranslationData("UIMasterAdmin", "at_least_one_week_required");
+  const coupon_type_required = GetTranslationData("UIMasterAdmin", "coupon_type_required");
+  const image_required = GetTranslationData("UIMasterAdmin", "image_required");
   // to get data from redux store
   const dealCouponData = useSelector((state) => state.dealCouponReducer);
   const getImage = useSelector(
@@ -190,17 +193,17 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
   const validations = Yup.object().shape({
     months: Yup.array()
       .of(Yup.object().shape({ value: Yup.string() }))
-      .min(1, "At least one month is required"),
+      .min(1, at_least_one_month_required),
     weekDays: Yup.array()
       .of(Yup.object().shape({ value: Yup.string() }))
-      .min(1, "At least one week is required"),
-    typeOfCoupoun: Yup.string().required("Coupon Type is required"),
-    image: Yup.string().required("Image is required"),
+      .min(1, at_least_one_week_required),
+    typeOfCoupoun: Yup.string().required(coupon_type_required),
+    image: Yup.string().required(image_required),
     cta: Yup.string().required(call_to_action_required),
-    title: Yup.string().required("Title is required"),
-    offerType: Yup.string().required("Offer Type is required"),
-    offerSubType: Yup.string().required("Offer Sub Type is required"),
-    dealId: Yup.string().required("Deal is required"),
+    title: Yup.string().required(title_required),
+    offerType: Yup.string().required(offer_type_required),
+    offerSubType: Yup.string().required(offer_sub_type_required),
+    dealId: Yup.string().required(deal_required),
     terms: Yup.string()
       .required("Text is Required")
       .test(

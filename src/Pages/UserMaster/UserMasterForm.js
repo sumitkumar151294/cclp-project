@@ -80,6 +80,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     "mobile_number_placeholder"
   );
   const email_label = GetTranslationData("UIMasterAdmin", "email_label");
+  const phone_number_must_number = GetTranslationData("UIMasterAdmin", "phone_number_must_number");
   const mobile_number_label = GetTranslationData(
     "UIMasterAdmin",
     "mobile_number_label"
@@ -100,7 +101,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     firstName: Yup.string().required(first_name_required),
     lastName: Yup.string().required(last_name_required),
     mobile: Yup.string()
-    .matches(/^\d+$/,"Phone Number Must Be a number") // Ensures only digits are allowed
+    .matches(/^\d+$/,phone_number_must_number) // Ensures only digits are allowed
     .min(10, mobil_10_digit_required) // Ensures a minimum of 10 digits
     .max(10, mobil_10_digit_required) // Ensures a maximum of 10 digits
     .required(mobile_number_required), // Ensures the field is required

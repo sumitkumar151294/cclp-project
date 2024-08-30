@@ -95,7 +95,7 @@ const RoleMasterList = () => {
         ...roleMaster,
         deleted: true,
       };
-      setDeleted(true)
+      setDeleted(true);
       dispatch(onPostUserRole(roleMasterInfo));
     }
   };
@@ -112,8 +112,12 @@ const RoleMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      <RoleMasterForm roleMasterData={roleMasterData} setRoleMasterData={setRoleMasterData}   deleted={deleted}
-          setDeleted={setDeleted}/>
+      <RoleMasterForm
+        roleMasterData={roleMasterData}
+        setRoleMasterData={setRoleMasterData}
+        deleted={deleted}
+        setDeleted={setDeleted}
+      />
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -123,7 +127,7 @@ const RoleMasterList = () => {
               </div>
               <div className="card-body position-relative">
                 {(roleAccessList?.isgetLoading ||
-            (deleted&& roleAccessList?.isPostLoading) ||
+                  (deleted && roleAccessList?.isPostLoading) ||
                   getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
@@ -178,18 +182,18 @@ const RoleMasterList = () => {
                                   )}
                                 </td>
                                 <td>
-                                <span
-                                  className={
-                                    roleMasterData.enabled
-                                      ? "badge badge-success"
-                                      : "badge badge-danger"
-                                  }
-                                >
-                                  {roleMasterData.enabled
-                                    ? active_label
-                                    : non_active_label}
-                                </span>
-                              </td>
+                                  <span
+                                    className={
+                                      roleMasterData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {roleMasterData.enabled
+                                      ? active_label
+                                      : non_active_label}
+                                  </span>
+                                </td>
                                 <td>
                                   <div className="d-flex">
                                     <Button

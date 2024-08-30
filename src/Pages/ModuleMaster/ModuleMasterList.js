@@ -161,9 +161,7 @@ const ModuleMasterList = () => {
                           <th>{module_icon}</th>
                           <th>{display_order}</th>
                           <th>{status_label}</th>
-
-                            <th>{action_label}</th>
-
+                          <th>{action_label}</th>
                         </tr>
                       </thead>
                       <tbody>

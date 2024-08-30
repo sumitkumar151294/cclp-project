@@ -88,6 +88,22 @@ const SectionMasterForm = ({ sectionData }) => {
     "UIMasterAdmin",
     "display_limit_required"
   );
+  const display_limit_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_limit_must_number"
+  );
+  const claim_limit_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "claim_limit_must_number"
+  );
+  const number_of_points_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "number_of_points_must_number"
+  );
+  const display_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_must_number"
+  );
   const sectionTypeOptions = [
     { value: "UnlockStaticCard", label: "Unlock Static Card" },
     { value: "Banner", label: "Banner" },
@@ -106,16 +122,16 @@ const SectionMasterForm = ({ sectionData }) => {
     enabled: Yup.string().required(status_required),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, "Display Order must be a number"),
+      .matches(/^[0-9]+$/, display_must_number),
     displayLimit: Yup.string()
       .required(display_limit_required)
-      .matches(/^[0-9]+$/, "Display Limit must be a number"),
+      .matches(/^[0-9]+$/, display_limit_must_number),
     claimLimit: Yup.string()
       .nullable() // Allows the value to be null
-      .matches(/^[0-9]*$/, "Claim Limit must be a number"),
+      .matches(/^[0-9]*$/, claim_limit_must_number),
       noOfpointToClaim: Yup.string()
       .nullable()
-      .matches(/^[0-9]*$/, "Number of Points to Claim must be a number"),
+      .matches(/^[0-9]*$/, number_of_points_must_number),
   });
 const resetState=[
 {

@@ -23,15 +23,22 @@ const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
-const DealCategoryForm = ({setdealCategory,dealCategory}) => {
+const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
   const [values, setValues] = useState(null);
   const [mobile, setMobile] = useState(false);
   const [web, setWeb] = useState(false);
   const dispatch = useDispatch();
   // to get lables and placeholder from translation
-  const deal_category = GetTranslationData("UIMasterAdmin", "deal_category"); 
-  const deal_category_name = GetTranslationData("UIMasterAdmin", "deal_category_name");
-  const category_name_placeholder = GetTranslationData("UIMasterAdmin", "category_name_placeholder");
+  const deal_category = GetTranslationData("UIMasterAdmin", "deal_category");
+  const deal_category_name = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_category_name"
+  );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const category_name_placeholder = GetTranslationData(
+    "UIMasterAdmin",
+    "category_name_placeholder"
+  );
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const displayOrderPlaceholder = GetTranslationData(
     "UIMasterAdmin",
@@ -43,14 +50,30 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const mobile_image_required = GetTranslationData("UIMasterAdmin", "mobile_image_required"); 
-  const web_image_required = GetTranslationData("UIMasterAdmin", "web_image_required");
+  const mobile_image_required = GetTranslationData(
+    "UIMasterAdmin",
+    "mobile_image_required"
+  );
   const upload_image_for_phone = GetTranslationData(
     "UIMasterAdmin",
     "upload_image_for_phone"
   );
-  const display_order_required = GetTranslationData("UIMasterAdmin","display_order_required");
-  const category_name_required = GetTranslationData("UIMasterAdmin","category_name_required");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
+  const display_order_required = GetTranslationData(
+    "UIMasterAdmin",
+    "display_order_required"
+  );
+  const category_name_required = GetTranslationData(
+    "UIMasterAdmin",
+    "category_name_required"
+  );
+  const display_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_must_number"
+  );
   // to get deal category data from redux store
   const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
   const getwebImage = useSelector(
@@ -66,28 +89,29 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
     mobImage: "",
     displayOrder: "",
     name: "",
-    enabled:""
+    enabled: "",
   });
-  const resetState=[{
-    webImage: "",
-    mobImage: "",
-    displayOrder: "",
-    name: "",
-    enabled:""
-  }]
+  const resetState = [
+    {
+      webImage: "",
+      mobImage: "",
+      displayOrder: "",
+      name: "",
+      enabled: "",
+    },
+  ];
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    name:Yup.string().required("Deal Category Name is required"),
-    enabled:Yup.string().required("Status is required"),
-   mobImage: Yup.string().required(mobile_image_required),
+    name: Yup.string().required(category_name_required),
+    enabled: Yup.string().required(status_required),
+    mobImage: Yup.string().required(mobile_image_required),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, "Display Order must be a number"),    name: Yup.string().required(category_name_required),
+      .matches(/^[0-9]+$/, display_must_number),
   });
 
   //to handle submit
   const handleSubmit = (values) => {
-
     if (!values) return;
     const { webImage, mobImage } = values;
     if (typeof webImage === "object" || typeof mobImage === "object") {
@@ -102,11 +126,14 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
     } else {
       const dealCategoryData = {
         ...values,
-        deleted:false,
-        clientId:6,
+        deleted: false,
+        clientId: 6,
         webImage: webImage || "",
         mobImage: mobImage || "",
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         ...(dealCategory && { id: values.id }),
       };
       dispatch(onPostDealCategory(dealCategoryData));
@@ -130,13 +157,15 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
     if (uploadImage) {
       const dealCategoryData = {
         ...values,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         webImage: dealCategory?.webImage,
         mobImage: dealCategory?.mobImage,
         clientId: 6,
         deleted: false,
         ...(dealCategory && { id: values?.id }),
-
       };
       let shouldDispatch = false;
       if (
@@ -164,14 +193,14 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
   useEffect(() => {
     if (dealCategoryData?.post_status_code === "201") {
       toast.success(dealCategoryData.postMessage);
-      setInitialValue(resetState)
+      setInitialValue(resetState);
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealCategoryReset());
       dispatch(onGetDealCategory());
-    }else if (dealCategoryData?.post_status_code === "205") {
+    } else if (dealCategoryData?.post_status_code === "205") {
       toast.success(dealCategoryData.postMessage);
-      setInitialValue(resetState)
+      setInitialValue(resetState);
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealCategoryReset());
@@ -181,6 +210,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
       dispatch(onPostDealCategoryReset());
     }
   }, [dealCategoryData]);
+  // to prefilled form
   useEffect(() => {
     if (dealCategory) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -198,9 +228,11 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                 <h4 className="card-title">{deal_category}</h4>
               </div>
               <div className="card-body">
-                       {dealCategoryData?.isPostLoading || dealCategoryData?.isUpdateLoading || uploadImage?.isPostLoading ? (
+                {dealCategoryData?.isPostLoading ||
+                dealCategoryData?.isUpdateLoading ||
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                   <Loader classType={"absoluteLoader"} />
+                    <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="containers-fluid">
@@ -260,7 +292,7 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 <span className="text-danger">*</span>
                               </label>
                               <input
-                              accept=".jpg, .jpeg, .png, .webp .svg"
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="mobImage"
                                 className={`form-control ${
@@ -279,11 +311,9 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                              <label>
-                                {upload_image_for_web}
-                              </label>
+                              <label>{upload_image_for_web}</label>
                               <input
-                              accept=".jpg, .jpeg, .png, .webp .svg"
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="webImage"
                                 className={`form-control ${
@@ -301,9 +331,8 @@ const DealCategoryForm = ({setdealCategory,dealCategory}) => {
                                 className="error-message"
                               />
                             </div>{" "}
-
                             <div className="col-sm-4 form-group mb-2 ">
-                              <label>{"Status"}</label>
+                              <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field

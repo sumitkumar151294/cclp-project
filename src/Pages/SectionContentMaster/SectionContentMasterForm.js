@@ -92,15 +92,25 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   );
   const location = useLocation();
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  const dealOptions = getDealData?.filter(dealData=>dealData?.dealType==="UnlockDeals").map((dealCategory) => ({
-    value: dealCategory.id,
-    label: dealCategory.name,
-  }));
+  const dealOptions = getDealData
+    ?.filter((dealData) => dealData?.dealType === "UnlockDeals")
+    .map((dealCategory) => ({
+      value: dealCategory.id,
+      label: dealCategory.name,
+    }));
   const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
+  const text_required = GetTranslationData("UIMasterAdmin", "text_required");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
-  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
+  const display_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_must_number"
+  );
   // options for status
   const statusOptions = [
     { value: true, label: "Active" },
@@ -127,36 +137,37 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     text: "",
     contentSourceType: "",
     segmentId: "",
-    textElementFlag:"",
-    textbgColor:"",
-    enabled:"",
-    isOverrideMetadata:""
+    textElementFlag: "",
+    textbgColor: "",
+    enabled: "",
+    isOverrideMetadata: "",
   });
   const [showFeild, setShowFields] = useState("");
-    const [values, setValues] = useState(null);
+  const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
     mobImage: Yup.lazy(() =>
-  type !== "UnlockStaticCard"
+      type !== "UnlockStaticCard"
         ? Yup.string().required(mobile_image_required)
         : Yup.string()
     ),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, "Display Order must be a number"),
+      .matches(/^[0-9]+$/, display_must_number),
     text: Yup.lazy(() =>
-     ( type === "UnlockStaticCard" || type === "SpecialBannerOne" || type==="SupportingBannerBottom")
+      type === "UnlockStaticCard" ||
+      type === "SpecialBannerOne" ||
+      type === "SupportingBannerBottom"
         ? Yup.string()
-            .required("Text is Required")
+            .required(text_required)
             .test(
               "no-empty-html",
-              "Text is Required",
+              text_required,
               (value) => value !== "<p><br></p>"
             )
         : Yup.string().nullable()
     ),
     enabled: Yup.string().required(status_required),
-
   });
 
   const displayLimit =
@@ -179,8 +190,14 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     } else {
       const sectionContentMasteData = {
         ...values,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
-        textElementFlag: typeof values?.textElementFlag === 'boolean' ? values.textElementFlag : values?.textElementFlag === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
+        textElementFlag:
+          typeof values?.textElementFlag === "boolean"
+            ? values.textElementFlag
+            : values?.textElementFlag === "true",
         webImage: webImage || "",
         mobImage: mobImage || "",
         clientId: 6,
@@ -189,9 +206,9 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         linkedMasterId: [2],
         segmentId: values?.segmentId || null,
         isOverrideMetadata:
-        typeof values?.isOverrideMetadata === "boolean"
-          ? values.isOverrideMetadata
-          : values?.isOverrideMetadata === "true",
+          typeof values?.isOverrideMetadata === "boolean"
+            ? values.isOverrideMetadata
+            : values?.isOverrideMetadata === "true",
         ...(sectionContentData && { id: values.id }),
       };
 
@@ -203,10 +220,16 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
 
   useEffect(() => {
     if (uploadImage) {
-      const   sectionContentMasteData = {
+      const sectionContentMasteData = {
         ...values,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
-        textElementFlag: typeof values?.textElementFlag === 'boolean' ? values.textElementFlag : values?.textElementFlag === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
+        textElementFlag:
+          typeof values?.textElementFlag === "boolean"
+            ? values.textElementFlag
+            : values?.textElementFlag === "true",
         webImage: sectionContentData?.webImage,
         mobImage: sectionContentData?.mobImage,
         clientId: 6,
@@ -214,12 +237,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         sectionMasterId: typeID,
         linkedMasterId: [4],
         isOverrideMetadata:
-        typeof values?.isOverrideMetadata === "boolean"
-          ? values.isOverrideMetadata
-          : values?.isOverrideMetadata === "true",
+          typeof values?.isOverrideMetadata === "boolean"
+            ? values.isOverrideMetadata
+            : values?.isOverrideMetadata === "true",
         segmentId: values?.segmentId || null,
         ...(sectionContentData && { id: values?.id }),
-
       };
       let shouldDispatch = false;
       if (
@@ -252,8 +274,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       setFieldValue("mobImage", formData);
     } else {
       setFieldValue("webImage", formData);
-
-    }}
+    }
+  };
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "201") {
       toast.success(getSectiontContentMasterData?.postMessage);
@@ -268,7 +290,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       dispatch(onPostuploadMobileImageReset());
       dispatch(onUpdatesectionMasterReset());
       dispatch(onPostSectionContentMasterReset());
-    }else if(getSectiontContentMasterData?.post_status_code){
+    } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
@@ -297,7 +319,8 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">
-                  {section_content_master} {type && `(Type:${type}, Name:${sectionName} )`}
+                  {section_content_master}{" "}
+                  {type && `(Type:${type}, Name:${sectionName} )`}
                 </h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
@@ -321,18 +344,17 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched,values, setFieldValue }) => (
+                      {({ errors, touched, values, setFieldValue }) => (
                         <Form>
                           <div className="row">
-
-                            {(type !== "UnlockStaticCard") && (
+                            {type !== "UnlockStaticCard" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Phone
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
-                                accept=".jpg, .jpeg, .png, .webp .svg"
+                                  accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="mobImage"
                                   className={`form-control ${
@@ -355,13 +377,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                             {(type !== "UnlockStaticCard" ) && (
+                            {type !== "UnlockStaticCard" && (
                               <div className="col-sm-4 form-group mb-4">
-                                <label>
-                                  {upload_image_for_web}
-                                </label>
+                                <label>{upload_image_for_web}</label>
                                 <input
-                                accept=".jpg, .jpeg, .png, .webp .svg"
+                                  accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="webImage"
                                   className={`form-control ${
@@ -419,7 +439,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 <Field
                                   name="linkedMasterId"
                                   component={Dropdown}
-                                  options={showFeild === "Deal" ? dealOptions : dealOptions}
+                                  options={
+                                    showFeild === "Deal"
+                                      ? dealOptions
+                                      : dealOptions
+                                  }
                                   className={`form-select ${
                                     errors.linkedMasterId &&
                                     touched.linkedMasterId
@@ -434,27 +458,27 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                              { (showFeild === "Product" && values.linkedMasterId)&& (
-                            <div className="col-lg-4 py-4">
-                                <div className="form-check  mb-2 padd mt-2">
-                                  <Field
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="isOverrideMetadata"
-
-                                  />
-                                  <label className="px-1">
-                                    {"is Over-ride MetaData"}
-                                  </label>
+                            {showFeild === "Product" &&
+                              values.linkedMasterId && (
+                                <div className="col-lg-4 py-4">
+                                  <div className="form-check  mb-2 padd mt-2">
+                                    <Field
+                                      type="checkbox"
+                                      className="form-check-input"
+                                      name="isOverrideMetadata"
+                                    />
+                                    <label className="px-1">
+                                      {"is Over-ride MetaData"}
+                                    </label>
+                                  </div>
                                 </div>
-                              </div>)}
+                              )}
                             {type === "SpecialSection" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{segment_label}</label>
                                 <Field
                                   name="segmentId"
                                   component={Dropdown}
-
                                   className={`form-select ${
                                     errors.segmentId && touched.segmentId
                                       ? "is-invalid"
@@ -472,7 +496,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {(type === "UnlockStaticCard" ) && (
+                            {type === "UnlockStaticCard" && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
                                 <Field
@@ -514,19 +538,22 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 className="error-message"
                               />
                             </div>
-                            {(type !== "UnlockStaticCard" ) && (
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{call_to_action}</label>
-                              <Field
-                                type="text"
-                                name="cta"
-                                className={`form-control ${
-                                  errors.cta && touched.cta ? "is-invalid" : ""
-                                }`}
-                                placeholder={call_to_action_placeholder}
-                              />
-                            </div>)}
-                            {type === "CustomerBenefits"   && (
+                            {type !== "UnlockStaticCard" && (
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>{call_to_action}</label>
+                                <Field
+                                  type="text"
+                                  name="cta"
+                                  className={`form-control ${
+                                    errors.cta && touched.cta
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  placeholder={call_to_action_placeholder}
+                                />
+                              </div>
+                            )}
+                            {type === "CustomerBenefits" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>{text_label}</label>
                                 <Field
@@ -541,22 +568,22 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                              {type === "CustomerBenefits" && (
-                            <div className="col-lg-4 py-4">
+                            {type === "CustomerBenefits" && (
+                              <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
                                     type="checkbox"
                                     className="form-check-input"
                                     name="textElementFlag"
-
                                   />
                                   <label className="px-1">
                                     {"Text Element Required"}
                                   </label>
                                 </div>
-                              </div>)}
+                              </div>
+                            )}
 
-                              {values?.textElementFlag && (
+                            {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Font Color"}</label>
                                 <Field
@@ -570,7 +597,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                              {values?.textElementFlag && (
+                            {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Background Color"}</label>
                                 <Field
@@ -584,14 +611,14 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                                       {values?.textElementFlag && (
-                                <div className="col-sm-4 form-group mb-2">
+                            {values?.textElementFlag && (
+                              <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Text Element
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
-                                accept=".jpg, .jpeg, .png, .webp .svg"
+                                  accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="textIcon"
                                   className={`form-control ${
@@ -612,8 +639,9 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   component="div"
                                   className="error-message"
                                 />
-                              </div>)}
-                              <div className="col-sm-4 form-group mb-2 ">
+                              </div>
+                            )}
+                            <div className="col-sm-4 form-group mb-2 ">
                               <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
@@ -621,10 +649,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"
@@ -640,7 +669,6 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                               />
                             </div>
                           </div>
-
                         </Form>
                       )}
                     </Formik>
