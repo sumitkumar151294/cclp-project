@@ -125,9 +125,9 @@ const formatDate = (datetime) => {
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess &&  */}
+      {getRoleAccess[0]?.addAccess && 
       <DealCouponFrequencyForm dealCouponFreq={dealCouponFreq} setDealCouponFreq={setDealCouponFreq}/>
-      {/* } */}
+            }
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">

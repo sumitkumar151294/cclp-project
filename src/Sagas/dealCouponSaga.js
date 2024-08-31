@@ -28,7 +28,6 @@ function* GetDealCoupon() {
   }
 }
 function* PostDealCoupon({ payload }) {
-  debugger
   try {
     const postDealCouponResponse = yield call(callDealCouponPostApi, payload);
     if (postDealCouponResponse.responseCode === "201") {

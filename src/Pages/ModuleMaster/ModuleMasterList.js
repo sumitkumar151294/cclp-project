@@ -110,17 +110,18 @@ const ModuleMasterList = () => {
       }
     }
   }, [filteredData]);
+  debugger
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess && ( */}
+      {getRoleAccess[0]?.addAccess && (
         <ModuleMasterForm
           moduleMasterData={moduleMasterData}
           setModuleMasterData={setModuleMasterData}
           edit={edit}
           setEdit={setEdit}
         />
-      {/* )} */}
+       )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -145,7 +146,7 @@ const ModuleMasterList = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+
               <div className="card-body">
                 {((edit && getModule?.postLoading) || getModule?.isLoading) ? (
                   <div style={{ height: "200px" }}>
@@ -162,7 +163,7 @@ const ModuleMasterList = () => {
                           <th>{display_order}</th>
                           <th>{status_label}</th>
 
-                            <th>{action_label}</th>
+                          {getRoleAccess[0]?.editAccess && (   <th>{action_label}</th>)}
 
                         </tr>
                       </thead>
@@ -194,7 +195,7 @@ const ModuleMasterList = () => {
                                     : non_active_label}
                                 </span>
                               </td>
-
+                              {getRoleAccess[0]?.editAccess && (
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -213,7 +214,7 @@ const ModuleMasterList = () => {
                                     />
                                   </div>
                                 </td>
-
+                              )}
                             </tr>
                           ))}
                       </tbody>
@@ -241,6 +242,7 @@ const ModuleMasterList = () => {
                 )}
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>

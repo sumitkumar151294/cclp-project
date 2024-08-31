@@ -138,9 +138,9 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess && ( */}
+      {getRoleAccess[0]?.addAccess && (
         <SectionMasterForm sectionData={sectionData} />
-      {/* )} */}
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -236,48 +236,51 @@ const SectionMasterList = () => {
                                   </span>
                                 </td>
                                 {getRoleAccess[0]?.editAccess && (
-                                  <td>
-                                    <div className="d-flex">
-                                      <Button
-                                        className="btn btn-primary shadow btn-xs sharp me-1"
-                                        end_icon={"fas fa-pencil-alt"}
-                                        onClick={() =>
-                                          handleSubmit(SectionMasterData, {
-                                            isEdit: true,
-                                          })
-                                        }
-                                      />
-                                      <Button
-                                        className="btn btn-danger shadow btn-xs sharp"
-                                        end_icon={"fa fa-trash"}
-                                        onClick={() =>
-                                          showAlert(SectionMasterData)
-                                        }
-                                      />
-                                    </div>
-                                  </td>
+                                  <>
+                                    <td>
+                                      <div className="d-flex">
+                                        <Button
+                                          className="btn btn-primary shadow btn-xs sharp me-1"
+                                          end_icon={"fas fa-pencil-alt"}
+                                          onClick={() =>
+                                            handleSubmit(SectionMasterData, {
+                                              isEdit: true,
+                                            })
+                                          }
+                                        />
+                                        <Button
+                                          className="btn btn-danger shadow btn-xs sharp"
+                                          end_icon={"fa fa-trash"}
+                                          onClick={() =>
+                                            showAlert(SectionMasterData)
+                                          }
+                                        />
+                                      </div>
+                                    </td>
+
+                                    <td>
+                                      <Link
+                                        to="/sectionContentMaster"
+                                        state={{
+                                          sectionType:
+                                            SectionMasterData.sectionType,
+                                          sectionId: SectionMasterData.id,
+                                          sectionLimit:
+                                            SectionMasterData.displayLimit,
+                                          sectionName:
+                                            SectionMasterData.sectionName,
+                                        }}
+                                      >
+                                        <Button
+                                          disabled={!SectionMasterData?.enabled}
+                                          text={"Customize"}
+                                          end_icon={"fa fa-eye"}
+                                          className="btn btn-primary btn-sm float-right client_Btn"
+                                        />
+                                      </Link>
+                                    </td>
+                                  </>
                                 )}
-                                <td>
-                                  <Link
-                                    to="/sectionContentMaster"
-                                    state={{
-                                      sectionType:
-                                        SectionMasterData.sectionType,
-                                      sectionId: SectionMasterData.id,
-                                      sectionLimit:
-                                        SectionMasterData.displayLimit,
-                                      sectionName:
-                                        SectionMasterData.sectionName,
-                                    }}
-                                  >
-                                    <Button
-                                      disabled={!SectionMasterData?.enabled}
-                                      text={"Customize"}
-                                      end_icon={"fa fa-eye"}
-                                      className="btn btn-primary btn-sm float-right client_Btn"
-                                    />
-                                  </Link>
-                                </td>
                               </tr>
                             ))}
                         </tbody>

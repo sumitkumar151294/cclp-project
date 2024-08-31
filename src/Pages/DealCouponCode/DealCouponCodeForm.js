@@ -11,6 +11,7 @@ import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onGetDealCouponCode, onPostDealCouponCode, onPostDealCouponCodeReset } from "../../Store/Slices/dealCouponCodeSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
+import { Link } from "react-router-dom";
 // to get today date
 const getTodayDate = () => {
   const today = new Date();
@@ -31,7 +32,8 @@ const statusOptions = [
 const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
   const todayDate = getTodayDate();
   const dispatch = useDispatch();
-  // to get labels and placeholders from translation  
+  // to get labels and placeholders from translation
+  const back_label = GetTranslationData("UIMasterAdmin", "back_label");
   const deal_coupon_code = GetTranslationData("UIMasterAdmin", "deal_coupon_code");
   const coupon_code = GetTranslationData("UIMasterAdmin", "coupon_code");
   const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
@@ -61,7 +63,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
   // to get deal coupon code data from redux store
   const dealCouponCodeData = useSelector(state => state.dealCouponCodeReducer);
   const getDealCoupon = useSelector((state) => state.dealCouponReducer?.getDealCouponData);
-  const dealCouponsOptions = getDealCoupon?.map(dealCoupon => ({
+  const dealCouponsOptions = getDealCoupon?.filter(dealCouponCode=>dealCouponCode?.enabled ).map(dealCoupon => ({
     value: dealCoupon.id,
     label: dealCoupon.title
   }));
@@ -170,6 +172,11 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">{"Deal Coupon Code"}</h4>
+                <Link to="/dealCoupon">
+                  <button className="back-button">
+                    <i class="fa-solid fa-arrow-left"></i> {back_label}
+                  </button>
+                </Link>
               </div>
               <div className="card-body">
                 {dealCouponCodeData?.isPostLoading ? (

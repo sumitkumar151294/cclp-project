@@ -45,6 +45,9 @@ const RoleMasterList = () => {
   const getuserRoleAccess = useSelector(
     (state) => state.userRoleModuleAccessReducer
   );
+  const getRoleAccess = useSelector(
+    (state) => state.moduleReducer?.filteredData
+  );
   // to get the module data from redux
   const moduleList = useSelector((state) => state.moduleReducer?.data);
   // fetch Role Master data on component mount
@@ -112,15 +115,18 @@ const RoleMasterList = () => {
   return (
     <>
       <ScrollToTop />
+       {getRoleAccess[0]?.addAccess && (
       <RoleMasterForm roleMasterData={roleMasterData} setRoleMasterData={setRoleMasterData}   deleted={deleted}
-          setDeleted={setDeleted}/>
+          setDeleted={setDeleted}/>)}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
+            <div className="containers-fluid mt-2 mb-2 pt-1">
               <div className="card-header">
-                <h4 className="card-title">{roleModuleAccessList}</h4>
+                <h4 className="card-title">{"Role Master List"}</h4>
               </div>
+            </div>
               <div className="card-body position-relative">
                 {(roleAccessList?.isgetLoading ||
             (deleted&& roleAccessList?.isPostLoading) ||
@@ -138,7 +144,7 @@ const RoleMasterList = () => {
                           <th>{modules}</th>
                           <th>{description}</th>
                           <th>{status_label}</th>
-                          <th>{action}</th>
+                          {getRoleAccess[0]?.editAccess && (<th>{action}</th>)}
                         </tr>
                       </thead>
                       <tbody key="tbody">
@@ -190,6 +196,7 @@ const RoleMasterList = () => {
                                     : non_active_label}
                                 </span>
                               </td>
+                              {getRoleAccess[0]?.editAccess && (
                                 <td>
                                   <div className="d-flex">
                                     <Button
@@ -208,6 +215,7 @@ const RoleMasterList = () => {
                                     />
                                   </div>
                                 </td>
+                              )}
                               </tr>
                             ))}
                       </tbody>

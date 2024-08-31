@@ -89,12 +89,12 @@ const DealCategoryList = () => {
   }, []);
   return (
     <>
-      {/* {getRoleAccess[0]?.addAccess && ( */}
+      {getRoleAccess[0]?.addAccess && (
         <DealCategoryForm
           setdealCategory={setdealCategory}
           dealCategory={dealCategory}
         />
-      {/* )} */}
+            )}
       <ScrollToTop />
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -140,8 +140,8 @@ const DealCategoryList = () => {
                                 <th>{mobile_image}</th>
                                 <th>{web_image}</th>
                                 <th>{"Status"}</th>
-
-                                  <th>{action_label}</th>
+                                {getRoleAccess[0]?.addAccess && (
+                                  <th>{action_label}</th>)}
 
                               </tr>
                             </thead>
@@ -180,7 +180,7 @@ const DealCategoryList = () => {
                                       : "Non Active"}
                                   </span>
                                 </td>
-
+                                {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
                                           <Button
@@ -201,7 +201,7 @@ const DealCategoryList = () => {
                                           />
                                         </div>
                                       </td>
-
+                                )}
                                   </tr>
                                 ))}
                             </tbody>

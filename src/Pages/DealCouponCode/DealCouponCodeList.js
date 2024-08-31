@@ -112,13 +112,12 @@ const DealCouponCodeList = () => {
   return (
     <>
       <ScrollToTop />
-      {/* {!getRoleAccess[0]?.addAccess ? getRoleAccess[0]?.addAcces && (<DealCouponCodeForm />) : ( */}
+
       <DealCouponCodeForm
         dealCouponCode={dealCouponCode}
         setDealCouponCode={setDealCouponCode}
       />
-      {/* )} */}
-      <div className="containers-fluid pt-0">
+   <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -163,9 +162,9 @@ const DealCouponCodeList = () => {
                                 <th>{"End Date"}</th>
                                 <th>{"Discription"}</th>
                                 <th>{status_label}</th>
-                                {getRoleAccess[0]?.editAccess && (
+
                                   <th>{action_label}</th>
-                                )}
+
                               </tr>
                             </thead>
                             <tbody>
@@ -196,7 +195,7 @@ const DealCouponCodeList = () => {
                                           : non_active_label}
                                       </span>
                                     </td>
-                                    {getRoleAccess[0]?.editAccess && (
+
                                       <td>
                                         <div className="d-flex">
                                           <Button
@@ -217,7 +216,7 @@ const DealCouponCodeList = () => {
                                           />
                                         </div>
                                       </td>
-                                    )}
+
                                   </tr>
                                 ))}
                             </tbody>

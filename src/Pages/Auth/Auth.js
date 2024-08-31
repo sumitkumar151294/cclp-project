@@ -17,7 +17,6 @@ import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
 import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
 import { onGetClientMaster } from "../../Store/Slices/clientMasterSlice";
 
-
 const Auth = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -34,12 +33,15 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
-  const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;;
+  const cleanUrl = currentUrl.endsWith("/")
+    ? currentUrl.slice(0, -1)
+    : currentUrl;
   //fetch module master data on mount
   useEffect(() => {
-    dispatch(onGetClientMaster({platformDomainUrlAdmin:cleanUrl}));
+    dispatch(onGetClientMaster({ platformDomainUrlAdmin: cleanUrl }));
   }, []);
   useEffect(() => {
+    debugger;
     setShowLoader(true);
     // find the configuration that matches the current URL
     let matchingConfig = config.filter((item) =>
@@ -68,7 +70,7 @@ const Auth = () => {
         loginAuthData?.data?.[0]?.clientId;
       axiosInstanceClient.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
-      if ((!loginAuthData?.data?.length || APICalled )) {
+      if (!loginAuthData?.data?.length || APICalled) {
         dispatch(onTranslationReset());
         dispatch(
           onLoginAuthSubmit({
@@ -99,7 +101,7 @@ const Auth = () => {
       axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceAdmin.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
-        axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
       axiosInstanceClient.defaults.headers["client-code"] =
         loginAuthData?.data?.[0]?.clientId;
       dispatch(onTranslationSubmit());

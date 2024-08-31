@@ -12,7 +12,6 @@ import { onLoginReset, onLoginSubmit } from "../../Store/Slices/loginSlice";
 import Loader from "../../Components/Loader/Loader";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
-import {onGetuserMaster} from "../../Store/Slices/userMasterSlice";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
