@@ -1,9 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { callNavConfigureGetApi, callNavConfigurePostApi } from "../Context/navConfigureApi";
 import { onGetNavConfigure, onGetNavConfigureError, onGetNavConfigureSuccess, onPostNavConfigure, onPostNavConfigureError, onPostNavConfigureSuccess } from "../Store/Slices/NavConfigurationSlice";
-function* GetNavConfigure() {
+function* GetNavConfigure({ payload }) {
   try {
-    const getNavConfigureResponse = yield call(callNavConfigureGetApi);
+    const getNavConfigureResponse = yield call(callNavConfigureGetApi,{ payload });
     if (getNavConfigureResponse.responseCode === "200") {
       yield put(
         onGetNavConfigureSuccess({

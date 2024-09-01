@@ -133,7 +133,6 @@ const SectionMasterForm = ({ sectionData }) => {
     },
   ];
   const handleSubmit = (values) => {
-    debugger;
     if (values) {
       const SectionformData = {
         ...values,

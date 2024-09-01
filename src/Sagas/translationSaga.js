@@ -6,9 +6,9 @@ import {
   onTranslationSubmit,
 } from "../Store/Slices/translationSlice";
 
-function* Translation() {
+function* Translation({payload}) {
   try { 
-    const translationResponse = yield call(translationApi);
+    const translationResponse = yield call(translationApi,payload);
     if (translationResponse.responseCode === "200") {
       yield put(
         onTranslationSubmitSuccess({

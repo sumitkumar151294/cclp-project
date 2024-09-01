@@ -15,10 +15,12 @@ import Loader from "../../Components/Loader/Loader";
 import { onPartnerKeyLoginSubmit } from "../../Store/Slices/loginSlice";
 import axiosInstanceAdmin from "../../Common/Axios/axiosInstanceAdmin";
 import axiosInstanceClient from "../../Common/Axios/axiosInstanceClient";
-import { onGetClientMaster } from "../../Store/Slices/clientMasterSlice";
+import {
+  onGetClientMaster,
+  onGetClientMasterReset,
+} from "../../Store/Slices/clientMasterSlice";
 
 const Auth = () => {
-  const [showLoader, setShowLoader] = useState(false);
   const [showError, setShowError] = useState(false);
   const dispatch = useDispatch();
   const [pageError, setPageError] = useState({
@@ -28,50 +30,29 @@ const Auth = () => {
     url: "",
     buttonText: "",
   });
+
+  const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
+  const PARTNER_KEY = process.env.REACT_APP_PARTNER_KEY;
+  const ACCESS_KEY = process.env.REACT_APP_ACCESS_KEY;
+  const clientMasterData = useSelector((state) => state.clientMasterReducer);
+  const clientData = useSelector(
+    (state) => state.clientMasterReducer?.clientMasterData
+  );
   // to get data from redux store
   const translationData = useSelector((state) => state.translationReducer);
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
-  const cleanUrl = currentUrl.endsWith("/")
-    ? currentUrl.slice(0, -1)
-    : currentUrl;
   //fetch module master data on mount
+
   useEffect(() => {
-    dispatch(onGetClientMaster({ platformDomainUrlAdmin: cleanUrl }));
-  }, []);
-  useEffect(() => {
-    debugger;
-    setShowLoader(true);
-    // find the configuration that matches the current URL
-    let matchingConfig = config.filter((item) =>
-      currentUrl.includes(item.API_URL)
-    );
-    if (matchingConfig.length > 1) {
-      matchingConfig = matchingConfig.find(
-        (item) => item.PARTNER_KEY === "UIMasterAdmin"
-      );
-    } else if (matchingConfig.length === 1) {
-      matchingConfig = matchingConfig[0];
+    if (!clientData.length) {
+      dispatch(onGetClientMaster({ PlatformDomainUrl: currentUrl }));
     }
-    // get data from present url
-    if (matchingConfig) {
-      const { ACCESS_KEY, SECRET_KEY, PARTNER_KEY } = matchingConfig;
-      var APICalled = false;
-      if (PARTNER_KEY !== loginDetails.partner_Key) {
-        APICalled = true;
-      }
-      dispatch(onPartnerKeyLoginSubmit(PARTNER_KEY));
-      axiosInstanceAdmin.defaults.headers["partner-code"] = PARTNER_KEY;
-      axiosInstanceClient.defaults.headers["partner-code"] = PARTNER_KEY;
-      axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceAdmin.defaults.headers["client-code"] =
-        loginAuthData?.data?.[0]?.clientId;
-      axiosInstanceClient.defaults.headers["client-code"] =
-        loginAuthData?.data?.[0]?.clientId;
-      if (!loginAuthData?.data?.length || APICalled) {
-        dispatch(onTranslationReset());
+  }, [currentUrl]);
+  useEffect(() => {
+    if (clientMasterData?.get_status_code === "200") {
+      if (clientData?.[0]?.clientId) {
         dispatch(
           onLoginAuthSubmit({
             partnerCode: PARTNER_KEY,
@@ -79,36 +60,33 @@ const Auth = () => {
             secretKey: SECRET_KEY,
           })
         );
-      } else {
-        setShowLoader(false);
-        setShowError(false);
       }
-    } else {
-      setShowLoader(false);
+      dispatch(onGetClientMasterReset());
+    } else if (clientMasterData?.get_status_code) {
       setShowError(true);
       setPageError({
-        StatusCode: "401",
-        ErrorName: "Permission Denied",
-        ErrorDesription:
-          "Your application url is not registerd to our application",
+        StatusCode: clientMasterData?.get_status_code,
+        ErrorName: "Internal Server Error",
+        ErrorDescription: "You do not have permission. Please contact admin.",
         url: "/",
         buttonText: "Back to Home",
       });
     }
-  }, [currentUrl]);
+  }, [clientMasterData, clientData]);
+
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
-      axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceAdmin.defaults.headers["client-code"] =
-        loginAuthData?.data?.[0]?.clientId;
-      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      axiosInstanceClient.defaults.headers["client-code"] =
-        loginAuthData?.data?.[0]?.clientId;
-      dispatch(onTranslationSubmit());
+      // axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      // axiosInstanceAdmin.defaults.headers["client-code"] =
+      //   loginAuthData?.data?.[0]?.clientId;
+      // axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      // axiosInstanceClient.defaults.headers["client-code"] =
+      //   loginAuthData?.data?.[0]?.clientId;
+      dispatch(onTranslationSubmit({ clientId: 0 }));
       dispatch(onLoginAuthReset());
     } else if (loginAuthData?.status_code) {
       setShowError(true);
-      setShowLoader(false);
+
       setPageError({
         StatusCode: loginAuthData.status_code,
         ErrorName: "Internal Server Error",
@@ -121,7 +99,6 @@ const Auth = () => {
 
   useEffect(() => {
     if (translationData.status_code === "200" && !translationData?.isLoading) {
-      setShowLoader(false);
       setShowError(false);
       dispatch(onTranslationReset());
     } else if (
@@ -129,7 +106,7 @@ const Auth = () => {
       translationData?.status_code
     ) {
       setShowError(true);
-      setShowLoader(false);
+
       setPageError({
         StatusCode: "500",
         ErrorName: "Internal Server Error",
@@ -141,7 +118,7 @@ const Auth = () => {
   }, [translationData]);
   return (
     <>
-      {showLoader ? (
+      {clientMasterData?.isgetLoading || translationData?.isLoading ? (
         <Loader />
       ) : (
         <>

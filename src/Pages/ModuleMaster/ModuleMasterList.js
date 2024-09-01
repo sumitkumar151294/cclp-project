@@ -110,7 +110,6 @@ const ModuleMasterList = () => {
       }
     }
   }, [filteredData]);
-  debugger
   return (
     <>
       <ScrollToTop />

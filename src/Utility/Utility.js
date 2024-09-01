@@ -1,10 +1,15 @@
 // src/hooks/useClientId.js
 import { useSelector } from 'react-redux';
 
-const useClientId = () => {
+const ClientId = () => {
   return useSelector(
-    (state) => state?.clientMasterReducer?.clientMasterData?.[0]?.id
+    (state) => state.clientMasterReducer?.clientMasterData?.[0]?.clientId
+  );
+};
+const UserId = () => {
+  return useSelector(
+    (state) => state.loginReducer?.data?.[0]?.userId
   );
 };
 
-export default useClientId;
+export { ClientId, UserId };

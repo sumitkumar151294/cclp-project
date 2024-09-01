@@ -1,9 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetDealCategory, onGetDealCategoryError, onGetDealCategorySuccess, onPostDealCategory, onPostDealCategoryError, onPostDealCategorySuccess, onUpdateDealCategory, onUpdateDealCategoryError, onUpdateDealCategorySuccess } from "../Store/Slices/dealCategorySlice";
 import { callDealCategoryGetApi, callDealCategoryPostApi, callDealCategoryUpdateApi } from "../Context/dealCategoryApi";
-function* GetDealCategory() {
+function* GetDealCategory({ payload }) {
   try {
-    const getDealCategoryResponse = yield call(callDealCategoryGetApi);
+    const getDealCategoryResponse = yield call(callDealCategoryGetApi,payload);
     if (getDealCategoryResponse.responseCode === "200") {
       yield put(
         onGetDealCategorySuccess({

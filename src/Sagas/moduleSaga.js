@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetModule, onGetModuleError, onGetModuleSuccess, onPostModule, onPostModuleError, onPostModuleSuccess } from "../Store/Slices/moduleSlice";
 import { callModuleApi, callPostModuleApi } from "../Context/moduleApi";
 
-function* Module() {
+function* Module({payload}) {
   try {
-    const moduleResponse = yield call(callModuleApi);
+    const moduleResponse = yield call(callModuleApi,payload);
     if (moduleResponse.responseCode === "200") {
       yield put(
         onGetModuleSuccess({

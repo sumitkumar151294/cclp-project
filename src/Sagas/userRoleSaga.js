@@ -1,9 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { callUserRoleGetApi, callUserRolePostApi } from "../Context/roleMasterApi";
 import { onGetUserRole, onGetUserRoleError, onGetUserRoleSuccess, onPostUserRole, onPostUserRoleError, onPostUserRoleSuccess } from "../Store/Slices/userRoleSlice";
-function* GetUserRole() {
+function* GetUserRole({ payload }) {
   try {
-    const getUserRoleResponse = yield call(callUserRoleGetApi);
+    const getUserRoleResponse = yield call(callUserRoleGetApi,payload);
     if (getUserRoleResponse.responseCode === "200") {
       yield put(
         onGetUserRoleSuccess({
