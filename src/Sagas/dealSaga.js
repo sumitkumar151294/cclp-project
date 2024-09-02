@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { callDealGetApi, callDealPostApi, callDealUpdateApi } from "../Context/dealApi";
 import { onGetDeal, onGetDealError, onGetDealSuccess, onPostDeal, onPostDealError, onPostDealSuccess, onUpdateDeal, onUpdateDealError, onUpdateDealSuccess } from "../Store/Slices/dealSlice";
 
-function* GetDeal({ payload }) {
+function* GetDeal() {
   try {
-    const getDealResponse = yield call(callDealGetApi,{ payload });
+    const getDealResponse = yield call(callDealGetApi);
     if (getDealResponse.responseCode === "200") {
       yield put(
         onGetDealSuccess({

@@ -1,11 +1,7 @@
 import axiosInstanceClient from '../Common/Axios/axiosInstanceClient';
 import API from '../Common/Endpoint/serviceConstrants';
 export const callUserRoleGetApi = async () => {
-  const { data = {} } = await axiosInstanceClient.get(API.RoleMaster,{
-    params: {
-        clientId: 6,
-    },
-});
+  const { data = {} } = await axiosInstanceClient.get(API.RoleMaster);
   return data;
 };
 export const callUserRolePostApi = async (payload) => {

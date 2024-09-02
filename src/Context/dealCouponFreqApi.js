@@ -1,11 +1,7 @@
 import axiosInstanceClient from '../Common/Axios/axiosInstanceClient';
 import API from '../Common/Endpoint/serviceConstrants';
 export const callDealCouponFreqGetApi = async () => {
-  const { data = {} } = await axiosInstanceClient.get(API.dealcouponfrequency,{
-    params: {
-        clientId: 6,
-    },
-});
+  const { data = {} } = await axiosInstanceClient.get(API.dealcouponfrequency);
   return data;
 };
 export const callDealCouponFreqPostApi = async (payload) => {

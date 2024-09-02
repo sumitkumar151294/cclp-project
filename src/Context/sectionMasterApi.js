@@ -1,11 +1,7 @@
 import axiosInstanceClient from '../Common/Axios/axiosInstanceClient';
 import API from '../Common/Endpoint/serviceConstrants';
 export const callsectionMasterGetApi = async () => {
-  const { data = {} } = await axiosInstanceClient.get(API.sectionMaster,{
-    params: {
-        clientId: 6,
-    },
-});
+  const { data = {} } = await axiosInstanceClient.get(API.sectionMaster);
   return data;
 };
 export const callsectionMasterPostApi = async (payload) => {

@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetProductContent, onGetProductContentError, onGetProductContentSuccess } from "../Store/Slices/productContentSlice";
 import { callProductContentGetApi } from "../Context/productContentApi";
 
-function* productContent({ payload }) {
+function* productContent() {
   try {
-    const productContentResponse = yield call(callProductContentGetApi, payload);
+    const productContentResponse = yield call(callProductContentGetApi);
     if (productContentResponse.httpStatusCode === "200") {
       yield put(
         onGetProductContentSuccess({

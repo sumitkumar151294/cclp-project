@@ -138,9 +138,9 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (
+      {/* {getRoleAccess[0]?.addAccess && ( */}
         <SectionMasterForm sectionData={sectionData} />
-      )}
+      {/* )} */}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -185,10 +185,13 @@ const SectionMasterList = () => {
                             <th>{claim_limit}</th>
                             <th>{points_to_claim_label}</th>
                             <th>{status_label}</th>
-                            {getRoleAccess[0]?.editAccess && (
+                            {/* {getRoleAccess[0]?.editAccess && ( */}
                               <th>{action_label}</th>
-                            )}
+                            {/* )} */}
+                            {/* {getRoleAccess[0]?.editAccess && ( */}
+
                             <th>{section_data}</th>
+                          {/* )} */}
                           </tr>
                         </thead>
                         <tbody>
@@ -235,7 +238,7 @@ const SectionMasterList = () => {
                                       : "Non Active"}
                                   </span>
                                 </td>
-                                {getRoleAccess[0]?.editAccess && (
+                                {/* {getRoleAccess[0]?.editAccess && ( */}
                                   <>
                                     <td>
                                       <div className="d-flex">
@@ -280,7 +283,7 @@ const SectionMasterList = () => {
                                       </Link>
                                     </td>
                                   </>
-                                )}
+                                {/* )} */}
                               </tr>
                             ))}
                         </tbody>

@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { callUserRoleModuleAccessGetApi, callUserRoleModuleAccessPostApi} from "../Context/userRoleModuleAccessApi";
 import {onGetUserRoleModuleAccess, onGetUserRoleModuleAccessError, onGetUserRoleModuleAccessSuccess, onPostUserRoleModuleAccess, onPostUserRoleModuleAccessError, onPostUserRoleModuleAccessSuccess} from "../Store/Slices/userRoleModuleAccessSlice";
 
-function* GetUserRoleModuleAccess({payload}) {
+function* GetUserRoleModuleAccess() {
   try {
-    const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi,payload);
+    const getUserRoleModuleAccessResponse = yield call(callUserRoleModuleAccessGetApi);
     if (getUserRoleModuleAccessResponse.responseCode === "200") {
       yield put(
         onGetUserRoleModuleAccessSuccess({

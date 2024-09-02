@@ -1,11 +1,7 @@
 import axiosInstanceClient from '../Common/Axios/axiosInstanceClient';
 import API from '../Common/Endpoint/serviceConstrants';
 export const callDealGetApi = async () => {
-  const { data = {} } = await axiosInstanceClient.get(API.deal,{
-    params: {
-        clientId: 6,
-    },
-});
+  const { data = {} } = await axiosInstanceClient.get(API.deal);
   return data;
 };
 export const callDealPostApi = async (payload) => {

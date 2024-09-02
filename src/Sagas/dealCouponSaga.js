@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { callDealCouponGetApi, callDealCouponPostApi, callDealCouponUpdateApi } from "../Context/dealCouponApi";
 import { onGetDealCoupon, onGetDealCouponError, onGetDealCouponSuccess, onPostDealCoupon, onPostDealCouponError, onPostDealCouponSuccess, onUpdateDealCoupon, onUpdateDealCouponError, onUpdateDealCouponSuccess } from "../Store/Slices/dealCouponSlice";
 
-function* GetDealCoupon({ payload }) {
+function* GetDealCoupon() {
   try {
-    const getDealCouponResponse = yield call(callDealCouponGetApi,payload);
+    const getDealCouponResponse = yield call(callDealCouponGetApi);
     if (getDealCouponResponse.responseCode === "200") {
       yield put(
         onGetDealCouponSuccess({

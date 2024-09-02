@@ -5,11 +5,7 @@ export const callUserMasterApi = async (payload) => {
   return data;
 };
 export const callUserMasterGetApi = async () => {
-  const { data = {} } = await axiosInstanceClient.get(API.userMaster,{
-    params: {
-        clientId: 6,
-    },
-});
+  const { data = {} } = await axiosInstanceClient.get(API.userMaster);
   return data;
 };
 export const callUserMasterUpdateApi = async (payload) => {

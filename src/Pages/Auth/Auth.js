@@ -19,6 +19,7 @@ import {
   onGetClientMaster,
   onGetClientMasterReset,
 } from "../../Store/Slices/clientMasterSlice";
+import { ClientId } from "../../Utility/Utility";
 
 const Auth = () => {
   const [showError, setShowError] = useState(false);
@@ -43,6 +44,7 @@ const Auth = () => {
   const loginAuthData = useSelector((state) => state.loginAuthReducer);
   const loginDetails = useSelector((state) => state.loginReducer);
   const currentUrl = window.location.href;
+  const clientId=ClientId();
   //fetch module master data on mount
 
   useEffect(() => {
@@ -51,6 +53,7 @@ const Auth = () => {
     }
   }, [currentUrl]);
   useEffect(() => {
+    debugger
     if (clientMasterData?.get_status_code === "200") {
       if (clientData?.[0]?.clientId) {
         dispatch(
@@ -60,9 +63,19 @@ const Auth = () => {
             secretKey: SECRET_KEY,
           })
         );
+      }else {
+        setShowError(true);
+        setPageError({
+          StatusCode: clientMasterData?.get_status_code,
+          ErrorName: "Internal Server Error",
+          ErrorDescription: "You do not have permission. Please contact admin.",
+          url: "/",
+          buttonText: "Back to Home",
+        });
       }
       dispatch(onGetClientMasterReset());
     } else if (clientMasterData?.get_status_code) {
+      debugger
       setShowError(true);
       setPageError({
         StatusCode: clientMasterData?.get_status_code,
@@ -76,12 +89,10 @@ const Auth = () => {
 
   useEffect(() => {
     if (loginAuthData?.status_code === "200") {
-      // axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      // axiosInstanceAdmin.defaults.headers["client-code"] =
-      //   loginAuthData?.data?.[0]?.clientId;
-      // axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
-      // axiosInstanceClient.defaults.headers["client-code"] =
-      //   loginAuthData?.data?.[0]?.clientId;
+      axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceAdmin.defaults.headers["clientId"] = clientId
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers["clientId"] = clientId
       dispatch(onTranslationSubmit({ clientId: 0 }));
       dispatch(onLoginAuthReset());
     } else if (loginAuthData?.status_code) {
@@ -96,7 +107,10 @@ const Auth = () => {
       });
     }
   }, [loginAuthData]);
-
+  axiosInstanceAdmin.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceAdmin.defaults.headers["clientId"] = clientId
+      axiosInstanceClient.defaults.headers.Authorization = `Bearer ${loginAuthData?.data?.[0]?.token}`;
+      axiosInstanceClient.defaults.headers["clientId"] = clientId
   useEffect(() => {
     if (translationData.status_code === "200" && !translationData?.isLoading) {
       setShowError(false);

@@ -340,7 +340,7 @@ const SectionMasterForm = ({ sectionData }) => {
                               />
                             </div>
 
-                            {(showFields !== "Promo Message") && (
+                            {(showFields && showFields !== "Promo Message") && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{text_label}</label>
                                 <Field
