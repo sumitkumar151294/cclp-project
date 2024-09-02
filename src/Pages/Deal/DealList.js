@@ -7,7 +7,11 @@ import Loader from "../../Components/Loader/Loader";
 import InputField from "../../Components/InputField/InputField";
 import DealForm from "./DealForm";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetDeal, onUpdateDeal, onUpdateDealReset } from "../../Store/Slices/dealSlice";
+import {
+  onGetDeal,
+  onUpdateDeal,
+  onUpdateDealReset,
+} from "../../Store/Slices/dealSlice";
 import { toast } from "react-toastify";
 import { onGetDealCategory } from "../../Store/Slices/dealCategorySlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
@@ -15,46 +19,51 @@ import Swal from "sweetalert2";
 
 const DealList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [dealsData,setdealData]=useState();
+  const [dealsData, setdealData] = useState();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const dispatch = useDispatch();
-  // to get labels and placeholders from translation  
-  const deal_list = GetTranslationData("UIMasterAdmin","deal_list");
-  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label");
-  const deal_name = GetTranslationData("UIMasterAdmin","deal_name");
+  // to get labels and placeholders from translation
+  const deal_list = GetTranslationData("UIMasterAdmin", "deal_list");
+  const search_here_label = GetTranslationData(
+    "UIMasterAdmin",
+    "search_here_label"
+  );
+  const deal_name = GetTranslationData("UIMasterAdmin", "deal_name");
   const deal_category = GetTranslationData("UIMasterAdmin", "deal_category");
   const deal_type = GetTranslationData("UIMasterAdmin", "deal_type");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
-  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const start_date_label = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_label"
+  );
   const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
   const mobile_image = GetTranslationData("UIMasterAdmin", "mobile_image");
   const web_image = GetTranslationData("UIMasterAdmin", "web_image");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const deal_alias = GetTranslationData("UIMasterAdmin", "deal_alias");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   // to fetch deal data from redux store
-  const dealCategoryData = useSelector((state) => state.dealCategoryReducer?.getDealCategoryData);
+  const dealCategoryData = useSelector(
+    (state) => state.dealCategoryReducer?.getDealCategoryData
+  );
   const getDealData = useSelector((state) => state.dealReducer);
   // to get module filtered data from redux
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
-  const filteredData =
-  getDealData?.getDealData?.filter(
+  const filteredData = getDealData?.getDealData?.filter(
     (data) =>
-      (data.name
-        ?.toLowerCase()
-        ?.includes(searchQuery?.toLowerCase()) ||
-        data.dealType
-          ?.toLowerCase()
-          ?.includes(searchQuery?.toLowerCase()))
+      data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+      data.dealType?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-   // modal for delete warning
-   const showAlert = (data) => {
+  // modal for delete warning
+  const showAlert = (data) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You want to delete this row.",
@@ -73,8 +82,8 @@ const DealList = () => {
   //to handle edit and delete
   const handleSubmit = (dealData, isEdit) => {
     const dealDataInfo = {
-     ...dealData,
-      deleted: true
+      ...dealData,
+      deleted: true,
     };
     if (isEdit) {
       setdealData(dealDataInfo);
@@ -99,8 +108,6 @@ const DealList = () => {
   useEffect(() => {
     dispatch(onGetDeal());
     dispatch(onGetDealCategory());
-    
-
   }, []);
 
   useEffect(() => {
@@ -147,7 +154,7 @@ const DealList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {getDealData?.isgetLoading || getDealData?.isUpdateLoading  ? (
+                {getDealData?.isgetLoading || getDealData?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -162,32 +169,48 @@ const DealList = () => {
                                 <th>{deal_name}</th>
                                 <th>{deal_category}</th>
                                 <th>{deal_type}</th>
-                                <th>{"Deal Alias"}</th>
+                                <th>{deal_alias}</th>
                                 <th>{display_order}</th>
                                 <th>{start_date_label}</th>
                                 <th>{end_date_label}</th>
                                 <th>{mobile_image}</th>
                                 <th>{web_image}</th>
-                                <th>{"Status"}</th>
-                                {getRoleAccess[0]?.editAccess && (<th>{action_label}</th>)}
+                                <th>{status_label}</th>
+                                {getRoleAccess[0]?.editAccess && (
+                                  <th>{action_label}</th>
+                                )}
                               </tr>
                             </thead>
                             <tbody>
-                              {filteredData.slice(startIndex, endIndex)
+                              {filteredData
+                                .slice(startIndex, endIndex)
                                 .map((dealData, index) => (
                                   <tr key={index}>
                                     <td>{dealData.name}</td>
                                     <td>
                                       {dealCategoryData
-                                        ?.filter(dealCategory => dealCategory.id === dealData.category)
-                                        .map(dealCategory => dealCategory.name)
-                                      }
+                                        ?.filter(
+                                          (dealCategory) =>
+                                            dealCategory.id ===
+                                            dealData.category
+                                        )
+                                        .map(
+                                          (dealCategory) => dealCategory.name
+                                        )}
                                     </td>
                                     <td>{dealData.dealType}</td>
                                     <td>{dealData.alias}</td>
                                     <td>{dealData.displayOrder}</td>
-                                    <td>{new Date(dealData.startDate).toLocaleDateString()}</td>
-                                    <td>{new Date(dealData.endDate).toLocaleDateString()}</td>
+                                    <td>
+                                      {new Date(
+                                        dealData.startDate
+                                      ).toLocaleDateString()}
+                                    </td>
+                                    <td>
+                                      {new Date(
+                                        dealData.endDate
+                                      ).toLocaleDateString()}
+                                    </td>
 
                                     <td>
                                       <img
@@ -204,18 +227,18 @@ const DealList = () => {
                                       />
                                     </td>
                                     <td>
-                                  <span
-                                    className={
-                                      dealData.enabled
-                                        ? "badge badge-success"
-                                        : "badge badge-danger"
-                                    }
-                                  >
-                                    {dealData.enabled
-                                      ? "Active"
-                                      : "Non Active"}
-                                  </span>
-                                </td>
+                                      <span
+                                        className={
+                                          dealData.enabled
+                                            ? "badge badge-success"
+                                            : "badge badge-danger"
+                                        }
+                                      >
+                                        {dealData.enabled
+                                          ? "Active"
+                                          : "Non Active"}
+                                      </span>
+                                    </td>
                                     {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
@@ -231,9 +254,7 @@ const DealList = () => {
                                           <Button
                                             className="btn btn-danger shadow btn-xs sharp"
                                             end_icon={"fa fa-trash"}
-                                            onClick={() =>
-                                              showAlert(dealData)
-                                            }
+                                            onClick={() => showAlert(dealData)}
                                           />
                                         </div>
                                       </td>

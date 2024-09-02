@@ -65,6 +65,14 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
     "UIMasterAdmin",
     "Module_route_path_required"
   );
+  const display_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_must_number"
+  );
+  const module_icon_required = GetTranslationData(
+    "UIMasterAdmin",
+    "module_icon_required"
+  );
   // to get module data from the Redux store
   const moduleData = useSelector((state) => state?.moduleReducer);
   const getwebImage = useSelector(
@@ -95,9 +103,9 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
     routePath: yup.string().required(Module_route_path_required),
     displayOrder: yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, "Display Order must be a number"),
+      .matches(/^[0-9]+$/, display_must_number),
     enabled: yup.string().required(status_required), // Validate as boolean
-    icon: yup.string().required("Module Icon is required"), // Validate as boolean
+    icon: yup.string().required(module_icon_required), // Validate as boolean
   });
 
   // to handle image changes

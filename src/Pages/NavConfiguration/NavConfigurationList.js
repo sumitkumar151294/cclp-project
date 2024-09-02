@@ -26,7 +26,7 @@ const NavConfigurationList = () => {
     "UIMasterAdmin",
     "nav_configuration_list"
   );
-  const menu_name = GetTranslationData("UIMasterAdmin", "menu_name");
+  const nav_name = GetTranslationData("UIMasterAdmin", "nav_name");
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
@@ -35,6 +35,7 @@ const NavConfigurationList = () => {
     "search_here_label"
   );
   const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
+  const login_required = GetTranslationData("UIMasterAdmin", "login_required");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const active_label = GetTranslationData("UIMasterAdmin", "active_label");
   const non_active_label = GetTranslationData(
@@ -94,8 +95,6 @@ const NavConfigurationList = () => {
       dispatch(onPostNavConfigure(navConfigData));
     }
   };
-  // to show the snackbar and call get api
-
   // for pagination
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -143,11 +142,11 @@ const NavConfigurationList = () => {
                     <table className="table header-border table-responsive-sm">
                       <thead>
                         <tr>
-                          <th>{menu_name}</th>
+                          <th>{nav_name}</th>
                           <th>{call_to_action}</th>
                           <th>{display_order}</th>
-                          <th>{"Nav Icon"}</th>
-                          <th>{"Login Required"}</th>
+                          <th>{nav_icon}</th>
+                          <th>{login_required}</th>
                           <th>{status_label}</th>
                           {getRoleAccess[0]?.editAccess && (  <th>{action_label}</th>)}
                         </tr>

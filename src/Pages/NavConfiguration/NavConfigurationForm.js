@@ -29,15 +29,15 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   );
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const menu_name = GetTranslationData("UIMasterAdmin", "menu_name");
+  const nav_name = GetTranslationData("UIMasterAdmin", "nav_name");
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const is_login_required = GetTranslationData(
     "UIMasterAdmin",
     "is_login_required"
   );
-  const menu_name_placeholder = GetTranslationData(
+  const nav_name_placeholder = GetTranslationData(
     "UIMasterAdmin",
-    "menu_name_placeholder"
+    "nav_name_placeholder"
   );
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const displayOrderPlaceholder = GetTranslationData(
@@ -48,9 +48,9 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
     "UIMasterAdmin",
     "call_to_action_placeholder"
   );
-  const menu_name_required = GetTranslationData(
+  const nav_name_required = GetTranslationData(
     "UIMasterAdmin",
-    "menu_name_ required"
+    "nav_name_required"
   );
   const call_to_action_required = GetTranslationData(
     "UIMasterAdmin",
@@ -61,9 +61,10 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
     "display_order_required"
   );
   const nav_icon = GetTranslationData("UIMasterAdmin", "nav_icon");
-  const nav_icon_placeholder = GetTranslationData(
+  const nav_icon_required = GetTranslationData("UIMasterAdmin", "nav_icon_required");
+  const display_must_number = GetTranslationData(
     "UIMasterAdmin",
-    "nav_icon_placeholder"
+    "display_must_number"
   );
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const status_required = GetTranslationData(
@@ -98,13 +99,13 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   ];
   // to validate nav configure form using Yup schema
   const validations = yup.object({
-    cta: yup.string().required("Call to Action is required"),
-    navigationMenuName: yup.string().required("Menu Name is required"),
+    cta: yup.string().required(call_to_action_required),
+    navigationMenuName: yup.string().required(nav_name_required),
     displayOrder: yup.string()
     .required(display_order_required)
-    .matches(/^[0-9]+$/, "Display Order must be a number"),
+    .matches(/^[0-9]+$/, display_must_number),
     enabled: yup.string().required(status_required),
-    icon:yup.string().required("Icon is required")
+    icon:yup.string().required(nav_icon_required)
   });
   // to handle form using useFormik hook
   const handleSubmit = (values) => {
@@ -129,6 +130,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
     setInitialValue(reset)
     }
   };
+  // to call post api based on upload Image status
   useEffect(() => {
     if (uploadImage?.post_status_code === "201") {
       const postData = {
@@ -169,8 +171,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
     }else if (navConfigureData?.post_status_code === "204"
     ) {
      setNavData(null);
-     setEdit(false)
-
+     setEdit(false);
      toast.success(navConfigureData?.postMessage);
      dispatch(onPostuploadImageReset())
      dispatch(onGetNavConfigure());
@@ -182,6 +183,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
       dispatch(onPostNavConfigureReset());
     }
   }, [navConfigureData]);
+  // to handle image
   const handleImageChange = (setFieldValue, event) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -217,7 +219,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label htmlFor="name-f">
-                                {"Navigation Name"}
+                                {nav_name}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -226,7 +228,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
                                   errors.navigationMenuName && touched.navigationMenuName ? "is-invalid" : ""
                                 }`}
                                 name="navigationMenuName"
-                                placeholder={menu_name_placeholder}
+                                placeholder={nav_name_placeholder}
                               />
                               <ErrorMessage
                                 name="navigationMenuName"
@@ -281,7 +283,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
 
                             <div className="col-sm-4 form-group mb-2">
                               <label htmlFor="description">
-                                {"Nav Icon"}
+                                {nav_icon}
                                 <span className="text-danger">*</span>
                               </label>
                               <input

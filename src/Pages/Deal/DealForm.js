@@ -62,10 +62,6 @@ const DealForm = ({ dealsData }) => {
     "UIMasterAdmin",
     "mobile_image_required"
   );
-  const web_image_required = GetTranslationData(
-    "UIMasterAdmin",
-    "web_image_required"
-  );
   const deal_name_required = GetTranslationData(
     "UIMasterAdmin",
     "deal_name_required"
@@ -97,6 +93,21 @@ const DealForm = ({ dealsData }) => {
     "UIMasterAdmin",
     "upload_image_for_phone"
   );
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
+  const alias_required = GetTranslationData("UIMasterAdmin", "alias_required");
+  const at_least_one_alias_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_alias_required"
+  );
+  const display_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "display_must_number"
+  );
+  const deal_alias = GetTranslationData("UIMasterAdmin", "deal_alias");
+  const enter_alias = GetTranslationData("UIMasterAdmin", "enter_alias");
   // to get data from redux store
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
@@ -104,7 +115,6 @@ const DealForm = ({ dealsData }) => {
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
-
   const uploadImage = useSelector((state) => state.uploadReducer);
   const dealCategoryData = useSelector(
     (state) => state.dealCategoryReducer?.getDealCategoryData
@@ -136,32 +146,34 @@ const DealForm = ({ dealsData }) => {
   ];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    mobImage: Yup.string().required(web_image_required),
+    mobImage: Yup.string().required(mobile_image_required),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, "Display Order must be a number"),
+      .matches(/^[0-9]+$/, display_must_number),
     category: Yup.string().required(category_name_required),
     name: Yup.string().required(deal_name_required),
     dealType: Yup.string().required(deal_type_required),
     startDate: Yup.string().required(start_date_required),
     endDate: Yup.string().required(end_date_required),
-    enabled: Yup.string().required("Status is required"),
+    enabled: Yup.string().required(status_required),
     alias: Yup.array()
-      .of(Yup.string().required("Alias is required"))
-      .required("At least one alias is required"),
+      .of(Yup.string().required(alias_required))
+      .required(at_least_one_alias_required),
   });
-const resetState=[{
-  enabled: "",
-  webImage: "",
-  mobImage: "",
-  displayOrder: "",
-  category: "",
-  name: "",
-  startDate: "",
-  endDate: dealsData?.endDate || "",
-  dealType: "",
-  alias: [""],
-}]
+  const resetState = [
+    {
+      enabled: "",
+      webImage: "",
+      mobImage: "",
+      displayOrder: "",
+      category: "",
+      name: "",
+      startDate: "",
+      endDate: dealsData?.endDate || "",
+      dealType: "",
+      alias: [""],
+    },
+  ];
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -187,11 +199,14 @@ const resetState=[{
     } else {
       const dealInfo = {
         ...values,
-        deleted:false,
-        clientId:6,
+        deleted: false,
+        clientId: 6,
         webImage: webImage || "",
         mobImage: mobImage || "",
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         ...(dealsData && { id: values.id }),
       };
       dispatch(onPostDeal(dealInfo));
@@ -204,12 +219,14 @@ const resetState=[{
       const dealDataInfo = {
         ...values,
         deleted: false,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         webImage: dealsData?.webImage,
         mobImage: dealsData?.mobImage,
         clientId: 6,
         ...(dealsData && { id: values?.id }),
-
       };
       let shouldDispatch = false;
       if (
@@ -241,7 +258,7 @@ const resetState=[{
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealReset());
-    }else if (dealData?.post_status_code === "205") {
+    } else if (dealData?.post_status_code === "205") {
       toast.success(dealData?.postMessage);
       dispatch(onGetDeal());
       dispatch(onPostuploadImageReset());
@@ -363,7 +380,7 @@ const resetState=[{
                             </div>
                             <div className="col-sm-4 form-group mb-3">
                               <label>
-                                {"Deal Alias"}
+                                {deal_alias}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -381,7 +398,7 @@ const resetState=[{
                                     .map((item) => item.trim());
                                   setFieldValue("alias", arrayValue);
                                 }}
-                                placeholder={"Enter Alias"}
+                                placeholder={enter_alias}
                               />
                               <ErrorMessage
                                 name="alias"
@@ -395,7 +412,7 @@ const resetState=[{
                                 <span className="text-danger">*</span>
                               </label>
                               <input
-                              accept=".jpg, .jpeg, .png, .webp .svg"
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="mobImage"
                                 className={`form-control ${
@@ -414,11 +431,9 @@ const resetState=[{
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-3">
-                              <label>
-                                {upload_image_for_web}
-                              </label>
+                              <label>{upload_image_for_web}</label>
                               <input
-                              accept=".jpg, .jpeg, .png, .webp .svg"
+                                accept=".jpg, .jpeg, .png, .webp .svg"
                                 type="file"
                                 name="webImage"
                                 className={`form-control ${
@@ -516,7 +531,7 @@ const resetState=[{
                             </div>
                             <div className="col-sm-12 form-group mb-0 ">
                               <Button
-                                text={submit}
+                                text={dealsData ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary  pad-aa mt-2"
                               />

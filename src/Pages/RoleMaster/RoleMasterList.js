@@ -98,7 +98,7 @@ const RoleMasterList = () => {
         ...roleMaster,
         deleted: true,
       };
-      setDeleted(true)
+      setDeleted(true);
       dispatch(onPostUserRole(roleMasterInfo));
     }
   };
@@ -129,7 +129,7 @@ const RoleMasterList = () => {
             </div>
               <div className="card-body position-relative">
                 {(roleAccessList?.isgetLoading ||
-            (deleted&& roleAccessList?.isPostLoading) ||
+                  (deleted && roleAccessList?.isPostLoading) ||
                   getuserRoleAccess?.isLoading) && (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />

@@ -163,7 +163,6 @@ const ModuleMasterList = () => {
                           <th>{status_label}</th>
 
                           {getRoleAccess[0]?.editAccess && (   <th>{action_label}</th>)}
-
                         </tr>
                       </thead>
                       <tbody>
