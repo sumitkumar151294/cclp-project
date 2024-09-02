@@ -26,10 +26,35 @@ const DealCouponList = () => {
   const [dealCouponDatas, setDealCouponDatas] = useState("");
   const [edit, setEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5);
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
     "search_here_label"
   );
+  const title_label = GetTranslationData("UIMasterAdmin", "title_label");
+  const coupoun_type = GetTranslationData("UIMasterAdmin", "coupoun_type");
+  const coupoun_code = GetTranslationData("UIMasterAdmin", "coupoun_code");
+  const offer_type = GetTranslationData("UIMasterAdmin", "offer_type");
+  const offer_type_value = GetTranslationData("UIMasterAdmin", "offer_type_value");
+  const offer_sub_type = GetTranslationData("UIMasterAdmin", "offer_sub_type");
+  const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const source = GetTranslationData("UIMasterAdmin", "source");
+  const deal_label = GetTranslationData("UIMasterAdmin", "deal_label");
+  const offer_id = GetTranslationData("UIMasterAdmin", "offer_id");
+  const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
+  const image_label = GetTranslationData("UIMasterAdmin", "image_label");
+  const description = GetTranslationData("UIMasterAdmin", "description");
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const terms_and_conditons = GetTranslationData(
+    "UIMasterAdmin",
+    "terms_and_conditons"
+  );
+  const valid_from = GetTranslationData("UIMasterAdmin", "valid_from");
+  const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const access_code = GetTranslationData("UIMasterAdmin", "access_code");
+  const valid_to = GetTranslationData("UIMasterAdmin", "valid_to");
+  // to get data from redux store
   const getDealCoupon = useSelector((state) => state.dealCouponReducer);
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
@@ -96,8 +121,6 @@ const DealCouponList = () => {
   };
 
   // to handle pagination
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
@@ -106,9 +129,11 @@ const DealCouponList = () => {
     const couponCodeLower = data.coupounCode?.toLowerCase() || "";
     return couponCodeLower.includes(searchQuery?.toLowerCase());
   });
+  // to handle search bar
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  // to handle pagination
   useEffect(() => {
     if (filteredData) {
       const totalItems = filteredData?.length;
@@ -120,6 +145,7 @@ const DealCouponList = () => {
   }, [filteredData]);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  // to fetch data on mount
   useEffect(() => {
     dispatch(onGetDeal());
     dispatch(onGetDealCoupon());
@@ -178,25 +204,25 @@ const DealCouponList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Title "}</th>
-                                <th>{"Coupoun Type"}</th>
-                                <th>{"Coupoun Code"}</th>
-                                <th>{"Offer Type"}</th>
-                                <th>{"Offer Sub Value"}</th>
-                                <th>{"Offer Type Value"}</th>
-                                <th>{"Segment "}</th>
-                                <th>{"Deal"}</th>
-                                <th>{"Source"}</th>
-                                <th>{"Offer Id"}</th>
-                                <th>{"Call To Action"}</th>
-                                <th>{"Image "}</th>
-                                <th>{"Description "}</th>
-                                <th>{"Terms and Condtions "}</th>
-                                <th>{"Valid-From "}</th>
-                                <th>{"Valid-To "}</th>
-                                {getRoleAccess[0]?.editAccess &&   <th>Access Code</th>}
-                                <th>{"Status "}</th>
-                                {getRoleAccess[0]?.editAccess &&      <th>{"Action"}</th>}
+                                <th>{title_label}</th>
+                                <th>{coupoun_type}</th>
+                                <th>{coupoun_code}</th>
+                                <th>{offer_type}</th>
+                                <th>{offer_sub_type}</th>
+                                <th>{offer_type_value}</th>
+                                <th>{segment_label}</th>
+                                <th>{deal_label}</th>
+                                <th>{source}</th>
+                                <th>{offer_id}</th>
+                                <th>{call_to_action}</th>
+                                <th>{image_label}</th>
+                                <th>{description}</th>
+                                <th>{terms_and_conditons}</th>
+                                <th>{valid_from}</th>
+                                <th>{valid_to}</th>
+                                {getRoleAccess[0]?.editAccess &&   <th>{access_code}</th>}
+                                <th>{status_label}</th>
+                                {getRoleAccess[0]?.editAccess &&      <th>{action_label}</th>}
                               </tr>
                             </thead>
                             <tbody>

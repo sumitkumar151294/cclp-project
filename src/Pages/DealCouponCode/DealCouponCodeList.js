@@ -30,6 +30,10 @@ const DealCouponCodeList = () => {
   const coupon_code = GetTranslationData("UIMasterAdmin", "coupon_code");
   const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
+  const deal_coupon_status = GetTranslationData("UIMasterAdmin", "deal_coupon_status");
+  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
+  const description = GetTranslationData("UIMasterAdmin", "description");
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
     "search_here_label"
@@ -124,7 +128,7 @@ const DealCouponCodeList = () => {
               <div className="containers-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Coupon Code List"}</h4>
+                    <h4 className="card-title">{deal_coupon_code_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -155,16 +159,14 @@ const DealCouponCodeList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Coupon Code"}</th>
-                                <th>{"Deal Coupon"}</th>
-                                <th>{"Coupon Status"}</th>
-                                <th>{"Start Date"}</th>
-                                <th>{"End Date"}</th>
-                                <th>{"Discription"}</th>
+                                <th>{coupon_code}</th>
+                                <th>{deal_coupon}</th>
+                                <th>{deal_coupon_status}</th>
+                                <th>{start_date_label}</th>
+                                <th>{end_date_label}</th>
+                                <th>{description}</th>
                                 <th>{status_label}</th>
-
-                                  <th>{action_label}</th>
-
+                                <th>{action_label}</th>
                               </tr>
                             </thead>
                             <tbody>

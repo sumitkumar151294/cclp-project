@@ -41,6 +41,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const coupon_status_required = GetTranslationData("UIMasterAdmin", "coupon_status_required");
   const deal_coupon_required = GetTranslationData("UIMasterAdmin", "deal_coupon_required");
   const coupon_code_required = GetTranslationData("UIMasterAdmin", "coupon_code_required");
   const status_required = GetTranslationData(
@@ -51,11 +52,18 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
     "UIMasterAdmin",
     "start_date_required"
   );
+  const end_date_must_after_or_on_Start_date = GetTranslationData(
+    "UIMasterAdmin",
+    "end_date_must_after_or_on_Start_date"
+  );
   const end_date_required = GetTranslationData(
     "UIMasterAdmin",
     "end_date_required"
-  );
+  ); 
   const description = GetTranslationData("UIMasterAdmin", "description");
+  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
+  const deal_coupon_status = GetTranslationData("UIMasterAdmin", "deal_coupon_status");
   const description_placeholder = GetTranslationData(
     "UIMasterAdmin",
     "description_placeholder"
@@ -83,10 +91,10 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
   }, []);
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
-    coupounCode: Yup.string().required("Coupon Code is required"),
-    dealCoupounId: Yup.string().required("Deal Coupon is required"),
-    enabled: Yup.string().required("Status is required"),
-    status: Yup.string().required("Coupon Status is required"),
+    coupounCode: Yup.string().required(coupon_code_required),
+    dealCoupounId: Yup.string().required(deal_coupon_required),
+    enabled: Yup.string().required(status_required),
+    status: Yup.string().required(coupon_status_required),
     startDate: Yup.string().required(start_date_required),
     endDate: Yup.string()
       .required(end_date_required)
@@ -95,7 +103,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
         if (startDate && new Date(value) < new Date(startDate)) {
           return this.createError({
             path: "endDate",
-            message: "End date must be after or on the Start date.",
+            message: end_date_must_after_or_on_Start_date,
           });
         }
         return true;
@@ -171,7 +179,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{"Deal Coupon Code"}</h4>
+                <h4 className="card-title">{deal_coupon_code}</h4>
                 <Link to="/dealCoupon">
                   <button className="back-button">
                     <i class="fa-solid fa-arrow-left"></i> {back_label}
@@ -195,7 +203,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
-                              <label>{"Coupon Code"}</label>
+                              <label>{coupon_code}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -205,7 +213,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                                     ? "is-invalid"
                                     : ""
                                   }`}
-                                placeholder={"Enter Coupon Code"}
+                                placeholder={coupon_code_placeholder}
                               />
                               <ErrorMessage
                                 name="coupounCode"
@@ -215,7 +223,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Deal Coupon"}
+                                {deal_coupon}
                                 <span className="text-danger">*</span>
                               </label>
 
@@ -235,7 +243,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-3">
-                              <label>{"Start Date"}</label>
+                              <label>{start_date_label}</label>
                               <Field
                                 type="date"
                                 name="startDate"
@@ -256,7 +264,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-3 ">
-                              <label>{"End Date"}</label>
+                              <label>{end_date_label}</label>
                               <Field
                                 type="date"
                                 name="endDate"
@@ -282,7 +290,7 @@ const DealCouponCodeForm = ({dealCouponCode,setDealCouponCode}) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Deal Coupon Status"}
+                                {deal_coupon_status}
                                 <span className="text-danger">*</span>
                               </label>
 

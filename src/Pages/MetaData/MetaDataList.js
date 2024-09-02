@@ -10,7 +10,11 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import MetaDataForm from "./MetaDataForm";
-import { onGetMetaData, onUpdateMetaData, onUpdateMetaDataReset } from "../../Store/Slices/metaDataSlice";
+import {
+  onGetMetaData,
+  onUpdateMetaData,
+  onUpdateMetaDataReset,
+} from "../../Store/Slices/metaDataSlice";
 
 const MetaDataList = () => {
   const dispatch = useDispatch();
@@ -19,6 +23,11 @@ const MetaDataList = () => {
   const [metaData, setMetaData] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   // to get column heading name from translation
+  const meta_data_list = GetTranslationData("UIMasterAdmin", "meta_data_list");
+  const price_label = GetTranslationData("UIMasterAdmin", "price_label");
+  const MRP_label = GetTranslationData("UIMasterAdmin", "MRP_label");
+  const earn_points = GetTranslationData("UIMasterAdmin", "earn_points");
+  const burn_points = GetTranslationData("UIMasterAdmin", "burn_points");
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
   const search_here_label = GetTranslationData(
@@ -27,15 +36,15 @@ const MetaDataList = () => {
   );
   //to get meta data from redux store
   const getMetaData = useSelector((state) => state.metaDataReducer);
-  const getLinkedMetaData=getMetaData?.getMetaData;
-   // to handle pagination
-   const handlePageChange = (selected) => {
+  const getLinkedMetaData = getMetaData?.getMetaData;
+  // to handle pagination
+  const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  //to filter tha data based on search query  
-  const filteredData = getLinkedMetaData.filter((data) =>
+  //to filter tha data based on search query
+  const filteredData = getLinkedMetaData?.filter((data) =>
     data.price.toString().includes(searchQuery)
   );
   const getRoleAccess = useSelector(
@@ -100,7 +109,7 @@ const MetaDataList = () => {
     <>
       <ScrollToTop />
       {getRoleAccess[0]?.addAccess && (
-        <MetaDataForm metaData={metaData} setMetaData={setMetaData}/>
+        <MetaDataForm metaData={metaData} setMetaData={setMetaData} />
       )}
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -109,7 +118,7 @@ const MetaDataList = () => {
               <div className="containers-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Meta Data List"}</h4>
+                    <h4 className="card-title">{meta_data_list}</h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -128,8 +137,7 @@ const MetaDataList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getMetaData?.isgetLoading ||
-                getMetaData?.isUpdateLoading ? (
+                {getMetaData?.isgetLoading || getMetaData?.isUpdateLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -139,12 +147,14 @@ const MetaDataList = () => {
                       <table className="table header-border table-responsive-sm">
                         <thead>
                           <tr>
-                            <th>{"Price"}</th>
-                            <th>{"MRP"}</th>
-                            <th>{"Earn Points"}</th>
-                            <th>{"Burn Poins"}</th>
+                            <th>{price_label}</th>
+                            <th>{MRP_label}</th>
+                            <th>{earn_points}</th>
+                            <th>{burn_points}</th>
                             <th>{status_label}</th>
-                            {getRoleAccess[0]?.editAccess && (   <th>{action_label}</th>)}
+                            {getRoleAccess[0]?.editAccess && (
+                              <th>{action_label}</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
@@ -164,13 +174,10 @@ const MetaDataList = () => {
                                         : "badge badge-danger"
                                     }
                                   >
-                                    {metaData.enabled
-                                      ? "Active"
-                                      : "Non Active"}
+                                    {metaData.enabled ? "Active" : "Non Active"}
                                   </span>
                                 </td>
-      {getRoleAccess[0]?.editAccess && (
-
+                                {getRoleAccess[0]?.editAccess && (
                                   <td>
                                     <div className="d-flex">
                                       <Button
@@ -185,12 +192,11 @@ const MetaDataList = () => {
                                       <Button
                                         className="btn btn-danger shadow btn-xs sharp"
                                         end_icon={"fa fa-trash"}
-                                        onClick={() =>
-                                          showAlert(metaData)
-                                        }
+                                        onClick={() => showAlert(metaData)}
                                       />
                                     </div>
-                                  </td>)}
+                                  </td>
+                                )}
                               </tr>
                             ))}
                         </tbody>

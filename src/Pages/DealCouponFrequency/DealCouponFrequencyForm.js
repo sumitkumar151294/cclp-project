@@ -67,6 +67,10 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
     "UIMasterAdmin",
     "end_date_required"
   );
+  const Valid_to_date_must_after_or_on_valid_from_date = GetTranslationData(
+    "UIMasterAdmin",
+    "Valid_to_date_must_after_or_on_valid_from_date"
+  );
   const week_required = GetTranslationData("UIMasterAdmin", "week_required");
   // to get module data from the Redux store
   const getDealCouponFeqData = useSelector(
@@ -102,7 +106,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
         if (validFrom && new Date(value) < new Date(validFrom)) {
           return this.createError({
             path: "validUpto",
-            message: "Valid to date must be after or on the valid from date.",
+            message: Valid_to_date_must_after_or_on_valid_from_date,
           });
         }
         return true;
@@ -149,10 +153,10 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
     if (!datetime) return todayDate;
     return datetime.split("T")[0];
   };
+  // to prefilled form when we will click on edit icon in the list
   useEffect(() => {
     if (dealCouponFreq) {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });      
       const weekDays = weekDayNames.filter((day) =>
         dealCouponFreq.weekDayId.includes(day.value)
       );
@@ -165,6 +169,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
       setInitialValue(updatedValues);
     }
   }, [dealCouponFreq]);
+  // to handle navigation and toast notifications based on post and update status_code
   useEffect(() => {
     if (getDealCouponFeqData?.post_status_code === "201" || getDealCouponFeqData?.post_status_code === "205") {
       toast.success(getDealCouponFeqData.postMessage);
@@ -190,7 +195,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
           <div className="col-xl-12 col-xxl-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">{"Deal Coupon Frequency"}</h4>
+                <h4 className="card-title">{deal_coupon_frequency}</h4>
               </div>
               <div className="card-body">
                 {getDealCouponFeqData.isLoading ? (
@@ -210,7 +215,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Deal Coupon"}
+                                {deal_coupon}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -231,7 +236,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"Valid From"}
+                                {valid_from}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -255,7 +260,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"Valid To"}
+                                {valid_to}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field

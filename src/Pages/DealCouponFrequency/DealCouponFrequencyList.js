@@ -43,7 +43,9 @@ const DealCouponFrequencyList = () => {
   );
   // Get deal coupon data from Redux store
   const getDealCouponFeq = useSelector((state) => state.dealCouponFreqReducer);
-  const getDealCouponData = useSelector((state) => state?.dealCouponReducer?.getDealCouponData);
+  const getDealCouponData = useSelector(
+    (state) => state?.dealCouponReducer?.getDealCouponData
+  );
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
@@ -70,7 +72,7 @@ const DealCouponFrequencyList = () => {
     });
   };
   //to handle edit and delete
-  const handleSubmit = (dealCouponFreq,isEdit) => {
+  const handleSubmit = (dealCouponFreq, isEdit) => {
     const dealCouponfreqData = {
       ...dealCouponFreq,
       deleted: true,
@@ -78,23 +80,26 @@ const DealCouponFrequencyList = () => {
     if (isEdit) {
       setDealCouponFreq(dealCouponfreqData);
     } else {
-    dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
+      dispatch(onUpdateDealCouponFreq(dealCouponfreqData));
     }
   };
   // Function to format dates
-const formatDate = (datetime) => {
-  if (!datetime) return "";
-  return datetime.split('T')[0]; // Extract the date part only
-};
+  const formatDate = (datetime) => {
+    if (!datetime) return "";
+    return datetime.split("T")[0]; // Extract the date part only
+  };
   // to handle pagination
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
   // to filter getDealCoupon
-  const filteredData = getDealCouponFeq?.getDealCouponFreqData?.filter((data) => {
-    const dealCoupounId = couponLabelMap[data.dealCoupounId]?.toLowerCase() || '';
-    return dealCoupounId.includes(searchQuery?.toLowerCase());
-  });
+  const filteredData = getDealCouponFeq?.getDealCouponFreqData?.filter(
+    (data) => {
+      const dealCoupounId =
+        couponLabelMap[data.dealCoupounId]?.toLowerCase() || "";
+      return dealCoupounId.includes(searchQuery?.toLowerCase());
+    }
+  );
   // to search data
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -125,9 +130,12 @@ const formatDate = (datetime) => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && 
-      <DealCouponFrequencyForm dealCouponFreq={dealCouponFreq} setDealCouponFreq={setDealCouponFreq}/>
-            }
+      {getRoleAccess[0]?.addAccess && (
+        <DealCouponFrequencyForm
+          dealCouponFreq={dealCouponFreq}
+          setDealCouponFreq={setDealCouponFreq}
+        />
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -135,7 +143,9 @@ const formatDate = (datetime) => {
               <div className="containers-fluid mt-2 mb-2 pt-1">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                   <div className="card-header">
-                    <h4 className="card-title">{"Deal Coupon Frequency List"}</h4>
+                    <h4 className="card-title">
+                      {"Deal Coupon Frequency List"}
+                    </h4>
                   </div>
                   <div className="customer-search mb-sm-0 mb-3">
                     <div className="input-group search-area">
@@ -166,9 +176,9 @@ const formatDate = (datetime) => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                <th>{"Deal COupon"}</th>
-                                <th>{"Valid From"}</th>
-                                <th>{"Valid To"}</th>
+                                <th>{deal_coupon}</th>
+                                <th>{valid_from}</th>
+                                <th>{valid_to}</th>
                                 <th>{status_label}</th>
                                 {getRoleAccess[0]?.editAccess && (
                                   <th>{action_label}</th>
@@ -176,9 +186,15 @@ const formatDate = (datetime) => {
                               </tr>
                             </thead>
                             <tbody>
-                              {filteredData?.slice(startIndex, endIndex)?.map((dealfreq, index) => (
+                              {filteredData
+                                ?.slice(startIndex, endIndex)
+                                ?.map((dealfreq, index) => (
                                   <tr key={index}>
-                                    <td>{couponLabelMap[dealfreq?.dealCoupounId] || 'Unknown'}</td>
+                                    <td>
+                                      {couponLabelMap[
+                                        dealfreq?.dealCoupounId
+                                      ] || "Unknown"}
+                                    </td>
                                     <td>{formatDate(dealfreq.validFrom)}</td>
                                     <td>{formatDate(dealfreq.validUpto)}</td>
                                     <td>
