@@ -53,7 +53,6 @@ const Auth = () => {
     }
   }, [currentUrl]);
   useEffect(() => {
-    debugger
     if (clientMasterData?.get_status_code === "200") {
       if (clientData?.[0]?.clientId) {
         dispatch(
@@ -75,7 +74,6 @@ const Auth = () => {
       }
       dispatch(onGetClientMasterReset());
     } else if (clientMasterData?.get_status_code) {
-      debugger
       setShowError(true);
       setPageError({
         StatusCode: clientMasterData?.get_status_code,

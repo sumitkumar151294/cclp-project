@@ -43,7 +43,7 @@ function* PostsectionMaster({ payload }) {
       yield put(
         onPostsectionMasterError({
           data: postsectionMasterResponse.response,
-          message: postsectionMasterResponse?.data?.responseMessage,
+          message: postsectionMasterResponse?.responseMessage,
           status_code:postsectionMasterResponse.responseCode
         })
       );
