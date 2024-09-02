@@ -40,7 +40,7 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
+const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
@@ -239,9 +239,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
     enabled: Yup.string().required("Status is required"),
   });
   // to handle form submit
-  console.log(dealCouponData);
   const handleSubmit = (values) => {
-    debugger;
     if (typeof values.image === "object") {
       dispatch(onPostuploadImage(values.image));
       setValues(values);
@@ -292,16 +290,16 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
+    }else if (uploadImage?.post_status_code){
+      toast.error(uploadImage?.postMessage)
+      dispatch(onPostuploadImageReset())
     }
   }, [uploadImage, values]);
 
-  console.log(dealCouponData);
   useEffect(() => {
-    if (
-      dealCouponData?.post_status_code === "201" ||
-      dealCouponData?.post_status_code === "205"
-    ) {
-      debugger;
+    const statusCode = dealCouponData?.post_status_code;
+    
+    if (statusCode === "201" || statusCode === "205") {
       const dealCouponFrequncyData = {
         ...values,
         deleted: false,
@@ -318,25 +316,43 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
         clientId: 6,
         ...(dealCouponDatas && { id: dealCouponDatas.frequency_id }),
       };
+
       dispatch(onPostDealCouponFreq(dealCouponFrequncyData));
+    } else if (statusCode && statusCode !== "204") {
+      toast.error(dealCouponData?.postMessage);
+      dispatch(onPostDealCouponReset());
     }
   }, [dealCouponData]);
 
+
+
   useEffect(() => {
-    if (
-      getDealCouponFeqData?.post_status_code === "201" ||
-      getDealCouponFeqData?.post_status_code === "205"
-    ) {
-      setInitialValue(reset);
-      setDealCouponDatas(null);
-      toast.success(getDealCouponFeqData.postMessage);
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostDealCouponReset());
-      dispatch(onPostDealCouponFreqReset());
-      dispatch(onGetDealCouponFreq());
-      dispatch(onGetDealCoupon());
+    if (getDealCouponFeqData) {
+      const { post_status_code, postMessage } = getDealCouponFeqData
+      if (post_status_code === "201" || post_status_code === "205" || post_status_code === "204") {
+        setInitialValue(reset);
+        setDealCouponDatas(null);
+        setEdit(false)
+        toast.success(postMessage);
+        dispatch(onPostuploadImageReset());
+        dispatch(onPostDealCouponReset());
+        dispatch(onPostDealCouponFreqReset());
+        dispatch(onGetDealCouponFreq());
+        dispatch(onGetDealCoupon());
+      }else if(post_status_code){
+        setInitialValue(reset);
+        setDealCouponDatas(null);
+        setEdit(false)
+        toast.error(postMessage);
+        dispatch(onPostuploadImageReset());
+        dispatch(onPostDealCouponReset());
+        dispatch(onPostDealCouponFreqReset());
+        dispatch(onGetDealCouponFreq());
+        dispatch(onGetDealCoupon());
+      }
     }
-  }, [getDealCouponFeqData]);
+  }, [getDealCouponFeqData, dispatch, reset]);
+
   const formatDate = (datetime) => {
     if (!datetime) return todayDate;
     return datetime.split("T")[0];
@@ -344,13 +360,13 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
   useEffect(() => {
     if (dealCouponDatas) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      const weekDays = weekDayNames.filter((day) =>
-        dealCouponDatas.weekDayId.includes(day.value)
+      const weekDays = weekDayNames?.filter((day) =>
+        dealCouponDatas.weekDayId?.includes(day?.value)
       );
       const updatedValues = {
         ...dealCouponDatas,
-        validFrom: formatDate(dealCouponDatas.validFrom),
-        validUpto: formatDate(dealCouponDatas.validUpto),
+        validFrom: formatDate(dealCouponData?.validFrom),
+        validUpto: formatDate(dealCouponDatas?.validUpto),
         weekDayId: weekDays,
       };
       setInitialValue(updatedValues);
@@ -369,9 +385,9 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas }) => {
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                {dealCouponData.isPostLoading ||
+                { (!edit && dealCouponData.isPostLoading ||
                 getDealCouponFeqData.isPostLoading ||
-                uploadImage?.isPostLoading ? (
+                uploadImage?.isPostLoading) ? (
                   <div style={{ height: "300px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

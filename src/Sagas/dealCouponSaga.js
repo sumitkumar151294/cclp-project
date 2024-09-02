@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { callDealCouponGetApi, callDealCouponPostApi, callDealCouponUpdateApi } from "../Context/dealCouponApi";
 import { onGetDealCoupon, onGetDealCouponError, onGetDealCouponSuccess, onPostDealCoupon, onPostDealCouponError, onPostDealCouponSuccess, onUpdateDealCoupon, onUpdateDealCouponError, onUpdateDealCouponSuccess } from "../Store/Slices/dealCouponSlice";
 
-function* GetDealCoupon() {
+function* GetDealCoupon({ payload }) {
   try {
-    const getDealCouponResponse = yield call(callDealCouponGetApi);
+    const getDealCouponResponse = yield call(callDealCouponGetApi,payload);
     if (getDealCouponResponse.responseCode === "200") {
       yield put(
         onGetDealCouponSuccess({
@@ -28,7 +28,6 @@ function* GetDealCoupon() {
   }
 }
 function* PostDealCoupon({ payload }) {
-  debugger
   try {
     const postDealCouponResponse = yield call(callDealCouponPostApi, payload);
     if (postDealCouponResponse.responseCode === "201") {

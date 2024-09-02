@@ -125,14 +125,14 @@ const UserMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess && ( */}
+      {getRoleAccess[0]?.addAccess && (
         <UserMasterForm
           userMasterData={userMasterData}
           setuserMasterData={setuserMasterData}
           edit={edit}
           setEdit={setEdit}
         />
-      {/* )} */}
+       )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -176,7 +176,7 @@ const UserMasterList = () => {
                             <th>{"Role Access"}</th>
                             <th>{status_label}</th>
 
-                              <th>{action_label}</th>
+                            {getRoleAccess[0]?.editAccess && <th>{action_label}</th>}
 
                           </tr>
                         </thead>
@@ -218,7 +218,7 @@ const UserMasterList = () => {
                                       : non_active_label}
                                   </span>
                                 </td>
-
+                                {getRoleAccess[0]?.editAccess && (
                                   <td>
                                     <div className="d-flex">
                                       <Button
@@ -239,7 +239,7 @@ const UserMasterList = () => {
                                       />
                                     </div>
                                   </td>
-
+                                )}
                               </tr>
                             ))}
                         </tbody>

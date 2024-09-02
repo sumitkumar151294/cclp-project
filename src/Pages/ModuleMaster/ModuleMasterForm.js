@@ -16,8 +16,11 @@ import {
   onPostuploadImage,
   onPostuploadImageReset,
 } from "../../Store/Slices/uploadSlice";
+import { ClientId, UserId } from "../../Utility/Utility";
 
 const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdit }) => {
+  const clientId=ClientId();
+  const userId=UserId();
   const [isSubmit, setIsSubmit] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
@@ -127,7 +130,9 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
             typeof values?.enabled === "boolean"
               ? values.enabled
               : values?.enabled === "true",
-          clientId: 6,
+              createdby:moduleMasterData ? 0 :userId,
+              updatedby:moduleMasterData ? userId :0,
+          clientId: moduleMasterData ? values.clientId : clientId ,
           ...(moduleMasterData && { id: values.id }),
         };
         dispatch(onPostModule(moduleData));
@@ -145,11 +150,13 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
     if (uploadImage?.post_status_code === "201") {
       const moduleData = {
         icon: getwebImage,
-        clientId: 6,
+        clientId: moduleMasterData ? values.clientId : clientId,
         deleted: false,
         name: values?.name,
         routePath: values?.routePath,
         displayOrder: values?.displayOrder,
+        createdby:moduleMasterData ? 0 :userId,
+        updatedby:moduleMasterData ? userId :0,
         ...(moduleMasterData && { id: values.id }),
       };
       dispatch(onPostModule(moduleData));

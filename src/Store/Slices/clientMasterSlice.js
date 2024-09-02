@@ -40,13 +40,22 @@ export const clientMasterSlice = createSlice({
         isgetLoading: false,
       };
     },
+    onGetClientMasterReset: (state) => {
+
+      return {
+        ...state,
+        get_status_code:null,
+        isgetLoading: false,
+      };
+    },
   },
 });
 
 export const {
   onGetClientMaster,
   onGetClientMasterSuccess,
-  onGetClientMasterError
+  onGetClientMasterError,
+  onGetClientMasterReset
 } = clientMasterSlice.actions;
 
 export default clientMasterSlice.reducer;

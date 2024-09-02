@@ -14,12 +14,17 @@ import {
 } from "../../Store/Slices/dealCouponSlice";
 import Swal from "sweetalert2";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { onGetDealCouponFreq } from "../../Store/Slices/dealCouponFreqSlice";
+import {
+  onGetDealCouponFreq,
+  onPostDealCouponFreq,
+} from "../../Store/Slices/dealCouponFreqSlice";
 import { onGetCustomerSegment } from "../../Store/Slices/customerSegmentSlice";
+import { Link } from "react-router-dom";
 
 const DealCouponList = () => {
   const dispatch = useDispatch();
   const [dealCouponDatas, setDealCouponDatas] = useState("");
+  const [edit, setEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const search_here_label = GetTranslationData(
     "UIMasterAdmin",
@@ -30,23 +35,27 @@ const DealCouponList = () => {
     (state) => state.moduleReducer?.filteredData
   );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  const getDealCouponFeq = useSelector(
-    (state) => state.dealCouponFreqReducer?.getDealCouponFreqData
+  const getDealCouponFeq = useSelector((state) => state.dealCouponFreqReducer);
+  const getCustometSegemtData = useSelector(
+    (state) => state.customerSegmentReducer?.data
   );
- const mergeDeals=(arr1, arr2)=> {
-    return arr1?.map(a => {
-      const matchingB = arr2?.find(b => b.dealId === a.dealId);
-      
+  const mergeDeals = (arr1, arr2) => {
+    return arr1?.map((a) => {
+      const matchingB = arr2?.find((b) => b.dealId === a.dealId);
+
       return {
         ...a,
         weekDayId: matchingB ? matchingB?.weekDayId : null,
         validFrom: matchingB ? matchingB?.validFrom : null,
         validUpto: matchingB ? matchingB?.validUpto : null,
-        frequency_id: matchingB ? matchingB?.id : null
+        frequency_id: matchingB ? matchingB?.id : null,
       };
     });
-  }
-  const merged = mergeDeals(getDealCoupon?.getDealCouponData, getDealCouponFeq);
+  };
+  const merged = mergeDeals(
+    getDealCoupon?.getDealCouponData,
+    getDealCouponFeq?.getDealCouponFreqData
+  );
   // modal for delete warning
   const showAlert = (data) => {
     Swal.fire({
@@ -64,17 +73,25 @@ const DealCouponList = () => {
       }
     });
   };
+
   //to handle edit and delete
   const handleSubmit = (dealCouponDatas, isEdit) => {
-    debugger
     const dealCouponData = {
       ...dealCouponDatas,
+      deleted: true,
+    };
+    const dealCouponFreqData = {
+      ...dealCouponDatas,
+      dealCoupounId: dealCouponDatas?.id,
+      id: dealCouponDatas?.frequency_id,
       deleted: true,
     };
     if (isEdit) {
       setDealCouponDatas(dealCouponData);
     } else {
+      setEdit(true);
       dispatch(onPostDealCoupon(dealCouponData));
+      dispatch(onPostDealCouponFreq(dealCouponFreqData));
     }
   };
 
@@ -113,9 +130,14 @@ const DealCouponList = () => {
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess &&  */}
-      <DealCouponForm dealCouponDatas={dealCouponDatas} setDealCouponDatas={setDealCouponDatas}/>
-      {/* } */}
+      {getRoleAccess[0]?.addAccess &&
+      <DealCouponForm
+        dealCouponDatas={dealCouponDatas}
+        setDealCouponDatas={setDealCouponDatas}
+        edit={edit}
+        setEdit={setEdit}
+      />
+      }
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -142,7 +164,9 @@ const DealCouponList = () => {
                 </div>
               </div>
               <div className="card-body ">
-                {getDealCoupon?.isgetLoading ? (
+                {getDealCoupon?.isgetLoading ||
+                (edit && getDealCoupon?.isPostLoading) ||
+                getDealCouponFeq?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -168,9 +192,11 @@ const DealCouponList = () => {
                                 <th>{"Image "}</th>
                                 <th>{"Description "}</th>
                                 <th>{"Terms and Condtions "}</th>
-                                <th>{"Valid-From "}</th> <th>{"Valid-To "}</th>
+                                <th>{"Valid-From "}</th>
+                                <th>{"Valid-To "}</th>
+                                {getRoleAccess[0]?.editAccess &&   <th>Access Code</th>}
                                 <th>{"Status "}</th>
-                                <th>{"Action"}</th>
+                                {getRoleAccess[0]?.editAccess &&      <th>{"Action"}</th>}
                               </tr>
                             </thead>
                             <tbody>
@@ -194,30 +220,36 @@ const DealCouponList = () => {
                                       )}
                                     </td>
                                     <td>
-                                      {dealcoupoun.segmentId || (
-                                        <span className="hyphen"> -</span>
-                                      )}
+                                      <td>
+                                        {getCustometSegemtData
+                                          ?.filter(
+                                            (segementData) =>
+                                              segementData.id ===
+                                              parseInt(dealcoupoun.segmentId)
+                                          )
+                                          ?.map((segementData) => (
+                                            <span key={segementData.id}>
+                                              {segementData.name}
+                                            </span>
+                                          ))}
+                                      </td>
                                     </td>
                                     <td>
-                                      {dealcoupoun.dealId ? (
-                                        getDealData
-                                          ?.filter(
-                                            (deal) =>
-                                              deal.id ===
-                                              parseInt(dealcoupoun.dealId)
-                                          )
-                                          ?.map((filteredDeal) => (
-                                            <span key={filteredDeal.id}>
-                                              {filteredDeal.name}
-                                            </span>
-                                          ))
-                                      ) : (
-                                        <span className="hyphen"> - </span>
-                                      )}
+                                      {getDealData
+                                        ?.filter(
+                                          (deal) =>
+                                            deal.id ===
+                                            parseInt(dealcoupoun.dealId)
+                                        )
+                                        ?.map((filteredDeal) => (
+                                          <span key={filteredDeal.id}>
+                                            {filteredDeal.name}
+                                          </span>
+                                        ))}
                                     </td>
                                     <td>{dealcoupoun.source}</td>
                                     <td>{dealcoupoun.offerId}</td>
-                                    <td>{dealcoupoun.cta}</td>{" "}
+                                    <td>{dealcoupoun.cta}</td>
                                     <td>
                                       {dealcoupoun.image ? (
                                         <img
@@ -245,6 +277,23 @@ const DealCouponList = () => {
                                         dealcoupoun.validUpto
                                       ).toLocaleDateString()}
                                     </td>
+                                    {getRoleAccess[0]?.editAccess &&
+                                    <td>
+                                      {(dealcoupoun.typeOfCoupoun ===
+                                        "Membership" ||
+                                      dealcoupoun.typeOfCoupoun ===
+                                        "Dynamic") ? (
+                                       <Link to="/dealCouponCode">
+                                        <Button
+                                          disabled={!dealcoupoun?.enabled}
+                                          text={"Customize"}
+                                          end_icon={"fa fa-eye"}
+                                          className="btn btn-primary btn-sm float-right client_Btn"
+                                        /></Link>
+                                      ) : (
+                                        "Not Allowed"
+                                      )}
+                                    </td>}
                                     <td>
                                       <span
                                         className={
@@ -258,6 +307,7 @@ const DealCouponList = () => {
                                           : "Non Active"}
                                       </span>
                                     </td>
+                                    {getRoleAccess[0]?.editAccess &&
                                     <td>
                                       <div className="d-flex">
                                         <Button
@@ -275,7 +325,7 @@ const DealCouponList = () => {
                                           onClick={() => showAlert(dealcoupoun)}
                                         />
                                       </div>
-                                    </td>
+                                    </td>}
                                   </tr>
                                 ))}
                             </tbody>

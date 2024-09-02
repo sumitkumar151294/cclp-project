@@ -99,12 +99,12 @@ const DealCategoryList = () => {
   }, []);
   return (
     <>
-      {/* {getRoleAccess[0]?.addAccess && ( */}
-      <DealCategoryForm
-        setdealCategory={setdealCategory}
-        dealCategory={dealCategory}
-      />
-      {/* )} */}
+      {getRoleAccess[0]?.addAccess && (
+        <DealCategoryForm
+          setdealCategory={setdealCategory}
+          dealCategory={dealCategory}
+        />
+            )}
       <ScrollToTop />
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -150,7 +150,8 @@ const DealCategoryList = () => {
                                 <th>{mobile_image}</th>
                                 <th>{web_image}</th>
                                 <th>{status_label}</th>
-                                <th>{action_label}</th>
+                                {getRoleAccess[0]?.addAccess && (
+                                  <th>{action_label}</th>)}
                               </tr>
                             </thead>
                             <tbody>
@@ -176,39 +177,73 @@ const DealCategoryList = () => {
                                     </td>
 
                                     <td>
-                                      <span
-                                        className={
-                                          dealCategoryData.enabled
-                                            ? "badge badge-success"
-                                            : "badge badge-danger"
-                                        }
-                                      >
-                                        {dealCategoryData.enabled
-                                          ? "Active"
-                                          : "Non Active"}
-                                      </span>
-                                    </td>
+//                                       <span
+//                                         className={
+//                                           dealCategoryData.enabled
+//                                             ? "badge badge-success"
+//                                             : "badge badge-danger"
+//                                         }
+//                                       >
+//                                         {dealCategoryData.enabled
+//                                           ? "Active"
+//                                           : "Non Active"}
+//                                       </span>
+//                                     </td>
 
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          end_icon={"fas fa-pencil-alt"}
-                                          onClick={() =>
-                                            handleSumbit(dealCategoryData, {
-                                              isEdit: true,
-                                            })
-                                          }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          onClick={() =>
-                                            handleSumbit(dealCategoryData)
-                                          }
-                                        />
-                                      </div>
-                                    </td>
+//                                     <td>
+//                                       <div className="d-flex">
+//                                         <Button
+//                                           className="btn btn-primary shadow btn-xs sharp me-1"
+//                                           end_icon={"fas fa-pencil-alt"}
+//                                           onClick={() =>
+//                                             handleSumbit(dealCategoryData, {
+//                                               isEdit: true,
+//                                             })
+//                                           }
+//                                         />
+//                                         <Button
+//                                           className="btn btn-danger shadow btn-xs sharp"
+//                                           end_icon={"fa fa-trash"}
+//                                           onClick={() =>
+//                                             handleSumbit(dealCategoryData)
+//                                           }
+//                                         />
+//                                       </div>
+//                                     </td>
+                                  <span
+                                    className={
+                                      dealCategoryData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {dealCategoryData.enabled
+                                      ? "Active"
+                                      : "Non Active"}
+                                  </span>
+                                </td>
+                                {getRoleAccess[0]?.editAccess && (
+                                      <td>
+                                        <div className="d-flex">
+                                          <Button
+                                            className="btn btn-primary shadow btn-xs sharp me-1"
+                                            end_icon={"fas fa-pencil-alt"}
+                                            onClick={() =>
+                                              handleSumbit(dealCategoryData, {
+                                                isEdit: true,
+                                              })
+                                            }
+                                          />
+                                          <Button
+                                            className="btn btn-danger shadow btn-xs sharp"
+                                            end_icon={"fa fa-trash"}
+                                            onClick={() =>
+                                              handleSumbit(dealCategoryData)
+                                            }
+                                          />
+                                        </div>
+                                      </td>
+                                )}
                                   </tr>
                                 ))}
                             </tbody>

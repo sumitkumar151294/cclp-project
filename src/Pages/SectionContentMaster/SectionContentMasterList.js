@@ -112,6 +112,7 @@ const SectionContentMasterList = () => {
   }, [filteredData]);
   return (
     <>
+    
       <SectionContentMasterForm
         sectionContentData={sectionContentData}
         setSectionContentData={setSectionContentData}

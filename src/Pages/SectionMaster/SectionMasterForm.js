@@ -39,6 +39,7 @@ const SectionMasterForm = ({ sectionData }) => {
     pointToClaim: "",
     noOfpointToClaim: "",
     segmentId: "",
+    cta: "",
   });
   // Translation labels
   const section_master = GetTranslationData("UIMasterAdmin", "section_master");
@@ -105,15 +106,13 @@ const SectionMasterForm = ({ sectionData }) => {
     "display_must_number"
   );
   const sectionTypeOptions = [
-    { value: "UnlockStaticCard", label: "Unlock Static Card" },
-    { value: "Banner", label: "Banner" },
-    { value: "UnlockDeals", label: "Unlock Deals" },
-    { value: "CustomerBenefits", label: "Customer Benefits" },
-    { value: "SupportingBanner", label: "Supporting Banner" },
-    { value: "SpecialSection", label: "Special Section" },
-    { value: "SpecialBannerOne", label: "Special Banner One" },
-    { value: "SpecialBannerTwo", label: "Special Banner Two" },
-    { value: "SupportingBannerBottom", label: "Supporting Banner Bottom" },
+    { value: "Promo Message", label: "Promo Message" },
+    { value: "Promo Banner", label: "Promo Banner" },
+    { value: "Customer Menu", label: "Customer Menu" },
+    { value: "Special Cart Banner", label: "Special Cart Banner" },
+    { value: "Supporting Banner", label: "Supporting Banner" },
+    { value: "Special Section", label: "Special Section" },
+    { value: "Unlock Deals", label: "Unlock Deals" },
   ];
   const dispatch = useDispatch();
   const validations = Yup.object().shape({
@@ -129,25 +128,25 @@ const SectionMasterForm = ({ sectionData }) => {
     claimLimit: Yup.string()
       .nullable() // Allows the value to be null
       .matches(/^[0-9]*$/, claim_limit_must_number),
-      noOfpointToClaim: Yup.string()
+    noOfpointToClaim: Yup.string()
       .nullable()
       .matches(/^[0-9]*$/, number_of_points_must_number),
   });
-const resetState=[
-{
-    sectionName: "",
-    sectionType: "",
-    enabled: "",
-    displayOrder: "",
-    displayLimit: "",
-    text: "",
-    claimLimit: "",
-    pointToClaim: "",
-    noOfpointToClaim: "",
-    segmentId: "",
-
-}
-]
+  const resetState = [
+    {
+      sectionName: "",
+      sectionType: "",
+      enabled: "",
+      displayOrder: "",
+      displayLimit: "",
+      text: "",
+      claimLimit: "",
+      pointToClaim: "",
+      noOfpointToClaim: "",
+      segmentId: "",
+      cta: "",
+    },
+  ];
   const handleSubmit = (values) => {
     if (values) {
       const SectionformData = {
@@ -172,9 +171,9 @@ const resetState=[
           ? values?.noOfpointToClaim
           : null,
         pointToClaim:
-        typeof values?.pointToClaim === "boolean"
-          ? values.pointToClaim
-          : values?.pointToClaim === "true",
+          typeof values?.pointToClaim === "boolean"
+            ? values.pointToClaim
+            : values?.pointToClaim === "true",
         ...(sectionData && { id: sectionData.id }),
       };
 
@@ -183,9 +182,8 @@ const resetState=[
       } else {
         dispatch(onPostsectionMaster(SectionformData));
       }
-      setInitialValue(resetState)
-      setShowFields(false);
 
+      setShowFields(false);
     }
   };
 
@@ -199,12 +197,12 @@ const resetState=[
       dispatch(onPostsectionMasterReset());
     }
   }, [sectionMasterData]);
-    useEffect(() => {
-      if (sectionData) {
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-        setInitialValue(sectionData);
-      }
-    }, [sectionData]);
+  useEffect(() => {
+    if (sectionData) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      setInitialValue(sectionData);
+    }
+  }, [sectionData]);
 
   return (
     <>
@@ -218,8 +216,7 @@ const resetState=[
                 <h4 className="card-title">{section_master}</h4>
               </div>
               <div className="card-body">
-                {sectionMasterData?.isPostLoading ||
-                (sectionData && sectionMasterData?.isUpdateLoading) ? (
+                {sectionMasterData?.isPostLoading ? (
                   <div style={{ height: "250px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -231,7 +228,7 @@ const resetState=[
                       onSubmit={handleSubmit}
                       enableReinitialize={true}
                     >
-                      {({ errors, touched, values }) => (
+                      {({ errors, touched, values, setFieldValue }) => (
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-2">
@@ -272,6 +269,25 @@ const resetState=[
                                 }`}
                                 onChange={(e) => {
                                   setShowFields(e || false);
+
+                                  if (e !== "Unlock Deals") {
+                                    setFieldValue("noOfpointToClaim", "");
+                                    setFieldValue("pointToClaim", false);
+                                    setFieldValue("claimLimit", "");
+                                  }
+
+                                  if (e !== "Special Section") {
+                                    setFieldValue("cta", "");
+                                  }
+                                  if ( e !== "Promo Message"  ) {
+                                    setFieldValue("text", "");
+                                  }
+                                  if (
+                                    e !== "Special Section" &&
+                                    e !== "Unlock Deals"
+                                  ) {
+                                    setFieldValue("segmentId", "");
+                                  }
                                 }}
                               />
                               <ErrorMessage
@@ -324,7 +340,7 @@ const resetState=[
                               />
                             </div>
 
-                            {( values?.sectionType && showFields!=="UnlockStaticCard" )&& (
+                            {(showFields !== "Promo Message") && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{text_label}</label>
                                 <Field
@@ -340,7 +356,7 @@ const resetState=[
                               </div>
                             )}
 
-                            {showFields === "SpecialSection" && (
+                            {showFields === "Unlock Deals" && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{claim_limit}</label>
                                 <Field
@@ -360,7 +376,7 @@ const resetState=[
                                 />
                               </div>
                             )}
-                            {showFields === "SpecialSection" && (
+                            {showFields === "Unlock Deals" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
@@ -374,7 +390,7 @@ const resetState=[
                                 </div>
                               </div>
                             )}
-                            {values.pointToClaim && (
+                            {(showFields === "Unlock Deals" ) && (
                               <div className="col-sm-4 form-group mb-1">
                                 <label>{no_Of_Points_To_Claim}</label>
                                 <Field
@@ -387,6 +403,7 @@ const resetState=[
                                       : ""
                                   }`}
                                   placeholder="Enter No Of Points To Claim"
+                                  disabled={!values.pointToClaim}
                                 />
                                 <ErrorMessage
                                   name="noOfpointToClaim"
@@ -395,7 +412,8 @@ const resetState=[
                                 />
                               </div>
                             )}
-                            {showFields === "SpecialSection" && (
+                            {(showFields === "Special Section" ||
+                              showFields === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-2 ">
                                 <label>{segment_label}</label>
 
@@ -416,6 +434,28 @@ const resetState=[
                                 />
                               </div>
                             )}
+
+                            {showFields === "Special Section" && (
+                              <div className="col-sm-4 form-group mb-2 mt-1">
+                                <label>{"Call To Action"}</label>
+                                <Field
+                                  type="text"
+                                  name="cta"
+                                  className={`form-control ${
+                                    errors.cta && touched.cta
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  placeholder="Enter Claim Limit"
+                                />
+                                <ErrorMessage
+                                  name="cta"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
+
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>{status_label}</label>
                               <span className="text-danger">*</span>

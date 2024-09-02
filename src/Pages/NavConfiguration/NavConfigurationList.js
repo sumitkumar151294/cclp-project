@@ -105,7 +105,8 @@ const NavConfigurationList = () => {
   return (
     <>
       <ScrollToTop />
-      <NavConfigurationForm navData={navData} setNavData={setNavData} edit={edit} setEdit={setEdit}/>
+      {getRoleAccess[0]?.addAccess && (
+      <NavConfigurationForm navData={navData} setNavData={setNavData} edit={edit} setEdit={setEdit}/>)}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -147,7 +148,7 @@ const NavConfigurationList = () => {
                           <th>{nav_icon}</th>
                           <th>{login_required}</th>
                           <th>{status_label}</th>
-                          <th>{action_label}</th>
+                          {getRoleAccess[0]?.editAccess && (  <th>{action_label}</th>)}
                         </tr>
                       </thead>
                       <tbody>
@@ -179,6 +180,7 @@ const NavConfigurationList = () => {
                                     : non_active_label}
                                 </span>
                               </td>
+                              {getRoleAccess[0]?.editAccess && (
                               <td>
                                 <div className="d-flex">
                                   <Button
@@ -200,7 +202,7 @@ const NavConfigurationList = () => {
                                     }
                                   />
                                 </div>
-                              </td>
+                              </td>)}
                             </tr>
                           ))}
                       </tbody>

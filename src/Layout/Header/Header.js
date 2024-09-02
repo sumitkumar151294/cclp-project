@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import image from "../../Assets/img/logo.png";
+import { useSelector } from "react-redux";
 const Header = ({ setSideBar, sidebar }) => {
   const [hamburgerClass, setHamburgerClass] = useState(false);
   const [initial, setinitial] = useState("DD");
@@ -8,6 +9,7 @@ const Header = ({ setSideBar, sidebar }) => {
     setHamburgerClass(!hamburgerClass);
     setSideBar(!sidebar);
   };
+  const fullName = useSelector((state) => state.loginReducer?.data?.[0]?.userName);
 
   // For transition of sidebar - Start
   const sidebarView = window.innerWidth;
@@ -31,12 +33,13 @@ const Header = ({ setSideBar, sidebar }) => {
     body.setAttribute("data-primary", "color_1");
     body.setAttribute("direction", "ltr");
   }
-  // useEffect(()=>{
-  //   const fullName=localStorage?.getItem("userFullName")
-  //   const nameParts = fullName?.split(" ");
-  //   const initials =nameParts ? `${nameParts?.[0]?.charAt?.(0)}${nameParts[1]?.charAt?.(0)}`: "NA";
-  //   setinitial(initials)
-  // },[])
+  useEffect(() => {
+    const initials = fullName
+      ? `${fullName?.split(" ")[0]?.charAt(0) || ""}${fullName?.split(" ")[1]?.charAt(0) || ""}`
+      : "NA";
+    setinitial(initials);
+  }, []);
+
 
   return (
     <>
@@ -64,12 +67,12 @@ const Header = ({ setSideBar, sidebar }) => {
               <ul className="navbar-nav header-right ">
                 <li className="nav-item dropdown  header-profile">
                   <div className="nav-link" data-bs-toggle="dropdown">
-                  <div className="user-profile">
-      {/* Display the initials */}
-      <div className="user-initials">
-        {initial.toUpperCase()}
-      </div>
-    </div>
+                    <div className="user-profile">
+                      {/* Display the initials */}
+                      <div className="user-initials">
+                        {initial.toUpperCase()}
+                      </div>
+                    </div>
                   </div>
                 </li>
               </ul>

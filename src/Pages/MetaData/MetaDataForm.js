@@ -71,7 +71,6 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
         ...(metaData && { id: metaData.id }),
       };
       dispatch(onPostMetaData(linkedMetaData));
-      console.log(linkedMetaData);
       setInitialValue({
         price: "",
         mrp: "",

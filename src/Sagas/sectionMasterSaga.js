@@ -1,9 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { onGetsectionMaster, onGetsectionMasterError, onGetsectionMasterSuccess, onPostsectionMaster, onPostsectionMasterError, onPostsectionMasterSuccess, onUpdatesectionMaster, onUpdatesectionMasterError, onUpdatesectionMasterSuccess } from "../Store/Slices/sectionMasterSlice";
 import { callsectionMasterGetApi, callsectionMasterPostApi, callsectionMasterUpdateApi } from "../Context/sectionMasterApi";
-function* GetsectionMaster() {
+function* GetsectionMaster({payload}) {
   try {
-    const getsectionMasterResponse = yield call(callsectionMasterGetApi);
+    const getsectionMasterResponse = yield call(callsectionMasterGetApi,payload);
     if (getsectionMasterResponse.responseCode === "200") {
       yield put(
         onGetsectionMasterSuccess({
