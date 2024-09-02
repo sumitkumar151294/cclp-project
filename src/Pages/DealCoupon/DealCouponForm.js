@@ -40,19 +40,27 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) => {
+const DealCouponForm = ({
+  dealCouponDatas,
+  setDealCouponDatas,
+  edit,
+  setEdit,
+}) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
-  // to get labels and placeholders from translation 
+  // to get labels and placeholders from translation
   const deal_coupoun = GetTranslationData("UIMasterAdmin", "deal_coupoun");
   const type_of_coupoun = GetTranslationData(
     "UIMasterAdmin",
     "type_of_coupoun"
-  ); 
-  const coupoun_code = GetTranslationData("UIMasterAdmin", "coupoun_code"); 
+  );
+  const coupoun_code = GetTranslationData("UIMasterAdmin", "coupoun_code");
   const offer_type = GetTranslationData("UIMasterAdmin", "offer_type");
-  const offer_type_value = GetTranslationData("UIMasterAdmin", "offer_type_value");
+  const offer_type_value = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_type_value"
+  );
   const offer_sub_type = GetTranslationData("UIMasterAdmin", "offer_sub_type");
   const coupoun_code_placeholder = GetTranslationData(
     "UIMasterAdmin",
@@ -96,14 +104,37 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
   const title_required = GetTranslationData("UIMasterAdmin", "title_required");
-  const offer_type_required = GetTranslationData("UIMasterAdmin", "offer_type_required");
-  const offer_sub_type_required = GetTranslationData("UIMasterAdmin", "offer_sub_type_required");
+  const offer_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_type_required"
+  );
+  const offer_sub_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_sub_type_required"
+  );
   const deal_required = GetTranslationData("UIMasterAdmin", "deal_required");
   const text_required = GetTranslationData("UIMasterAdmin", "text_required");
-  const text_cannot_empty = GetTranslationData("UIMasterAdmin", "text_cannot_empty");
+  const description_required = GetTranslationData(
+    "UIMasterAdmin",
+    "description_required"
+  );
+  const description_cannot_empty_HTML = GetTranslationData(
+    "UIMasterAdmin",
+    "description_cannot_empty_HTML"
+  );
+  const text_cannot_empty = GetTranslationData(
+    "UIMasterAdmin",
+    "text_cannot_empty"
+  );
   const souce_required = GetTranslationData("UIMasterAdmin", "souce_required");
-  const segment_required = GetTranslationData("UIMasterAdmin", "segment_required");
-  const offer_id_required = GetTranslationData("UIMasterAdmin", "offer_id_required");
+  const segment_required = GetTranslationData(
+    "UIMasterAdmin",
+    "segment_required"
+  );
+  const offer_id_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_id_required"
+  );
   const call_to_action_required = GetTranslationData(
     "UIMasterAdmin",
     "call_to_action_required"
@@ -116,14 +147,35 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     "UIMasterAdmin",
     "end_date_required"
   );
-  const at_least_one_month_required = GetTranslationData("UIMasterAdmin", "at_least_one_month_required");
-  const at_least_one_week_required = GetTranslationData("UIMasterAdmin", "at_least_one_week_required");
-  const coupon_type_required = GetTranslationData("UIMasterAdmin", "coupon_type_required");
+  const at_least_one_month_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_month_required"
+  );
+  const at_least_one_week_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_week_required"
+  );
+  const coupon_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "coupon_type_required"
+  );
   const image_required = GetTranslationData("UIMasterAdmin", "image_required");
-  const value_is_required = GetTranslationData("UIMasterAdmin", "value_is_required");
-  const valid_to_date_must_after_or_on_valid_from_date = GetTranslationData("UIMasterAdmin", "valid_to_date_must_after_or_on_valid_from_date");
-  const at_least_one_week_day_required = GetTranslationData("UIMasterAdmin", "at_least_one_week_day_required");
-  const week_day_required = GetTranslationData("UIMasterAdmin", "week_day_required");
+  const value_is_required = GetTranslationData(
+    "UIMasterAdmin",
+    "value_is_required"
+  );
+  const valid_to_date_must_after_or_on_valid_from_date = GetTranslationData(
+    "UIMasterAdmin",
+    "valid_to_date_must_after_or_on_valid_from_date"
+  );
+  const at_least_one_week_day_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_week_day_required"
+  );
+  const week_day_required = GetTranslationData(
+    "UIMasterAdmin",
+    "week_day_required"
+  );
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const status_required = GetTranslationData(
     "UIMasterAdmin",
@@ -134,7 +186,10 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
   const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
-
+  const uploadImage = useSelector((state) => state.uploadReducer);
+  const getDealCouponFeqData = useSelector(
+    (state) => state.dealCouponFreqReducer
+  );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   const getCustometSegemtData = useSelector(
     (state) => state.customerSegmentReducer?.data
@@ -143,21 +198,18 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     value: segementData.id,
     label: segementData?.name?.substring(0, 18) + "...",
   }));
+  // options for deal
   const dealOptions = getDealData
     ?.filter((deal) => deal?.enabled)
     .map((dealData) => ({
       value: dealData.id,
       label: dealData.name,
     }));
+  // options for status
   const statusOptions = [
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
   ];
-
-  const uploadImage = useSelector((state) => state.uploadReducer);
-  const getDealCouponFeqData = useSelector(
-    (state) => state.dealCouponFreqReducer
-  );
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
     coupounCode: "",
@@ -231,6 +283,13 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
       .test(
         "no-empty-html",
         text_cannot_empty,
+        (value) => value !== "<p><br></p>"
+      ),
+    description: Yup.string()
+      .required(description_required)
+      .test(
+        "no-empty-html",
+        description_cannot_empty_HTML,
         (value) => value !== "<p><br></p>"
       ),
     source: Yup.string().required(souce_required),
@@ -312,15 +371,15 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
-    }else if (uploadImage?.post_status_code){
-      toast.error(uploadImage?.postMessage)
-      dispatch(onPostuploadImageReset())
+    } else if (uploadImage?.post_status_code) {
+      toast.error(uploadImage?.postMessage);
+      dispatch(onPostuploadImageReset());
     }
   }, [uploadImage, values]);
 
   useEffect(() => {
     const statusCode = dealCouponData?.post_status_code;
-    
+
     if (statusCode === "201" || statusCode === "205") {
       const dealCouponFrequncyData = {
         ...values,
@@ -346,25 +405,27 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     }
   }, [dealCouponData]);
 
-
-
   useEffect(() => {
     if (getDealCouponFeqData) {
-      const { post_status_code, postMessage } = getDealCouponFeqData
-      if (post_status_code === "201" || post_status_code === "205" || post_status_code === "204") {
+      const { post_status_code, postMessage } = getDealCouponFeqData;
+      if (
+        post_status_code === "201" ||
+        post_status_code === "205" ||
+        post_status_code === "204"
+      ) {
         setInitialValue(reset);
         setDealCouponDatas(null);
-        setEdit(false)
+        setEdit(false);
         toast.success(postMessage);
         dispatch(onPostuploadImageReset());
         dispatch(onPostDealCouponReset());
         dispatch(onPostDealCouponFreqReset());
         dispatch(onGetDealCouponFreq());
         dispatch(onGetDealCoupon());
-      }else if(post_status_code){
+      } else if (post_status_code) {
         setInitialValue(reset);
         setDealCouponDatas(null);
-        setEdit(false)
+        setEdit(false);
         toast.error(postMessage);
         dispatch(onPostuploadImageReset());
         dispatch(onPostDealCouponReset());
@@ -407,9 +468,9 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                { (!edit && dealCouponData.isPostLoading ||
+                {(!edit && dealCouponData.isPostLoading) ||
                 getDealCouponFeqData.isPostLoading ||
-                uploadImage?.isPostLoading) ? (
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "300px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -678,24 +739,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group">
-                              <label>{description}</label>
-                              <Field
-                                type="text"
-                                name="description"
-                                className={`form-control ${
-                                  errors.description && touched.description
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={description_placeholder}
-                              />
-                              <ErrorMessage
-                                name="description"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
+
                             <div className="col-sm-4 form-group mb-2  ">
                               <label>
                                 {valid_from}
@@ -774,9 +818,32 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                                 className="error-message"
                               />
                             </div>
-
                             <div className="col-sm-12 form-group mb-4">
-                              <label>{terms_and_conditons}</label>
+                              <label>
+                                {description}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                component={HtmlEditor}
+                                name="description"
+                                className={`form-control ${
+                                  errors.description && touched.description
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={description_placeholder}
+                              />
+                              <ErrorMessage
+                                name="description"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-12 form-group mb-4">
+                              <label>
+                                {terms_and_conditons}
+                                <span className="text-danger">*</span>
+                              </label>
                               <Field
                                 component={HtmlEditor}
                                 name="terms"
