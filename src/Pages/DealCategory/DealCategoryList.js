@@ -25,41 +25,33 @@ const DealCategoryList = () => {
   const [dealCategory, setdealCategory] = useState("");
   const dispatch = useDispatch();
   // to get data from translation
-  const search_here_label = GetTranslationData(
-    "UIMasterAdmin",
-    "search_here_label"
-  );
-  const deal_category_list = GetTranslationData(
-    "UIMasterAdmin",
-    "deal_category_list"
-  );
+  const search_here_label = GetTranslationData("UIMasterAdmin", "search_here_label"); 
+  const deal_category_list = GetTranslationData("UIMasterAdmin", "deal_category_list");
   const name_label = GetTranslationData("UIMasterAdmin", "name_label");
   const display_order = GetTranslationData("UIMasterAdmin", "display_order");
   const mobile_image = GetTranslationData("UIMasterAdmin", "mobile_image");
   const web_image = GetTranslationData("UIMasterAdmin", "web_image");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
-  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
   const dealCategoryData = useSelector((state) => state.dealCategoryReducer);
-  // to handle search
+
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-  // to filter data based on deal category name
+
   const filteredData = dealCategoryData?.getDealCategoryData?.filter((data) =>
     data.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
-  // to handle page change
   const handlePageChange = (selected) => {
     setPage(selected.selected + 1);
   };
-  // to handle submit
   const handleSumbit = (dealCategory, isEdit) => {
     const dealCategoryData = {
-      ...dealCategory,
+     ...dealCategory,
       deleted: true,
+
     };
     if (isEdit) {
       setdealCategory(dealCategoryData);
@@ -67,14 +59,13 @@ const DealCategoryList = () => {
       dispatch(onUpdateDealCategory(dealCategoryData));
     }
   };
-  // to handle toast notifications based on post and update status code
   useEffect(() => {
     if (dealCategoryData?.update_status_code == "204") {
       toast.success(dealCategoryData?.updateMessage);
       dispatch(onGetDealCategory());
       dispatch(onUpdateDealCategoryReset());
     } else if (dealCategoryData?.update_status_code == "205") {
-      setdealCategory("");
+      setdealCategory("")
       toast.success(dealCategoryData?.updateMessage);
       dispatch(onGetDealCategory());
       dispatch(onUpdateDealCategoryReset());
@@ -83,7 +74,6 @@ const DealCategoryList = () => {
       dispatch(onUpdateDealCategoryReset());
     }
   }, [dealCategoryData]);
-  // to handle pagination
   useEffect(() => {
     if (filteredData) {
       const totalItems = filteredData?.length;
@@ -93,7 +83,7 @@ const DealCategoryList = () => {
       }
     }
   }, [filteredData]);
-  // to fetch deal category data on mount
+
   useEffect(() => {
     dispatch(onGetDealCategory());
   }, []);
@@ -149,7 +139,7 @@ const DealCategoryList = () => {
                                 <th>{display_order}</th>
                                 <th>{mobile_image}</th>
                                 <th>{web_image}</th>
-                                <th>{status_label}</th>
+                                <th>{"Status"}</th>
                                 {getRoleAccess[0]?.addAccess && (
                                   <th>{action_label}</th>
                                 )}
@@ -178,53 +168,19 @@ const DealCategoryList = () => {
                                     </td>
 
                                     <td>
-                                      {/* <span
-                                        className={
-                                          dealCategoryData.enabled
-                                            ? "badge badge-success"
-                                            : "badge badge-danger"
-                                        }
-                                      >
-                                        {dealCategoryData.enabled
-                                          ? "Active"
-                                          : "Non Active"}
-                                      </span>
-                                    </td>
-
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          end_icon={"fas fa-pencil-alt"}
-                                          onClick={() =>
-                                            handleSumbit(dealCategoryData, {
-                                              isEdit: true,
-                                            })
-                                          }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          onClick={() =>
-                                            handleSumbit(dealCategoryData)
-                                          }
-                                        />
-                                      </div>
-                                    </td> */}
-
-                                      <span
-                                        className={
-                                          dealCategoryData.enabled
-                                            ? "badge badge-success"
-                                            : "badge badge-danger"
-                                        }
-                                      >
-                                        {dealCategoryData.enabled
-                                          ? "Active"
-                                          : "Non Active"}
-                                      </span>
-                                    </td>
-                                    {getRoleAccess[0]?.editAccess && (
+                                  <span
+                                    className={
+                                      dealCategoryData.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {dealCategoryData.enabled
+                                      ? "Active"
+                                      : "Non Active"}
+                                  </span>
+                                </td>
+                                {getRoleAccess[0]?.editAccess && (
                                       <td>
                                         <div className="d-flex">
                                           <Button

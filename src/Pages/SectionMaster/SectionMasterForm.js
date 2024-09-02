@@ -11,22 +11,19 @@ import {
   onGetsectionMaster,
   onPostsectionMaster,
   onPostsectionMasterReset,
-  onUpdatesectionMaster,
 } from "../../Store/Slices/sectionMasterSlice";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { ClientId } from "../../Utility/Utility";
 
-const segmentOptions = [
-  { value: 1, label: "Demo" },
-  { value: 2, label: "Demo1" },
-];
 const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
 
-const SectionMasterForm = ({ sectionData }) => {
-  const [showFields, setShowFields] = useState(false);
+const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
+  const clientId = ClientId();
+  const [showFields, setShowFields] = useState("");
   const sectionMasterData = useSelector((state) => state.sectionMasterReducer);
   const [intialValue, setInitialValue] = useState({
     sectionName: "",
@@ -37,7 +34,7 @@ const SectionMasterForm = ({ sectionData }) => {
     text: "",
     claimLimit: "",
     pointToClaim: "",
-    noOfpointToClaim: "",
+    noOfPointsToClaim: "",
     segmentId: "",
     cta: "",
   });
@@ -128,25 +125,51 @@ const SectionMasterForm = ({ sectionData }) => {
     claimLimit: Yup.string()
       .nullable() // Allows the value to be null
       .matches(/^[0-9]*$/, claim_limit_must_number),
-    noOfpointToClaim: Yup.string()
+    noOfPointsToClaim: Yup.string()
       .nullable()
       .matches(/^[0-9]*$/, number_of_points_must_number),
+    text: Yup.lazy(() =>
+      showFields && showFields !== "Promo Message"
+        ? Yup.string().required("Text is required")
+        : Yup.string().nullable()
+    ),
+    cta: Yup.lazy(() =>
+      showFields && showFields === "Special Section"
+        ? Yup.string().required("Call To Action is required")
+        : Yup.string().nullable()
+    ),
+    segmentId: Yup.lazy(() =>
+      showFields &&
+      (showFields === "Special Section" || showFields === "Unlock Deals")
+        ? Yup.string().required("Segement is required")
+        : Yup.string().nullable()
+    ),
+    claimLimit: Yup.lazy(() =>
+      showFields && showFields === "Unlock Deals"
+        ? Yup.string().required("Claim limit is required")
+        : Yup.string().nullable()
+    ),
   });
-  const resetState = [
-    {
-      sectionName: "",
-      sectionType: "",
-      enabled: "",
-      displayOrder: "",
-      displayLimit: "",
-      text: "",
-      claimLimit: "",
-      pointToClaim: "",
-      noOfpointToClaim: "",
-      segmentId: "",
-      cta: "",
-    },
-  ];
+  const resetState = {
+    sectionName: "",
+    sectionType: "",
+    enabled: "",
+    displayOrder: "",
+    displayLimit: "",
+    text: "",
+    claimLimit: "",
+    pointToClaim: "",
+    noOfPointsToClaim: "",
+    segmentId: "",
+    cta: "",
+  };
+  const getCustometSegemtData = useSelector(
+    (state) => state.customerSegmentReducer?.data
+  );
+  const SegmentOptions = getCustometSegemtData?.map((segementData) => ({
+    value: segementData.id,
+    label: segementData?.name?.substring(0, 18) + "...",
+  }));
   const handleSubmit = (values) => {
     if (values) {
       const SectionformData = {
@@ -156,39 +179,32 @@ const SectionMasterForm = ({ sectionData }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
-        displayOrder:
-          typeof values?.displayOrder === "string"
-            ? values.displayOrder
-            : JSON.stringify(values?.displayOrder),
-        displayLimit:
-          typeof values?.displayLimit === "string"
-            ? values.displayLimit
-            : JSON.stringify(values?.displayLimit),
-        claimLimit: values?.claimLimit ? values?.claimLimit : null,
-        segmentId: values?.segmentId ? values?.segmentId : null,
-        noOfpointToClaim: values?.noOfpointToClaim
-          ? values?.noOfpointToClaim
-          : null,
+        clientId: clientId,
+        displayOrder: values?.displayOrder,
+        displayLimit: values.displayLimit,
+        claimLimit: values?.claimLimit || null,
+        segmentId: values?.segmentId || null,
+        noOfPointsToClaim: parseInt(values?.noOfPointsToClaim) || null,
         pointToClaim:
           typeof values?.pointToClaim === "boolean"
             ? values.pointToClaim
             : values?.pointToClaim === "true",
         ...(sectionData && { id: sectionData.id }),
       };
-
-      if (sectionData) {
-        dispatch(onUpdatesectionMaster(SectionformData));
-      } else {
-        dispatch(onPostsectionMaster(SectionformData));
-      }
-
-      setShowFields(false);
+      dispatch(onPostsectionMaster(SectionformData));
+      setInitialValue(resetState);
     }
   };
 
   useEffect(() => {
-    if (sectionMasterData?.post_status_code === "201") {
+    if (
+      sectionMasterData?.post_status_code === "201" ||
+      sectionMasterData?.post_status_code === "204" ||
+      sectionMasterData?.post_status_code === "205"
+    ) {
+      setEdit(false)
+      setSectionData(null);
+      setShowFields(false);
       toast.success(sectionMasterData.postMessage);
       dispatch(onGetsectionMaster());
       dispatch(onPostsectionMasterReset());
@@ -201,6 +217,7 @@ const SectionMasterForm = ({ sectionData }) => {
     if (sectionData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(sectionData);
+      setShowFields(sectionData?.sectionType);
     }
   }, [sectionData]);
 
@@ -216,7 +233,7 @@ const SectionMasterForm = ({ sectionData }) => {
                 <h4 className="card-title">{section_master}</h4>
               </div>
               <div className="card-body">
-                {sectionMasterData?.isPostLoading ? (
+                {(!edit && sectionMasterData?.isPostLoading) ? (
                   <div style={{ height: "250px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -269,23 +286,19 @@ const SectionMasterForm = ({ sectionData }) => {
                                 }`}
                                 onChange={(e) => {
                                   setShowFields(e || false);
-
-                                  if (e !== "Unlock Deals") {
-                                    setFieldValue("noOfpointToClaim", "");
-                                    setFieldValue("pointToClaim", false);
-                                    setFieldValue("claimLimit", "");
+                                  if (e === "Promo Message") {
+                                    setFieldValue("text", "");
                                   }
-
                                   if (e !== "Special Section") {
                                     setFieldValue("cta", "");
                                   }
-                                  if ( e !== "Promo Message"  ) {
-                                    setFieldValue("text", "");
+                                  if (e !== "Unlock Deals") {
+                                    setFieldValue("claimLimit", "");
+                                    setFieldValue("pointToClaim",false)
+                                    setFieldValue("pointToClaim",false)
+                                    setFieldValue("noOfPointsToClaim","")
                                   }
-                                  if (
-                                    e !== "Special Section" &&
-                                    e !== "Unlock Deals"
-                                  ) {
+                                  if (e !== "Special Section" &&  e !=="Unlock Deals" ) {
                                     setFieldValue("segmentId", "");
                                   }
                                 }}
@@ -340,9 +353,15 @@ const SectionMasterForm = ({ sectionData }) => {
                               />
                             </div>
 
-                            {(showFields && showFields !== "Promo Message") && (
-                              <div className="col-sm-4 form-group mb-2 mt-1">
+                            {(showFields === "Promo Banner" ||
+                              showFields === "Customer Menu" ||
+                              showFields === "Special Cart Banner" ||
+                              showFields === "Supporting Banner" ||
+                              showFields === "Special Section" ||
+                              showFields === "Unlock Deals") && (
+                              <div className="col-sm-4 form-group mb-4">
                                 <label>{text_label}</label>
+                                <span className="text-danger">*</span>
                                 <Field
                                   type="text"
                                   name="text"
@@ -353,9 +372,14 @@ const SectionMasterForm = ({ sectionData }) => {
                                   }`}
                                   placeholder="Enter Text "
                                 />
+                                <ErrorMessage
+                                  name="text"
+                                  component="div"
+                                  className="error-message"
+                                />
                               </div>
                             )}
-
+                            {console.log(showFields)}
                             {showFields === "Unlock Deals" && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{claim_limit}</label>
@@ -390,15 +414,15 @@ const SectionMasterForm = ({ sectionData }) => {
                                 </div>
                               </div>
                             )}
-                            {(showFields === "Unlock Deals" ) && (
+                            {showFields === "Unlock Deals" && (
                               <div className="col-sm-4 form-group mb-1">
                                 <label>{no_Of_Points_To_Claim}</label>
                                 <Field
                                   type="text"
-                                  name="noOfpointToClaim"
+                                  name="noOfPointsToClaim"
                                   className={`form-control ${
-                                    errors.noOfpointToClaim &&
-                                    touched.noOfpointToClaim
+                                    errors.noOfPointsToClaim &&
+                                    touched.noOfPointsToClaim
                                       ? "is-invalid"
                                       : ""
                                   }`}
@@ -406,7 +430,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                   disabled={!values.pointToClaim}
                                 />
                                 <ErrorMessage
-                                  name="noOfpointToClaim"
+                                  name="noOfPointsToClaim"
                                   component="div"
                                   className="error-message"
                                 />
@@ -420,7 +444,7 @@ const SectionMasterForm = ({ sectionData }) => {
                                 <Field
                                   name="segmentId"
                                   component={Dropdown}
-                                  options={segmentOptions}
+                                  options={SegmentOptions}
                                   className={`form-select ${
                                     errors.segmentId && touched.segmentId
                                       ? "is-invalid"
@@ -456,7 +480,7 @@ const SectionMasterForm = ({ sectionData }) => {
                               </div>
                             )}
 
-                            <div className="col-sm-4 form-group mb-2 ">
+                            <div className="col-sm-4 form-group mb-4">
                               <label>{status_label}</label>
                               <span className="text-danger">*</span>
 

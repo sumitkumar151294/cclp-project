@@ -11,12 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import {
   onGetsectionMaster,
+  onPostsectionMaster,
   onUpdatesectionMaster,
   onUpdatesectionMasterReset,
 } from "../../Store/Slices/sectionMasterSlice";
 import { toast } from "react-toastify";
 import PageError from "../../Components/PageError/PageError";
 import Swal from "sweetalert2";
+import { onGetCustomerSegment } from "../../Store/Slices/customerSegmentSlice";
 
 const SectionMasterList = () => {
   // to get column heading name from translation
@@ -44,6 +46,7 @@ const SectionMasterList = () => {
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
+const [edit,setEdit]=useState(false)
   // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -52,14 +55,8 @@ const SectionMasterList = () => {
   };
   const [sectionData, setSectionData] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const showError = false;
-  const [pageError, setPageError] = useState({
-    StatusCode: "",
-    ErrorName: "",
-    ErrorDesription: "",
-    url: "",
-    buttonText: "",
-  });
+
+
   const dispatch = useDispatch();
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -92,8 +89,9 @@ const SectionMasterList = () => {
     };
     if (isEdit) {
       setSectionData(sectionMasterData);
+      setEdit(true)
     } else {
-      dispatch(onUpdatesectionMaster(sectionMasterData));
+      dispatch(onPostsectionMaster(sectionMasterData));
     }
   };
 
@@ -107,22 +105,9 @@ const SectionMasterList = () => {
   };
   useEffect(() => {
     dispatch(onGetsectionMaster());
+    dispatch(onGetCustomerSegment());
   }, []);
-  useEffect(() => {
-    if (SectionMaster?.update_status_code == "204") {
-      toast.success(SectionMaster?.updateMessage);
-      dispatch(onGetsectionMaster());
-      dispatch(onUpdatesectionMasterReset());
-    } else if (SectionMaster?.update_status_code == "205") {
-      toast.success(SectionMaster?.updateMessage);
-      setSectionData(null);
-      dispatch(onGetsectionMaster());
-      dispatch(onUpdatesectionMasterReset());
-    } else if (SectionMaster?.update_status_code) {
-      toast.error(SectionMaster?.updateMessage);
-      dispatch(onUpdatesectionMasterReset());
-    }
-  }, [SectionMaster]);
+
   useEffect(() => {
     if (SectionMasterData) {
       const totalItems = SectionMasterData.length;
@@ -138,9 +123,10 @@ const SectionMasterList = () => {
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess && ( */}
-        <SectionMasterForm sectionData={sectionData} />
-      {/* )} */}
+      {getRoleAccess[0]?.addAccess && (
+        <SectionMasterForm sectionData={sectionData}  setSectionData=
+        {setSectionData} edit={edit} setEdit={setEdit}/>
+      )}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -166,9 +152,9 @@ const SectionMasterList = () => {
                   </div>
                 </div>
               </div>
+              {console.log(SectionMaster?.isPostLoading)}
               <div className="card-body">
-                {SectionMaster?.isgetLoading ||
-                SectionMaster?.isUpdateLoading ? (
+                {( (edit && SectionMaster?.isPostLoading) || SectionMaster?.isgetLoading ) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -183,15 +169,18 @@ const SectionMasterList = () => {
                             <th>{display_order}</th>
                             <th>{display_limit}</th>
                             <th>{claim_limit}</th>
+                            <th>Text</th>
+                            <th>Call To Action</th>
                             <th>{points_to_claim_label}</th>
+                            <th>Segment Id</th>
                             <th>{status_label}</th>
-                            {/* {getRoleAccess[0]?.editAccess && ( */}
+                            {getRoleAccess[0]?.editAccess && (
                               <th>{action_label}</th>
-                            {/* )} */}
-                            {/* {getRoleAccess[0]?.editAccess && ( */}
+                             )}
+                            {getRoleAccess[0]?.editAccess && (
 
                             <th>{section_data}</th>
-                          {/* )} */}
+                          )}
                           </tr>
                         </thead>
                         <tbody>
@@ -221,7 +210,22 @@ const SectionMasterList = () => {
                                   )}
                                 </td>
                                 <td>
+                                  {SectionMasterData?.text || (
+                                    <span className="hyphen"> -</span>
+                                  )}
+                                </td>
+                                <td>
+                                  {SectionMasterData?.cta || (
+                                    <span className="hyphen"> -</span>
+                                  )}
+                                </td>
+                                <td>
                                   {SectionMasterData?.noOfPointsToClaim || (
+                                    <span className="hyphen"> -</span>
+                                  )}
+                                </td>
+                                <td>
+                                  {SectionMasterData?.segmentId || (
                                     <span className="hyphen"> -</span>
                                   )}
                                 </td>
