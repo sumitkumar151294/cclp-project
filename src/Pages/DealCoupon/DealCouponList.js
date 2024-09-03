@@ -309,7 +309,10 @@ const DealCouponList = () => {
                                         "Membership" ||
                                       dealcoupoun.typeOfCoupoun ===
                                         "Dynamic") ? (
-                                       <Link to="/dealCouponCode">
+                                       <Link to="/dealCouponCode" state={{
+                                          dealId:dealcoupoun?.dealId,
+                                          dealCoupounId:dealcoupoun?.id,
+                                        }}>
                                         <Button
                                           disabled={!dealcoupoun?.enabled}
                                           text={"Customize"}

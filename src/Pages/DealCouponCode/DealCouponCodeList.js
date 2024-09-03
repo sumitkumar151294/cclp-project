@@ -15,6 +15,7 @@ import {
 } from "../../Store/Slices/dealCouponCodeSlice";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
 
 const DealCouponCodeList = () => {
   const dispatch = useDispatch();
@@ -28,10 +29,17 @@ const DealCouponCodeList = () => {
     "deal_coupon_code_list"
   );
   const coupon_code = GetTranslationData("UIMasterAdmin", "coupon_code");
+  const deal_label = GetTranslationData("UIMasterAdmin", "deal_label");
   const deal_coupon = GetTranslationData("UIMasterAdmin", "deal_coupon");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
-  const deal_coupon_status = GetTranslationData("UIMasterAdmin", "deal_coupon_status");
-  const start_date_label = GetTranslationData("UIMasterAdmin", "start_date_label");
+  const deal_coupon_status = GetTranslationData(
+    "UIMasterAdmin",
+    "deal_coupon_status"
+  );
+  const start_date_label = GetTranslationData(
+    "UIMasterAdmin",
+    "start_date_label"
+  );
   const end_date_label = GetTranslationData("UIMasterAdmin", "end_date_label");
   const description = GetTranslationData("UIMasterAdmin", "description");
   const search_here_label = GetTranslationData(
@@ -44,18 +52,21 @@ const DealCouponCodeList = () => {
     "UIMasterAdmin",
     "non_active_label"
   );
-  // to get data from translation
-  const getRoleAccess = useSelector(
-    (state) => state.moduleReducer?.filteredData
-  );
   // to get deal coupon code data from redux
   const getDealCouponCode = useSelector(
     (state) => state?.dealCouponCodeReducer
   );
   const dealCouponCodeData = getDealCouponCode?.getDealCouponCodeData;
+  // to get deal coupon data from redux store
+  const getDealCoupon = useSelector(
+    (state) => state.dealCouponReducer?.getDealCouponData
+  );
+  // to get deal data from redux store
+  const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   //to fetch data on mount
   useEffect(() => {
     dispatch(onGetDealCouponCode());
+    dispatch(onGetDealCoupon());
   }, []);
   // modal for delete warning
   const showAlert = (data) => {
@@ -86,16 +97,21 @@ const DealCouponCodeList = () => {
       dispatch(onUpdateDealCouponCode(dealCouponCodeData));
     }
   };
-  // to filter deal coupon code data
+  // function to get title by dealCouponId
+  const getDealCouponTitleById = (dealCouponId) => {
+    const dealCoupon = getDealCoupon?.find((data) => data.id === dealCouponId);
+    return dealCoupon?.title || "";
+  };
+  // to filter deal coupon code data based on search query
   const filteredData = dealCouponCodeData?.filter((data) =>
     data?.status?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
-  // Function to format dates
+  // function to format dates
   const formatDate = (datetime) => {
     if (!datetime) return "";
-    return datetime.split("T")[0]; // Extract the date part only
+    return datetime.split("T")[0]; // extract the date part only
   };
-  // to handle search
+  // to handle search query change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -121,7 +137,7 @@ const DealCouponCodeList = () => {
         dealCouponCode={dealCouponCode}
         setDealCouponCode={setDealCouponCode}
       />
-   <div className="containers-fluid pt-0">
+      <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -160,6 +176,7 @@ const DealCouponCodeList = () => {
                             <thead>
                               <tr>
                                 <th>{coupon_code}</th>
+                                <th>{deal_label}</th>
                                 <th>{deal_coupon}</th>
                                 <th>{deal_coupon_status}</th>
                                 <th>{start_date_label}</th>
@@ -174,16 +191,33 @@ const DealCouponCodeList = () => {
                                 .slice(startIndex, endIndex)
                                 .map((dealCouponCode, index) => (
                                   <tr key={index}>
-                                    <td>{dealCouponCode.coupounCode}</td>
-                                    <td>{dealCouponCode.dealCoupounId}</td>
-                                    <td>{dealCouponCode.status}</td>
+                                    <td>{dealCouponCode?.coupounCode}</td>
                                     <td>
-                                      {formatDate(dealCouponCode.startDate)}
+                                      {getDealData
+                                        ?.filter(
+                                          (deal) =>
+                                            deal.id ===
+                                            parseInt(dealCouponCode.dealId)
+                                        )
+                                        ?.map((filteredDeal) => (
+                                          <span key={filteredDeal.id}>
+                                            {filteredDeal.name}
+                                          </span>
+                                        ))}
                                     </td>
                                     <td>
-                                      {formatDate(dealCouponCode.endDate)}
+                                      {getDealCouponTitleById(
+                                        dealCouponCode?.dealCoupounId
+                                      )}
                                     </td>
-                                    <td>{dealCouponCode.descriptions}</td>
+                                    <td>{dealCouponCode?.status}</td>
+                                    <td>
+                                      {formatDate(dealCouponCode?.startDate)}
+                                    </td>
+                                    <td>
+                                      {formatDate(dealCouponCode?.endDate)}
+                                    </td>
+                                    <td>{dealCouponCode?.descriptions}</td>
                                     <td>
                                       <span
                                         className={
@@ -198,27 +232,26 @@ const DealCouponCodeList = () => {
                                       </span>
                                     </td>
 
-                                      <td>
-                                        <div className="d-flex">
-                                          <Button
-                                            className="btn btn-primary shadow btn-xs sharp me-1"
-                                            end_icon={"fas fa-pencil-alt"}
-                                            onClick={() =>
-                                              handleSubmit(dealCouponCode, {
-                                                isEdit: true,
-                                              })
-                                            }
-                                          />
-                                          <Button
-                                            className="btn btn-danger shadow btn-xs sharp"
-                                            end_icon={"fa fa-trash"}
-                                            onClick={() =>
-                                              showAlert(dealCouponCode)
-                                            }
-                                          />
-                                        </div>
-                                      </td>
-
+                                    <td>
+                                      <div className="d-flex">
+                                        <Button
+                                          className="btn btn-primary shadow btn-xs sharp me-1"
+                                          end_icon={"fas fa-pencil-alt"}
+                                          onClick={() =>
+                                            handleSubmit(dealCouponCode, {
+                                              isEdit: true,
+                                            })
+                                          }
+                                        />
+                                        <Button
+                                          className="btn btn-danger shadow btn-xs sharp"
+                                          end_icon={"fa fa-trash"}
+                                          onClick={() =>
+                                            showAlert(dealCouponCode)
+                                          }
+                                        />
+                                      </div>
+                                    </td>
                                   </tr>
                                 ))}
                             </tbody>
