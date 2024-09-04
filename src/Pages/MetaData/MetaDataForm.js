@@ -32,23 +32,39 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
     "UIMasterAdmin",
     "status_required"
   );
+  const price_required = GetTranslationData("UIMasterAdmin", "price_required");
+  const price_must_be_number = GetTranslationData("UIMasterAdmin", "price_must_be_number");
+  const MRP_required = GetTranslationData("UIMasterAdmin", "MRP_required");
+  const MRP_must_be_number = GetTranslationData("UIMasterAdmin", "MRP_must_be_number");
+  const end_points_required = GetTranslationData("UIMasterAdmin", "end_points_required");
+  const end_points_must_be_number = GetTranslationData("UIMasterAdmin", "end_points_must_be_number");
+  const burn_points_required = GetTranslationData("UIMasterAdmin", "burn_points_required");
+  const burn_points_must_be_number = GetTranslationData("UIMasterAdmin", "burn_points_must_be_number");
+  const price_label = GetTranslationData("UIMasterAdmin", "price_label");
+  const price_placeholder = GetTranslationData("UIMasterAdmin", "price_placeholder");
+  const MRP_label = GetTranslationData("UIMasterAdmin", "MRP_label");
+  const MRP_placeholder = GetTranslationData("UIMasterAdmin", "MRP_placeholder");
+  const earn_points = GetTranslationData("UIMasterAdmin", "earn_points");
+  const enter_earn_points = GetTranslationData("UIMasterAdmin", "enter_earn_points");
+  const burn_points = GetTranslationData("UIMasterAdmin", "burn_points");
+  const burn_points_placeholder = GetTranslationData("UIMasterAdmin", "burn_points_placeholder");
   //to get meta data from redux
   const getMetaData = useSelector((state) => state.metaDataReducer);
   //to validate the form using Yup schema
   const validations = Yup.object().shape({
     enabled: Yup.string().required(status_required),
     price: Yup.string()
-      .required("Price is required")
-      .matches(/^[0-9]+$/, "Price must be a number"),
+      .required(price_required)
+      .matches(/^[0-9]+$/, price_must_be_number),
     mrp: Yup.string()
-      .required("MRP is required")
-      .matches(/^[0-9]+$/, "MRP must be a number"),
+      .required(MRP_required)
+      .matches(/^[0-9]+$/, MRP_must_be_number),
     earnPoints: Yup.string()
-      .required("End Points is required")
-      .matches(/^[0-9]*$/, "End Points must be a number"),
+      .required(end_points_required)
+      .matches(/^[0-9]*$/, end_points_must_be_number),
     burnPoints: Yup.string()
-      .required("Burn Points is required")
-      .matches(/^[0-9]*$/, "Burn Points must be a number"),
+      .required(burn_points_required)
+      .matches(/^[0-9]*$/, burn_points_must_be_number),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -80,7 +96,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
       });
     }
   };
-  // to prefilled form 
+  // to prefilled the form when we will click on edit icon in the list
   useEffect(() => {
     if (metaData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -94,7 +110,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
       });
     }
   }, [metaData]);
-  // to handle toast notifications based on meta data status
+  // to handle toast notifications based on post and update status code
   useEffect(() => {
     if (getMetaData?.post_status_code === "201" || getMetaData?.post_status_code === "205") {
       toast.success(getMetaData.postMessage);
@@ -136,7 +152,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Price"}
+                                {price_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -147,7 +163,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={"Enter Price"}
+                                placeholder={price_placeholder}
                               />
                               <ErrorMessage
                                 name="price"
@@ -157,7 +173,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"MRP"}
+                                {MRP_label}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -166,7 +182,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                                 className={`form-control ${
                                   errors.mrp && touched.mrp ? "is-invalid" : ""
                                 }`}
-                                placeholder={"Enter MRP"}
+                                placeholder={MRP_placeholder}
                               />
                               <ErrorMessage
                                 name="mrp"
@@ -176,7 +192,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"Earn Points"}
+                                {earn_points}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -187,7 +203,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={"Enter Earn Points"}
+                                placeholder={enter_earn_points}
                               />
                               <ErrorMessage
                                 name="earnPoints"
@@ -197,7 +213,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"Burn Points"}
+                                {burn_points}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -208,7 +224,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={"Enter Burn Points"}
+                                placeholder={burn_points_placeholder}
                               />
                               <ErrorMessage
                                 name="burnPoints"

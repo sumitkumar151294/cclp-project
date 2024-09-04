@@ -145,6 +145,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   const [showFeild, setShowFields] = useState("");
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
+  // to validate form using Yup schema
   const validations = Yup.object().shape({
     mobImage: Yup.lazy(() =>
       type !== "UnlockStaticCard"

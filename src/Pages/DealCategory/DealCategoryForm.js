@@ -210,7 +210,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
       dispatch(onPostDealCategoryReset());
     }
   }, [dealCategoryData]);
-  // to prefilled form
+  // to prefilled form when we will click on edit icon in the list
   useEffect(() => {
     if (dealCategory) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });

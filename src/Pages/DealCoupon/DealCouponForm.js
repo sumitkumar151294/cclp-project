@@ -40,7 +40,12 @@ const typeOfCoupoun = [
   { value: "Membership", label: "Membership" },
 ];
 
-const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) => {
+const DealCouponForm = ({
+  dealCouponDatas,
+  setDealCouponDatas,
+  edit,
+  setEdit,
+}) => {
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
@@ -51,6 +56,12 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     "type_of_coupoun"
   );
   const coupoun_code = GetTranslationData("UIMasterAdmin", "coupoun_code");
+  const offer_type = GetTranslationData("UIMasterAdmin", "offer_type");
+  const offer_type_value = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_type_value"
+  );
+  const offer_sub_type = GetTranslationData("UIMasterAdmin", "offer_sub_type");
   const coupoun_code_placeholder = GetTranslationData(
     "UIMasterAdmin",
     "coupoun_code_placeholder"
@@ -66,9 +77,9 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     "UIMasterAdmin",
     "select_week_days"
   );
-  const terms_and_condition = GetTranslationData(
+  const terms_and_conditons = GetTranslationData(
     "UIMasterAdmin",
-    "select_months"
+    "terms_and_conditons"
   );
   const terms_placeholder = GetTranslationData(
     "UIMasterAdmin",
@@ -79,7 +90,12 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     "UIMasterAdmin",
     "call_to_action_placeholder"
   );
+  const upload_image = GetTranslationData("UIMasterAdmin", "upload_image");
   const segment_label = GetTranslationData("UIMasterAdmin", "segment_label");
+  const source = GetTranslationData("UIMasterAdmin", "source");
+  const offer_id = GetTranslationData("UIMasterAdmin", "offer_id");
+  const valid_from = GetTranslationData("UIMasterAdmin", "valid_from");
+  const valid_to = GetTranslationData("UIMasterAdmin", "valid_to");
   const description = GetTranslationData("UIMasterAdmin", "description");
   const description_placeholder = GetTranslationData(
     "UIMasterAdmin",
@@ -88,9 +104,37 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
   const title_required = GetTranslationData("UIMasterAdmin", "title_required");
-  const offer_type_required = GetTranslationData("UIMasterAdmin", "offer_type_required");
-  const offer_sub_type_required = GetTranslationData("UIMasterAdmin", "offer_sub_type_required");
+  const offer_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_type_required"
+  );
+  const offer_sub_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_sub_type_required"
+  );
   const deal_required = GetTranslationData("UIMasterAdmin", "deal_required");
+  const text_required = GetTranslationData("UIMasterAdmin", "text_required");
+  const description_required = GetTranslationData(
+    "UIMasterAdmin",
+    "description_required"
+  );
+  const description_cannot_empty_HTML = GetTranslationData(
+    "UIMasterAdmin",
+    "description_cannot_empty_HTML"
+  );
+  const text_cannot_empty = GetTranslationData(
+    "UIMasterAdmin",
+    "text_cannot_empty"
+  );
+  const souce_required = GetTranslationData("UIMasterAdmin", "souce_required");
+  const segment_required = GetTranslationData(
+    "UIMasterAdmin",
+    "segment_required"
+  );
+  const offer_id_required = GetTranslationData(
+    "UIMasterAdmin",
+    "offer_id_required"
+  );
   const call_to_action_required = GetTranslationData(
     "UIMasterAdmin",
     "call_to_action_required"
@@ -103,16 +147,49 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     "UIMasterAdmin",
     "end_date_required"
   );
-  const at_least_one_month_required = GetTranslationData("UIMasterAdmin", "at_least_one_month_required");
-  const at_least_one_week_required = GetTranslationData("UIMasterAdmin", "at_least_one_week_required");
-  const coupon_type_required = GetTranslationData("UIMasterAdmin", "coupon_type_required");
+  const at_least_one_month_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_month_required"
+  );
+  const at_least_one_week_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_week_required"
+  );
+  const coupon_type_required = GetTranslationData(
+    "UIMasterAdmin",
+    "coupon_type_required"
+  );
   const image_required = GetTranslationData("UIMasterAdmin", "image_required");
+  const value_is_required = GetTranslationData(
+    "UIMasterAdmin",
+    "value_is_required"
+  );
+  const valid_to_date_must_after_or_on_valid_from_date = GetTranslationData(
+    "UIMasterAdmin",
+    "valid_to_date_must_after_or_on_valid_from_date"
+  );
+  const at_least_one_week_day_required = GetTranslationData(
+    "UIMasterAdmin",
+    "at_least_one_week_day_required"
+  );
+  const week_day_required = GetTranslationData(
+    "UIMasterAdmin",
+    "week_day_required"
+  );
+  const status_label = GetTranslationData("UIMasterAdmin", "status_label");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   // to get data from redux store
   const dealCouponData = useSelector((state) => state.dealCouponReducer);
   const getImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
-
+  const uploadImage = useSelector((state) => state.uploadReducer);
+  const getDealCouponFeqData = useSelector(
+    (state) => state.dealCouponFreqReducer
+  );
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
   const getCustometSegemtData = useSelector(
     (state) => state.customerSegmentReducer?.data
@@ -121,21 +198,18 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     value: segementData.id,
     label: segementData?.name?.substring(0, 18) + "...",
   }));
+  // options for deal
   const dealOptions = getDealData
     ?.filter((deal) => deal?.enabled)
     .map((dealData) => ({
       value: dealData.id,
       label: dealData.name,
     }));
+  // options for status
   const statusOptions = [
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
   ];
-
-  const uploadImage = useSelector((state) => state.uploadReducer);
-  const getDealCouponFeqData = useSelector(
-    (state) => state.dealCouponFreqReducer
-  );
   // initial state for the input fields
   const [intialValue, setInitialValue] = useState({
     coupounCode: "",
@@ -205,15 +279,22 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     offerSubType: Yup.string().required(offer_sub_type_required),
     dealId: Yup.string().required(deal_required),
     terms: Yup.string()
-      .required("Text is Required")
+      .required(text_required)
       .test(
         "no-empty-html",
-        "Text cannot be empty HTML",
+        text_cannot_empty,
         (value) => value !== "<p><br></p>"
       ),
-    source: Yup.string().required("Souce is required"),
-    segmentId: Yup.string().required("Segment is required"),
-    offerId: Yup.string().required("Offer Id is required"),
+    description: Yup.string()
+      .required(description_required)
+      .test(
+        "no-empty-html",
+        description_cannot_empty_HTML,
+        (value) => value !== "<p><br></p>"
+      ),
+    source: Yup.string().required(souce_required),
+    segmentId: Yup.string().required(segment_required),
+    offerId: Yup.string().required(offer_id_required),
     validFrom: Yup.string().required(start_date_required),
     validUpto: Yup.string()
       .required(end_date_required)
@@ -222,7 +303,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
         if (validFrom && new Date(value) < new Date(validFrom)) {
           return this.createError({
             path: "validUpto",
-            message: "Valid to date must be after or on the valid from date.",
+            message: valid_to_date_must_after_or_on_valid_from_date,
           });
         }
         return true;
@@ -231,12 +312,12 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     weekDayId: Yup.array()
       .of(
         Yup.object().shape({
-          value: Yup.number().required("Value is required"),
+          value: Yup.number().required(value_is_required),
         })
       )
-      .min(1, "At least one week day is required")
-      .required("Week day is required"),
-    enabled: Yup.string().required("Status is required"),
+      .min(1, at_least_one_week_day_required)
+      .required(week_day_required),
+    enabled: Yup.string().required(status_required),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -290,15 +371,15 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
         ...(dealCouponDatas && { id: values.id }),
       };
       dispatch(onPostDealCoupon(dealCouponData));
-    }else if (uploadImage?.post_status_code){
-      toast.error(uploadImage?.postMessage)
-      dispatch(onPostuploadImageReset())
+    } else if (uploadImage?.post_status_code) {
+      toast.error(uploadImage?.postMessage);
+      dispatch(onPostuploadImageReset());
     }
   }, [uploadImage, values]);
 
   useEffect(() => {
     const statusCode = dealCouponData?.post_status_code;
-    
+
     if (statusCode === "201" || statusCode === "205") {
       const dealCouponFrequncyData = {
         ...values,
@@ -324,25 +405,27 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
     }
   }, [dealCouponData]);
 
-
-
   useEffect(() => {
     if (getDealCouponFeqData) {
-      const { post_status_code, postMessage } = getDealCouponFeqData
-      if (post_status_code === "201" || post_status_code === "205" || post_status_code === "204") {
+      const { post_status_code, postMessage } = getDealCouponFeqData;
+      if (
+        post_status_code === "201" ||
+        post_status_code === "205" ||
+        post_status_code === "204"
+      ) {
         setInitialValue(reset);
         setDealCouponDatas(null);
-        setEdit(false)
+        setEdit(false);
         toast.success(postMessage);
         dispatch(onPostuploadImageReset());
         dispatch(onPostDealCouponReset());
         dispatch(onPostDealCouponFreqReset());
         dispatch(onGetDealCouponFreq());
         dispatch(onGetDealCoupon());
-      }else if(post_status_code){
+      } else if (post_status_code) {
         setInitialValue(reset);
         setDealCouponDatas(null);
-        setEdit(false)
+        setEdit(false);
         toast.error(postMessage);
         dispatch(onPostuploadImageReset());
         dispatch(onPostDealCouponReset());
@@ -385,9 +468,9 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                 <h4 className="card-title">{deal_coupoun}</h4>
               </div>
               <div className="card-body">
-                { (!edit && dealCouponData.isPostLoading ||
+                {(!edit && dealCouponData.isPostLoading) ||
                 getDealCouponFeqData.isPostLoading ||
-                uploadImage?.isPostLoading) ? (
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "300px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -403,7 +486,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                         <Form>
                           <div className="row">
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Deal"}</label>
+                              <label>{deal_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field
@@ -486,7 +569,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                               </div>
                             )}
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Offer Type"}</label>
+                              <label>{offer_type}</label>
 
                               <Field
                                 name="offerType"
@@ -507,7 +590,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                             {(values.offerType === "SpecialType" ||
                               values.offerType === "NetworkCardType") && (
                               <div className="col-sm-4 form-group mb-4">
-                                <label>{"Offer Type Value"}</label>
+                                <label>{offer_type_value}</label>
 
                                 <Field
                                   name="offerTypeValue"
@@ -532,7 +615,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                               </div>
                             )}
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Offer Sub Type"}</label>
+                              <label>{offer_sub_type}</label>
 
                               <Field
                                 name="offerSubType"
@@ -575,7 +658,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
 
                             <div className="col-sm-4 form-group mb-4 ">
                               <label>
-                                {"Source"}
+                                {source}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -595,7 +678,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4 ">
-                              <label>{"Offer Id"}</label>
+                              <label>{offer_id}</label>
                               <Field
                                 type="text"
                                 name="offerId"
@@ -634,7 +717,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
 
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {"Upload Image"}
+                                {upload_image}
                                 <span className="text-danger">*</span>
                               </label>
                               <input
@@ -656,27 +739,10 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                                 className="error-message"
                               />
                             </div>
-                            <div className="col-sm-4 form-group">
-                              <label>{description}</label>
-                              <Field
-                                type="text"
-                                name="description"
-                                className={`form-control ${
-                                  errors.description && touched.description
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={description_placeholder}
-                              />
-                              <ErrorMessage
-                                name="description"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>
+
                             <div className="col-sm-4 form-group mb-2  ">
                               <label>
-                                {"Valid From"}
+                                {valid_from}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -700,7 +766,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                             </div>
                             <div className="col-sm-4 form-group mb-2">
                               <label>
-                                {"Valid To"}
+                                {valid_to}
                                 <span className="text-danger">*</span>
                               </label>
                               <Field
@@ -752,9 +818,32 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                                 className="error-message"
                               />
                             </div>
-
                             <div className="col-sm-12 form-group mb-4">
-                              <label>{"Terms And Conditons"}</label>
+                              <label>
+                                {description}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                component={HtmlEditor}
+                                name="description"
+                                className={`form-control ${
+                                  errors.description && touched.description
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={description_placeholder}
+                              />
+                              <ErrorMessage
+                                name="description"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-12 form-group mb-4">
+                              <label>
+                                {terms_and_conditons}
+                                <span className="text-danger">*</span>
+                              </label>
                               <Field
                                 component={HtmlEditor}
                                 name="terms"
@@ -772,7 +861,7 @@ const DealCouponForm = ({ dealCouponDatas, setDealCouponDatas,edit,setEdit }) =>
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-4">
-                              <label>{"Status"}</label>
+                              <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field

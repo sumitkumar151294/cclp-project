@@ -94,7 +94,7 @@ const DealCategoryList = () => {
           setdealCategory={setdealCategory}
           dealCategory={dealCategory}
         />
-            )}
+      )}
       <ScrollToTop />
       <div className="containers-fluid pt-0">
         <div className="row">
@@ -141,8 +141,8 @@ const DealCategoryList = () => {
                                 <th>{web_image}</th>
                                 <th>{"Status"}</th>
                                 {getRoleAccess[0]?.addAccess && (
-                                  <th>{action_label}</th>)}
-
+                                  <th>{action_label}</th>
+                                )}
                               </tr>
                             </thead>
                             <tbody>
@@ -201,7 +201,7 @@ const DealCategoryList = () => {
                                           />
                                         </div>
                                       </td>
-                                )}
+                                    )}
                                   </tr>
                                 ))}
                             </tbody>
