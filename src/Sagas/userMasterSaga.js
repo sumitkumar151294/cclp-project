@@ -5,7 +5,7 @@ import { onGetuserMaster, onGetuserMasterError, onGetuserMasterSuccess, onPostus
 function* userMaster() {
   try {
     const userMasterResponse = yield call(callUserMasterApi);
-    if (userMasterResponse.responseCode === "201") {
+    if (userMasterResponse.responseCode === "200") {
       yield put(
         onPostuserMasterSuccess({
           data: userMasterResponse.response,

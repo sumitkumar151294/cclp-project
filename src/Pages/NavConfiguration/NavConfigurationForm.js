@@ -132,7 +132,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   };
   // to call post api based on upload Image status
   useEffect(() => {
-    if (uploadImage?.post_status_code === "201") {
+    if (uploadImage?.post_status_code === "200") {
       const postData = {
         ...values,
         deleted: false,
@@ -160,7 +160,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   }, [navData]);
   // to handle navigation and toast notifications based on post and update status
   useEffect(() => {
-    if (navConfigureData?.post_status_code === "201" || navConfigureData?.post_status_code === "205"
+    if (navConfigureData?.post_status_code === "200" || navConfigureData?.post_status_code === "205"
      ) {
       setNavData(null);
       setEdit(false)

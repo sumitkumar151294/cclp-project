@@ -30,7 +30,7 @@ function* PostDealCouponCode({ payload }) {
   
   try {
     const postDealCouponCodeResponse = yield call(callDealCouponCodePostApi, payload);
-    if (postDealCouponCodeResponse.responseCode === "201") {
+    if (postDealCouponCodeResponse.responseCode === "200") {
       yield put(
         onPostDealCouponCodeSuccess({
           postData: postDealCouponCodeResponse.response,

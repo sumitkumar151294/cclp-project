@@ -137,7 +137,7 @@ const statusOptions = [
 
   useEffect(() => {
     if (
-      getUserRoleData?.status_code === "201" ||
+      getUserRoleData?.status_code === "200" ||
       getUserRoleData?.status_code === "205"
     ) {
       const modulesData = Object.keys(value).map((moduleId) => {
@@ -156,7 +156,7 @@ const statusOptions = [
       setInitialValue(reset)
       dispatch(onPostUserRoleModuleAccess(modulesData));
       dispatch(onPostUserRoleReset());
-    } else if (getUserModalAccessData?.status_code === "201") {
+    } else if (getUserModalAccessData?.status_code === "200") {
       toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());

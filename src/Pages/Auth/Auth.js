@@ -48,7 +48,7 @@ const Auth = () => {
   //fetch module master data on mount
 
   useEffect(() => {
-    if (!clientData.length) {
+    if (!clientData?.length) {
       dispatch(onGetClientMaster({ PlatformDomainUrl: currentUrl }));
     }
   }, [currentUrl]);

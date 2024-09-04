@@ -357,7 +357,7 @@ const DealCouponForm = ({
   };
 
   useEffect(() => {
-    if (uploadImage?.post_status_code == "201") {
+    if (uploadImage?.post_status_code == "200") {
       const dealCouponData = {
         ...values,
         enabled:
@@ -380,7 +380,7 @@ const DealCouponForm = ({
   useEffect(() => {
     const statusCode = dealCouponData?.post_status_code;
 
-    if (statusCode === "201" || statusCode === "205") {
+    if (statusCode === "200" || statusCode === "205") {
       const dealCouponFrequncyData = {
         ...values,
         deleted: false,
@@ -409,7 +409,7 @@ const DealCouponForm = ({
     if (getDealCouponFeqData) {
       const { post_status_code, postMessage } = getDealCouponFeqData;
       if (
-        post_status_code === "201" ||
+        post_status_code === "200" ||
         post_status_code === "205" ||
         post_status_code === "204"
       ) {

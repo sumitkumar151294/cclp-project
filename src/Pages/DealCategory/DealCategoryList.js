@@ -159,13 +159,19 @@ const DealCategoryList = () => {
                                         alt="mobImage"
                                       />
                                     </td>
-                                    <td>
-                                      <img
-                                        src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.webImage}`}
-                                        style={{ width: "50px" }}
-                                        alt="webImage"
-                                      />
-                                    </td>
+
+                                      <td>
+                                        {dealCategoryData.webImage ? (
+                                          <img
+                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealCategoryData.webImage}`}
+                                            style={{ width: "50px" }}
+                                            alt="webImage"
+                                          />
+                                        ) : (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+
 
                                     <td>
                                   <span

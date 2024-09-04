@@ -171,7 +171,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   }, [dealCouponFreq]);
   // to handle navigation and toast notifications based on post and update status_code
   useEffect(() => {
-    if (getDealCouponFeqData?.post_status_code === "201" || getDealCouponFeqData?.post_status_code === "205") {
+    if (getDealCouponFeqData?.post_status_code === "200" || getDealCouponFeqData?.post_status_code === "205") {
       toast.success(getDealCouponFeqData.postMessage);
       setDealCouponFreq(null);
       dispatch(onPostDealCouponFreqReset());

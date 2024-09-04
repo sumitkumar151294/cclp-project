@@ -91,15 +91,15 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
     name: "",
     enabled: "",
   });
-  const resetState = [
+  const resetState =
     {
       webImage: "",
       mobImage: "",
       displayOrder: "",
       name: "",
       enabled: "",
-    },
-  ];
+    }
+
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     name: Yup.string().required(category_name_required),
@@ -107,11 +107,12 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
     mobImage: Yup.string().required(mobile_image_required),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, display_must_number),
+      .matches(/^[0-9]+$/, "Display Order Must be a Number"),
   });
 
   //to handle submit
   const handleSubmit = (values) => {
+    debugger
     if (!values) return;
     const { webImage, mobImage } = values;
     if (typeof webImage === "object" || typeof mobImage === "object") {
@@ -134,6 +135,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
+            displayOrder:parseInt(values?.displayOrder),
         ...(dealCategory && { id: values.id }),
       };
       dispatch(onPostDealCategory(dealCategoryData));
@@ -161,25 +163,26 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        webImage: dealCategory?.webImage,
-        mobImage: dealCategory?.mobImage,
+        webImage: dealCategory?.webImage || "",
+        mobImage: dealCategory?.mobImage || "",
         clientId: 6,
         deleted: false,
+        displayOrder:parseInt(values?.displayOrder),
         ...(dealCategory && { id: values?.id }),
       };
       let shouldDispatch = false;
       if (
-        uploadImage.postMobileStatusCode === "201" &&
-        uploadImage.post_status_code === "201"
+        uploadImage.postMobileStatusCode === "200" &&
+        uploadImage.post_status_code === "200"
       ) {
         dealCategoryData.webImage = getwebImage;
         dealCategoryData.mobImage = getmobImage;
         shouldDispatch = true;
-      } else if (uploadImage.post_status_code === "201" && web) {
+      } else if (uploadImage.post_status_code === "200" && web) {
         dealCategoryData.webImage = getwebImage;
         shouldDispatch = true;
         setWeb(false);
-      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+      } else if (uploadImage.postMobileStatusCode === "200" && mobile) {
         dealCategoryData.mobImage = getmobImage;
         shouldDispatch = true;
         setMobile(false);
@@ -191,7 +194,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
   }, [uploadImage, values, web, mobile]);
   // to handle navigation and toast notifications based on deal category status
   useEffect(() => {
-    if (dealCategoryData?.post_status_code === "201") {
+    if (dealCategoryData?.post_status_code === "200") {
       toast.success(dealCategoryData.postMessage);
       setInitialValue(resetState);
       dispatch(onPostuploadImageReset());

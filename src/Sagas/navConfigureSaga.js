@@ -29,7 +29,7 @@ function* GetNavConfigure() {
 function* PostNavConfigure({ payload }) {
   try {
     const postNavConfigureResponse = yield call(callNavConfigurePostApi, payload);
-    if (postNavConfigureResponse.responseCode === "201") {
+    if (postNavConfigureResponse.responseCode === "200") {
       yield put(
         onPostNavConfigureSuccess({
           postData: postNavConfigureResponse.response,

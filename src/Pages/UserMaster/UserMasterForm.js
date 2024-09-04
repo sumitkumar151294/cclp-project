@@ -144,7 +144,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     }
   }, [userMasterData]);
   useEffect(() => {
-    if (getUserMaster?.post_status_code === "201") {
+    if (getUserMaster?.post_status_code === "200") {
       toast.success(getUserMaster.postMessage);
       dispatch(onGetuserMaster());
       dispatch(onPostuserMasterReset());

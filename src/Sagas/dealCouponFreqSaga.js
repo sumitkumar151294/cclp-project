@@ -31,7 +31,7 @@ function* GetDealCouponFreq() {
 function* PostDealCouponFreq({ payload }) {
   try {
     const postDealCouponFreqResponse = yield call(callDealCouponFreqPostApi, payload);
-    if (postDealCouponFreqResponse.responseCode === "201") {
+    if (postDealCouponFreqResponse.responseCode === "200") {
       yield put(
         onPostDealCouponFreqSuccess({
           postData: postDealCouponFreqResponse.response,
@@ -56,7 +56,7 @@ function* PostDealCouponFreq({ payload }) {
 function* UpdateDealCouponFreq({ payload }) {
   try {
     const updateDealCouponFreqResponse = yield call(callDealCouponFreqUpdateApi, payload);
-    if (updateDealCouponFreqResponse.responseCode === "201") {
+    if (updateDealCouponFreqResponse.responseCode === "200") {
       yield put(
         onUpdateDealCouponFreqSuccess({
           status_code: updateDealCouponFreqResponse.responseCode,

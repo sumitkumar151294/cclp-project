@@ -29,7 +29,7 @@ function* GetUserRole({ payload }) {
 function* PostUserRole({ payload }) {
   try {
     const postUserRoleResponse = yield call(callUserRolePostApi, payload);
-    if (postUserRoleResponse.responseCode === "201") {
+    if (postUserRoleResponse.responseCode === "200") {
       yield put(
         onPostUserRoleSuccess({
           postData: postUserRoleResponse.response,

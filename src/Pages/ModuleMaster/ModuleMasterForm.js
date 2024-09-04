@@ -147,7 +147,7 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
     { value: false, label: "Non Active" },
   ];
   useEffect(() => {
-    if (uploadImage?.post_status_code === "201") {
+    if (uploadImage?.post_status_code === "200") {
       const moduleData = {
         icon: getwebImage,
         clientId: moduleMasterData ? values.clientId : clientId,
@@ -169,7 +169,7 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
 
   // to handle toast notifications based on module master status
   useEffect(() => {
-    if (moduleData?.status_code === "201") {
+    if (moduleData?.status_code === "200") {
       toast.success(moduleData.message);
       dispatch(onPostuploadImageReset());
       dispatch(onPostModuleReset());

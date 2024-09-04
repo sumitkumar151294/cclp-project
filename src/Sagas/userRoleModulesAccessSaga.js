@@ -31,7 +31,7 @@ function* PostUserRoleModuleAccess({ payload }) {
 
     const statusCode = postUserRoleModuleAccessResponse.responseCode;
 
-    if (statusCode === "201") {
+    if (statusCode === "200") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
           status_code: statusCode,

@@ -30,7 +30,7 @@ function* GetDeal() {
 function* PostDeal({ payload }) {
   try {
     const postDealResponse = yield call(callDealPostApi, payload);
-    if (postDealResponse.responseCode === "201") {
+    if (postDealResponse.responseCode === "200") {
       yield put(
         onPostDealSuccess({
           postData: postDealResponse.response,

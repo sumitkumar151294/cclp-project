@@ -161,15 +161,21 @@ const SectionContentMasterList = () => {
                           <table className="table header-border table-responsive-sm">
                             <thead>
                               <tr>
-                                {sectionType !== "UnlockStaticCard" && (
+                                {sectionType !== "Promo Message" && (
                                   <th>{mobile_image}</th>
                                 )}
-                                {sectionType !== "UnlockStaticCard" && (
+                                {sectionType !== "Promo Message" && (
                                   <th>{web_image}</th>
-                                )}
+                                )}        {(sectionType === "Promo Message" || sectionType === "CustomerBenefits") &&   <th>{text_label}</th>}
                                 <th>{display_order}</th>
-                                {sectionType !== "UnlockStaticCard" && (
+                                {sectionType !== "Promo Message" && (
                                   <th>{call_to_action}</th>
+                                )}
+                                      {sectionType !== "Promo Message" && (
+                                  <th>{"Text"}</th>
+                                )}
+                                       {sectionType=== "Customer Menu" && (
+                                  <th>{"Text Element"}</th>
                                 )}
                                 {sectionType === "SpecialSection" && (
                                   <th>{content_source_type}</th>
@@ -177,7 +183,7 @@ const SectionContentMasterList = () => {
                                 {sectionType === "SpecialSection" && (
                                   <th>{segment_label}</th>
                                 )}
-                                {(sectionType === "UnlockStaticCard" || sectionType === "CustomerBenefits") &&   <th>{text_label}</th>}
+
                                 <th>{"Status"}</th>
                                 {sectionType === "SpecialSection" && (
                                   <th>{"Over-Ride Data"}</th>
@@ -190,7 +196,7 @@ const SectionContentMasterList = () => {
                                 ?.slice(startIndex, endIndex)
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
-                                         {sectionType !== "UnlockStaticCard" && (
+                                         {sectionType !== "Promo Message" && (
                                       <td>
                                         {sectionContent.mobImage ? (
                                           <img
@@ -203,7 +209,7 @@ const SectionContentMasterList = () => {
                                         )}
                                       </td>
                                     )}
-                                    {sectionType !== "UnlockStaticCard" && (
+                                    {sectionType !== "Promo Message" && (
                                       <td>
                                         {sectionContent.webImage ? (
                                           <img
@@ -218,9 +224,9 @@ const SectionContentMasterList = () => {
                                     )}
 
 
-                                    <td>{sectionContent.displayOrder}</td>
 
-                                    {sectionType !== "UnlockStaticCard" && (
+
+                                    {sectionType !== "Promo Message" && (
                                       <td>
                                         {sectionContent.cta.substring(0, 18) +
                                           "..."}
@@ -240,7 +246,7 @@ const SectionContentMasterList = () => {
                                         )}
                                       </td>
                                     )}
-                                   {(sectionType === "UnlockStaticCard" || sectionType === "CustomerBenefits") &&      <td>
+                                   {true&&      <td>
                                       {sectionContent?.text ? (
                                         sectionContent?.text.substring(0, 10) +
                                         "..."
@@ -248,6 +254,10 @@ const SectionContentMasterList = () => {
                                         <span className="hyphen">-</span>
                                       )}
                                     </td>}
+                                    {(sectionType ==="Customer Menu") &&      <td>
+                                      {sectionContent?.textElementFlag ? "Yes" : "No"}
+                                    </td>}
+                                    <td>{sectionContent.displayOrder}</td>
                                     <td>
                                       <span
                                         className={

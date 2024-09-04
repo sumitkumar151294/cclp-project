@@ -61,7 +61,7 @@ export const userRoleModuleAccessSlice = createSlice({
     },
 
     onPostUserRoleModuleAccessSuccess: (state, { payload }) => {
-      const { data = [], message = "", status_code = "201" } = payload;
+      const { data = [], message = "", status_code = "200" } = payload;
       return {
         ...state,
         data: data,

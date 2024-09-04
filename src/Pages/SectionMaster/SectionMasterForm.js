@@ -198,7 +198,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
 
   useEffect(() => {
     if (
-      sectionMasterData?.post_status_code === "201" ||
+      sectionMasterData?.post_status_code === "200" ||
       sectionMasterData?.post_status_code === "204" ||
       sectionMasterData?.post_status_code === "205"
     ) {

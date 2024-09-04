@@ -112,7 +112,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
   }, [metaData]);
   // to handle toast notifications based on post and update status code
   useEffect(() => {
-    if (getMetaData?.post_status_code === "201" || getMetaData?.post_status_code === "205") {
+    if (getMetaData?.post_status_code === "200" || getMetaData?.post_status_code === "205") {
       toast.success(getMetaData.postMessage);
       setMetaData(null);
       dispatch(onGetMetaData());

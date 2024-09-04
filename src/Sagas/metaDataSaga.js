@@ -29,7 +29,7 @@ function* GetMetaData() {
 function* PostMetaData({ payload }) {
   try {
     const postMetaDataResponse = yield call(callMetaDataPostApi, payload);
-    if (postMetaDataResponse.errorCode === "201" || postMetaDataResponse.errorCode === "205") {
+    if (postMetaDataResponse.errorCode === "200" || postMetaDataResponse.errorCode === "205") {
       yield put(
         onPostMetaDataSuccess({
           postData: postMetaDataResponse.response,

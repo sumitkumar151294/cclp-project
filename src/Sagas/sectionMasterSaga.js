@@ -31,7 +31,7 @@ function* GetsectionMaster() {
 function* PostsectionMaster({ payload }) {
   try {
     const postsectionMasterResponse = yield call(callsectionMasterPostApi, payload);
-    if (postsectionMasterResponse.responseCode === "201") {
+    if (postsectionMasterResponse.responseCode === "200") {
       yield put(
         onPostsectionMasterSuccess({
           postData: postsectionMasterResponse.response,
@@ -56,7 +56,7 @@ function* PostsectionMaster({ payload }) {
 function* UpdatesectionMaster({ payload }) {
   try {
     const updatesectionMasterResponse = yield call(callsectionMasterUpdateApi, payload);
-    if (updatesectionMasterResponse.responseCode === "201") {
+    if (updatesectionMasterResponse.responseCode === "200") {
       yield put(
         onUpdatesectionMasterSuccess({
           status_code: updatesectionMasterResponse.responseCode,

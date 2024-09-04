@@ -26,12 +26,17 @@ import {
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
 import { onUpdatesectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
+import { ClientId } from "../../Utility/Utility";
 
 const contentSourceTypeOptions = [
   { value: "Deal", label: "Deal" },
   { value: "Product", label: "Product" },
 ];
-const SectionContentMasterForm = ({ sectionContentData }) => {
+const SectionContentMasterForm = ({
+  sectionContentData,
+  setSectionContentData,
+}) => {
+  const clientId = ClientId();
   const [mobile, setMobile] = useState(false);
   const [web, setWeb] = useState(false);
   const section_content_master = GetTranslationData(
@@ -112,10 +117,15 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     "display_must_number"
   );
   // options for status
+  const TextstatusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   const statusOptions = [
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
   ];
+
   const getmobImage = useSelector(
     (state) => state.uploadReducer?.postuploadMobileImageData
   );
@@ -129,6 +139,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
   const typeID = location?.state?.sectionId;
   const sectionLimit = location?.state?.sectionLimit;
   // get labels and placeholder from translation
+
   const [intialValue, setInitialValue] = useState({
     webImage: "",
     mobImage: "",
@@ -141,24 +152,21 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     textbgColor: "",
     enabled: "",
     isOverrideMetadata: "",
+    textForElements: "",
+    textElementStatus: "",
+    textForElements:""
+
   });
   const [showFeild, setShowFields] = useState("");
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   // to validate form using Yup schema
   const validations = Yup.object().shape({
-    mobImage: Yup.lazy(() =>
-      type !== "UnlockStaticCard"
-        ? Yup.string().required(mobile_image_required)
-        : Yup.string()
-    ),
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, display_must_number),
+      .matches(/^[0-9]+$/, ("Display Order Must be a number")),
     text: Yup.lazy(() =>
-      type === "UnlockStaticCard" ||
-      type === "SpecialBannerOne" ||
-      type === "SupportingBannerBottom"
+      type === "Promo Message"
         ? Yup.string()
             .required(text_required)
             .test(
@@ -168,7 +176,23 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
             )
         : Yup.string().nullable()
     ),
+    mobImage: Yup.lazy(() =>
+      type !== "Promo Message"
+        ? Yup.string().required("Mobile Image is required")
+        : Yup.string().nullable()
+    ),
+    cta: Yup.lazy(() =>
+      type !== "Promo Message"
+        ? Yup.string().required("Call to Action is required")
+        : Yup.string().nullable()
+    ),
+    text: Yup.lazy(() =>
+   (   type !== "Promo Banner" && type !== "Supporting Banner")
+        ? Yup.string().required("Text is required")
+        : Yup.string().nullable()
+    ),
     enabled: Yup.string().required(status_required),
+
   });
 
   const displayLimit =
@@ -177,6 +201,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     )?.length === sectionLimit;
 
   const handleSubmit = (values) => {
+    debugger
     if (!values) return;
     const { webImage, mobImage } = values;
     if (typeof webImage === "object" || typeof mobImage === "object") {
@@ -204,21 +229,25 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
-        linkedMasterId: [2],
+        linkedMasterId: values?.linkedMasterId || null,
         segmentId: values?.segmentId || null,
         isOverrideMetadata:
           typeof values?.isOverrideMetadata === "boolean"
             ? values.isOverrideMetadata
             : values?.isOverrideMetadata === "true",
+        textElementStatus:
+          typeof values?.textElementStatus === "boolean"
+            ? values.textElementStatus
+            : values?.textElementStatus === "true",
+            displayOrder:parseInt(values?.displayOrder),
         ...(sectionContentData && { id: values.id }),
       };
 
       dispatch(onPostSectionContentMaster(sectionContentMasteData));
     }
-
     setValues(values);
   };
-
+console.log(validations)
   useEffect(() => {
     if (uploadImage) {
       const sectionContentMasteData = {
@@ -236,27 +265,32 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
         clientId: 6,
         deleted: false,
         sectionMasterId: typeID,
-        linkedMasterId: [4],
+        linkedMasterId: values?.linkedMasterId || null,
         isOverrideMetadata:
           typeof values?.isOverrideMetadata === "boolean"
             ? values.isOverrideMetadata
             : values?.isOverrideMetadata === "true",
         segmentId: values?.segmentId || null,
+        textElementStatus:
+          typeof values?.textElementStatus === "boolean"
+            ? values.textElementStatus
+            : values?.textElementStatus === "true",
+            displayOrder:parseInt(values?.displayOrder),
         ...(sectionContentData && { id: values?.id }),
       };
       let shouldDispatch = false;
       if (
-        uploadImage.postMobileStatusCode === "201" &&
-        uploadImage.post_status_code === "201"
+        uploadImage.postMobileStatusCode === "200" &&
+        uploadImage.post_status_code === "200"
       ) {
         sectionContentMasteData.webImage = getwebImage;
         sectionContentMasteData.mobImage = getmobImage;
         shouldDispatch = true;
-      } else if (uploadImage.post_status_code === "201" && web) {
+      } else if (uploadImage.post_status_code === "200" && web) {
         sectionContentMasteData.webImage = getwebImage;
         shouldDispatch = true;
         setWeb(false);
-      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+      } else if (uploadImage.postMobileStatusCode === "200" && mobile) {
         sectionContentMasteData.mobImage = getmobImage;
         shouldDispatch = true;
         setMobile(false);
@@ -278,13 +312,15 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
     }
   };
   useEffect(() => {
-    if (getSectiontContentMasterData?.post_status_code === "201") {
+    if (getSectiontContentMasterData?.post_status_code === "200") {
+      setSectionContentData(null);
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
     } else if (getSectiontContentMasterData?.post_status_code === "205") {
+      setSectionContentData(null);
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
@@ -310,6 +346,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
       setInitialValue(sectionContentData);
     }
   }, [sectionContentData]);
+  console.log(validations);
   return (
     <>
       <ScrollToTop />
@@ -347,8 +384,11 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                     >
                       {({ errors, touched, values, setFieldValue }) => (
                         <Form>
+
                           <div className="row">
-                            {type !== "UnlockStaticCard" && (
+                             {console.log(errors,"errors")}
+                            {console.log(type)}
+                            {type !== "Promo Message" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
                                   Upload Image For Phone
@@ -378,7 +418,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {type !== "UnlockStaticCard" && (
+                            {type !== "Promo Message" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{upload_image_for_web}</label>
                                 <input
@@ -405,7 +445,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {type === "SpecialSection" && (
+                            {type === "Special Section" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{content_source_type}</label>
 
@@ -431,8 +471,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {(showFeild === "Deal" ||
-                              showFeild === "Product") && (
+                            {values?.contentSourceType && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   {showFeild === "Deal" ? "Deal" : "Product"}
@@ -459,22 +498,22 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {showFeild === "Product" &&
-                              values.linkedMasterId && (
-                                <div className="col-lg-4 py-4">
-                                  <div className="form-check  mb-2 padd mt-2">
-                                    <Field
-                                      type="checkbox"
-                                      className="form-check-input"
-                                      name="isOverrideMetadata"
-                                    />
-                                    <label className="px-1">
-                                      {"is Over-ride MetaData"}
-                                    </label>
-                                  </div>
+                            {values?.contentSourceType && (
+                              <div className="col-lg-4 py-4">
+                                <div className="form-check  mb-2 padd mt-2">
+                                  <Field
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="isOverrideMetadata"
+                                  />
+                                  <label className="px-1">
+                                    {"is Over-ride MetaData"}
+                                  </label>
                                 </div>
-                              )}
-                            {type === "SpecialSection" && (
+                              </div>
+                            )}
+                            {(type === "Special Section" ||
+                              type === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{segment_label}</label>
                                 <Field
@@ -497,7 +536,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
-                            {type === "UnlockStaticCard" && (
+                            {type === "Promo Message" && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
                                 <Field
@@ -539,7 +578,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 className="error-message"
                               />
                             </div>
-                            {type !== "UnlockStaticCard" && (
+                            {type !== "Promo Message" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{call_to_action}</label>
                                 <Field
@@ -552,11 +591,21 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   }`}
                                   placeholder={call_to_action_placeholder}
                                 />
+
+                                <ErrorMessage
+                                  name="cta"
+                                  component="div"
+                                  className="error-message"
+                                />
                               </div>
                             )}
-                            {type === "CustomerBenefits" && (
+                            {(type !== "Promo Message" && type!=="Promo Banner") && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>{text_label}</label>
+                                {type !== "Promo Message" &&
+                                  type !== "Supporting Banner" && (
+                                    <span className="text-danger">*</span>
+                                  )}
                                 <Field
                                   type="text"
                                   name="text"
@@ -567,15 +616,30 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                   }`}
                                   placeholder={text_placeholder}
                                 />
+                                <ErrorMessage
+                                  name="text"
+                                  component="div"
+                                  className="error-message"
+                                />
                               </div>
                             )}
-                            {type === "CustomerBenefits" && (
+                            {type === "Customer Menu" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
                                     type="checkbox"
                                     className="form-check-input"
                                     name="textElementFlag"
+                                    onChange={({ target: { checked } }) => {
+                                      setFieldValue("textElementFlag", checked);
+                                      if (!checked) {
+                                        setFieldValue("textColor", "");
+                                        setFieldValue("textbgColor", "");
+                                        setFieldValue("textIcon", "");
+                                        setFieldValue("textElementStatus", "");
+                                        setFieldValue("textForElements", "");
+                                      }
+                                    }}
                                   />
                                   <label className="px-1">
                                     {"Text Element Required"}
@@ -583,7 +647,49 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 </div>
                               </div>
                             )}
+ {values?.textElementFlag && (
+                            <div className="col-sm-4 form-group mb-4">
+                              <label>{"Text For Element"}</label>
+                              <span className="text-danger">*</span>
+                              <Field
+                                type="text"
+                                name="textForElements"
+                                className={`form-control ${
+                                  errors.textForElements &&
+                                  touched.textForElements
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={text_placeholder}
+                              />
+                              <ErrorMessage
+                                name="textForElements"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>)}
+                            {values?.textElementFlag && (
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{"Text Element Status"}</label>
+                              <span className="text-danger">*</span>
 
+                              <Field
+                                name="textElementStatus"
+                                component={Dropdown}
+                                options={TextstatusOptions}
+                                className={`form-select ${
+                                  errors.textElementStatus &&
+                                  touched.textElementStatus
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="textElementStatus"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>)}
                             {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Font Color"}</label>
@@ -612,6 +718,7 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
+
                             {values?.textElementFlag && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
@@ -642,11 +749,56 @@ const SectionContentMasterForm = ({ sectionContentData }) => {
                                 />
                               </div>
                             )}
+          {values?.textElementFlag && (
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>{"Text For Element"}</label>&{" "}
+                              <span className="text-danger">*</span>
+                              <Field
+                                type="text"
+                                name="textForElements"
+                                className={`form-control ${
+                                  errors.textForElements &&
+                                  touched.textForElements
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                placeholder={text_placeholder}
+                              />
+                              <ErrorMessage
+                                name="textForElements"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>)}
+                            {values?.textElementFlag && (
+                            <div className="col-sm-4 form-group mb-2 ">
+                              <label>{"Text Element Status"}</label>
+                              <span className="text-danger">*</span>
+
+                              <Field
+                                name="textElementStatus"
+                                component={Dropdown}
+                                options={TextstatusOptions}
+                                className={`form-select ${
+                                  errors.textElementStatus &&
+                                  touched.textElementStatus
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="textElementStatus"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>)}
+
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field
+
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}

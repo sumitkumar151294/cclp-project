@@ -29,7 +29,7 @@ function* Module() {
 function* PostModule({ payload }) {
   try {
     const postModuleResponse = yield call(callPostModuleApi, payload);
-    if (postModuleResponse.responseCode === "201") {
+    if (postModuleResponse.responseCode === "200") {
       yield put(
         onPostModuleSuccess({
           postData: postModuleResponse.response,

@@ -50,7 +50,7 @@ export const metaDataSlice = createSlice({
     },
 
     onPostMetaDataSuccess: (state, { payload }) => {
-      const { postData = [], message = "", status_code="201" } = payload;
+      const { postData = [], message = "", status_code="200" } = payload;
       return {
         ...state,
         isPostLoading: false,
@@ -89,7 +89,7 @@ export const metaDataSlice = createSlice({
     },
 
     onUpdateMetaDataSuccess: (state, { payload }) => {
-      const {data=[], message = "", status_code = "201" } = payload;
+      const {data=[], message = "", status_code = "200" } = payload;
       return {
         ...state,
         isUpdateLoading: false,

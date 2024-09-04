@@ -230,17 +230,17 @@ const DealForm = ({ dealsData }) => {
       };
       let shouldDispatch = false;
       if (
-        uploadImage.postMobileStatusCode === "201" &&
-        uploadImage.post_status_code === "201"
+        uploadImage.postMobileStatusCode === "200" &&
+        uploadImage.post_status_code === "200"
       ) {
         dealDataInfo.webImage = getwebImage;
         dealDataInfo.mobImage = getmobImage;
         shouldDispatch = true;
-      } else if (uploadImage.post_status_code === "201" && web) {
+      } else if (uploadImage.post_status_code === "200" && web) {
         dealDataInfo.webImage = getwebImage;
         shouldDispatch = true;
         setWeb(false);
-      } else if (uploadImage.postMobileStatusCode === "201" && mobile) {
+      } else if (uploadImage.postMobileStatusCode === "200" && mobile) {
         dealDataInfo.mobImage = getmobImage;
         shouldDispatch = true;
         setMobile(false);
@@ -252,7 +252,7 @@ const DealForm = ({ dealsData }) => {
   }, [uploadImage, values, web, mobile]);
 
   useEffect(() => {
-    if (dealData?.post_status_code === "201") {
+    if (dealData?.post_status_code === "200") {
       toast.success(dealData?.postMessage);
       dispatch(onGetDeal());
       dispatch(onPostuploadImageReset());

@@ -7,7 +7,7 @@ function* PostuploadImage({ payload }) {
 
   try {
     const postuploadImageResponse = yield call(calluploadApi, payload);
-    if (postuploadImageResponse.responseCode === "201") {
+    if (postuploadImageResponse.responseCode === "200") {
       yield put(
         onPostuploadImageSuccess({
           postData: postuploadImageResponse.response,
@@ -33,7 +33,7 @@ function* PostuploadMobileImage({ payload }) {
 
   try {
     const postuploadMobileImageResponse = yield call(calluploadApi, payload);
-    if (postuploadMobileImageResponse.responseCode === "201") {
+    if (postuploadMobileImageResponse.responseCode === "200") {
       yield put(
         onPostuploadMobileImageSuccess({
           postData: postuploadMobileImageResponse.response,

@@ -29,7 +29,7 @@ function* GetDealCategory() {
 function* PostDealCategory({ payload }) {
   try {
     const postDealCategoryResponse = yield call(callDealCategoryPostApi, payload);
-    if (postDealCategoryResponse.responseCode === "201") {
+    if (postDealCategoryResponse.responseCode === "200") {
       yield put(
         onPostDealCategorySuccess({
           postData: postDealCategoryResponse.response,
@@ -54,7 +54,7 @@ function* PostDealCategory({ payload }) {
 function* UpdateDealCategory({ payload }) {
   try {
     const updateDealCategoryResponse = yield call(callDealCategoryUpdateApi, payload);
-    if (updateDealCategoryResponse.responseCode === "201") {
+    if (updateDealCategoryResponse.responseCode === "200") {
       yield put(
         onUpdateDealCategorySuccess({
           status_code: updateDealCategoryResponse.responseCode,

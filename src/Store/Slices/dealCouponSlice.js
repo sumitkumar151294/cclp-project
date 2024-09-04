@@ -49,7 +49,7 @@ export const dealCouponSlice = createSlice({
     },
 
     onPostDealCouponSuccess: (state, { payload }) => {
-      const { postData = [], message = "", status_code="201" } = payload;
+      const { postData = [], message = "", status_code="200" } = payload;
       return {
         ...state,
         isPostLoading: false,
@@ -87,7 +87,7 @@ export const dealCouponSlice = createSlice({
     },
 
     onUpdateDealCouponSuccess: (state, { payload }) => {
-      const {data=[], message = "", status_code = "201" } = payload;
+      const {data=[], message = "", status_code = "200" } = payload;
       return {
         ...state,
         isUpdateLoading: false,
