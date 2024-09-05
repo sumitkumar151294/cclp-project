@@ -123,7 +123,7 @@ const DealCouponCodeList = () => {
   const endIndex = startIndex + rowsPerPage;
   // to show snackbar based on delete status code
   useEffect(() => {
-    if (getDealCouponCode?.update_status_code == "204") {
+    if (getDealCouponCode?.update_status_code == "200") {
       toast.success(getDealCouponCode?.updateMessage);
       dispatch(onGetDealCouponCode());
       dispatch(onUpdateDealCouponCodeReset());

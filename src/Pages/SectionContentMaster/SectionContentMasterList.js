@@ -85,11 +85,11 @@ const SectionContentMasterList = () => {
     }
   };
   useEffect(() => {
-    if (getSectionContenMasterData?.update_status_code === "204") {
+    if (getSectionContenMasterData?.update_status_code === "200") {
       toast.success(getSectionContenMasterData?.updateMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onUpdateSectionContentMasterReset());
-    } else if (getSectionContenMasterData?.post_status_code === "205") {
+    } else if (getSectionContenMasterData?.post_status_code === "200") {
       setSectionContentData({
         webImage: "",
         mobImage: "",
@@ -149,7 +149,7 @@ const SectionContentMasterList = () => {
                 {getSectionContenMasterData?.isgetLoading ||
                 getSectionContenMasterData?.isUpdateLoading ||
                 (getSectionContenMasterData?.isUpdateLoading &&
-                  getSectionContenMasterData?.update_status_code == "205") ? (
+                  getSectionContenMasterData?.update_status_code == "200") ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>

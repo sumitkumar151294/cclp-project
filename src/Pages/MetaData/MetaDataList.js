@@ -89,7 +89,7 @@ const MetaDataList = () => {
   }, []);
   // to show the snackbar based on status_code
   useEffect(() => {
-    if (getMetaData?.update_status_code == "204") {
+    if (getMetaData?.update_status_code == "200") {
       toast.success(getMetaData?.updateMessage);
       dispatch(onGetMetaData());
       dispatch(onUpdateMetaDataReset());

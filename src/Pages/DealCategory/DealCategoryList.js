@@ -60,11 +60,11 @@ const DealCategoryList = () => {
     }
   };
   useEffect(() => {
-    if (dealCategoryData?.update_status_code == "204") {
+    if (dealCategoryData?.update_status_code == "200") {
       toast.success(dealCategoryData?.updateMessage);
       dispatch(onGetDealCategory());
       dispatch(onUpdateDealCategoryReset());
-    } else if (dealCategoryData?.update_status_code == "205") {
+    } else if (dealCategoryData?.update_status_code == "200") {
       setdealCategory("")
       toast.success(dealCategoryData?.updateMessage);
       dispatch(onGetDealCategory());

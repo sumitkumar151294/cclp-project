@@ -379,8 +379,7 @@ const DealCouponForm = ({
 
   useEffect(() => {
     const statusCode = dealCouponData?.post_status_code;
-
-    if (statusCode === "200" || statusCode === "205") {
+    if (statusCode === "200") {
       const dealCouponFrequncyData = {
         ...values,
         deleted: false,
@@ -399,7 +398,7 @@ const DealCouponForm = ({
       };
 
       dispatch(onPostDealCouponFreq(dealCouponFrequncyData));
-    } else if (statusCode && statusCode !== "204") {
+    } else if (statusCode && statusCode !== "200") {
       toast.error(dealCouponData?.postMessage);
       dispatch(onPostDealCouponReset());
     }
@@ -408,11 +407,7 @@ const DealCouponForm = ({
   useEffect(() => {
     if (getDealCouponFeqData) {
       const { post_status_code, postMessage } = getDealCouponFeqData;
-      if (
-        post_status_code === "200" ||
-        post_status_code === "205" ||
-        post_status_code === "204"
-      ) {
+      if (post_status_code === "200") {
         setInitialValue(reset);
         setDealCouponDatas(null);
         setEdit(false);

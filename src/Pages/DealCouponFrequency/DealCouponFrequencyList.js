@@ -121,7 +121,7 @@ const DealCouponFrequencyList = () => {
   }, []);
   // to show snackbar based on delete status code
   useEffect(() => {
-    if (getDealCouponFeq?.update_status_code == "204") {
+    if (getDealCouponFeq?.update_status_code == "200") {
       toast.success(getDealCouponFeq?.updateMessage);
       dispatch(onGetDealCouponFreq());
       dispatch(onUpdateDealCouponFreqReset());

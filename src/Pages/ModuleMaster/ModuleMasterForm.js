@@ -18,9 +18,14 @@ import {
 } from "../../Store/Slices/uploadSlice";
 import { ClientId, UserId } from "../../Utility/Utility";
 
-const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdit }) => {
-  const clientId=ClientId();
-  const userId=UserId();
+const ModuleMasterForm = ({
+  moduleMasterData,
+  setModuleMasterData,
+  edit,
+  setEdit,
+}) => {
+  const clientId = ClientId();
+  const userId = UserId();
   const [isSubmit, setIsSubmit] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
@@ -101,7 +106,8 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
   const validations = yup.object({
     name: yup.string().required(modul_name_required),
     routePath: yup.string().required(Module_route_path_required),
-    displayOrder: yup.string()
+    displayOrder: yup
+      .string()
       .required(display_order_required)
       .matches(/^[0-9]+$/, display_must_number),
     enabled: yup.string().required(status_required), // Validate as boolean
@@ -130,9 +136,9 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
             typeof values?.enabled === "boolean"
               ? values.enabled
               : values?.enabled === "true",
-              createdby:moduleMasterData ? 0 :userId,
-              updatedby:moduleMasterData ? userId :0,
-          clientId: moduleMasterData ? values.clientId : clientId ,
+          createdBy: moduleMasterData ? 0 : userId,
+          updatedBy: moduleMasterData ? userId : 0,
+          clientId: clientId,
           ...(moduleMasterData && { id: values.id }),
         };
         dispatch(onPostModule(moduleData));
@@ -155,15 +161,15 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
         name: values?.name,
         routePath: values?.routePath,
         displayOrder: values?.displayOrder,
-        createdby:moduleMasterData ? 0 :userId,
-        updatedby:moduleMasterData ? userId :0,
+        createdby: moduleMasterData ? 0 : userId,
+        updatedby: moduleMasterData ? userId : 0,
         ...(moduleMasterData && { id: values.id }),
       };
       dispatch(onPostModule(moduleData));
       setInitialValue(reset);
-    }else if(uploadImage?.post_status_code){
-      toast.error(uploadImage?.postMessage)
-      dispatch(onPostuploadImageReset())
+    } else if (uploadImage?.post_status_code) {
+      toast.error(uploadImage?.postMessage);
+      dispatch(onPostuploadImageReset());
     }
   }, [uploadImage, values]);
 
@@ -174,15 +180,15 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
       dispatch(onPostuploadImageReset());
       dispatch(onPostModuleReset());
       dispatch(onGetModule());
-    } else if (moduleData?.status_code === "205") {
-      setModuleMasterData(null)
+    } else if (moduleData?.status_code === "200") {
+      setModuleMasterData(null);
       toast.success(moduleData?.message);
       dispatch(onPostuploadImageReset());
       dispatch(onGetModule());
       dispatch(onPostModuleReset());
       setInitialValue(reset);
-    }else if (moduleData?.status_code === "204") {
-      setEdit(false)
+    } else if (moduleData?.status_code === "200") {
+      setEdit(false);
       toast.success(moduleData?.message);
       dispatch(onPostuploadImageReset());
       dispatch(onGetModule());
@@ -212,138 +218,143 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
                 <h4 className="card-title">{module_master}</h4>
               </div>
               <div className="card-body">
-                {((!edit && moduleData?.postLoading) | uploadImage?.isPostLoading) ? (
+                {(!edit && moduleData?.postLoading) |
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="containers-fluid">
-                  <Formik
-                    initialValues={initialValue}
-                    validationSchema={validations}
-                    onSubmit={handleSubmit}
-                    enableReinitialize={true}
-                  >
-                    {({ errors, touched, setFieldValue }) => (
-                      <Form>
-                        <div className="row">
-                          <div className="col-sm-4 form-group mb-4">
-                            <label htmlFor="name-f">
-                              {module_name}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <Field
-                              type="text"
-                              className={`form-control ${
-                                errors.name && touched.name ? "is-invalid" : ""
-                              }`}
-                              name="name"
-                              placeholder={module_name_placeholder}
-                            />
-                            <ErrorMessage
-                              name="name"
-                              component="div"
-                              className="error-message"
+                    <Formik
+                      initialValues={initialValue}
+                      validationSchema={validations}
+                      onSubmit={handleSubmit}
+                      enableReinitialize={true}
+                    >
+                      {({ errors, touched, setFieldValue }) => (
+                        <Form>
+                          <div className="row">
+                            <div className="col-sm-4 form-group mb-4">
+                              <label htmlFor="name-f">
+                                {module_name}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                className={`form-control ${
+                                  errors.name && touched.name
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                name="name"
+                                placeholder={module_name_placeholder}
+                              />
+                              <ErrorMessage
+                                name="name"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="routePath">
+                                {module_route_path}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                className={`form-control ${
+                                  errors.routePath && touched.routePath
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                name="routePath"
+                                id="routePath"
+                                placeholder={route_path_placeholder}
+                              />
+                              <ErrorMessage
+                                name="routePath"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="icon">
+                                {module_icon}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <input
+                                accept=".jpg, .jpeg, .png, .webp .svg"
+                                type="file"
+                                name="icon"
+                                className={`form-control ${
+                                  errors.icon && touched.icon
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onChange={(event) =>
+                                  handleImageChange(setFieldValue, event)
+                                }
+                              />
+                              <ErrorMessage
+                                name="icon"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label htmlFor="displayOrder">
+                                {display_order}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                type="text"
+                                name="displayOrder"
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                id="displayOrder"
+                                placeholder={displayOrderPlaceholder}
+                              />
+                              <ErrorMessage
+                                name="displayOrder"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                            <div className="col-sm-4 form-group mb-2">
+                              <label>
+                                {status_label}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
+                          </div>
+                          <div className="col-sm-4 mb-4">
+                            <Button
+                              text={moduleMasterData ? update : submit}
+                              end_icon="fa fa-arrow-right"
+                              className="btn btn-primary pad-aa mt-2"
                             />
                           </div>
-                          <div className="col-sm-4 form-group mb-2">
-                            <label htmlFor="routePath">
-                              {module_route_path}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <Field
-                              type="text"
-                              className={`form-control ${
-                                errors.routePath && touched.routePath
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                              name="routePath"
-                              id="routePath"
-                              placeholder={route_path_placeholder}
-                            />
-                            <ErrorMessage
-                              name="routePath"
-                              component="div"
-                              className="error-message"
-                            />
-                          </div>
-                          <div className="col-sm-4 form-group mb-2">
-                            <label htmlFor="icon">
-                              {module_icon}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <input
-                            accept=".jpg, .jpeg, .png, .webp .svg"
-                              type="file"
-                              name="icon"
-                              className={`form-control ${
-                                errors.icon && touched.icon ? "is-invalid" : ""
-                              }`}
-                              onChange={(event) =>
-                                handleImageChange(setFieldValue, event)
-                              }
-                            />
-                            <ErrorMessage
-                              name="icon"
-                              component="div"
-                              className="error-message"
-                            />
-                          </div>
-                          <div className="col-sm-4 form-group mb-2">
-                            <label htmlFor="displayOrder">
-                              {display_order}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <Field
-                              type="text"
-                              name="displayOrder"
-                              className={`form-control ${
-                                errors.displayOrder && touched.displayOrder
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                              id="displayOrder"
-                              placeholder={displayOrderPlaceholder}
-                            />
-                            <ErrorMessage
-                              name="displayOrder"
-                              component="div"
-                              className="error-message"
-                            />
-                          </div>
-                          <div className="col-sm-4 form-group mb-2">
-                            <label>
-                              {status_label}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <Field
-                              name="enabled"
-                              component={Dropdown}
-                              options={statusOptions}
-                              className={`form-select ${
-                                errors.enabled && touched.enabled
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                            />
-                            <ErrorMessage
-                              name="enabled"
-                              component="div"
-                              className="error-message"
-                            />
-                          </div>
-                        </div>
-                        <div className="col-sm-4 mb-4">
-                          <Button
-                            text={moduleMasterData ? update : submit}
-                            end_icon="fa fa-arrow-right"
-                            className="btn btn-primary pad-aa mt-2"
-                          />
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
+                        </Form>
+                      )}
+                    </Formik>
                   </div>
                 )}
               </div>

@@ -55,7 +55,7 @@ function* PostDealCouponCode({ payload }) {
 function* UpdateDealCouponCode({ payload }) {
   try {
     const updateDealCouponCodeResponse = yield call(callDealCouponCodeUpdateApi, payload);
-    if (updateDealCouponCodeResponse.responseCode === "205") {
+    if (updateDealCouponCodeResponse.responseCode === "200") {
       yield put(
         onUpdateDealCouponCodeSuccess({
           status_code: updateDealCouponCodeResponse.responseCode,

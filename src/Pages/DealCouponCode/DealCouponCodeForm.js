@@ -175,8 +175,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
   // to handle navigation and toast notifications based on post and update status_code
   useEffect(() => {
     if (
-      dealCouponCodeData?.post_status_code === "200" ||
-      dealCouponCodeData?.post_status_code === "205"
+      dealCouponCodeData?.post_status_code === "200"
     ) {
       toast.success(dealCouponCodeData?.postMessage);
       setDealCouponCode(null);

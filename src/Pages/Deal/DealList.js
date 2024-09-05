@@ -92,11 +92,11 @@ const DealList = () => {
     }
   };
   useEffect(() => {
-    if (getDealData?.update_status_code == "204") {
+    if (getDealData?.update_status_code == "200") {
       toast.success(getDealData?.updateMessage);
       dispatch(onGetDeal());
       dispatch(onUpdateDealReset());
-    } else if (getDealData?.update_status_code == "205") {
+    } else if (getDealData?.update_status_code == "200") {
       toast.success(getDealData?.updateMessage);
       dispatch(onGetDeal());
       dispatch(onUpdateDealReset());

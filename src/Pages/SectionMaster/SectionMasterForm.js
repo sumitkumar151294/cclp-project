@@ -14,7 +14,7 @@ import {
 } from "../../Store/Slices/sectionMasterSlice";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
-import { ClientId } from "../../Utility/Utility";
+import { ClientId, UserId } from "../../Utility/Utility";
 
 const statusOptions = [
   { value: true, label: "Active" },
@@ -23,6 +23,7 @@ const statusOptions = [
 
 const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
   const clientId = ClientId();
+  const userId= UserId();
   const [showFields, setShowFields] = useState("");
   const sectionMasterData = useSelector((state) => state.sectionMasterReducer);
   const [intialValue, setInitialValue] = useState({
@@ -184,7 +185,9 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
         displayLimit: values.displayLimit,
         claimLimit: values?.claimLimit || null,
         segmentId: values?.segmentId || null,
-        noOfPointsToClaim: parseInt(values?.noOfPointsToClaim) || null,
+        segmentId: values?.segmentId || null,
+        createdBy: sectionData ? 0 : userId ,
+        updatedBy: sectionData ? userId : 0 ,
         pointToClaim:
           typeof values?.pointToClaim === "boolean"
             ? values.pointToClaim
@@ -198,9 +201,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
 
   useEffect(() => {
     if (
-      sectionMasterData?.post_status_code === "200" ||
-      sectionMasterData?.post_status_code === "204" ||
-      sectionMasterData?.post_status_code === "205"
+      sectionMasterData?.post_status_code === "200"
     ) {
       setEdit(false)
       setSectionData(null);

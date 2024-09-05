@@ -88,7 +88,7 @@ export const dealSlice = createSlice({
     },
 
     onUpdateDealSuccess: (state, { payload }) => {
-      const {data=[], message = "", status_code = "205" } = payload;
+      const {data=[], message = "", status_code = "200" } = payload;
       return {
         ...state,
         isUpdateLoading: false,

@@ -38,7 +38,7 @@ function* PostUserRoleModuleAccess({ payload }) {
           message: postUserRoleModuleAccessResponse.responseMessage,
         })
       );
-    } else if (statusCode === "205") {
+    } else if (statusCode === "200") {
       yield put(
         onPostUserRoleModuleAccessSuccess({
           status_code: statusCode,

@@ -319,7 +319,7 @@ console.log(validations)
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostSectionContentMasterReset());
-    } else if (getSectiontContentMasterData?.post_status_code === "205") {
+    } else if (getSectiontContentMasterData?.post_status_code === "200") {
       setSectionContentData(null);
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());

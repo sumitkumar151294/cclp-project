@@ -258,7 +258,7 @@ const DealForm = ({ dealsData }) => {
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealReset());
-    } else if (dealData?.post_status_code === "205") {
+    } else if (dealData?.post_status_code === "200") {
       toast.success(dealData?.postMessage);
       dispatch(onGetDeal());
       dispatch(onPostuploadImageReset());

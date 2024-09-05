@@ -160,7 +160,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   }, [navData]);
   // to handle navigation and toast notifications based on post and update status
   useEffect(() => {
-    if (navConfigureData?.post_status_code === "200" || navConfigureData?.post_status_code === "205"
+    if (navConfigureData?.post_status_code === "200"
      ) {
       setNavData(null);
       setEdit(false)
@@ -168,7 +168,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
       dispatch(onPostuploadImageReset())
       dispatch(onGetNavConfigure());
       dispatch(onPostNavConfigureReset());
-    }else if (navConfigureData?.post_status_code === "204"
+    }else if (navConfigureData?.post_status_code === "200"
     ) {
      setNavData(null);
      setEdit(false);

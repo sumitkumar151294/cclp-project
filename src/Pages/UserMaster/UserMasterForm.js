@@ -11,12 +11,19 @@ import { onGetUserRole } from "../../Store/Slices/userRoleSlice";
 import {
   onGetuserMaster,
   onPostuserMaster,
-  onPostuserMasterReset
+  onPostuserMasterReset,
 } from "../../Store/Slices/userMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
-const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
-
+import { ClientId, UserId } from "../../Utility/Utility";
+const UserMasterForm = ({
+  userMasterData,
+  setuserMasterData,
+  edit,
+  setEdit,
+}) => {
+  const clientId = ClientId();
+  const userId = UserId();
   const dispatch = useDispatch();
   const roleList = useSelector((state) => state?.userRoleReducer);
   const getUserMaster = useSelector((state) => state?.userMasterReducer);
@@ -27,9 +34,9 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     mobile: "",
     email: "",
     roleId: "",
-    enabled:""
+    enabled: "",
   });
-  // to get labels and placeholders from translation 
+  // to get labels and placeholders from translation
   const user_master_label = GetTranslationData(
     "UIMasterAdmin",
     "user_master_label"
@@ -80,7 +87,10 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     "mobile_number_placeholder"
   );
   const email_label = GetTranslationData("UIMasterAdmin", "email_label");
-  const phone_number_must_number = GetTranslationData("UIMasterAdmin", "phone_number_must_number");
+  const phone_number_must_number = GetTranslationData(
+    "UIMasterAdmin",
+    "phone_number_must_number"
+  );
   const mobile_number_label = GetTranslationData(
     "UIMasterAdmin",
     "mobile_number_label"
@@ -88,9 +98,15 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
   const role_name = GetTranslationData("UIMasterAdmin", "role_name");
   const submit = GetTranslationData("UIMasterAdmin", "submit");
   const update = GetTranslationData("UIMasterAdmin", "update");
-  const please_select_one_role = GetTranslationData("UIMasterAdmin", "please_select_one_role");
+  const please_select_one_role = GetTranslationData(
+    "UIMasterAdmin",
+    "please_select_one_role"
+  );
   const status_label = GetTranslationData("UIMasterAdmin", "status_label");
-  const status_required = GetTranslationData("UIMasterAdmin", "status_required");
+  const status_required = GetTranslationData(
+    "UIMasterAdmin",
+    "status_required"
+  );
   // options for status
   const statusOptions = [
     { value: true, label: "Active" },
@@ -101,10 +117,10 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     firstName: Yup.string().required(first_name_required),
     lastName: Yup.string().required(last_name_required),
     mobile: Yup.string()
-    .matches(/^\d+$/,phone_number_must_number) // Ensures only digits are allowed
-    .min(10, mobil_10_digit_required) // Ensures a minimum of 10 digits
-    .max(10, mobil_10_digit_required) // Ensures a maximum of 10 digits
-    .required(mobile_number_required), // Ensures the field is required
+      .matches(/^\d+$/, phone_number_must_number) // Ensures only digits are allowed
+      .min(10, mobil_10_digit_required) // Ensures a minimum of 10 digits
+      .max(10, mobil_10_digit_required) // Ensures a maximum of 10 digits
+      .required(mobile_number_required), // Ensures the field is required
 
     email: Yup.string().email(email_invalid_format).required(email_required),
     roleId: Yup.string().required(please_select_one_role),
@@ -115,13 +131,19 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     if (values) {
       const userMasterdata = {
         ...values,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+        enabled:
+          typeof values?.enabled === "boolean"
+            ? values.enabled
+            : values?.enabled === "true",
         deleted: false,
-        clientId: 6,
-        mobile:typeof values?.mobile === "string"
-        ? values.mobile
-        : JSON.stringify(values?.mobile),
- 
+        createdBy: userMasterData ? 0 : userId,
+        updatedBy: userMasterData ? userId : 0,
+        clientId: clientId,
+        mobile:
+          typeof values?.mobile === "string"
+            ? values.mobile
+            : JSON.stringify(values?.mobile),
+
         ...(userMasterData && { id: userMasterData.id }),
       };
       dispatch(onPostuserMaster(userMasterdata));
@@ -132,15 +154,16 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
         email: "",
         roleId: "",
         enabled: "",
-      })
-      setSelectedRole("")
+      });
+      setSelectedRole("");
     }
   };
+  // to prefilled form 
   useEffect(() => {
     if (userMasterData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(userMasterData);
-      setSelectedRole(userMasterData.roleId)
+      setSelectedRole(userMasterData.roleId);
     }
   }, [userMasterData]);
   useEffect(() => {
@@ -148,23 +171,23 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
       toast.success(getUserMaster.postMessage);
       dispatch(onGetuserMaster());
       dispatch(onPostuserMasterReset());
-    }else if (getUserMaster?.post_status_code==="204") {
-      setEdit(false)
-      setuserMasterData(null)
+    } else if (getUserMaster?.post_status_code === "200") {
+      setEdit(false);
+      setuserMasterData(null);
       toast.success(getUserMaster.postMessage);
-      dispatch(onGetuserMaster())
-      dispatch(onPostuserMasterReset());}
-       else if (getUserMaster?.post_status_code==="205") {
-      setuserMasterData(null)
-      toast.success(getUserMaster.postMessage);
-      dispatch(onGetuserMaster())
+      dispatch(onGetuserMaster());
       dispatch(onPostuserMasterReset());
-    }else if (getUserMaster?.post_status_code) {
+    } else if (getUserMaster?.post_status_code === "200") {
+      setuserMasterData(null);
+      toast.success(getUserMaster.postMessage);
+      dispatch(onGetuserMaster());
+      dispatch(onPostuserMasterReset());
+    } else if (getUserMaster?.post_status_code) {
       toast.error(getUserMaster.postMessage);
-      dispatch(onPostuserMasterReset())
+      dispatch(onPostuserMasterReset());
     }
   }, [getUserMaster]);
-
+  // to fetch data on mount
   useEffect(() => {
     dispatch(onGetUserRole());
   }, []);
@@ -179,8 +202,8 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
                 <h4 className="card-title">{user_master_label}</h4>
               </div>
               <div className="card-body">
-
-                {(roleList?.isgetLoading  || (!edit && getUserMaster?.isPostLoading))? (
+                {roleList?.isgetLoading ||
+                (!edit && getUserMaster?.isPostLoading) ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -286,10 +309,11 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"
@@ -302,39 +326,41 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
                               <div className="row ml-4">
                                 {Array.isArray(roleList?.userRoleData) &&
                                   roleList?.userRoleData?.map(
-                                    (userRole, index) => (
-                                      (userRole?.enabled) && (
-                                      <div
-                                        key={index}
-                                        className="form-check mt-2 col-lg-3"
-                                      >
-                                        <Field
-                                          type="checkbox"
-                                          className="form-check-input"
-                                          name="roleId"
-                                          value={userRole.id}
-                                          checked={selectedRole === userRole.id}
-                                          onChange={() => {
-                                            const newSelectedRole =
-                                              selectedRole === userRole.id
-                                                ? ""
-                                                : userRole.id;
-                                            setSelectedRole(newSelectedRole);
-                                            setFieldValue(
-                                              "roleId",
-                                              newSelectedRole
-                                            );
-                                          }}
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor={userRole.id}
+                                    (userRole, index) =>
+                                      userRole?.enabled && (
+                                        <div
+                                          key={index}
+                                          className="form-check mt-2 col-lg-3"
                                         >
-                                          {userRole.name}
-                                        </label>
-                                      </div>
-                                    )
-                                  ))}
+                                          <Field
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            name="roleId"
+                                            value={userRole.id}
+                                            checked={
+                                              selectedRole === userRole.id
+                                            }
+                                            onChange={() => {
+                                              const newSelectedRole =
+                                                selectedRole === userRole.id
+                                                  ? ""
+                                                  : userRole.id;
+                                              setSelectedRole(newSelectedRole);
+                                              setFieldValue(
+                                                "roleId",
+                                                newSelectedRole
+                                              );
+                                            }}
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor={userRole.id}
+                                          >
+                                            {userRole.name}
+                                          </label>
+                                        </div>
+                                      )
+                                  )}
                               </div>
 
                               <ErrorMessage
@@ -342,15 +368,14 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
                                 component="div"
                                 className="error-message"
                               />
-
                             </div>
                             <div className="col-sm-4 mb-4">
-                                <Button
-                                  text={userMasterData ? update : submit}
-                                  end_icon="fa fa-arrow-right"
-                                  className="btn btn-primary  pad-aa mt-2"
-                                />
-                              </div>
+                              <Button
+                                text={userMasterData ? update : submit}
+                                end_icon="fa fa-arrow-right"
+                                className="btn btn-primary  pad-aa mt-2"
+                              />
+                            </div>
                           </div>
                         </Form>
                       )}

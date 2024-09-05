@@ -201,7 +201,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
       dispatch(onPostuploadMobileImageReset());
       dispatch(onPostDealCategoryReset());
       dispatch(onGetDealCategory());
-    } else if (dealCategoryData?.post_status_code === "205") {
+    } else if (dealCategoryData?.post_status_code === "200") {
       toast.success(dealCategoryData.postMessage);
       setInitialValue(resetState);
       dispatch(onPostuploadImageReset());

@@ -10,7 +10,6 @@ import {
   onGetUserRole,
   onPostUserRole,
   onPostUserRoleReset,
-
 } from "../../Store/Slices/userRoleSlice";
 import {
   onGetUserRoleModuleAccess,
@@ -18,9 +17,17 @@ import {
   onPostUserRoleModuleAccessReset,
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { ClientId, UserId } from "../../Utility/Utility";
 
-const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted  }) => {
+const RoleMasterForm = ({
+  roleMasterData,
+  setRoleMasterData,
+  deleted,
+  setDeleted,
+}) => {
   const dispatch = useDispatch();
+  const clientId = ClientId();
+  const userId = UserId();
   const [selectAll, setSelectAll] = useState(false);
   const [value, setValues] = useState([]);
   // to get labels and placeholder from translation
@@ -70,7 +77,7 @@ const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted
   const [intialValue, setInitialValue] = useState({
     name: "",
     description: "",
-    enabled:"",
+    enabled: "",
     modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
@@ -88,7 +95,7 @@ const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted
   const reset = {
     name: "",
     description: "",
-    enabled:"",
+    enabled: "",
     modules: modulesData.reduce(
       (acc, module) => ({
         ...acc,
@@ -114,11 +121,11 @@ const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted
     }),
   });
 
-// options for status
-const statusOptions = [
-  { value: true, label: "Active" },
-  { value: false, label: "Non Active" },
-];
+  // options for status
+  const statusOptions = [
+    { value: true, label: "Active" },
+    { value: false, label: "Non Active" },
+  ];
   //to handle form submit
   const handleSubmit = (values) => {
     if (!values) return;
@@ -126,8 +133,13 @@ const statusOptions = [
       deleted: false,
       name: values?.name,
       description: values?.description || "",
-      clientId: 6,
-        enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
+      createdBy: roleMasterData ? 0 : userId,
+      updatedBy: roleMasterData ? userId : 0,
+      clientId: roleMasterData ? values?.clientId : clientId,
+      enabled:
+        typeof values?.enabled === "boolean"
+          ? values.enabled
+          : values?.enabled === "true",
       ...(roleMasterData && { id: roleMasterData.id }),
     };
     setValues(values.modules);
@@ -137,8 +149,7 @@ const statusOptions = [
 
   useEffect(() => {
     if (
-      getUserRoleData?.status_code === "200" ||
-      getUserRoleData?.status_code === "205"
+      getUserRoleData?.status_code === "200"
     ) {
       const modulesData = Object.keys(value).map((moduleId) => {
         const { id, view, add, edit } = value[moduleId];
@@ -153,7 +164,7 @@ const statusOptions = [
           clientId: 6,
         };
       });
-      setInitialValue(reset)
+      setInitialValue(reset);
       dispatch(onPostUserRoleModuleAccess(modulesData));
       dispatch(onPostUserRoleReset());
     } else if (getUserModalAccessData?.status_code === "200") {
@@ -161,15 +172,15 @@ const statusOptions = [
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleModuleAccessReset());
-    }else if (getUserRoleData?.status_code === "204") {
-      setDeleted(false)
+    } else if (getUserRoleData?.status_code === "200") {
+      setDeleted(false);
       toast.success(getUserRoleData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
-      dispatch(onPostUserRoleReset())
+      dispatch(onPostUserRoleReset());
       dispatch(onPostUserRoleModuleAccessReset());
-    } else if (getUserModalAccessData?.status_code === "205") {
-      setRoleMasterData(null)
+    } else if (getUserModalAccessData?.status_code === "200") {
+      setRoleMasterData(null);
       toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
@@ -195,7 +206,7 @@ const statusOptions = [
       }, {});
 
       setInitialValue({
-      ...roleMasterData,
+        ...roleMasterData,
         modules: initialModules,
       });
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -213,9 +224,9 @@ const statusOptions = [
                 <h4 className="card-title">{roleMasterLabel}</h4>
               </div>
               <div className="card-body">
-                {(!deleted && getUserRoleData?.isPostLoading||
+                {(!deleted && getUserRoleData?.isPostLoading) ||
                 getmoduleLoading?.isLoading ||
-                getUserModalAccessData?.isLoading) ? (
+                getUserModalAccessData?.isLoading ? (
                   <div style={{ height: "500px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -264,26 +275,26 @@ const statusOptions = [
                               />
                             </div>
                             <div className="col-sm-4 form-group mb-2">
-                            <label>
-                              {status_label}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <Field
-                              name="enabled"
-                              component={Dropdown}
-                              options={statusOptions}
-                              className={`form-select ${
-                                errors.enabled && touched.enabled
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                            />
-                            <ErrorMessage
-                              name="enabled"
-                              component="div"
-                              className="error-message"
-                            />
-                          </div>
+                              <label>
+                                {status_label}
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                name="enabled"
+                                component={Dropdown}
+                                options={statusOptions}
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
+                              <ErrorMessage
+                                name="enabled"
+                                component="div"
+                                className="error-message"
+                              />
+                            </div>
                             <div className="row top-top mt-2">
                               <div className="col-lg-3">
                                 <div className="form-check mb-2 padd">
