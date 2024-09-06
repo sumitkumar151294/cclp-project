@@ -20,12 +20,13 @@ import {
   onPostSectionContentMasterReset,
 } from "../../Store/Slices/sectionContentMasterSlice";
 import {
+  onPostuploadElementImage,
+  onPostuploadElementImageReset,
   onPostuploadImage,
   onPostuploadImageReset,
   onPostuploadMobileImage,
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
-import { onUpdatesectionMasterReset } from "../../Store/Slices/sectionMasterSlice";
 import { ClientId } from "../../Utility/Utility";
 
 const contentSourceTypeOptions = [
@@ -97,12 +98,15 @@ const SectionContentMasterForm = ({
   );
   const location = useLocation();
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-  const dealOptions = getDealData
-    ?.filter((dealData) => dealData?.dealType === "UnlockDeals")
-    .map((dealCategory) => ({
-      value: dealCategory.id,
-      label: dealCategory.name,
-    }));
+
+
+  const getCustomerSegemtData = useSelector(
+    (state) => state.customerSegmentReducer?.data
+  );
+  const SegmentOptions = getCustomerSegemtData?.map((segementData) => ({
+    value: segementData.id,
+    label: segementData?.name?.substring(0, 18) + "...",
+  }));
   const getSectiontContentMasterData = useSelector(
     (state) => state?.sectionContentMasterReducer
   );
@@ -132,6 +136,9 @@ const SectionContentMasterForm = ({
   const getwebImage = useSelector(
     (state) => state.uploadReducer?.postuploadImageData
   );
+  const getTextIcon = useSelector(
+    (state) => state.uploadReducer?.postuploadElementImageData
+  );
   const uploadImage = useSelector((state) => state.uploadReducer);
 
   const type = location?.state?.sectionType;
@@ -152,28 +159,53 @@ const SectionContentMasterForm = ({
     textbgColor: "",
     enabled: "",
     isOverrideMetadata: "",
-    textForElements: "",
+    textForElement: "",
     textElementStatus: "",
-    textForElements:""
-
+    textForElement: "",
+    textIcon: "",
   });
+  const reset = {
+    webImage: "",
+    mobImage: "",
+    cta: "",
+    displayOrder: "",
+    text: "",
+    contentSourceType: "",
+    segmentId: "",
+    textElementFlag: "",
+    textbgColor: "",
+    enabled: "",
+    isOverrideMetadata: "",
+    textForElement: "",
+    textElementStatus: "",
+    textForElement: "",
+    textIcon: "",
+  };
+  const dealOptions = (type === "Unlock Deals"
+    ? getDealData?.filter(deal => deal?.dealType === "UnlockDeals")
+    : getDealData
+  )?.map(deal => ({
+    value: deal.id,
+    label: deal.name
+  }));
   const [showFeild, setShowFields] = useState("");
+  const [textIcon, setTextIcon] = useState(false);
   const [values, setValues] = useState(null);
   const dispatch = useDispatch();
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     displayOrder: Yup.string()
       .required(display_order_required)
-      .matches(/^[0-9]+$/, ("Display Order Must be a number")),
+      .matches(/^[0-9]+$/, "Display Order Must be a number"),
     text: Yup.lazy(() =>
       type === "Promo Message"
         ? Yup.string()
-            .required(text_required)
-            .test(
-              "no-empty-html",
-              text_required,
-              (value) => value !== "<p><br></p>"
-            )
+          .required(text_required)
+          .test(
+            "no-empty-html",
+            text_required,
+            (value) => value !== "<p><br></p>"
+          )
         : Yup.string().nullable()
     ),
     mobImage: Yup.lazy(() =>
@@ -187,12 +219,25 @@ const SectionContentMasterForm = ({
         : Yup.string().nullable()
     ),
     text: Yup.lazy(() =>
-   (   type !== "Promo Banner" && type !== "Supporting Banner")
+      type !== "Promo Banner" &&
+        type !== "Supporting Banner" &&
+        type !== "Special Cart Banner" &&
+        type !== "Special Section" &&
+        type !== "Unlock Deals"
         ? Yup.string().required("Text is required")
         : Yup.string().nullable()
     ),
     enabled: Yup.string().required(status_required),
-
+    segmentId: Yup.lazy(() =>
+      type === "Unlock Deals" || type === "Special Section"
+        ? Yup.string().required("Segment is required")
+        : Yup.string().nullable()
+    ),
+    contentSourceType: Yup.lazy(() =>
+      type === "Unlock Deals" || type === "Special Section"
+        ? Yup.string().required("Segment is required")
+        : Yup.string().nullable()
+    ),
   });
 
   const displayLimit =
@@ -201,17 +246,29 @@ const SectionContentMasterForm = ({
     )?.length === sectionLimit;
 
   const handleSubmit = (values) => {
-    debugger
     if (!values) return;
-    const { webImage, mobImage } = values;
-    if (typeof webImage === "object" || typeof mobImage === "object") {
+    const { webImage, mobImage, textIcon } = values;
+
+    // Check if any of the image fields are of type "object"
+    if (
+      typeof webImage === "object" ||
+      typeof mobImage === "object" ||
+      typeof textIcon === "object"
+    ) {
       if (typeof webImage === "object") {
         dispatch(onPostuploadImage(webImage));
         if (typeof mobImage !== "object") setWeb(true);
       }
+
       if (typeof mobImage === "object") {
         dispatch(onPostuploadMobileImage(mobImage));
         if (typeof webImage !== "object") setMobile(true);
+      }
+
+      if (typeof textIcon === "object") {
+        dispatch(onPostuploadElementImage(textIcon));
+        if (typeof webImage !== "object" || typeof mobImage !== "object")
+          setTextIcon(true);
       }
     } else {
       const sectionContentMasteData = {
@@ -226,7 +283,8 @@ const SectionContentMasterForm = ({
             : values?.textElementFlag === "true",
         webImage: webImage || "",
         mobImage: mobImage || "",
-        clientId: 6,
+        textIcon: textIcon || "", // Add textIcon to the payload
+        clientId: clientId,
         deleted: false,
         sectionMasterId: typeID,
         linkedMasterId: values?.linkedMasterId || null,
@@ -239,7 +297,7 @@ const SectionContentMasterForm = ({
           typeof values?.textElementStatus === "boolean"
             ? values.textElementStatus
             : values?.textElementStatus === "true",
-            displayOrder:parseInt(values?.displayOrder),
+        displayOrder: parseInt(values?.displayOrder),
         ...(sectionContentData && { id: values.id }),
       };
 
@@ -247,7 +305,7 @@ const SectionContentMasterForm = ({
     }
     setValues(values);
   };
-console.log(validations)
+
   useEffect(() => {
     if (uploadImage) {
       const sectionContentMasteData = {
@@ -262,7 +320,8 @@ console.log(validations)
             : values?.textElementFlag === "true",
         webImage: sectionContentData?.webImage,
         mobImage: sectionContentData?.mobImage,
-        clientId: 6,
+        textIcon: sectionContentData?.textIcon, // Add textIcon to the data
+        clientId: clientId,
         deleted: false,
         sectionMasterId: typeID,
         linkedMasterId: values?.linkedMasterId || null,
@@ -275,16 +334,19 @@ console.log(validations)
           typeof values?.textElementStatus === "boolean"
             ? values.textElementStatus
             : values?.textElementStatus === "true",
-            displayOrder:parseInt(values?.displayOrder),
+        displayOrder: parseInt(values?.displayOrder),
         ...(sectionContentData && { id: values?.id }),
       };
+
       let shouldDispatch = false;
       if (
         uploadImage.postMobileStatusCode === "200" &&
-        uploadImage.post_status_code === "200"
+        uploadImage.post_status_code === "200" &&
+        uploadImage.postElementStatusCode === "200"
       ) {
         sectionContentMasteData.webImage = getwebImage;
         sectionContentMasteData.mobImage = getmobImage;
+        sectionContentMasteData.textIcon = getTextIcon;
         shouldDispatch = true;
       } else if (uploadImage.post_status_code === "200" && web) {
         sectionContentMasteData.webImage = getwebImage;
@@ -294,38 +356,45 @@ console.log(validations)
         sectionContentMasteData.mobImage = getmobImage;
         shouldDispatch = true;
         setMobile(false);
+      } else if (uploadImage.postElementStatusCode === "200" && textIcon) {
+        sectionContentMasteData.textIcon = getTextIcon;
+        shouldDispatch = true;
+        setTextIcon(false);
       }
+
       if (shouldDispatch) {
         dispatch(onPostSectionContentMaster(sectionContentMasteData));
       }
+    } else if (uploadImage) {
+      dispatch(onPostuploadImageReset());
+      dispatch(onPostuploadMobileImageReset());
+      dispatch(onPostuploadElementImageReset());
     }
-  }, [uploadImage, values, web, mobile]);
+  }, [uploadImage, values, web, mobile, textIcon]);
 
-  const handleImageChange = (setFieldValue, event, isMobile) => {
+  const handleImageChange = (setFieldValue, event, fieldType) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    if (isMobile) {
+
+    if (fieldType === "mobile") {
       setFieldValue("mobImage", formData);
-    } else {
+    } else if (fieldType === "web") {
       setFieldValue("webImage", formData);
+    } else if (fieldType === "textIcon") {
+      setFieldValue("textIcon", formData);
     }
   };
+
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "200") {
+      setInitialValue(reset);
       setSectionContentData(null);
       toast.success(getSectiontContentMasterData?.postMessage);
       dispatch(onGetSectionContentMaster());
       dispatch(onPostuploadImageReset());
       dispatch(onPostuploadMobileImageReset());
-      dispatch(onPostSectionContentMasterReset());
-    } else if (getSectiontContentMasterData?.post_status_code === "205") {
-      setSectionContentData(null);
-      toast.success(getSectiontContentMasterData?.postMessage);
-      dispatch(onGetSectionContentMaster());
-      dispatch(onPostuploadImageReset());
-      dispatch(onPostuploadMobileImageReset());
-      dispatch(onUpdatesectionMasterReset());
+      dispatch(onPostuploadElementImageReset());
       dispatch(onPostSectionContentMasterReset());
     } else if (getSectiontContentMasterData?.post_status_code) {
       toast.error(getSectiontContentMasterData?.postMessage);
@@ -339,14 +408,18 @@ console.log(validations)
       toast.error(max_display_limit_reached);
     }
   }, []);
-
+  useEffect(() => {
+    dispatch(onPostuploadImageReset());
+    dispatch(onPostuploadMobileImageReset());
+    dispatch(onPostSectionContentMasterReset());
+  }, []);
   useEffect(() => {
     if (sectionContentData) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setInitialValue(sectionContentData);
+      setShowFields(sectionContentData?.contentSourceType);
     }
   }, [sectionContentData]);
-  console.log(validations);
   return (
     <>
       <ScrollToTop />
@@ -368,9 +441,9 @@ console.log(validations)
               </div>
               <div className="card-body">
                 {getSectiontContentMasterData?.isPostLoading ||
-                (sectionContentData &&
-                  getSectiontContentMasterData?.isUpdateLoading) ||
-                uploadImage?.isPostLoading ? (
+                  (sectionContentData &&
+                    getSectiontContentMasterData?.isUpdateLoading) ||
+                  uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -384,10 +457,7 @@ console.log(validations)
                     >
                       {({ errors, touched, values, setFieldValue }) => (
                         <Form>
-
                           <div className="row">
-                             {console.log(errors,"errors")}
-                            {console.log(type)}
                             {type !== "Promo Message" && (
                               <div className="col-sm-4 form-group mb-2">
                                 <label>
@@ -398,16 +468,15 @@ console.log(validations)
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="mobImage"
-                                  className={`form-control ${
-                                    errors.mobImage && touched.mobImage
+                                  className={`form-control ${errors.mobImage && touched.mobImage
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
                                       event,
-                                      true
+                                      "mobile"
                                     )
                                   }
                                 />
@@ -425,16 +494,15 @@ console.log(validations)
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="webImage"
-                                  className={`form-control ${
-                                    errors.webImage && touched.webImage
+                                  className={`form-control ${errors.webImage && touched.webImage
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
                                       event,
-                                      false
+                                      "web"
                                     )
                                   }
                                 />
@@ -445,22 +513,24 @@ console.log(validations)
                                 />
                               </div>
                             )}
-                            {type === "Special Section" && (
+                            {(type === "Special Section" || type === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{content_source_type}</label>
-
+                               { (type === "Special Section" || type === "Unlock Deals") &&     <span className="text-danger">*</span>}
                                 <Field
                                   name="contentSourceType"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${
-                                    errors.contentSourceType &&
-                                    touched.contentSourceType
+                                  className={`form-select ${errors.contentSourceType &&
+                                      touched.contentSourceType
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   onChange={(e) => {
                                     setShowFields(e);
+                                    if (e === "Deal") {
+                                      setFieldValue("linkedMasterId", false);
+                                    }
                                   }}
                                 />
 
@@ -480,16 +550,15 @@ console.log(validations)
                                   name="linkedMasterId"
                                   component={Dropdown}
                                   options={
-                                    showFeild === "Deal"
+                                    (showFeild === "Deal")
                                       ? dealOptions
                                       : dealOptions
                                   }
-                                  className={`form-select ${
-                                    errors.linkedMasterId &&
-                                    touched.linkedMasterId
+                                  className={`form-select ${errors.linkedMasterId &&
+                                      touched.linkedMasterId
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                 />
                                 <ErrorMessage
                                   name="sectionType"
@@ -498,7 +567,7 @@ console.log(validations)
                                 />
                               </div>
                             )}
-                            {values?.contentSourceType && (
+                            {values?.contentSourceType === "Product" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
@@ -514,39 +583,39 @@ console.log(validations)
                             )}
                             {(type === "Special Section" ||
                               type === "Unlock Deals") && (
-                              <div className="col-sm-4 form-group mb-4">
-                                <label>{segment_label}</label>
-                                <Field
-                                  name="segmentId"
-                                  component={Dropdown}
-                                  className={`form-select ${
-                                    errors.segmentId && touched.segmentId
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  onChange={(e) => {
-                                    setShowFields(e);
-                                  }}
-                                />
+                                <div className="col-sm-4 form-group mb-4">
+                                  <label>{segment_label}</label>
+                                  {(type === "Special Section" ||
+                                    type === "Unlock Deals") && (
+                                      <span className="text-danger">*</span>
+                                    )}
+                                  <Field
+                                    name="segmentId"
+                                    component={Dropdown}
+                                    options={SegmentOptions}
+                                    className={`form-select ${errors.segmentId && touched.segmentId
+                                        ? "is-invalid"
+                                        : ""
+                                      }`}
+                                  />
 
-                                <ErrorMessage
-                                  name="segmentId"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
+                                  <ErrorMessage
+                                    name="segmentId"
+                                    component="div"
+                                    className="error-message"
+                                  />
+                                </div>
+                              )}
                             {type === "Promo Message" && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
-                                  className={`form-control ${
-                                    errors.text && touched.text
+                                  className={`form-control ${errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   placeholder={displayLimitPlaceholder}
                                 />
                                 <ErrorMessage
@@ -564,11 +633,10 @@ console.log(validations)
                               <Field
                                 type="text"
                                 name="displayOrder"
-                                className={`form-control ${
-                                  errors.displayOrder && touched.displayOrder
+                                className={`form-control ${errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                                 placeholder={displayOrderPlaceholder}
                               />
 
@@ -584,11 +652,10 @@ console.log(validations)
                                 <Field
                                   type="text"
                                   name="cta"
-                                  className={`form-control ${
-                                    errors.cta && touched.cta
+                                  className={`form-control ${errors.cta && touched.cta
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   placeholder={call_to_action_placeholder}
                                 />
 
@@ -599,30 +666,37 @@ console.log(validations)
                                 />
                               </div>
                             )}
-                            {(type !== "Promo Message" && type!=="Promo Banner") && (
-                              <div className="col-sm-4 form-group mb-2">
-                                <label>{text_label}</label>
-                                {type !== "Promo Message" &&
-                                  type !== "Supporting Banner" && (
-                                    <span className="text-danger">*</span>
-                                  )}
-                                <Field
-                                  type="text"
-                                  name="text"
-                                  className={`form-control ${
-                                    errors.text && touched.text
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                  placeholder={text_placeholder}
-                                />
-                                <ErrorMessage
-                                  name="text"
-                                  component="div"
-                                  className="error-message"
-                                />
-                              </div>
-                            )}
+                            {type !== "Promo Message" &&
+                              type !== "Promo Banner" &&
+                              type !== "Special Cart Banner" &&
+                              type !== "Supporting Banner" &&
+                              type !== "Special Section" &&
+                              type !== "Unlock Deals" && (
+                                <div className="col-sm-4 form-group mb-2">
+                                  <label>{text_label}</label>
+                                  {type !== "Promo Message" &&
+                                    type !== "Supporting Banner" &&
+                                    type !== "Special Cart Banner" &&
+                                    type !== "Special Section" &&
+                                    type !== "Unlock Deals" && (
+                                      <span className="text-danger">*</span>
+                                    )}
+                                  <Field
+                                    type="text"
+                                    name="text"
+                                    className={`form-control ${errors.text && touched.text
+                                        ? "is-invalid"
+                                        : ""
+                                      }`}
+                                    placeholder={text_placeholder}
+                                  />
+                                  <ErrorMessage
+                                    name="text"
+                                    component="div"
+                                    className="error-message"
+                                  />
+                                </div>
+                              )}
                             {type === "Customer Menu" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
@@ -637,7 +711,7 @@ console.log(validations)
                                         setFieldValue("textbgColor", "");
                                         setFieldValue("textIcon", "");
                                         setFieldValue("textElementStatus", "");
-                                        setFieldValue("textForElements", "");
+                                        setFieldValue("textForElement", "");
                                       }
                                     }}
                                   />
@@ -647,60 +721,38 @@ console.log(validations)
                                 </div>
                               </div>
                             )}
- {values?.textElementFlag && (
-                            <div className="col-sm-4 form-group mb-4">
-                              <label>{"Text For Element"}</label>
-                              <span className="text-danger">*</span>
-                              <Field
-                                type="text"
-                                name="textForElements"
-                                className={`form-control ${
-                                  errors.textForElements &&
-                                  touched.textForElements
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={text_placeholder}
-                              />
-                              <ErrorMessage
-                                name="textForElements"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>)}
                             {values?.textElementFlag && (
-                            <div className="col-sm-4 form-group mb-2 ">
-                              <label>{"Text Element Status"}</label>
-                              <span className="text-danger">*</span>
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>{"Text For Element"}</label>
+                                <span className="text-danger">*</span>
+                                <Field
+                                  type="text"
+                                  name="textForElement"
+                                  className={`form-control ${errors.textForElement &&
+                                      touched.textForElement
+                                      ? "is-invalid"
+                                      : ""
+                                    }`}
+                                  placeholder={text_placeholder}
+                                />
+                                <ErrorMessage
+                                  name="textForElement"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
 
-                              <Field
-                                name="textElementStatus"
-                                component={Dropdown}
-                                options={TextstatusOptions}
-                                className={`form-select ${
-                                  errors.textElementStatus &&
-                                  touched.textElementStatus
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="textElementStatus"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>)}
                             {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Font Color"}</label>
                                 <Field
                                   type="color"
                                   name="textColor"
-                                  className={`form-control ${
-                                    errors.text && touched.text
+                                  className={`form-control ${errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                 />
                               </div>
                             )}
@@ -710,17 +762,16 @@ console.log(validations)
                                 <Field
                                   type="color"
                                   name="textbgColor"
-                                  className={`form-control ${
-                                    errors.text && touched.text
+                                  className={`form-control ${errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                 />
                               </div>
                             )}
 
                             {values?.textElementFlag && (
-                              <div className="col-sm-4 form-group mb-2">
+                              <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   Upload Image For Text Element
                                   <span className="text-danger">*</span>
@@ -729,16 +780,15 @@ console.log(validations)
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="textIcon"
-                                  className={`form-control ${
-                                    errors.textIcon && touched.textIcon
+                                  className={`form-control ${errors.textIcon && touched.textIcon
                                       ? "is-invalid"
                                       : ""
-                                  }`}
+                                    }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
                                       event,
-                                      true
+                                      "textIcon"
                                     )
                                   }
                                 />
@@ -749,64 +799,42 @@ console.log(validations)
                                 />
                               </div>
                             )}
-          {values?.textElementFlag && (
-                            <div className="col-sm-4 form-group mb-2">
-                              <label>{"Text For Element"}</label>&{" "}
-                              <span className="text-danger">*</span>
-                              <Field
-                                type="text"
-                                name="textForElements"
-                                className={`form-control ${
-                                  errors.textForElements &&
-                                  touched.textForElements
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                                placeholder={text_placeholder}
-                              />
-                              <ErrorMessage
-                                name="textForElements"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>)}
-                            {values?.textElementFlag && (
-                            <div className="col-sm-4 form-group mb-2 ">
-                              <label>{"Text Element Status"}</label>
-                              <span className="text-danger">*</span>
 
-                              <Field
-                                name="textElementStatus"
-                                component={Dropdown}
-                                options={TextstatusOptions}
-                                className={`form-select ${
-                                  errors.textElementStatus &&
-                                  touched.textElementStatus
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-                              <ErrorMessage
-                                name="textElementStatus"
-                                component="div"
-                                className="error-message"
-                              />
-                            </div>)}
+                            {values?.textElementFlag && (
+                              <div className="col-sm-4 form-group mb-2 ">
+                                <label>{"Text Element Status"}</label>
+                                <span className="text-danger">*</span>
+
+                                <Field
+                                  name="textElementStatus"
+                                  component={Dropdown}
+                                  options={TextstatusOptions}
+                                  className={`form-select ${errors.textElementStatus &&
+                                      touched.textElementStatus
+                                      ? "is-invalid"
+                                      : ""
+                                    }`}
+                                />
+                                <ErrorMessage
+                                  name="textElementStatus"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
 
                             <div className="col-sm-4 form-group mb-2 ">
                               <label>{status_label}</label>
                               <span className="text-danger">*</span>
 
                               <Field
-
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${
-                                  errors.enabled && touched.enabled
+                                className={`form-select ${errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                }`}
+                                  }`}
                               />
                               <ErrorMessage
                                 name="enabled"

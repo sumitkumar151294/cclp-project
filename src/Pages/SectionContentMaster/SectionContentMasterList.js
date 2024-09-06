@@ -10,11 +10,11 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import { useDispatch, useSelector } from "react-redux";
 import {
   onGetSectionContentMaster,
-  onUpdateSectionContentMaster,
-  onUpdateSectionContentMasterReset,
+  onPostSectionContentMaster,
 } from "../../Store/Slices/sectionContentMasterSlice";
 import Button from "../../Components/Button/Button";
-import { toast } from "react-toastify";
+import { onGetProductContent } from "../../Store/Slices/productContentSlice";
+import { onGetDeal } from "../../Store/Slices/dealSlice";
 
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
@@ -72,6 +72,8 @@ const SectionContentMasterList = () => {
   const endIndex = startIndex + rowsPerPage;
   useEffect(() => {
     dispatch(onGetSectionContentMaster());
+    dispatch(onGetProductContent());
+    dispatch(onGetDeal());
   }, []);
   const handleSumbit = (sectionContent, isEdit) => {
     const sectionMasterData = {
@@ -81,26 +83,10 @@ const SectionContentMasterList = () => {
     if (isEdit) {
       setSectionContentData(sectionMasterData);
     } else {
-      dispatch(onUpdateSectionContentMaster(sectionMasterData));
+      dispatch(onPostSectionContentMaster(sectionMasterData));
     }
   };
-  useEffect(() => {
-    if (getSectionContenMasterData?.update_status_code === "204") {
-      toast.success(getSectionContenMasterData?.updateMessage);
-      dispatch(onGetSectionContentMaster());
-      dispatch(onUpdateSectionContentMasterReset());
-    } else if (getSectionContenMasterData?.post_status_code === "205") {
-      setSectionContentData({
-        webImage: "",
-        mobImage: "",
-        cta: "",
-        displayOrder: "",
-        text: "",
-        contentSourceType: "",
-        segmentId: "",
-      });
-    }
-  }, [getSectionContenMasterData]);
+
   useEffect(() => {
     if (filteredData) {
       const totalItems = filteredData.length;
@@ -112,7 +98,6 @@ const SectionContentMasterList = () => {
   }, [filteredData]);
   return (
     <>
-    
       <SectionContentMasterForm
         sectionContentData={sectionContentData}
         setSectionContentData={setSectionContentData}
@@ -147,9 +132,9 @@ const SectionContentMasterList = () => {
               </div>
               <div className="card-body">
                 {getSectionContenMasterData?.isgetLoading ||
-                getSectionContenMasterData?.isUpdateLoading ||
-                (getSectionContenMasterData?.isUpdateLoading &&
-                  getSectionContenMasterData?.update_status_code == "205") ? (
+                  getSectionContenMasterData?.isUpdateLoading ||
+                  (getSectionContenMasterData?.isUpdateLoading &&
+                    getSectionContenMasterData?.update_status_code == "205") ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -166,24 +151,47 @@ const SectionContentMasterList = () => {
                                 )}
                                 {sectionType !== "Promo Message" && (
                                   <th>{web_image}</th>
-                                )}        {(sectionType === "Promo Message" || sectionType === "CustomerBenefits") &&   <th>{text_label}</th>}
-                                <th>{display_order}</th>
+                                )}
+                                {(sectionType === "Special Section" ||
+                                  sectionType === "Unlock Deals") && (
+                                    <>
+                                      <th>{"Content Source Type"}</th>
+                                      <th>{"Linked Data"}</th>
+                                      <th>{"Over-ride Data"}</th>
+                                    </>
+                                  )}
+                                {(sectionType === "Promo Message" ||
+                                  sectionType === "CustomerBenefits") && (
+                                    <th>{text_label}</th>
+                                  )}
+                                <th>{"Call To Action"}</th>
                                 {sectionType !== "Promo Message" && (
-                                  <th>{call_to_action}</th>
+                                  <th>{"Display Order"}</th>
                                 )}
-                                      {sectionType !== "Promo Message" && (
-                                  <th>{"Text"}</th>
-                                )}
-                                       {sectionType=== "Customer Menu" && (
+                                {sectionType === "Promo Banner" &&
+                                  sectionType === "Customer Menu" && (
+                                    <th>{"Text"}</th>
+                                  )}
+                                {sectionType === "Customer Menu" && (
                                   <th>{"Text Element"}</th>
                                 )}
-                                {sectionType === "SpecialSection" && (
-                                  <th>{content_source_type}</th>
+                                {sectionType === "Customer Menu" && (
+                                  <th>{"Text Color"}</th>
                                 )}
-                                {sectionType === "SpecialSection" && (
-                                  <th>{segment_label}</th>
+                                {sectionType === "Customer Menu" && (
+                                  <th>{"Text BGColor"}</th>
+                                )}
+                                {sectionType === "Customer Menu" && (
+                                  <th>{"Element Status"}</th>
+                                )}{" "}
+                                {sectionType === "Customer Menu" && (
+                                  <th>{"Element Image"}</th>
                                 )}
 
+                                {(sectionType === "SpecialSection" ||
+                                  sectionType === "Unlock Deals") && (
+                                    <th>{segment_label}</th>
+                                  )}
                                 <th>{"Status"}</th>
                                 {sectionType === "SpecialSection" && (
                                   <th>{"Over-Ride Data"}</th>
@@ -196,7 +204,7 @@ const SectionContentMasterList = () => {
                                 ?.slice(startIndex, endIndex)
                                 ?.map((sectionContent, index) => (
                                   <tr key={index}>
-                                         {sectionType !== "Promo Message" && (
+                                    {sectionType !== "Promo Message" && (
                                       <td>
                                         {sectionContent.mobImage ? (
                                           <img
@@ -222,9 +230,27 @@ const SectionContentMasterList = () => {
                                         )}
                                       </td>
                                     )}
+                                    {(sectionType === "Unlock Deals" ||
+                                      sectionType === "Special Section") && (
+                                        <>
+                                          <td>
+                                            {sectionContent.contentSourceType}
+                                          </td>
+                                          <td>
+                                            {sectionContent.linkedMasterId}
+                                          </td>
+                                          <td>
+                                            {sectionContent.isOverrideMetadata ?
+                                           <Link to="/metaData">
+                                             <Button
+                                              text={"Customize"}
+                                              end_icon={"fa fa-eye"}
+                                              className="btn btn-primary btn-sm float-right client_Btn"
+                                            /> </Link>: "Not Allowed"}
+                                          </td>
+                                        </>
 
-
-
+                                      )}
 
                                     {sectionType !== "Promo Message" && (
                                       <td>
@@ -246,18 +272,80 @@ const SectionContentMasterList = () => {
                                         )}
                                       </td>
                                     )}
-                                   {true&&      <td>
-                                      {sectionContent?.text ? (
-                                        sectionContent?.text.substring(0, 10) +
-                                        "..."
-                                      ) : (
-                                        <span className="hyphen">-</span>
+                                    {sectionType === "Promo Banner" &&
+                                      sectionType === "Customer Menu" && (
+                                        <td>
+                                          {sectionContent?.text ? (
+                                            sectionContent?.text.substring(
+                                              0,
+                                              10
+                                            ) + "..."
+                                          ) : (
+                                            <span className="hyphen">-</span>
+                                          )}
+                                        </td>
                                       )}
-                                    </td>}
-                                    {(sectionType ==="Customer Menu") &&      <td>
-                                      {sectionContent?.textElementFlag ? "Yes" : "No"}
-                                    </td>}
                                     <td>{sectionContent.displayOrder}</td>
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textElementFlag
+                                          ? "Yes"
+                                          : "No"}
+                                      </td>
+                                    )}
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textForElement || (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textColor || (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textbgColor || (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textElementFlag ? (
+                                          <span
+                                            className={
+                                              sectionContent.textElementStatus
+                                                ? "badge badge-success"
+                                                : "badge badge-danger"
+                                            }
+                                          >
+                                            {sectionContent.textElementStatus
+                                              ? "Active"
+                                              : "Non Active"}
+                                          </span>
+                                        ) : (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
+                                    {sectionType === "Customer Menu" && (
+                                      <td>
+                                        {sectionContent?.textElementFlag ? (
+                                          <img
+                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.textIcon}`}
+                                            style={{ width: "50px" }}
+                                            alt="webImage"
+                                          />
+                                        ) : (
+                                          <span className="hyphen"> -</span>
+                                        )}
+                                      </td>
+                                    )}
                                     <td>
                                       <span
                                         className={
