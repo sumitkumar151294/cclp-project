@@ -160,18 +160,15 @@ const SectionContentMasterList = () => {
                                       <th>{"Over-ride Data"}</th>
                                     </>
                                   )}
-                                {(sectionType === "Promo Message" ||
-                                  sectionType === "CustomerBenefits") && (
+                                {(sectionType === "Promo Message"  ||
+                                  sectionType === "Customer Menu") && (
                                     <th>{text_label}</th>
                                   )}
                                 <th>{"Call To Action"}</th>
                                 {sectionType !== "Promo Message" && (
                                   <th>{"Display Order"}</th>
                                 )}
-                                {sectionType === "Promo Banner" &&
-                                  sectionType === "Customer Menu" && (
-                                    <th>{"Text"}</th>
-                                  )}
+
                                 {sectionType === "Customer Menu" && (
                                   <th>{"Text Element"}</th>
                                 )}
@@ -272,8 +269,8 @@ const SectionContentMasterList = () => {
                                         )}
                                       </td>
                                     )}
-                                    {sectionType === "Promo Banner" &&
-                                      sectionType === "Customer Menu" && (
+                                    {( sectionType === "Promo Message" ||
+                                      sectionType === "Customer Menu") && (
                                         <td>
                                           {sectionContent?.text ? (
                                             sectionContent?.text.substring(

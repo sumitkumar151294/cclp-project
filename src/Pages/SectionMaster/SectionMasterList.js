@@ -123,10 +123,10 @@ const [edit,setEdit]=useState(false)
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (
+      {/* {getRoleAccess[0]?.addAccess && ( */}
         <SectionMasterForm sectionData={sectionData}  setSectionData=
         {setSectionData} edit={edit} setEdit={setEdit}/>
-      )}
+      {/* )} */}
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -241,7 +241,7 @@ const [edit,setEdit]=useState(false)
                                       : "Non Active"}
                                   </span>
                                 </td>
-                                {getRoleAccess[0]?.editAccess && (
+                                {/* {getRoleAccess[0]?.editAccess && ( */}
                                   <>
                                     <td>
                                       <div className="d-flex">
@@ -286,7 +286,8 @@ const [edit,setEdit]=useState(false)
                                       </Link>
                                     </td>
                                   </>
-                                                              )}                              </tr>
+                                                              {/* )} */}
+                                                                                           </tr>
                             ))}
                         </tbody>
                       </table>
