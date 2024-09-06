@@ -18,8 +18,10 @@ import {
   onPostUserRoleModuleAccessReset,
 } from "../../Store/Slices/userRoleModuleAccessSlice";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { ClientId } from "../../Utility/Utility";
 
 const RoleMasterForm = ({ roleMasterData,setRoleMasterData , deleted ,setDeleted  }) => {
+  const clientId=ClientId();
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
   const [value, setValues] = useState([]);
@@ -126,7 +128,7 @@ const statusOptions = [
       deleted: false,
       name: values?.name,
       description: values?.description || "",
-      clientId: 6,
+      clientId: clientId,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
       ...(roleMasterData && { id: roleMasterData.id }),
     };
@@ -136,10 +138,7 @@ const statusOptions = [
   };
 
   useEffect(() => {
-    if (
-      getUserRoleData?.status_code === "200" ||
-      getUserRoleData?.status_code === "205"
-    ) {
+    if (getUserRoleData?.status_code === "200"){
       const modulesData = Object.keys(value).map((moduleId) => {
         const { id, view, add, edit } = value[moduleId];
         return {
@@ -150,31 +149,20 @@ const statusOptions = [
           viewAccess: view,
           addAccess: add,
           editAccess: edit,
-          clientId: 6,
+          clientId: clientId,
         };
       });
       setInitialValue(reset)
       dispatch(onPostUserRoleModuleAccess(modulesData));
       dispatch(onPostUserRoleReset());
     } else if (getUserModalAccessData?.status_code === "200") {
-      toast.success(getUserModalAccessData?.message);
-      dispatch(onGetUserRole());
-      dispatch(onGetUserRoleModuleAccess());
-      dispatch(onPostUserRoleModuleAccessReset());
-    }else if (getUserRoleData?.status_code === "204") {
+
       setDeleted(false)
-      toast.success(getUserRoleData?.message);
+      toast.success(getUserModalAccessData?.message);
       dispatch(onGetUserRole());
       dispatch(onGetUserRoleModuleAccess());
       dispatch(onPostUserRoleReset())
       dispatch(onPostUserRoleModuleAccessReset());
-    } else if (getUserModalAccessData?.status_code === "205") {
-      setRoleMasterData(null)
-      toast.success(getUserModalAccessData?.message);
-      dispatch(onGetUserRole());
-      dispatch(onGetUserRoleModuleAccess());
-      dispatch(onPostUserRoleModuleAccessReset());
-      setInitialValue(reset);
     }
   }, [getUserRoleData, getUserModalAccessData]);
   useEffect(() => {

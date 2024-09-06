@@ -9,6 +9,7 @@ import Dropdown from "../../Components/Dropdown/Dropdown";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetMetaData, onPostMetaData, onPostMetaDataReset } from "../../Store/Slices/metaDataSlice";
+import { ClientId } from "../../Utility/Utility";
 //options of status
 const statusOptions = [
   { value: true, label: "Active" },
@@ -66,6 +67,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
       .required(burn_points_required)
       .matches(/^[0-9]*$/, burn_points_must_be_number),
   });
+  const clientId=ClientId();
   // to handle form submit
   const handleSubmit = (values) => {
     if (values) {
@@ -76,7 +78,7 @@ const MetaDataForm = ({ metaData,setMetaData }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
+        clientId: clientId,
         sectionMasterId: 2,
         sectionContentMasterId: 2,
         linkedMasterId: 8,

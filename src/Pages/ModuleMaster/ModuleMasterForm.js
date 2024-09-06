@@ -132,7 +132,7 @@ const ModuleMasterForm = ({ moduleMasterData ,setModuleMasterData, edit , setEdi
               : values?.enabled === "true",
               createdby:moduleMasterData ? 0 :userId,
               updatedby:moduleMasterData ? userId :0,
-          clientId: moduleMasterData ? values.clientId : clientId ,
+          clientId: clientId ,
           ...(moduleMasterData && { id: values.id }),
         };
         dispatch(onPostModule(moduleData));

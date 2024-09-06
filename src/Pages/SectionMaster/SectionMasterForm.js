@@ -129,7 +129,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
       .nullable()
       .matches(/^[0-9]*$/, number_of_points_must_number),
     text: Yup.lazy(() =>
-      showFields && showFields !== "Promo Message"
+   (   showFields && showFields !== "Promo Message" && showFields !== "Supporting Banner")
         ? Yup.string().required("Text is required")
         : Yup.string().nullable()
     ),
@@ -163,10 +163,10 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
     segmentId: "",
     cta: "",
   };
-  const getCustometSegemtData = useSelector(
+  const getCustomerSegemtData = useSelector(
     (state) => state.customerSegmentReducer?.data
   );
-  const SegmentOptions = getCustometSegemtData?.map((segementData) => ({
+  const SegmentOptions = getCustomerSegemtData?.map((segementData) => ({
     value: segementData.id,
     label: segementData?.name?.substring(0, 18) + "...",
   }));
@@ -361,7 +361,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
                               showFields === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{text_label}</label>
-                                <span className="text-danger">*</span>
+                              {showFields!=="Supporting Banner" && <span className="text-danger">*</span>}
                                 <Field
                                   type="text"
                                   name="text"
@@ -379,7 +379,6 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
                                 />
                               </div>
                             )}
-                            {console.log(showFields)}
                             {showFields === "Unlock Deals" && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{claim_limit}</label>
@@ -440,6 +439,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
                               showFields === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-2 ">
                                 <label>{segment_label}</label>
+                                <span className="text-danger">*</span>
 
                                 <Field
                                   name="segmentId"

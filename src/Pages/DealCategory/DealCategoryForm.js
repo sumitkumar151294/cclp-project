@@ -19,11 +19,13 @@ import {
 } from "../../Store/Slices/uploadSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { ClientId } from "../../Utility/Utility";
 const statusOptions = [
   { value: true, label: "Active" },
   { value: false, label: "Non Active" },
 ];
 const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
+  const clientId=ClientId();
   const [values, setValues] = useState(null);
   const [mobile, setMobile] = useState(false);
   const [web, setWeb] = useState(false);
@@ -112,7 +114,6 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
 
   //to handle submit
   const handleSubmit = (values) => {
-    debugger
     if (!values) return;
     const { webImage, mobImage } = values;
     if (typeof webImage === "object" || typeof mobImage === "object") {
@@ -128,7 +129,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
       const dealCategoryData = {
         ...values,
         deleted: false,
-        clientId: 6,
+        clientId: clientId,
         webImage: webImage || "",
         mobImage: mobImage || "",
         enabled:
@@ -165,7 +166,7 @@ const DealCategoryForm = ({ setdealCategory, dealCategory }) => {
             : values?.enabled === "true",
         webImage: dealCategory?.webImage || "",
         mobImage: dealCategory?.mobImage || "",
-        clientId: 6,
+        clientId: clientId,
         deleted: false,
         displayOrder:parseInt(values?.displayOrder),
         ...(dealCategory && { id: values?.id }),

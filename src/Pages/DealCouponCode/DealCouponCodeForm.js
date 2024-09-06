@@ -13,6 +13,7 @@ import {
 } from "../../Store/Slices/dealCouponCodeSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { Link, useLocation } from "react-router-dom";
+import { ClientId } from "../../Utility/Utility";
 // to get today date
 const getTodayDate = () => {
   const today = new Date();
@@ -120,6 +121,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
         return true;
       }),
   });
+  const clientId=ClientId();
   // to handle form submit
   const handleSubmit = (values) => {
     if (values) {
@@ -130,7 +132,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
+        clientId: clientId,
         coupounCode: values?.coupounCode,
         dealCoupounId: location?.state?.dealCoupounId,
         status: values?.status,

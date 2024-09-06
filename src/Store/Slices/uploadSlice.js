@@ -10,7 +10,6 @@ export const uploadImageSlice = createSlice({
     isgetLoading: true,
   },
   reducers: {
-
     onPostuploadImage: (state) => {
       return {
         ...state,
@@ -55,6 +54,13 @@ export const uploadImageSlice = createSlice({
         postuploadMobileImageData: [],
       };
     },
+    onPostuploadElementImage: (state) => {
+      return {
+        ...state,
+        isPostLoading: true,
+        postuploadElementImageData: [],
+      };
+    },
 
     onPostuploadMobileImageSuccess: (state, { payload }) => {
       const { postData = [], message = "", status_code = "200" } = payload;
@@ -64,6 +70,16 @@ export const uploadImageSlice = createSlice({
         postuploadMobileImageData: postData,
         postMessage: message,
         postMobileStatusCode: status_code,
+      };
+    },
+    onPostuploadElementImageSuccess: (state, { payload }) => {
+      const { postData = [], message = "", status_code = "200" } = payload;
+      return {
+        ...state,
+        isPostLoading: false,
+        postuploadElementImageData: postData,
+        postElementMessage: message,
+        postElementStatusCode: status_code,
       };
     },
 
@@ -77,6 +93,16 @@ export const uploadImageSlice = createSlice({
         isPostLoading: false,
       };
     },
+    onPostuploadElementImageError: (state, { payload }) => {
+      const { postData = [], message = "", status_code = 400 } = payload;
+      return {
+        ...state,
+        postuploadElementImageData: postData,
+        postElementMessage: message,
+        postElementStatusCode: status_code,
+        isPostLoading: false,
+      };
+    },
     onPostuploadMobileImageReset: (state) => {
       return {
         ...state,
@@ -85,7 +111,14 @@ export const uploadImageSlice = createSlice({
         postMobileStatusCode: null,
       };
     },
-
+    onPostuploadElementImageReset: (state) => {
+      return {
+        ...state,
+        postuploadElementImageData: [],
+        postElementMessage: "",
+        postElementStatusCode: null,
+      };
+    },
   },
 });
 
@@ -98,6 +131,10 @@ export const {
   onPostuploadImageSuccess,
   onPostuploadImageError,
   onPostuploadImageReset,
+  onPostuploadElementImage,
+  onPostuploadElementImageReset,
+  onPostuploadElementImageSuccess,
+  onPostuploadElementImageError,
 } = uploadImageSlice.actions;
 
 export default uploadImageSlice.reducer;

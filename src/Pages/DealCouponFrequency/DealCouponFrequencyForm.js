@@ -17,6 +17,7 @@ import {
 } from "../../Store/Slices/dealCouponFreqSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
+import { ClientId } from "../../Utility/Utility";
 //to get weekday's name
 const weekDayNames = Array.from({ length: 7 }, (_, index) => ({
   value: index + 1,
@@ -76,6 +77,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
   const getDealCouponFeqData = useSelector(
     (state) => state.dealCouponFreqReducer
   );
+  const clientId=ClientId();
   const getDealCouponData = useSelector(
     (state) => state?.dealCouponReducer?.getDealCouponData
   );
@@ -126,7 +128,7 @@ const DealCouponFrequencyForm = ({ dealCouponFreq, setDealCouponFreq }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 4,
+        clientId:clientId,
         dealCoupounId: values?.dealCoupounId,
         validFrom: values?.validFrom,
         validUpto: values?.validUpto,

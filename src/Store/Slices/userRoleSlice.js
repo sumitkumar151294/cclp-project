@@ -28,7 +28,7 @@ export const userRoleSlice = createSlice({
         isError: false,
         userRoleData: data,  
         message,
-        status_code,
+        status_code:null,
       };
     },
 

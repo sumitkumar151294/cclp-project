@@ -15,6 +15,7 @@ import {
 } from "../../Store/Slices/userMasterSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
+import { ClientId } from "../../Utility/Utility";
 const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
 
   const dispatch = useDispatch();
@@ -96,6 +97,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
     { value: true, label: "Active" },
     { value: false, label: "Non Active" },
   ];
+  const clientId=ClientId();
   // to validate form using Yup schema
   const validations = Yup.object().shape({
     firstName: Yup.string().required(first_name_required),
@@ -117,7 +119,7 @@ const UserMasterForm = ({ userMasterData ,setuserMasterData,edit,setEdit }) => {
         ...values,
         enabled: typeof values?.enabled === 'boolean' ? values.enabled : values?.enabled === 'true',
         deleted: false,
-        clientId: 6,
+        clientId: clientId,
         mobile:typeof values?.mobile === "string"
         ? values.mobile
         : JSON.stringify(values?.mobile),

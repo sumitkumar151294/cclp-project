@@ -24,6 +24,7 @@ import {
   onPostDealCouponFreq,
   onPostDealCouponFreqReset,
 } from "../../Store/Slices/dealCouponFreqSlice";
+import { ClientId } from "../../Utility/Utility";
 // to get today's date
 const getTodayDate = () => {
   const today = new Date();
@@ -261,6 +262,7 @@ const DealCouponForm = ({
     { value: "Visa", label: "Visa" },
     { value: "Master Card", label: "Master Card" },
   ];
+  const clientId=ClientId();
   const offerTypeValue2 = [{ value: "First Wealth", label: "First Wealth" }];
   const oferSubTypeOptions = [{ value: "EMI", label: "EMI" }];
   // to validate the form using Yup schema
@@ -333,7 +335,7 @@ const DealCouponForm = ({
             ? values.enabled
             : values?.enabled === "true",
         image: dealCouponDatas?.image || "",
-        clientId: 6,
+        clientId: clientId,
         deleted: false,
         segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
@@ -365,7 +367,7 @@ const DealCouponForm = ({
             ? values.enabled
             : values?.enabled === "true",
         image: getImage,
-        clientId: 6,
+        clientId: clientId,
         deleted: false,
         segmentId: values.segmentId || null,
         ...(dealCouponDatas && { id: values.id }),
@@ -394,7 +396,7 @@ const DealCouponForm = ({
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
+        clientId: clientId,
         ...(dealCouponDatas && { id: dealCouponDatas.frequency_id }),
       };
 
@@ -409,9 +411,7 @@ const DealCouponForm = ({
     if (getDealCouponFeqData) {
       const { post_status_code, postMessage } = getDealCouponFeqData;
       if (
-        post_status_code === "200" ||
-        post_status_code === "205" ||
-        post_status_code === "204"
+        post_status_code === "200"
       ) {
         setInitialValue(reset);
         setDealCouponDatas(null);

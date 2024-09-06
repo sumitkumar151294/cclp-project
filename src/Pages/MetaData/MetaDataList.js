@@ -108,9 +108,9 @@ const MetaDataList = () => {
   return (
     <>
       <ScrollToTop />
-      {getRoleAccess[0]?.addAccess && (
+
         <MetaDataForm metaData={metaData} setMetaData={setMetaData} />
-      )}
+
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -177,7 +177,7 @@ const MetaDataList = () => {
                                     {metaData.enabled ? "Active" : "Non Active"}
                                   </span>
                                 </td>
-                                {getRoleAccess[0]?.editAccess && (
+
                                   <td>
                                     <div className="d-flex">
                                       <Button
@@ -196,7 +196,7 @@ const MetaDataList = () => {
                                       />
                                     </div>
                                   </td>
-                                )}
+
                               </tr>
                             ))}
                         </tbody>

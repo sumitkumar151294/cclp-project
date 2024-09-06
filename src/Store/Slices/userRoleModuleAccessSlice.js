@@ -27,7 +27,7 @@ export const userRoleModuleAccessSlice = createSlice({
         isError: false,
         data: data,
         message,
-        status_code,
+        status_code :null,
       };
     },
 

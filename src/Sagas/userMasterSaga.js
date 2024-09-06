@@ -2,9 +2,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 
 import { callUserMasterApi, callUserMasterGetApi } from "../Context/userMasterApi";
 import { onGetuserMaster, onGetuserMasterError, onGetuserMasterSuccess, onPostuserMaster, onPostuserMasterError, onPostuserMasterSuccess } from "../Store/Slices/userMasterSlice";
-function* userMaster() {
+function* userMaster({payload}) {
   try {
-    const userMasterResponse = yield call(callUserMasterApi);
+    const userMasterResponse = yield call(callUserMasterApi,payload);
     if (userMasterResponse.responseCode === "200") {
       yield put(
         onPostuserMasterSuccess({

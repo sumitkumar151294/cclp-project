@@ -14,6 +14,7 @@ import {
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
 import Dropdown from "../../Components/Dropdown/Dropdown";
 import { onPostuploadImage, onPostuploadImageReset } from "../../Store/Slices/uploadSlice";
+import { ClientId } from "../../Utility/Utility";
 
 const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
   const getwebImage = useSelector(
@@ -92,6 +93,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
     icon: "",
     enabled: "",
   }
+  const clientId=ClientId();
   // options for status
   const statusOptions = [
     { value: true, label: "Active" },
@@ -122,7 +124,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
+        clientId: clientId,
         ...(navData && { id: navData.id }),
       };
       dispatch(onPostNavConfigure(postData));
@@ -141,7 +143,7 @@ const NavConfigurationForm = ({ navData, setNavData,edit , setEdit  }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        clientId: 6,
+        clientId: clientId,
         ...(navData && { id: navData.id }),
       };
       dispatch(onPostNavConfigure(postData));

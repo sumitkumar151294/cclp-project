@@ -152,7 +152,6 @@ const [edit,setEdit]=useState(false)
                   </div>
                 </div>
               </div>
-              {console.log(SectionMaster?.isPostLoading)}
               <div className="card-body">
                 {( (edit && SectionMaster?.isPostLoading) || SectionMaster?.isgetLoading ) ? (
                   <div style={{ height: "200px" }}>
@@ -242,7 +241,7 @@ const [edit,setEdit]=useState(false)
                                       : "Non Active"}
                                   </span>
                                 </td>
-                                {/* {getRoleAccess[0]?.editAccess && ( */}
+                                {getRoleAccess[0]?.editAccess && (
                                   <>
                                     <td>
                                       <div className="d-flex">
@@ -287,8 +286,7 @@ const [edit,setEdit]=useState(false)
                                       </Link>
                                     </td>
                                   </>
-                                {/* )} */}
-                              </tr>
+                                                              )}                              </tr>
                             ))}
                         </tbody>
                       </table>

@@ -18,6 +18,7 @@ import {
   onPostuploadMobileImageReset,
 } from "../../Store/Slices/uploadSlice";
 import { GetTranslationData } from "../../Components/GetTranslationData/GetTranslationData ";
+import { ClientId } from "../../Utility/Utility";
 
 const getTodayDate = () => {
   const today = new Date();
@@ -144,6 +145,7 @@ const DealForm = ({ dealsData }) => {
     { value: "Common", label: "Common" },
     { value: "UnlockDeals", label: "Unlock Deals" },
   ];
+  const clientId=ClientId();
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
     mobImage: Yup.string().required(mobile_image_required),
@@ -200,7 +202,7 @@ const DealForm = ({ dealsData }) => {
       const dealInfo = {
         ...values,
         deleted: false,
-        clientId: 6,
+        clientId: clientId,
         webImage: webImage || "",
         mobImage: mobImage || "",
         enabled:
@@ -223,9 +225,9 @@ const DealForm = ({ dealsData }) => {
           typeof values?.enabled === "boolean"
             ? values.enabled
             : values?.enabled === "true",
-        webImage: dealsData?.webImage,
-        mobImage: dealsData?.mobImage,
-        clientId: 6,
+        webImage: dealsData?.webImage ||"",
+        mobImage: dealsData?.mobImage || "",
+        clientId: clientId,
         ...(dealsData && { id: values?.id }),
       };
       let shouldDispatch = false;

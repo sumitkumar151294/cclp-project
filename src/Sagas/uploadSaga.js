@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { calluploadApi } from "../Context/uploadApi";
-import { onPostuploadImage, onPostuploadImageError, onPostuploadImageSuccess, onPostuploadMobileImage, onPostuploadMobileImageError, onPostuploadMobileImageSuccess } from "../Store/Slices/uploadSlice";
+import { onPostuploadElementImage, onPostuploadElementImageError, onPostuploadElementImageSuccess, onPostuploadImage, onPostuploadImageError, onPostuploadImageSuccess, onPostuploadMobileImage, onPostuploadMobileImageError, onPostuploadMobileImageSuccess } from "../Store/Slices/uploadSlice";
 
 
 function* PostuploadImage({ payload }) {
@@ -55,10 +55,36 @@ function* PostuploadMobileImage({ payload }) {
     yield put(onPostuploadMobileImageError({ data: [], message, status_code: 400 }));
   }
 }
+function* PostuploadElementImage({ payload }) {
 
+  try {
+    const postuploadElementImageResponse = yield call(calluploadApi, payload);
+    if (postuploadElementImageResponse.responseCode === "200") {
+      yield put(
+        onPostuploadElementImageSuccess({
+          postData: postuploadElementImageResponse.response,
+          message: postuploadElementImageResponse.responseMessage,
+          status_code: postuploadElementImageResponse.responseCode,
+        })
+      );
+    } else {
+      yield put(
+        onPostuploadElementImageError({
+          data: postuploadElementImageResponse.response,
+          message: postuploadElementImageResponse?.data?.responseMessage,
+          status_code:postuploadElementImageResponse.responseCode
+        })
+      );
+    }
+  } catch (error) {
+    const message = error.response || "Something went wrong";
+    yield put(onPostuploadElementImageError({ data: [], message, status_code: 400 }));
+  }
+}
 export default function* uploadSaga() {
 
   yield takeLatest(onPostuploadImage.type, PostuploadImage);
   yield takeLatest(onPostuploadMobileImage.type, PostuploadMobileImage);
+  yield takeLatest(onPostuploadElementImage.type, PostuploadElementImage);
 
 }
