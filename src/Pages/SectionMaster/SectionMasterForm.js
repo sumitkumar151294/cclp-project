@@ -379,7 +379,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
                                 />
                               </div>
                             )}
-                            {showFields === "Unlock Deals" && (
+                          {showFields === "Unlock Deals" && (
                               <div className="col-sm-4 form-group mb-2 mt-1">
                                 <label>{claim_limit}</label>
                                 <Field
@@ -400,7 +400,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
                               </div>
                             )}
                             {showFields === "Unlock Deals" && (
-                              <div className="col-lg-4 py-4">
+                              <div className="col-lg-4 py-4 mb-2">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
                                     type="checkbox"

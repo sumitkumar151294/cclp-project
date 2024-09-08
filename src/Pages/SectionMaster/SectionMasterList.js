@@ -89,8 +89,8 @@ const [edit,setEdit]=useState(false)
     };
     if (isEdit) {
       setSectionData(sectionMasterData);
-      setEdit(true)
     } else {
+      setEdit(true)
       dispatch(onPostsectionMaster(sectionMasterData));
     }
   };
@@ -123,11 +123,10 @@ const [edit,setEdit]=useState(false)
   return (
     <>
       <ScrollToTop />
-      {/* {getRoleAccess[0]?.addAccess && ( */}
+      {getRoleAccess[0]?.addAccess && (
         <SectionMasterForm sectionData={sectionData}  setSectionData=
         {setSectionData} edit={edit} setEdit={setEdit}/>
-      {/* )} */}
-      <div className="containers-fluid pt-0">
+            )}      <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -175,11 +174,11 @@ const [edit,setEdit]=useState(false)
                             <th>{status_label}</th>
                             {getRoleAccess[0]?.editAccess && (
                               <th>{action_label}</th>
-                             )}
+                              )}
                             {getRoleAccess[0]?.editAccess && (
 
                             <th>{section_data}</th>
-                          )}
+                        )}
                           </tr>
                         </thead>
                         <tbody>

@@ -5,6 +5,7 @@ export const uploadImageSlice = createSlice({
   initialState: {
     isLoading: false,
     isError: false,
+    isPostLoading: false,
     uploadImageData: [],
     message: "",
     isgetLoading: true,
@@ -109,6 +110,7 @@ export const uploadImageSlice = createSlice({
         postuploadMobileImageData: [],
         postMessage: "",
         postMobileStatusCode: null,
+        isPostLoading:false
       };
     },
     onPostuploadElementImageReset: (state) => {

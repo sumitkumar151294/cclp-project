@@ -18,7 +18,7 @@ import { onGetDeal } from "../../Store/Slices/dealSlice";
 
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
-
+  const [edit, SetEdit] = useState(false);
   // to get column heading name from translation
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
@@ -83,6 +83,7 @@ const SectionContentMasterList = () => {
     if (isEdit) {
       setSectionContentData(sectionMasterData);
     } else {
+      SetEdit(true);
       dispatch(onPostSectionContentMaster(sectionMasterData));
     }
   };
@@ -131,293 +132,232 @@ const SectionContentMasterList = () => {
                 </div>
               </div>
               <div className="card-body">
-                {getSectionContenMasterData?.isgetLoading ||
-                  getSectionContenMasterData?.isUpdateLoading ||
-                  (getSectionContenMasterData?.isUpdateLoading &&
-                    getSectionContenMasterData?.update_status_code == "205") ? (
+                {(edit && getSectionContenMasterData?.isPostLoading) ||
+                getSectionContenMasterData?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
-                ) : (
-                  <>
-                    {filteredData?.length ? (
-                      <div className="table-responsive scroll-Table-x">
-                        <>
-                          <table className="table header-border table-responsive-sm">
-                            <thead>
-                              <tr>
-                                {sectionType !== "Promo Message" && (
-                                  <th>{mobile_image}</th>
-                                )}
-                                {sectionType !== "Promo Message" && (
-                                  <th>{web_image}</th>
-                                )}
+                ) : filteredData?.length ? (
+                  <div className="table-responsive scroll-Table-x">
+                    <>
+                      <table className="table header-border table-responsive-sm">
+                        <thead>
+                          <tr>
+                            <th>{mobile_image}</th>
+                            <th>{web_image}</th>
+                            {(sectionType === "Special Section" ||
+                              sectionType === "Unlock Deals") && (
+                              <>
+                                <th>{content_source_type}</th>
+                                <th>{"Source"}</th>
+                                <th>{segment_label}</th>
+                                <th>{"Over-ride Data"}</th>
+                              </>
+                            )}
+                            <th>{display_order}</th>
+                            {sectionType !== "Promo Message" && (
+                              <th>{call_to_action}</th>
+                            )}
+                            {(sectionType === "Promo Message" ||
+                              sectionType === "Customer Menu") && (
+                              <th>{text_label}</th>
+                            )}
+                            {sectionType === "Customer Menu" && (
+                              <>
+                                <th>{"Element"}</th>
+                                <th>{"Element Text"}</th>
+                                <th>{"Element Text Color"}</th>
+                                <th>{"Element BG Color"}</th>
+                                <th>{"Element Image"}</th>
+                                <th>{"Element Status"}</th>
+                              </>
+                            )}
+                            <th>{"Status"}</th>
+                            <th>{action_label}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredData
+                            .slice(startIndex, endIndex)
+                            .map((sectionContent, index) => (
+                              <tr key={index}>
+                                <td>
+                                  <img
+                                    src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
+                                    style={{ width: "50px" }}
+                                    alt="mobImage"
+                                  />
+                                </td>
+
+                                <td>
+                                  {sectionContent.webImage ? (
+                                    <img
+                                      src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
+                                      style={{ width: "50px" }}
+                                      alt="webImage"
+                                    />
+                                  ) : (
+                                    <span className="hyphen"> -</span>
+                                  )}
+                                </td>
                                 {(sectionType === "Special Section" ||
                                   sectionType === "Unlock Deals") && (
-                                    <>
-                                      <th>{"Content Source Type"}</th>
-                                      <th>{"Linked Data"}</th>
-                                      <th>{"Over-ride Data"}</th>
-                                    </>
-                                  )}
-                                {(sectionType === "Promo Message"  ||
-                                  sectionType === "Customer Menu") && (
-                                    <th>{text_label}</th>
-                                  )}
-                                <th>{"Call To Action"}</th>
-                                {sectionType !== "Promo Message" && (
-                                  <th>{"Display Order"}</th>
-                                )}
-
-                                {sectionType === "Customer Menu" && (
-                                  <th>{"Text Element"}</th>
-                                )}
-                                {sectionType === "Customer Menu" && (
-                                  <th>{"Text Color"}</th>
-                                )}
-                                {sectionType === "Customer Menu" && (
-                                  <th>{"Text BGColor"}</th>
-                                )}
-                                {sectionType === "Customer Menu" && (
-                                  <th>{"Element Status"}</th>
-                                )}{" "}
-                                {sectionType === "Customer Menu" && (
-                                  <th>{"Element Image"}</th>
-                                )}
-
-                                {(sectionType === "SpecialSection" ||
-                                  sectionType === "Unlock Deals") && (
-                                    <th>{segment_label}</th>
-                                  )}
-                                <th>{"Status"}</th>
-                                {sectionType === "SpecialSection" && (
-                                  <th>{"Over-Ride Data"}</th>
-                                )}
-                                <th>{action_label}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {filteredData
-                                ?.slice(startIndex, endIndex)
-                                ?.map((sectionContent, index) => (
-                                  <tr key={index}>
-                                    {sectionType !== "Promo Message" && (
-                                      <td>
-                                        {sectionContent.mobImage ? (
-                                          <img
-                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.mobImage}`}
-                                            style={{ width: "50px" }}
-                                            alt="mobImage"
-                                          />
-                                        ) : (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType !== "Promo Message" && (
-                                      <td>
-                                        {sectionContent.webImage ? (
-                                          <img
-                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.webImage}`}
-                                            style={{ width: "50px" }}
-                                            alt="webImage"
-                                          />
-                                        ) : (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {(sectionType === "Unlock Deals" ||
-                                      sectionType === "Special Section") && (
-                                        <>
-                                          <td>
-                                            {sectionContent.contentSourceType}
-                                          </td>
-                                          <td>
-                                            {sectionContent.linkedMasterId}
-                                          </td>
-                                          <td>
-                                            {sectionContent.isOverrideMetadata ?
-                                           <Link to="/metaData">
-                                             <Button
-                                              text={"Customize"}
-                                              end_icon={"fa fa-eye"}
-                                              className="btn btn-primary btn-sm float-right client_Btn"
-                                            /> </Link>: "Not Allowed"}
-                                          </td>
-                                        </>
-
-                                      )}
-
-                                    {sectionType !== "Promo Message" && (
-                                      <td>
-                                        {sectionContent.cta.substring(0, 18) +
-                                          "..."}
-                                      </td>
-                                    )}
-                                    {sectionType === "SpecialSection" && (
-                                      <td>
-                                        {sectionContent?.contentSourceType || (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType === "SpecialSection" && (
-                                      <td>
-                                        {sectionContent?.segmentId || (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {( sectionType === "Promo Message" ||
-                                      sectionType === "Customer Menu") && (
-                                        <td>
-                                          {sectionContent?.text ? (
-                                            sectionContent?.text.substring(
-                                              0,
-                                              10
-                                            ) + "..."
-                                          ) : (
-                                            <span className="hyphen">-</span>
-                                          )}
-                                        </td>
-                                      )}
-                                    <td>{sectionContent.displayOrder}</td>
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textElementFlag
-                                          ? "Yes"
-                                          : "No"}
-                                      </td>
-                                    )}
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textForElement || (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textColor || (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textbgColor || (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textElementFlag ? (
-                                          <span
-                                            className={
-                                              sectionContent.textElementStatus
-                                                ? "badge badge-success"
-                                                : "badge badge-danger"
-                                            }
-                                          >
-                                            {sectionContent.textElementStatus
-                                              ? "Active"
-                                              : "Non Active"}
-                                          </span>
-                                        ) : (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
-                                    {sectionType === "Customer Menu" && (
-                                      <td>
-                                        {sectionContent?.textElementFlag ? (
-                                          <img
-                                            src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.textIcon}`}
-                                            style={{ width: "50px" }}
-                                            alt="webImage"
-                                          />
-                                        ) : (
-                                          <span className="hyphen"> -</span>
-                                        )}
-                                      </td>
-                                    )}
+                                  <>
+                                    <td>{sectionContent?.contentSourceType}</td>
+                                    <td>{sectionContent?.linkedMasterId}</td>
+                                    <td>{sectionContent?.segmentId}</td>
                                     <td>
-                                      <span
-                                        className={
-                                          sectionContent.enabled
-                                            ? "badge badge-success"
-                                            : "badge badge-danger"
-                                        }
-                                      >
-                                        {sectionContent.enabled
-                                          ? "Active"
-                                          : "Non Active"}
-                                      </span>
-                                    </td>
-                                    {sectionType === "SpecialSection" && (
-                                      <td>
-                                        {sectionContent?.isOverrideMetadata ? (
+                                      {sectionContent?.isOverrideMetadata ? (
+                                        <Link
+                                          to={
+                                            sectionContent?.contentSourceType ===
+                                            "Deal"
+                                              ? "/deal"
+                                              : "/metaData"
+                                          }
+                                        >
                                           <Button
-                                            text={"Edit Data"}
+                                            text={"Customize"}
+                                            end_icon={"fa fa-eye"}
                                             className="btn btn-primary btn-sm float-right client_Btn"
                                           />
-                                        ) : (
-                                          "Not Allowed"
-                                        )}
-                                      </td>
-                                    )}
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          end_icon={"fas fa-pencil-alt"}
-                                          onClick={() =>
-                                            handleSumbit(sectionContent, {
-                                              isEdit: true,
-                                            })
-                                          }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          onClick={() =>
-                                            handleSumbit(sectionContent)
-                                          }
-                                        />
-                                      </div>
+                                        </Link>
+                                      ) : (
+                                        "Not Allowed"
+                                      )}
                                     </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-                          {filteredData?.length > 5 && (
-                            <div className="pagination-container">
-                              <ReactPaginate
-                                previousLabel={"<"}
-                                nextLabel={">"}
-                                breakLabel={"..."}
-                                pageCount={Math.ceil(
-                                  filteredData?.length / rowsPerPage
+                                  </>
                                 )}
-                                marginPagesDisplayed={2}
-                                onPageChange={handlePageChange}
-                                containerClassName={"pagination"}
-                                activeClassName={page === 1 && "active"}
-                                initialPage={page - 1}
-                                previousClassName={
-                                  page === 1 ? "disabled_Text" : ""
-                                }
-                              />
-                            </div>
-                          )}
-                        </>
-                      </div>
-                    ) : (
-                      <NoRecord />
-                    )}
-                  </>
+
+                                <td>{sectionContent?.displayOrder}</td>
+                                {sectionType !== "Promo Message" && (
+                                  <td>
+                                    {sectionContent?.cta || (
+                                      <span className="hyphen"> -</span>
+                                    )}
+                                  </td>
+                                )}
+                                {(sectionType === "Promo Message" ||
+                                  sectionType === "Customer Menu") && (
+                                  <td>
+                                    {sectionContent?.text || (
+                                      <span className="hyphen"> -</span>
+                                    )}
+                                  </td>
+                                )}
+                                {sectionType === "Customer Menu" && (
+                                  <>
+                                    <td>
+                                      {sectionContent?.textElementFlag
+                                        ? "Yes"
+                                        : "No"}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.textForElement || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.textColor || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.textbgColor || (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent.textIcon ? (
+                                        <img
+                                          src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${sectionContent.textIcon}`}
+                                          style={{ width: "50px" }}
+                                          alt="textIcon"
+                                        />
+                                      ) : (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {sectionContent?.textElementFlag ? (
+                                        <span
+                                          className={
+                                            sectionContent.textElementStatus
+                                              ? "badge badge-success"
+                                              : "badge badge-danger"
+                                          }
+                                        >
+                                          {sectionContent.textElementStatus
+                                            ? "Active"
+                                            : "Non Active"}
+                                        </span>
+                                      ) : (
+                                        <span className="hyphen"> -</span>
+                                      )}
+                                    </td>
+                                  </>
+                                )}
+                                <td>
+                                  <span
+                                    className={
+                                      sectionContent.enabled
+                                        ? "badge badge-success"
+                                        : "badge badge-danger"
+                                    }
+                                  >
+                                    {sectionContent.enabled
+                                      ? "Active"
+                                      : "Non Active"}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div className="d-flex">
+                                    <Button
+                                      className="btn btn-primary shadow btn-xs sharp me-1"
+                                      end_icon={"fas fa-pencil-alt"}
+                                      onClick={() =>
+                                        handleSumbit(sectionContent, {
+                                          isEdit: true,
+                                        })
+                                      }
+                                    />
+                                    <Button
+                                      className="btn btn-danger shadow btn-xs sharp"
+                                      end_icon={"fa fa-trash"}
+                                      onClick={() =>
+                                        handleSumbit(sectionContent)
+                                      }
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                      {filteredData?.length > 5 && (
+                        <div className="pagination-container">
+                          <ReactPaginate
+                            previousLabel={"<"}
+                            nextLabel={">"}
+                            breakLabel={"..."}
+                            pageCount={Math.ceil(
+                              filteredData?.length / rowsPerPage
+                            )}
+                            marginPagesDisplayed={2}
+                            onPageChange={handlePageChange}
+                            containerClassName={"pagination"}
+                            activeClassName={page === 1 && "active"}
+                            initialPage={page - 1}
+                            previousClassName={
+                              page === 1 ? "disabled_Text" : ""
+                            }
+                          />
+                        </div>
+                      )}
+                    </>
+                  </div>
+                ) : (
+                  <NoRecord />
                 )}
               </div>
             </div>

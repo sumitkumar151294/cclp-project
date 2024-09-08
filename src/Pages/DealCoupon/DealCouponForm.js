@@ -48,6 +48,9 @@ const DealCouponForm = ({
   setEdit,
 }) => {
   const [values, setValues] = useState(null);
+  const [couponType, setCouponType] = useState(null);
+  const [offerType, setofferType] = useState(null);
+
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
   // to get labels and placeholders from translation
@@ -224,7 +227,7 @@ const DealCouponForm = ({
     cta: "",
     title: "",
     source: "",
-    dealId: "",
+
     offerSubType: "",
     validFrom: "",
     validUpto: "",
@@ -244,7 +247,6 @@ const DealCouponForm = ({
     cta: "",
     title: "",
     source: "",
-    dealId: "",
     offerSubType: "",
     validFrom: "",
     validUpto: "",
@@ -262,7 +264,7 @@ const DealCouponForm = ({
     { value: "Visa", label: "Visa" },
     { value: "Master Card", label: "Master Card" },
   ];
-  const clientId=ClientId();
+  const clientId = ClientId();
   const offerTypeValue2 = [{ value: "First Wealth", label: "First Wealth" }];
   const oferSubTypeOptions = [{ value: "EMI", label: "EMI" }];
   // to validate the form using Yup schema
@@ -278,7 +280,6 @@ const DealCouponForm = ({
     cta: Yup.string().required(call_to_action_required),
     title: Yup.string().required(title_required),
     offerType: Yup.string().required(offer_type_required),
-    offerSubType: Yup.string().required(offer_sub_type_required),
     dealId: Yup.string().required(deal_required),
     terms: Yup.string()
       .required(text_required)
@@ -295,7 +296,7 @@ const DealCouponForm = ({
         (value) => value !== "<p><br></p>"
       ),
     source: Yup.string().required(souce_required),
-    segmentId: Yup.string().required(segment_required),
+
     offerId: Yup.string().required(offer_id_required),
     validFrom: Yup.string().required(start_date_required),
     validUpto: Yup.string()
@@ -320,6 +321,16 @@ const DealCouponForm = ({
       .min(1, at_least_one_week_day_required)
       .required(week_day_required),
     enabled: Yup.string().required(status_required),
+    coupounCode: Yup.lazy(() =>
+      couponType === "Static"
+        ? Yup.string().required("Coupon Code is required")
+        : Yup.string().nullable()
+    ),
+    segmentId: Yup.lazy(() =>
+      offerType === "Feature"
+        ? Yup.string().required(segment_required)
+        : Yup.string().nullable()
+    ),
   });
   // to handle form submit
   const handleSubmit = (values) => {
@@ -410,9 +421,7 @@ const DealCouponForm = ({
   useEffect(() => {
     if (getDealCouponFeqData) {
       const { post_status_code, postMessage } = getDealCouponFeqData;
-      if (
-        post_status_code === "200"
-      ) {
+      if (post_status_code === "200") {
         setInitialValue(reset);
         setDealCouponDatas(null);
         setEdit(false);
@@ -541,6 +550,9 @@ const DealCouponForm = ({
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                                onChange={(e) => {
+                                  setCouponType(e);
+                                }}
                               />
                               <ErrorMessage
                                 name="typeOfCoupoun"
@@ -551,6 +563,8 @@ const DealCouponForm = ({
                             {values.typeOfCoupoun === "Static" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label> {coupoun_code}</label>
+                                <span className="text-danger">*</span>
+
                                 <Field
                                   type="text"
                                   name="coupounCode"
@@ -570,16 +584,27 @@ const DealCouponForm = ({
                             )}
                             <div className="col-sm-4 form-group mb-4">
                               <label>{offer_type}</label>
-
+                              <span className="text-danger">*</span>
                               <Field
+                                type="text"
                                 name="offerType"
-                                options={offerTypeOptions}
-                                component={Dropdown}
-                                className={`form-select ${
+                                className={`form-control ${
                                   errors.offerType && touched.offerType
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                                onChange={(e) => {
+                                  const capitalize = (str) =>
+                                    str.replace(/\b\w/g, (char) =>
+                                      char.toUpperCase()
+                                    );
+                                  const capitalizedValue = capitalize(
+                                    e.target.value
+                                  );
+                                  setFieldValue("offerType", capitalizedValue);
+                                  setofferType(capitalizedValue);
+                                }}
+                                placeholder={"Feature, Network Card Type,..etc"}
                               />
                               <ErrorMessage
                                 name="offerType"
@@ -587,6 +612,7 @@ const DealCouponForm = ({
                                 className="error-message"
                               />
                             </div>
+
                             {(values.offerType === "SpecialType" ||
                               values.offerType === "NetworkCardType") && (
                               <div className="col-sm-4 form-group mb-4">
@@ -636,7 +662,9 @@ const DealCouponForm = ({
                             <div className="col-sm-4 form-group mb-4">
                               <label>{segment_label}</label>
 
-                              <span className="text-danger">*</span>
+                              {values?.offerType === "Feature" && (
+                                <span className="text-danger">*</span>
+                              )}
 
                               <Field
                                 name="segmentId"
@@ -679,6 +707,8 @@ const DealCouponForm = ({
                             </div>
                             <div className="col-sm-4 form-group mb-4 ">
                               <label>{offer_id}</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="text"
                                 name="offerId"

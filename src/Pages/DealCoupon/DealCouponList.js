@@ -126,7 +126,7 @@ const DealCouponList = () => {
   };
   // to filter getDealCoupon
   const filteredData = merged?.filter((data) => {
-    const couponCodeLower = data.coupounCode?.toLowerCase() || "";
+    const couponCodeLower = data.title?.toLowerCase() || "";
     return couponCodeLower.includes(searchQuery?.toLowerCase());
   });
   // to handle search bar
@@ -162,8 +162,8 @@ const DealCouponList = () => {
         setDealCouponDatas={setDealCouponDatas}
         edit={edit}
         setEdit={setEdit}
-      />
-      }
+      />}
+
       <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
@@ -281,7 +281,7 @@ const DealCouponList = () => {
                                         <img
                                           src={`${process.env.REACT_APP_CLIENT_IMAGE_URL}${dealcoupoun.image}`}
                                           style={{ width: "50px" }}
-                                          alt="Image"
+                                          alt="deal-image"
                                         />
                                       ) : (
                                         <span className="hyphen"> -</span>

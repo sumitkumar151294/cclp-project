@@ -225,6 +225,8 @@ label {
 .btn.btn-danger,
 .btn.btn-info {
   color: var(--primary-white) !important;
+  padding:  0.5rem 5.8rem 0.5rem 0.7rem;
+  gap: 0.5rem;
 }
 
 .btn-check:checked + .btn-danger,

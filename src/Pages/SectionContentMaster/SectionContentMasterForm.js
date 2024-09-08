@@ -39,6 +39,7 @@ const SectionContentMasterForm = ({
 }) => {
   const clientId = ClientId();
   const [mobile, setMobile] = useState(false);
+  const [textFeilds, setTextFeilds] = useState(false);
   const [web, setWeb] = useState(false);
   const section_content_master = GetTranslationData(
     "UIMasterAdmin",
@@ -98,7 +99,6 @@ const SectionContentMasterForm = ({
   );
   const location = useLocation();
   const getDealData = useSelector((state) => state.dealReducer?.getDealData);
-
 
   const getCustomerSegemtData = useSelector(
     (state) => state.customerSegmentReducer?.data
@@ -161,8 +161,9 @@ const SectionContentMasterForm = ({
     isOverrideMetadata: "",
     textForElement: "",
     textElementStatus: "",
-    textForElement: "",
+    textColor: "",
     textIcon: "",
+    linkedMasterId: "",
   });
   const reset = {
     webImage: "",
@@ -176,17 +177,19 @@ const SectionContentMasterForm = ({
     textbgColor: "",
     enabled: "",
     isOverrideMetadata: "",
-    textForElement: "",
+    textColor: "",
     textElementStatus: "",
     textForElement: "",
     textIcon: "",
+    linkedMasterId: "",
   };
-  const dealOptions = (type === "Unlock Deals"
-    ? getDealData?.filter(deal => deal?.dealType === "UnlockDeals")
-    : getDealData
-  )?.map(deal => ({
+  const dealOptions = (
+    type === "Unlock Deals"
+      ? getDealData?.filter((deal) => deal?.dealType === "UnlockDeals")
+      : getDealData
+  )?.map((deal) => ({
     value: deal.id,
-    label: deal.name
+    label: deal.name,
   }));
   const [showFeild, setShowFields] = useState("");
   const [textIcon, setTextIcon] = useState(false);
@@ -200,12 +203,12 @@ const SectionContentMasterForm = ({
     text: Yup.lazy(() =>
       type === "Promo Message"
         ? Yup.string()
-          .required(text_required)
-          .test(
-            "no-empty-html",
-            text_required,
-            (value) => value !== "<p><br></p>"
-          )
+            .required(text_required)
+            .test(
+              "no-empty-html",
+              text_required,
+              (value) => value !== "<p><br></p>"
+            )
         : Yup.string().nullable()
     ),
     mobImage: Yup.lazy(() =>
@@ -220,10 +223,10 @@ const SectionContentMasterForm = ({
     ),
     text: Yup.lazy(() =>
       type !== "Promo Banner" &&
-        type !== "Supporting Banner" &&
-        type !== "Special Cart Banner" &&
-        type !== "Special Section" &&
-        type !== "Unlock Deals"
+      type !== "Supporting Banner" &&
+      type !== "Special Cart Banner" &&
+      type !== "Special Section" &&
+      type !== "Unlock Deals"
         ? Yup.string().required("Text is required")
         : Yup.string().nullable()
     ),
@@ -236,6 +239,36 @@ const SectionContentMasterForm = ({
     contentSourceType: Yup.lazy(() =>
       type === "Unlock Deals" || type === "Special Section"
         ? Yup.string().required("Segment is required")
+        : Yup.string().nullable()
+    ),
+    textColor: Yup.lazy(() =>
+      textFeilds
+        ? Yup.string().required("Text Color is required")
+        : Yup.string().nullable()
+    ),
+    textbgColor: Yup.lazy(() =>
+      textFeilds
+        ? Yup.string().required("Text Background Color is required")
+        : Yup.string().nullable()
+    ),
+    textForElement: Yup.lazy(() =>
+      textFeilds
+        ? Yup.string().required("Text is required")
+        : Yup.string().nullable()
+    ),
+    textIcon: Yup.lazy(() =>
+      textFeilds
+        ? Yup.string().required("Element image is required")
+        : Yup.string().nullable()
+    ),
+    textElementStatus: Yup.lazy(() =>
+      textFeilds
+        ? Yup.string().required("Element status is required")
+        : Yup.string().nullable()
+    ),
+    linkedMasterId: Yup.lazy(() =>
+      showFeild
+        ? Yup.string().required("Value is required")
         : Yup.string().nullable()
     ),
   });
@@ -255,19 +288,21 @@ const SectionContentMasterForm = ({
       typeof mobImage === "object" ||
       typeof textIcon === "object"
     ) {
-      if (typeof webImage === "object") {
-        dispatch(onPostuploadImage(webImage));
-        if (typeof mobImage !== "object") setWeb(true);
-      }
-
       if (typeof mobImage === "object") {
         dispatch(onPostuploadMobileImage(mobImage));
-        if (typeof webImage !== "object") setMobile(true);
+        if (typeof webImage !== "object" && typeof textIcon !== "object")
+          setMobile(true);
+      }
+
+      if (typeof webImage === "object") {
+        dispatch(onPostuploadImage(webImage));
+        if (typeof mobImage !== "object" && typeof textIcon !== "object")
+          setWeb(true);
       }
 
       if (typeof textIcon === "object") {
         dispatch(onPostuploadElementImage(textIcon));
-        if (typeof webImage !== "object" || typeof mobImage !== "object")
+        if (typeof mobImage !== "object" && typeof webImage !== "object")
           setTextIcon(true);
       }
     } else {
@@ -318,9 +353,9 @@ const SectionContentMasterForm = ({
           typeof values?.textElementFlag === "boolean"
             ? values.textElementFlag
             : values?.textElementFlag === "true",
-        webImage: sectionContentData?.webImage,
-        mobImage: sectionContentData?.mobImage,
-        textIcon: sectionContentData?.textIcon, // Add textIcon to the data
+        webImage: sectionContentData?.webImage || "",
+        mobImage: sectionContentData?.mobImage || "",
+        textIcon: sectionContentData?.textIcon || "",
         clientId: clientId,
         deleted: false,
         sectionMasterId: typeID,
@@ -341,10 +376,15 @@ const SectionContentMasterForm = ({
       let shouldDispatch = false;
       if (
         uploadImage.postMobileStatusCode === "200" &&
-        uploadImage.post_status_code === "200" &&
+        uploadImage.post_status_code === "200"
+      ) {
+        sectionContentMasteData.mobImage = getmobImage;
+        sectionContentMasteData.webImage = getwebImage;
+        shouldDispatch = true;
+      } else if (
+        uploadImage.postMobileStatusCode === "200" &&
         uploadImage.postElementStatusCode === "200"
       ) {
-        sectionContentMasteData.webImage = getwebImage;
         sectionContentMasteData.mobImage = getmobImage;
         sectionContentMasteData.textIcon = getTextIcon;
         shouldDispatch = true;
@@ -360,6 +400,15 @@ const SectionContentMasterForm = ({
         sectionContentMasteData.textIcon = getTextIcon;
         shouldDispatch = true;
         setTextIcon(false);
+      } else if (
+        uploadImage.post_status_code === "200" &&
+        uploadImage.postMobileStatusCode === "200" &&
+        uploadImage.postElementStatusCode === "200"
+      ) {
+        sectionContentMasteData.mobImage = getmobImage;
+        sectionContentMasteData.textIcon = getTextIcon;
+        sectionContentMasteData.webImage = getwebImage;
+        shouldDispatch = true;
       }
 
       if (shouldDispatch) {
@@ -376,7 +425,6 @@ const SectionContentMasterForm = ({
     const file = event.currentTarget.files[0];
     const formData = new FormData();
     formData.append("file", file);
-
     if (fieldType === "mobile") {
       setFieldValue("mobImage", formData);
     } else if (fieldType === "web") {
@@ -388,6 +436,7 @@ const SectionContentMasterForm = ({
 
   useEffect(() => {
     if (getSectiontContentMasterData?.post_status_code === "200") {
+      setTextFeilds(false);
       setInitialValue(reset);
       setSectionContentData(null);
       toast.success(getSectiontContentMasterData?.postMessage);
@@ -411,7 +460,7 @@ const SectionContentMasterForm = ({
   useEffect(() => {
     dispatch(onPostuploadImageReset());
     dispatch(onPostuploadMobileImageReset());
-    dispatch(onPostSectionContentMasterReset());
+    dispatch(onPostuploadElementImageReset());
   }, []);
   useEffect(() => {
     if (sectionContentData) {
@@ -420,6 +469,7 @@ const SectionContentMasterForm = ({
       setShowFields(sectionContentData?.contentSourceType);
     }
   }, [sectionContentData]);
+
   return (
     <>
       <ScrollToTop />
@@ -441,9 +491,9 @@ const SectionContentMasterForm = ({
               </div>
               <div className="card-body">
                 {getSectiontContentMasterData?.isPostLoading ||
-                  (sectionContentData &&
-                    getSectiontContentMasterData?.isUpdateLoading) ||
-                  uploadImage?.isPostLoading ? (
+                (sectionContentData &&
+                  getSectiontContentMasterData?.isUpdateLoading) ||
+                uploadImage?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -468,10 +518,11 @@ const SectionContentMasterForm = ({
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="mobImage"
-                                  className={`form-control ${errors.mobImage && touched.mobImage
+                                  className={`form-control ${
+                                    errors.mobImage && touched.mobImage
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
@@ -494,10 +545,11 @@ const SectionContentMasterForm = ({
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="webImage"
-                                  className={`form-control ${errors.webImage && touched.webImage
+                                  className={`form-control ${
+                                    errors.webImage && touched.webImage
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
@@ -513,27 +565,28 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
-                            {(type === "Special Section" || type === "Unlock Deals") && (
+                            {(type === "Special Section" ||
+                              type === "Unlock Deals") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{content_source_type}</label>
-                               { (type === "Special Section" || type === "Unlock Deals") &&     <span className="text-danger">*</span>}
+                                {(type === "Special Section" ||
+                                  type === "Unlock Deals") && (
+                                  <span className="text-danger">*</span>
+                                )}
                                 <Field
                                   name="contentSourceType"
                                   component={Dropdown}
                                   options={contentSourceTypeOptions}
-                                  className={`form-select ${errors.contentSourceType &&
-                                      touched.contentSourceType
+                                  className={`form-select ${
+                                    errors.contentSourceType &&
+                                    touched.contentSourceType
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   onChange={(e) => {
                                     setShowFields(e);
-                                    if (e === "Deal") {
-                                      setFieldValue("linkedMasterId", false);
-                                    }
                                   }}
                                 />
-
                                 <ErrorMessage
                                   name="contentSourceType"
                                   component="div"
@@ -545,29 +598,32 @@ const SectionContentMasterForm = ({
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
                                   {showFeild === "Deal" ? "Deal" : "Product"}
+                                  <span className="text-danger">*</span>
                                 </label>
                                 <Field
                                   name="linkedMasterId"
                                   component={Dropdown}
                                   options={
-                                    (showFeild === "Deal")
+                                    showFeild === "Deal"
                                       ? dealOptions
                                       : dealOptions
                                   }
-                                  className={`form-select ${errors.linkedMasterId &&
-                                      touched.linkedMasterId
+                                  className={`form-select ${
+                                    errors.linkedMasterId &&
+                                    touched.linkedMasterId
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                 />
                                 <ErrorMessage
-                                  name="sectionType"
+                                  name="linkedMasterId"
                                   component="div"
                                   className="error-message"
                                 />
                               </div>
                             )}
-                            {values?.contentSourceType === "Product" && (
+                            {(type === "Special Section" ||
+                              type === "Unlock Deals") && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
@@ -581,41 +637,47 @@ const SectionContentMasterForm = ({
                                 </div>
                               </div>
                             )}
+
                             {(type === "Special Section" ||
                               type === "Unlock Deals") && (
-                                <div className="col-sm-4 form-group mb-4">
-                                  <label>{segment_label}</label>
-                                  {(type === "Special Section" ||
-                                    type === "Unlock Deals") && (
-                                      <span className="text-danger">*</span>
-                                    )}
-                                  <Field
-                                    name="segmentId"
-                                    component={Dropdown}
-                                    options={SegmentOptions}
-                                    className={`form-select ${errors.segmentId && touched.segmentId
-                                        ? "is-invalid"
-                                        : ""
-                                      }`}
-                                  />
+                              <div className="col-sm-4 form-group mb-4">
+                                <label>{segment_label}</label>
+                                {(type === "Special Section" ||
+                                  type === "Unlock Deals") && (
+                                  <span className="text-danger">*</span>
+                                )}
+                                <Field
+                                  name="segmentId"
+                                  component={Dropdown}
+                                  options={SegmentOptions}
+                                  className={`form-select ${
+                                    errors.segmentId && touched.segmentId
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                />
 
-                                  <ErrorMessage
-                                    name="segmentId"
-                                    component="div"
-                                    className="error-message"
-                                  />
-                                </div>
-                              )}
+                                <ErrorMessage
+                                  name="segmentId"
+                                  component="div"
+                                  className="error-message"
+                                />
+                              </div>
+                            )}
                             {type === "Promo Message" && (
                               <div className="col-sm-9 mb-4">
                                 <label>{"Text"}</label>
+                                {type === "Promo Message" && (
+                                  <span className="text-danger">*</span>
+                                )}
                                 <Field
                                   component={HtmlEditor}
                                   name="text"
-                                  className={`form-control ${errors.text && touched.text
+                                  className={`form-control ${
+                                    errors.text && touched.text
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   placeholder={displayLimitPlaceholder}
                                 />
                                 <ErrorMessage
@@ -633,10 +695,11 @@ const SectionContentMasterForm = ({
                               <Field
                                 type="text"
                                 name="displayOrder"
-                                className={`form-control ${errors.displayOrder && touched.displayOrder
+                                className={`form-control ${
+                                  errors.displayOrder && touched.displayOrder
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                                 placeholder={displayOrderPlaceholder}
                               />
 
@@ -649,13 +712,15 @@ const SectionContentMasterForm = ({
                             {type !== "Promo Message" && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{call_to_action}</label>
+                                <span className="text-danger">*</span>
                                 <Field
                                   type="text"
                                   name="cta"
-                                  className={`form-control ${errors.cta && touched.cta
+                                  className={`form-control ${
+                                    errors.cta && touched.cta
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   placeholder={call_to_action_placeholder}
                                 />
 
@@ -684,10 +749,11 @@ const SectionContentMasterForm = ({
                                   <Field
                                     type="text"
                                     name="text"
-                                    className={`form-control ${errors.text && touched.text
+                                    className={`form-control ${
+                                      errors.text && touched.text
                                         ? "is-invalid"
                                         : ""
-                                      }`}
+                                    }`}
                                     placeholder={text_placeholder}
                                   />
                                   <ErrorMessage
@@ -706,7 +772,11 @@ const SectionContentMasterForm = ({
                                     name="textElementFlag"
                                     onChange={({ target: { checked } }) => {
                                       setFieldValue("textElementFlag", checked);
+                                      if (checked) {
+                                        setTextFeilds(true);
+                                      }
                                       if (!checked) {
+                                        setTextFeilds(false);
                                         setFieldValue("textColor", "");
                                         setFieldValue("textbgColor", "");
                                         setFieldValue("textIcon", "");
@@ -728,11 +798,12 @@ const SectionContentMasterForm = ({
                                 <Field
                                   type="text"
                                   name="textForElement"
-                                  className={`form-control ${errors.textForElement &&
-                                      touched.textForElement
+                                  className={`form-control ${
+                                    errors.textForElement &&
+                                    touched.textForElement
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   placeholder={text_placeholder}
                                 />
                                 <ErrorMessage
@@ -746,26 +817,40 @@ const SectionContentMasterForm = ({
                             {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Font Color"}</label>
+                                <span className="text-danger">*</span>
                                 <Field
                                   type="color"
                                   name="textColor"
-                                  className={`form-control ${errors.text && touched.text
+                                  className={`form-control ${
+                                    errors.textColor && touched.textColor
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
+                                />
+                                <ErrorMessage
+                                  name="textColor"
+                                  component="div"
+                                  className="error-message"
                                 />
                               </div>
                             )}
                             {values?.textElementFlag && (
                               <div className="col-sm-3 form-group mb-2">
                                 <label>{"Text Background Color"}</label>
+                                <span className="text-danger">*</span>
                                 <Field
                                   type="color"
                                   name="textbgColor"
-                                  className={`form-control ${errors.text && touched.text
+                                  className={`form-control ${
+                                    errors.textbgColor && touched.textbgColor
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
+                                />
+                                <ErrorMessage
+                                  name="textbgColor"
+                                  component="div"
+                                  className="error-message"
                                 />
                               </div>
                             )}
@@ -773,17 +858,18 @@ const SectionContentMasterForm = ({
                             {values?.textElementFlag && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>
-                                  Upload Image For Text Element
+                                  Upload Image For Element
                                   <span className="text-danger">*</span>
                                 </label>
                                 <input
                                   accept=".jpg, .jpeg, .png, .webp .svg"
                                   type="file"
                                   name="textIcon"
-                                  className={`form-control ${errors.textIcon && touched.textIcon
+                                  className={`form-control ${
+                                    errors.textIcon && touched.textIcon
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                   onChange={(event) =>
                                     handleImageChange(
                                       setFieldValue,
@@ -809,11 +895,12 @@ const SectionContentMasterForm = ({
                                   name="textElementStatus"
                                   component={Dropdown}
                                   options={TextstatusOptions}
-                                  className={`form-select ${errors.textElementStatus &&
-                                      touched.textElementStatus
+                                  className={`form-select ${
+                                    errors.textElementStatus &&
+                                    touched.textElementStatus
                                       ? "is-invalid"
                                       : ""
-                                    }`}
+                                  }`}
                                 />
                                 <ErrorMessage
                                   name="textElementStatus"
@@ -831,10 +918,11 @@ const SectionContentMasterForm = ({
                                 name="enabled"
                                 component={Dropdown}
                                 options={statusOptions}
-                                className={`form-select ${errors.enabled && touched.enabled
+                                className={`form-select ${
+                                  errors.enabled && touched.enabled
                                     ? "is-invalid"
                                     : ""
-                                  }`}
+                                }`}
                               />
                               <ErrorMessage
                                 name="enabled"
