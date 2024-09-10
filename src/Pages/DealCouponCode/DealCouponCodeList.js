@@ -16,8 +16,10 @@ import {
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { onGetDealCoupon } from "../../Store/Slices/dealCouponSlice";
+import { useLocation } from "react-router-dom";
 
 const DealCouponCodeList = () => {
+  const location=useLocation();
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [dealCouponCode, setDealCouponCode] = useState("");
@@ -56,7 +58,8 @@ const DealCouponCodeList = () => {
   const getDealCouponCode = useSelector(
     (state) => state?.dealCouponCodeReducer
   );
-  const dealCouponCodeData = getDealCouponCode?.getDealCouponCodeData;
+  const dealCouponCodeData = getDealCouponCode?.getDealCouponCodeData?.filter(dealId=>dealId?.dealCoupounId=== location?.state?.dealCoupounId);
+  console.log(dealCouponCodeData)
   // to get deal coupon data from redux store
   const getDealCoupon = useSelector(
     (state) => state.dealCouponReducer?.getDealCouponData
@@ -178,7 +181,7 @@ const DealCouponCodeList = () => {
                                 <th>{coupon_code}</th>
                                 <th>{deal_label}</th>
                                 <th>{deal_coupon}</th>
-                                <th>{deal_coupon_status}</th>
+                                <th>{"Claim Status"}</th>
                                 <th>{start_date_label}</th>
                                 <th>{end_date_label}</th>
                                 <th>{description}</th>
@@ -217,7 +220,7 @@ const DealCouponCodeList = () => {
                                     <td>
                                       {formatDate(dealCouponCode?.endDate)}
                                     </td>
-                                    <td>{dealCouponCode?.descriptions}</td>
+                                    <td>{dealCouponCode?.descriptions ||  <span className="hyphen"> -</span>}</td>
                                     <td>
                                       <span
                                         className={

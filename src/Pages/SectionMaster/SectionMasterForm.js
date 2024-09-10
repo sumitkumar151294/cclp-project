@@ -122,9 +122,7 @@ const SectionMasterForm = ({ sectionData, setSectionData,edit,setEdit }) => {
     displayLimit: Yup.string()
       .required(display_limit_required)
       .matches(/^[0-9]+$/, display_limit_must_number),
-    claimLimit: Yup.string()
-      .nullable() // Allows the value to be null
-      .matches(/^[0-9]*$/, claim_limit_must_number),
+
     noOfPointsToClaim: Yup.string()
       .nullable()
       .matches(/^[0-9]*$/, number_of_points_must_number),

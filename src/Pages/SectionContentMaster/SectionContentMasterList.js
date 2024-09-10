@@ -15,10 +15,27 @@ import {
 import Button from "../../Components/Button/Button";
 import { onGetProductContent } from "../../Store/Slices/productContentSlice";
 import { onGetDeal } from "../../Store/Slices/dealSlice";
+import Swal from "sweetalert2";
 
 const SectionContentMasterList = () => {
   const [sectionContentData, setSectionContentData] = useState("");
   const [edit, SetEdit] = useState(false);
+  const showAlert = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this row.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result?.value) {
+        handleSumbit(data);
+      }
+    });
+  };
   // to get column heading name from translation
   const call_to_action = GetTranslationData("UIMasterAdmin", "call_to_action");
   const action_label = GetTranslationData("UIMasterAdmin", "action_label");
@@ -207,14 +224,9 @@ const SectionContentMasterList = () => {
                                     <td>{sectionContent?.linkedMasterId}</td>
                                     <td>{sectionContent?.segmentId}</td>
                                     <td>
-                                      {sectionContent?.isOverrideMetadata ? (
+                                      {sectionContent?.contentSourceType=="Product" ? sectionContent?.isOverrideMetadata ? (
                                         <Link
-                                          to={
-                                            sectionContent?.contentSourceType ===
-                                            "Deal"
-                                              ? "/deal"
-                                              : "/metaData"
-                                          }
+                                          to="/metaData"
                                         >
                                           <Button
                                             text={"Customize"}
@@ -224,7 +236,7 @@ const SectionContentMasterList = () => {
                                         </Link>
                                       ) : (
                                         "Not Allowed"
-                                      )}
+                                      ):  <span className="hyphen"> -</span>}
                                     </td>
                                   </>
                                 )}
@@ -240,7 +252,7 @@ const SectionContentMasterList = () => {
                                 {(sectionType === "Promo Message" ||
                                   sectionType === "Customer Menu") && (
                                   <td>
-                                    {sectionContent?.text || (
+                                    {sectionContent?.text.substring(0, 10) + "..." || (
                                       <span className="hyphen"> -</span>
                                     )}
                                   </td>
@@ -325,7 +337,7 @@ const SectionContentMasterList = () => {
                                       className="btn btn-danger shadow btn-xs sharp"
                                       end_icon={"fa fa-trash"}
                                       onClick={() =>
-                                        handleSumbit(sectionContent)
+                                        showAlert(sectionContent)
                                       }
                                     />
                                   </div>

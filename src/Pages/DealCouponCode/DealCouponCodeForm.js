@@ -207,7 +207,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
               <div className="card-body">
                 {dealCouponCodeData?.isPostLoading ? (
                   <div style={{ height: "200px" }}>
-                    <Loader />
+                     <Loader classType={"absoluteLoader"} />
                   </div>
                 ) : (
                   <div className="containers-fluid">
@@ -232,7 +232,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
-                                placeholder={coupon_code_placeholder}
+                                placeholder={"Enter Deal Coupon Code"}
                               />
                               <ErrorMessage
                                 name="coupounCode"
@@ -242,6 +242,8 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-3">
                               <label>{start_date_label}</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="date"
                                 name="startDate"
@@ -263,6 +265,8 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-3 ">
                               <label>{end_date_label}</label>
+                              <span className="text-danger">*</span>
+
                               <Field
                                 type="date"
                                 name="endDate"
@@ -288,7 +292,7 @@ const DealCouponCodeForm = ({ dealCouponCode, setDealCouponCode }) => {
                             </div>
                             <div className="col-sm-4 form-group mb-4">
                               <label>
-                                {deal_coupon_status}
+                                {"Claim Status"}
                                 <span className="text-danger">*</span>
                               </label>
 

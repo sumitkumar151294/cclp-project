@@ -48,8 +48,8 @@ const DealCouponForm = ({
   setEdit,
 }) => {
   const [values, setValues] = useState(null);
+  const [showOfferType, setShowOfferType] = useState(null);
   const [couponType, setCouponType] = useState(null);
-  const [offerType, setofferType] = useState(null);
 
   const dispatch = useDispatch();
   const todayDate = getTodayDate();
@@ -227,7 +227,6 @@ const DealCouponForm = ({
     cta: "",
     title: "",
     source: "",
-
     offerSubType: "",
     validFrom: "",
     validUpto: "",
@@ -256,16 +255,13 @@ const DealCouponForm = ({
   };
   const offerTypeOptions = [
     { value: "Feature", label: "Feature" },
-    { value: "NetworkCardType", label: "Networkd Card Type" },
-    { value: "SpecialType", label: "SpecialType" },
+    { value: "NetworkCardType", label: "Network Card Type" },
+    { value: "SpecialType", label: "Special Type" },
     { value: "Generic", label: "Generic" },
   ];
-  const offerTypeValue1 = [
-    { value: "Visa", label: "Visa" },
-    { value: "Master Card", label: "Master Card" },
-  ];
+
   const clientId = ClientId();
-  const offerTypeValue2 = [{ value: "First Wealth", label: "First Wealth" }];
+
   const oferSubTypeOptions = [{ value: "EMI", label: "EMI" }];
   // to validate the form using Yup schema
   const validations = Yup.object().shape({
@@ -327,8 +323,13 @@ const DealCouponForm = ({
         : Yup.string().nullable()
     ),
     segmentId: Yup.lazy(() =>
-      offerType === "Feature"
+      showOfferType === "Feature"
         ? Yup.string().required(segment_required)
+        : Yup.string().nullable()
+    ),
+    offerTypeValue: Yup.lazy(() =>
+      showOfferType === "NetworkCardType" || showOfferType === "SpecialType"
+        ? Yup.string().required("Offer Type Value is required")
         : Yup.string().nullable()
     ),
   });
@@ -585,26 +586,27 @@ const DealCouponForm = ({
                             <div className="col-sm-4 form-group mb-4">
                               <label>{offer_type}</label>
                               <span className="text-danger">*</span>
+
                               <Field
-                                type="text"
                                 name="offerType"
-                                className={`form-control ${
+                                options={offerTypeOptions}
+                                component={Dropdown}
+                                className={`form-select ${
                                   errors.offerType && touched.offerType
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 onChange={(e) => {
-                                  const capitalize = (str) =>
-                                    str.replace(/\b\w/g, (char) =>
-                                      char.toUpperCase()
-                                    );
-                                  const capitalizedValue = capitalize(
-                                    e.target.value
-                                  );
-                                  setFieldValue("offerType", capitalizedValue);
-                                  setofferType(capitalizedValue);
+                                  setShowOfferType(e);
+                                  if (e !== "NetworkCardType") {
+                                    setFieldValue("offerTypeValue", "");
+                                  }
+                                  if (e !== "SpecialType") {
+                                    setFieldValue("offerTypeValue", "");
+                                  }
+
                                 }}
-                                placeholder={"Feature, Network Card Type,..etc"}
+
                               />
                               <ErrorMessage
                                 name="offerType"
@@ -617,21 +619,20 @@ const DealCouponForm = ({
                               values.offerType === "NetworkCardType") && (
                               <div className="col-sm-4 form-group mb-4">
                                 <label>{offer_type_value}</label>
-
+                                {(values.offerType === "SpecialType" ||
+                                  values.offerType === "NetworkCardType") && (
+                                  <span className="text-danger">*</span>
+                                )}
                                 <Field
                                   name="offerTypeValue"
-                                  options={
-                                    values.offerType === "NetworkCardType"
-                                      ? offerTypeValue1
-                                      : offerTypeValue2
-                                  }
-                                  component={Dropdown}
+                                  type="text"
                                   className={`form-select ${
                                     errors.offerTypeValue &&
                                     touched.offerTypeValue
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  placeholder="Visa, Master Card, etc.."
                                 />
                                 <ErrorMessage
                                   name="offerTypeValue"

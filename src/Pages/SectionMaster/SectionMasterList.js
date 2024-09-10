@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from "react";
 import NoRecord from "../../Components/NoRecord/NoRecord";
 import ReactPaginate from "react-paginate";
@@ -12,13 +14,11 @@ import { GetTranslationData } from "../../Components/GetTranslationData/GetTrans
 import {
   onGetsectionMaster,
   onPostsectionMaster,
-  onUpdatesectionMaster,
-  onUpdatesectionMasterReset,
 } from "../../Store/Slices/sectionMasterSlice";
-import { toast } from "react-toastify";
-import PageError from "../../Components/PageError/PageError";
 import Swal from "sweetalert2";
 import { onGetCustomerSegment } from "../../Store/Slices/customerSegmentSlice";
+import { onGetSectionContentMaster } from "../../Store/Slices/sectionContentMasterSlice";
+import { toast } from "react-toastify";
 
 const SectionMasterList = () => {
   // to get column heading name from translation
@@ -46,7 +46,7 @@ const SectionMasterList = () => {
   const getRoleAccess = useSelector(
     (state) => state.moduleReducer?.filteredData
   );
-const [edit,setEdit]=useState(false)
+  const [edit, setEdit] = useState(false);
   // to handle pagination
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -55,14 +55,17 @@ const [edit,setEdit]=useState(false)
   };
   const [sectionData, setSectionData] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
-
   const dispatch = useDispatch();
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const SectionMasterData = useSelector(
     (state) => state?.sectionMasterReducer?.getsectionMasterData
   );
+
+  const getSectionContenMasterData = useSelector(
+    (state) => state?.sectionContentMasterReducer?.getSectionContentMasterData
+  );
+
   const SectionMaster = useSelector((state) => state?.sectionMasterReducer);
   // modal for delete warning
   const showAlert = (data) => {
@@ -90,8 +93,16 @@ const [edit,setEdit]=useState(false)
     if (isEdit) {
       setSectionData(sectionMasterData);
     } else {
-      setEdit(true)
-      dispatch(onPostsectionMaster(sectionMasterData));
+      if (
+        getSectionContenMasterData.filter(
+          (contentData) => contentData?.sectionMasterId === sectionData?.id
+        ).length
+      ) {
+        toast.error("Section Content Exists for this Data, Unable to Delete");
+      } else {
+        setEdit(true);
+        dispatch(onPostsectionMaster(sectionMasterData));
+      }
     }
   };
 
@@ -106,6 +117,7 @@ const [edit,setEdit]=useState(false)
   useEffect(() => {
     dispatch(onGetsectionMaster());
     dispatch(onGetCustomerSegment());
+    dispatch(onGetSectionContentMaster());
   }, []);
 
   useEffect(() => {
@@ -124,9 +136,14 @@ const [edit,setEdit]=useState(false)
     <>
       <ScrollToTop />
       {getRoleAccess[0]?.addAccess && (
-        <SectionMasterForm sectionData={sectionData}  setSectionData=
-        {setSectionData} edit={edit} setEdit={setEdit}/>
-            )}      <div className="containers-fluid pt-0">
+        <SectionMasterForm
+          sectionData={sectionData}
+          setSectionData={setSectionData}
+          edit={edit}
+          setEdit={setEdit}
+        />
+      )}{" "}
+      <div className="containers-fluid pt-0">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -152,7 +169,8 @@ const [edit,setEdit]=useState(false)
                 </div>
               </div>
               <div className="card-body">
-                {( (edit && SectionMaster?.isPostLoading) || SectionMaster?.isgetLoading ) ? (
+                {(edit && SectionMaster?.isPostLoading) ||
+                SectionMaster?.isgetLoading ? (
                   <div style={{ height: "200px" }}>
                     <Loader classType={"absoluteLoader"} />
                   </div>
@@ -174,11 +192,10 @@ const [edit,setEdit]=useState(false)
                             <th>{status_label}</th>
                             {getRoleAccess[0]?.editAccess && (
                               <th>{action_label}</th>
-                              )}
+                            )}
                             {getRoleAccess[0]?.editAccess && (
-
-                            <th>{section_data}</th>
-                        )}
+                              <th>{section_data}</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
@@ -241,52 +258,52 @@ const [edit,setEdit]=useState(false)
                                   </span>
                                 </td>
                                 {/* {getRoleAccess[0]?.editAccess && ( */}
-                                  <>
-                                    <td>
-                                      <div className="d-flex">
-                                        <Button
-                                          className="btn btn-primary shadow btn-xs sharp me-1"
-                                          end_icon={"fas fa-pencil-alt"}
-                                          onClick={() =>
-                                            handleSubmit(SectionMasterData, {
-                                              isEdit: true,
-                                            })
-                                          }
-                                        />
-                                        <Button
-                                          className="btn btn-danger shadow btn-xs sharp"
-                                          end_icon={"fa fa-trash"}
-                                          onClick={() =>
-                                            showAlert(SectionMasterData)
-                                          }
-                                        />
-                                      </div>
-                                    </td>
+                                <>
+                                  <td>
+                                    <div className="d-flex">
+                                      <Button
+                                        className="btn btn-primary shadow btn-xs sharp me-1"
+                                        end_icon={"fas fa-pencil-alt"}
+                                        onClick={() =>
+                                          handleSubmit(SectionMasterData, {
+                                            isEdit: true,
+                                          })
+                                        }
+                                      />
+                                      <Button
+                                        className="btn btn-danger shadow btn-xs sharp"
+                                        end_icon={"fa fa-trash"}
+                                        onClick={() =>
+                                          showAlert(SectionMasterData)
+                                        }
+                                      />
+                                    </div>
+                                  </td>
 
-                                    <td>
-                                      <Link
-                                        to="/sectionContentMaster"
-                                        state={{
-                                          sectionType:
-                                            SectionMasterData.sectionType,
-                                          sectionId: SectionMasterData.id,
-                                          sectionLimit:
-                                            SectionMasterData.displayLimit,
-                                          sectionName:
-                                            SectionMasterData.sectionName,
-                                        }}
-                                      >
-                                        <Button
-                                          disabled={!SectionMasterData?.enabled}
-                                          text={"Customize"}
-                                          end_icon={"fa fa-eye"}
-                                          className="btn btn-primary btn-sm float-right client_Btn"
-                                        />
-                                      </Link>
-                                    </td>
-                                  </>
-                                                              {/* )} */}
-                                                                                           </tr>
+                                  <td>
+                                    <Link
+                                      to="/sectionContentMaster"
+                                      state={{
+                                        sectionType:
+                                          SectionMasterData.sectionType,
+                                        sectionId: SectionMasterData.id,
+                                        sectionLimit:
+                                          SectionMasterData.displayLimit,
+                                        sectionName:
+                                          SectionMasterData.sectionName,
+                                      }}
+                                    >
+                                      <Button
+                                        disabled={!SectionMasterData?.enabled}
+                                        text={"Customize"}
+                                        end_icon={"fa fa-eye"}
+                                        className="btn btn-primary btn-sm float-right client_Btn"
+                                      />
+                                    </Link>
+                                  </td>
+                                </>
+                                {/* )} */}
+                              </tr>
                             ))}
                         </tbody>
                       </table>
@@ -325,3 +342,4 @@ const [edit,setEdit]=useState(false)
 };
 
 export default SectionMasterList;
+/* eslint-enable react-hooks/exhaustive-deps */

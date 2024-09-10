@@ -200,17 +200,6 @@ const SectionContentMasterForm = ({
     displayOrder: Yup.string()
       .required(display_order_required)
       .matches(/^[0-9]+$/, "Display Order Must be a number"),
-    text: Yup.lazy(() =>
-      type === "Promo Message"
-        ? Yup.string()
-            .required(text_required)
-            .test(
-              "no-empty-html",
-              text_required,
-              (value) => value !== "<p><br></p>"
-            )
-        : Yup.string().nullable()
-    ),
     mobImage: Yup.lazy(() =>
       type !== "Promo Message"
         ? Yup.string().required("Mobile Image is required")
@@ -452,11 +441,7 @@ const SectionContentMasterForm = ({
       dispatch(onPostSectionContentMasterReset());
     }
   }, [getSectiontContentMasterData]);
-  useEffect(() => {
-    if (displayLimit) {
-      toast.error(max_display_limit_reached);
-    }
-  }, []);
+
   useEffect(() => {
     dispatch(onPostuploadImageReset());
     dispatch(onPostuploadMobileImageReset());
@@ -480,8 +465,15 @@ const SectionContentMasterForm = ({
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">
-                  {section_content_master}{" "}
+                  {section_content_master}
                   {type && `(Type:${type}, Name:${sectionName} )`}
+                  {sectionContentData ? (
+                    ""
+                  ) : displayLimit ? (
+                    <p className="error-message">
+                      Maximum Display Limit Reached
+                    </p>
+                  ) : null}
                 </h4>
                 <Link to="/sectionMaster">
                   <button className="back-button">
@@ -530,6 +522,7 @@ const SectionContentMasterForm = ({
                                       "mobile"
                                     )
                                   }
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="mobImage"
@@ -557,6 +550,7 @@ const SectionContentMasterForm = ({
                                       "web"
                                     )
                                   }
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="webImage"
@@ -586,6 +580,7 @@ const SectionContentMasterForm = ({
                                   onChange={(e) => {
                                     setShowFields(e);
                                   }}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="contentSourceType"
@@ -614,6 +609,15 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
+                                  onChange={(e) => {
+                                    if (e === "Deal") {
+                                      setFieldValue(
+                                        "isOverrideMetadata",
+                                        false
+                                      );
+                                    }
+                                  }}
                                 />
                                 <ErrorMessage
                                   name="linkedMasterId"
@@ -622,14 +626,16 @@ const SectionContentMasterForm = ({
                                 />
                               </div>
                             )}
-                            {(type === "Special Section" ||
-                              type === "Unlock Deals") && (
+                            {values?.contentSourceType === "Product" && (
                               <div className="col-lg-4 py-4">
                                 <div className="form-check  mb-2 padd mt-2">
                                   <Field
                                     type="checkbox"
                                     className="form-check-input"
                                     name="isOverrideMetadata"
+                                    disabled={
+                                      !sectionContentData && displayLimit
+                                    }
                                   />
                                   <label className="px-1">
                                     {"is Over-ride MetaData"}
@@ -655,6 +661,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
 
                                 <ErrorMessage
@@ -679,6 +686,9 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   placeholder={displayLimitPlaceholder}
+                                  displayLimit={
+                                    !sectionContentData && displayLimit
+                                  }
                                 />
                                 <ErrorMessage
                                   name="text"
@@ -701,6 +711,7 @@ const SectionContentMasterForm = ({
                                     : ""
                                 }`}
                                 placeholder={displayOrderPlaceholder}
+                                disabled={!sectionContentData && displayLimit}
                               />
 
                               <ErrorMessage
@@ -722,6 +733,7 @@ const SectionContentMasterForm = ({
                                       : ""
                                   }`}
                                   placeholder={call_to_action_placeholder}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
 
                                 <ErrorMessage
@@ -755,6 +767,9 @@ const SectionContentMasterForm = ({
                                         : ""
                                     }`}
                                     placeholder={text_placeholder}
+                                    disabled={
+                                      !sectionContentData && displayLimit
+                                    }
                                   />
                                   <ErrorMessage
                                     name="text"
@@ -784,6 +799,9 @@ const SectionContentMasterForm = ({
                                         setFieldValue("textForElement", "");
                                       }
                                     }}
+                                    disabled={
+                                      !sectionContentData && displayLimit
+                                    }
                                   />
                                   <label className="px-1">
                                     {"Text Element Required"}
@@ -804,6 +822,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
                                   placeholder={text_placeholder}
                                 />
                                 <ErrorMessage
@@ -826,6 +845,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="textColor"
@@ -846,6 +866,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="textbgColor"
@@ -877,6 +898,7 @@ const SectionContentMasterForm = ({
                                       "textIcon"
                                     )
                                   }
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="textIcon"
@@ -901,6 +923,7 @@ const SectionContentMasterForm = ({
                                       ? "is-invalid"
                                       : ""
                                   }`}
+                                  disabled={!sectionContentData && displayLimit}
                                 />
                                 <ErrorMessage
                                   name="textElementStatus"
@@ -923,6 +946,7 @@ const SectionContentMasterForm = ({
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                                disabled={!sectionContentData && displayLimit}
                               />
                               <ErrorMessage
                                 name="enabled"
@@ -935,6 +959,7 @@ const SectionContentMasterForm = ({
                                 text={sectionContentData ? update : submit}
                                 end_icon="fa fa-arrow-right"
                                 className="btn btn-primary  pad-aa mt-2"
+                                disabled={!sectionContentData && displayLimit}
                               />
                             </div>
                           </div>

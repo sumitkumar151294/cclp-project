@@ -162,20 +162,7 @@ const DealForm = ({ dealsData }) => {
       .of(Yup.string().required(alias_required))
       .required(at_least_one_alias_required),
   });
-  const resetState = [
-    {
-      enabled: "",
-      webImage: "",
-      mobImage: "",
-      displayOrder: "",
-      category: "",
-      name: "",
-      startDate: "",
-      endDate: dealsData?.endDate || "",
-      dealType: "",
-      alias: [""],
-    },
-  ];
+
   const handleImageChange = (setFieldValue, event, isMobile) => {
     const file = event.currentTarget.files[0];
     const formData = new FormData();
@@ -465,6 +452,9 @@ const DealForm = ({ dealsData }) => {
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                                onChange={(e) => {
+                                  setFieldValue("startDate", e.target.value);
+                                }}
                               />
                               <ErrorMessage
                                 name="startDate"
@@ -477,12 +467,19 @@ const DealForm = ({ dealsData }) => {
                               <Field
                                 type="date"
                                 name="endDate"
-                                min={todayDate}
+
                                 className={`form-control ${
                                   errors.endDate && touched.endDate
                                     ? "is-invalid"
                                     : ""
                                 }`}
+                          onChange={(e) => {
+                                  const endData = e.target.value;
+                                  setFieldValue("endDate", endData);
+                                  if (!values?.startDate) {
+                                    setFieldValue("startDate", todayDate);
+                                  }
+                                }}
                               />
                               <ErrorMessage
                                 name="endDate"

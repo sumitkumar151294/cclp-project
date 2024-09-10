@@ -15,6 +15,7 @@ import NavConfigurationList from "../Pages/NavConfiguration/NavConfigurationList
 import PageError from "../Components/PageError/PageError";
 import DealCouponFrequencyList from "../Pages/DealCouponFrequency/DealCouponFrequencyList";
 import MetaDataList from "../Pages/MetaData/MetaDataList";
+import BulkUploadingList from "../Pages/BulkUploading/BulkUploadingList";
 
 function RouteConfiq() {
   return (
@@ -68,6 +69,11 @@ function RouteConfiq() {
         <Route
           path="/metaData"
           element={<Layout Component={MetaDataList} />}
+        />
+
+<Route
+          path="/bulkUploading"
+          element={<Layout Component={BulkUploadingList} />}
         />
         <Route
           path="*"
